@@ -1,0 +1,50 @@
+{
+  "active": false,
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Postgres",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-12-22T07:28:34.124Z",
+  "id": "102",
+  "name": "SOD : Query Execution",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "Insert into sod_states (state_name,country_code) \nvalues ('Andaman & Nicobar',1),\n('Andhra Pradesh',1),\n( 'Arunachal Pradesh',1),\n( 'Assam',1),\n( 'Bihar',1),\n( 'Chandigarh',1),\n( 'Chhattisgarh',1),\n( 'Dadra & Nagar Haveli',1),\n( 'Daman & Diu',1),\n( 'Delhi',1),\n( 'Goa',1),\n( 'Gujarat',1),\n( 'Haryana',1),\n( 'Himachal Pradesh',1),\n( 'Jammu & Kashmir',1),\n( 'Jharkhand',1),\n( 'Karnataka',1),\n( 'Kerala',1),\n( 'Lakshadweep',1),\n( 'Madhya Pradesh',1),\n( 'Maharashtra',1),\n( 'Manipur',1),\n( 'Meghalaya',1),\n( 'Mizoram',1),\n( 'Nagaland',1),\n( 'Orissa',1),\n( 'Pondicherry',1),\n( 'Punjab',1),\n( 'Rajasthan',1),\n( 'Sikkim',1),\n( 'Tamil Nadu',1),\n( 'Tripura',1),\n( 'Uttar Pradesh',1),\n( 'Uttaranchal',1),\n( 'West Bengal',1);\n\n\n\n\n\n"
+      },
+      "name": "Postgres",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        490,
+        300
+      ],
+      "credentials": {
+        "postgres": "sodqadmsdb"
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "updatedAt": "2021-12-22T09:13:03.412Z"
+}
