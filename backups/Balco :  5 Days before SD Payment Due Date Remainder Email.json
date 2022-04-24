@@ -1,0 +1,232 @@
+{
+  "active": true,
+  "connections": {
+    "Cron": {
+      "main": [
+        [
+          {
+            "node": "Global",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get 5 days after time_stamp": {
+      "main": [
+        [
+          {
+            "node": "Get payment_due_on dates with po_num &POI email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "SplitInBatches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SplitInBatches": {
+      "main": [
+        [
+          {
+            "node": "SD Payment Due Date reminder to SA, OPS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get payment_due_on dates with po_num &POI email": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SD Payment Due Date reminder to SA, OPS": {
+      "main": [
+        [
+          {
+            "node": "SD Payment Due Date reminder to POI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Global": {
+      "main": [
+        [
+          {
+            "node": "Get 5 days after time_stamp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-03-24T04:20:55.328Z",
+  "id": "49",
+  "name": "Balco :  5 Days before SD Payment Due Date Remainder Email",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "hour": 10
+            }
+          ]
+        }
+      },
+      "name": "Cron",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        310,
+        450
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "\nvar someDate = new Date();\nvar numberOfDaysToAdd = 4;\nsomeDate.setDate(someDate.getDate() + numberOfDaysToAdd);\n\nvar dd =parseInt(someDate.getDate());\nvar day = dd < 10 ? '0' + dd : dd;\nvar mm =parseInt(someDate.getMonth() + 1);\nvar month = mm < 10 ? '0' + mm : mm;\nvar y = someDate.getFullYear();\n\nvar someFormattedDate = y+'-'+month +'-'+day;\n\nitems[0].json.date=someFormattedDate\nreturn items;\n"
+      },
+      "name": "Get 5 days after time_stamp",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        620,
+        450
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let data = items[0].json.data\n  \nlet split =[]\ndata.forEach(function(obj,index){\n    split[index] = {}\n    split[index].json = obj\n})\nreturn split\n"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        450
+      ]
+    },
+    {
+      "parameters": {
+        "batchSize": 100,
+        "options": {}
+      },
+      "name": "SplitInBatches",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 1,
+      "position": [
+        1170,
+        450
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Global\"].json[\"dms_url\"]}}/items/sd_mozart_payment_advise?filter={\"payment_due_on\":{\"_lte\":\"{{$node[\"Get 5 days after time_stamp\"].json[\"date\"]}}\"}}&fields=order.po_num.po_num,payment_due_on,order.po_num.issuer_name.user.email,order.po_num.issuer_name.user.first_name",
+        "allowUnauthorizedCerts": true,
+        "options": {}
+      },
+      "name": "Get payment_due_on dates with po_num &POI email",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        830,
+        450
+      ],
+      "credentials": {
+        "httpHeaderAuth": "Balcoqa-Dms-Token"
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "handyalasairam9177@gmail.com",
+        "toEmail": "sairam.reddy@shakedeal.com",
+        "subject": "=SD Payment Date almost here for PO : {{$node[\"Get payment_due_on dates with po_num &POI email\"].json[\"data\"][0][\"order\"][\"po_num\"][\"po_num\"]}}",
+        "html": "=<!DoCtYPe html><html lang=\"en\"><head><style id=\"stndzstyle\"></style>\n <meta http-equiv=\"Content-Type\" content=\"text\n/html; charset=UTF-8\">\n <meta name=\"viewport\" content=\"width=device-width,\ninitial-scale=1, shrink-to-fit=no\">\n <meta name=\"description\" content=\"\">\n <meta name=\"author\" content=\"Mark Otto, Jacob\nThornton, and Bootstrap contributors\">\n <meta name=\"generator\" content=\"\nAcelleSystemLayouts\">\n\n <!-- Bootstrap core CSS -->\n <link href=\"https://marketing.shakedeal.com/assets\n/templates/60584da7bdf65/css/bootstrap.min.css\" rel=\"\nstylesheet\">\n <script id=\"spHTMLFormElementPrototypeScript\">\n(function()\n {\n try\n {\n var sp_old_HTMLFormElementPrototype_submit = \nHTMLFormElement.prototype.submit;\n HTMLFormElement.prototype.submit = function\n(AEvent)\n {\n try\n {\n var spEvent = document.createEvent('Event');\n spEvent.initEvent('sp_submit', true, true);\n this.dispatchEvent(spEvent);\n }\n catch(ErrorMessage)\n {\n console.error('spFormElementPrototype()\nError sending \"sp_submit\" event from HTMLFormElement.\nprototype.submit: ' + ErrorMessage);\n }\n sp_old_HTMLFormElementPrototype_submit.apply\n(this);\n };\n }\n catch(ErrorMessage)\n {\n console.error('spFormElementPrototype() Error\nattaching to HTMLFormElement.prototype.submit: ' +\nErrorMessage);\n }\n try\n {\n if (typeof __doPostBack == 'function')\n {\n var sp_old__doPostBack = __doPostBack;\n __doPostBack = function(eventTarget,\neventArgument)\n {\n try\n {\n var spEvent = document.createEvent\n('Event');\n spEvent.initEvent('sp_submit', true, true);\n window.dispatchEvent(spEvent);\n }\n catch(ErrorMessage)\n {\n console.error('spFormElementPrototype()\nError sending \"sp_submit\" event from __doPostBack(): '\n+ ErrorMessage);\n }\n sp_old__doPostBack(eventTarget,\neventArgument);\n };\n }\n }\n catch(ErrorMessage)\n {\n console.error('spFormElementPrototype() Error\nattaching to __doPostBack(): ' + ErrorMessage);\n }\n })();</script><link href=\"https://fonts.googleapis.\ncom/icon?family=Material+Icons\" rel=\"stylesheet\"><link\nhref=\"https://fonts.googleapis.com/icon?\nfamily=Material+Icons+Outlined\" rel=\"stylesheet\"></head>\n\n <body data-new-gr-c-s-check-loaded=\"14.990.0\" datagr-ext-installed=\"\">\n<main role=\"main\">\n<div class=\"py-5 bg-light\">\n<div class=\"container\">\n<h1 class=\"my-4 display-4 text-center\">PO : {{$node[\"Get payment_due_on dates with po_num &POI email\"].json[\"data\"][0][\"order\"][\"po_num\"][\"po_num\"]}} SD Payment Date is almost here. </h1>\n<p class=\"lead text-center\">On {{$node[\"Get payment_due_on dates with po_num &POI email\"].json[\"data\"][0][\"payment_due_on\"]}} PO :{{$node[\"Get payment_due_on dates with po_num &POI email\"].json[\"data\"][0][\"order\"][\"po_num\"][\"po_num\"]}}  will be overdue for receiving Payment. Please check up on the status for payment against this PO from {{$node[\"Get payment_due_on dates with po_num &POI email\"].json[\"data\"][0][\"order\"][\"po_num\"][\"issuer_name\"][\"first_name\"]}}</p>\n<div><img class=\"my-2\" src=\"\" width=\"100%\" /></div>\n</div>\n</div>\n</main><footer class=\"text-muted py-5\">\n<div class=\"container\">\n<div class=\"row\">\n<div class=\"col-md-8\">\n<p class=\"mb-1\">Copyright &copy; OpCommerce Online PVT\nLTD, All rights reserved.</p>\n<p class=\"mb-0\">Please email us on <a href=\"\nsupport@shakedeal.com\">support@shakedeal.com</a> in\ncase of any queries.\n</div>\n<div class=\"col-md-4\">\n<p class=\"float-right\"><a href=\"#\">Back to top</a></p>\n</div>\n</div>\n</div>\n</footer>\n</body></html>",
+        "options": {}
+      },
+      "name": "SD Payment Due Date reminder to SA, OPS",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        1380,
+        450
+      ],
+      "credentials": {
+        "smtp": "smtp(sai)creds"
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "handyalasairam9177@gmail.com",
+        "toEmail": "sairam.reddy@shakedeal.com",
+        "subject": "=SD Payment Date almost here for PO ; {{$node[\"Get payment_due_on dates with po_num &POI email\"].json[\"data\"][0][\"order\"][\"po_num\"][\"po_num\"]}}",
+        "html": "=<!DoCtYPe html><html lang=\"en\"><head><style id=\"stndzstyle\"></style>\n <meta http-equiv=\"Content-Type\" content=\"text\n/html; charset=UTF-8\">\n <meta name=\"viewport\" content=\"width=device-width,\ninitial-scale=1, shrink-to-fit=no\">\n <meta name=\"description\" content=\"\">\n <meta name=\"author\" content=\"Mark Otto, Jacob\nThornton, and Bootstrap contributors\">\n <meta name=\"generator\" content=\"\nAcelleSystemLayouts\">\n\n <!-- Bootstrap core CSS -->\n <link href=\"https://marketing.shakedeal.com/assets\n/templates/60584da7bdf65/css/bootstrap.min.css\" rel=\"\nstylesheet\">\n <script id=\"spHTMLFormElementPrototypeScript\">\n(function()\n {\n try\n {\n var sp_old_HTMLFormElementPrototype_submit = \nHTMLFormElement.prototype.submit;\n HTMLFormElement.prototype.submit = function\n(AEvent)\n {\n try\n {\n var spEvent = document.createEvent('Event');\n spEvent.initEvent('sp_submit', true, true);\n this.dispatchEvent(spEvent);\n }\n catch(ErrorMessage)\n {\n console.error('spFormElementPrototype()\nError sending \"sp_submit\" event from HTMLFormElement.\nprototype.submit: ' + ErrorMessage);\n }\n sp_old_HTMLFormElementPrototype_submit.apply\n(this);\n };\n }\n catch(ErrorMessage)\n {\n console.error('spFormElementPrototype() Error\nattaching to HTMLFormElement.prototype.submit: ' +\nErrorMessage);\n }\n try\n {\n if (typeof __doPostBack == 'function')\n {\n var sp_old__doPostBack = __doPostBack;\n __doPostBack = function(eventTarget,\neventArgument)\n {\n try\n {\n var spEvent = document.createEvent\n('Event');\n spEvent.initEvent('sp_submit', true, true);\n window.dispatchEvent(spEvent);\n }\n catch(ErrorMessage)\n {\n console.error('spFormElementPrototype()\nError sending \"sp_submit\" event from __doPostBack(): '\n+ ErrorMessage);\n }\n sp_old__doPostBack(eventTarget,\neventArgument);\n };\n }\n }\n catch(ErrorMessage)\n {\n console.error('spFormElementPrototype() Error\nattaching to __doPostBack(): ' + ErrorMessage);\n }\n })();</script><link href=\"https://fonts.googleapis.\ncom/icon?family=Material+Icons\" rel=\"stylesheet\"><link\nhref=\"https://fonts.googleapis.com/icon?\nfamily=Material+Icons+Outlined\" rel=\"stylesheet\"></head>\n\n <body data-new-gr-c-s-check-loaded=\"14.990.0\" datagr-ext-installed=\"\">\n<main role=\"main\">\n<div class=\"py-5 bg-light\">\n<div class=\"container\">\n<h1 class=\"my-4 display-4 text-center\">PO : {{$node[\"Get payment_due_on dates with po_num &POI email\"].json[\"data\"][0][\"order\"][\"po_num\"][\"po_num\"]}}SD Payment Date is almost here</h1>\n<p class=\"lead text-center\">On {{$node[\"Get payment_due_on dates with po_num &POI email\"].json[\"data\"][0][\"payment_due_on\"]}} against po:{{$node[\"Get payment_due_on dates with po_num &POI email\"].json[\"data\"][0][\"order\"][\"po_num\"][\"po_num\"]}} will be overdue for receiving payment against Invoice {PO Invoice Number(s)}. Please ensure payment for this Purchase Order is made so that payments to Vendors don’t experience any delays</p>\n<div><img class=\"my-2\" src=\"\" width=\"100%\" /></div>\n</div>\n</div>\n</main><footer class=\"text-muted py-5\">\n<div class=\"container\">\n<div class=\"row\">\n<div class=\"col-md-8\">\n<p class=\"mb-1\">Copyright &copy; OpCommerce Online PVT\nLTD, All rights reserved.</p>\n<p class=\"mb-0\">Please email us on <a href=\"\nsupport@shakedeal.com\">support@shakedeal.com</a> in\ncase of any queries.\n</div>\n<div class=\"col-md-4\">\n<p class=\"float-right\"><a href=\"#\">Back to top</a></p>\n</div>\n</div>\n</div>\n</footer>\n</body></html>",
+        "options": {}
+      },
+      "name": "SD Payment Due Date reminder to POI",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        1590,
+        450
+      ],
+      "credentials": {
+        "smtp": "smtp(sai)creds"
+      }
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "dms_url",
+              "value": "=https://balcoqa.mozart.shakedeal.com"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Global",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        460,
+        450
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "updatedAt": "2021-03-27T15:26:58.875Z"
+}
