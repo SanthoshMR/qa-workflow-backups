@@ -1,0 +1,279 @@
+{
+  "active": true,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "globals": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "post the member object",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get user details": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "prepare member object": {
+      "main": [
+        [
+          {
+            "node": "send the member object",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "prepare member object",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get user details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-07-12T08:01:25.261Z",
+  "id": "74",
+  "name": "Order_Aged:adding and updating member in SDStore",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        120,
+        140
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "member",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        260
+      ],
+      "webhookId": "8439a9f6-b9f7-4b89-b92d-fd860c6fe91f",
+      "credentials": {
+        "httpBasicAuth": "SD Basic Auth"
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let member_object={};\nmember_object.id= Array.isArray($node[\"Webhook\"].json[\"body\"][\"item\"])?$node[\"Webhook\"].json[\"body\"][\"item\"][0]:$node[\"Webhook\"].json[\"body\"][\"item\"];\nmember_object.name= $node[\"Get user details\"].json[\"data\"][\"first_name\"];\nmember_object.status = $node[\"Webhook\"].json[\"body\"][\"action\"] === \"delete\"?\"0\":\"1\"\nitems[0].json.member_object = member_object\nreturn items;\n"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        950,
+        310
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "SDstore_url",
+              "value": "=https://sdqa.shakedeal.com/index.php?dispatch=wfs_update.initiate_update"
+            },
+            {
+              "name": "dms_url",
+              "value": "=https://dmsqa.shakedeal.com"
+            },
+            {
+              "name": "hash",
+              "value": "=wfs%#hash"
+            },
+            {
+              "name": "action",
+              "value": "=add_member"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        420,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{Object.keys($node[\"Webhook\"].json[\"body\"][\"payload\"][\"email\"]).join(', ')}}",
+              "operation": "contains",
+              "value2": "=first_name"
+            }
+          ],
+          "number": []
+        },
+        "combineOperation": "any"
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        580,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"globals\"].json[\"dms_url\"]}}/users/{{$node[\"globals\"].json[\"body\"][\"payload\"][\"email\"]}}",
+        "options": {}
+      },
+      "name": "Get user details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        800,
+        310
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let item_id = $node[\"Webhook\"].json[\"body\"][\"item\"]\nlet member_object={};\nmember_object.id= Array.isArray(item_id)?item_id[0]:item_id;\nmember_object.name= $node[\"Webhook\"].json[\"body\"][\"payload\"][\"email\"][\"first_name\"];\nmember_object.status = $node[\"Webhook\"].json[\"body\"][\"action\"] === \"delete\"?\"0\":\"1\"\nitems[0].json.member_object = member_object\nreturn items;\n"
+      },
+      "name": "prepare member object",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        790,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"globals\"].json[\"SDstore_url\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "hash",
+              "value": "={{$node[\"globals\"].json[\"hash\"]}}"
+            },
+            {
+              "name": "action",
+              "value": "={{$node[\"globals\"].json[\"action\"]}}"
+            },
+            {
+              "name": "wfs_data",
+              "value": "={{$node[\"prepare member object\"].json[\"member_object\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "send the member object",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1010,
+        160
+      ],
+      "credentials": {
+        "httpBasicAuth": "SD Basic Auth"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"globals\"].json[\"SDstore_url\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "hash",
+              "value": "={{$node[\"globals\"].json[\"hash\"]}}"
+            },
+            {
+              "name": "action",
+              "value": "={{$node[\"globals\"].json[\"action\"]}}"
+            },
+            {
+              "name": "wfs_data",
+              "value": "={{$node[\"Function\"].json[\"member_object\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "post the member object",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1140,
+        310
+      ],
+      "credentials": {
+        "httpBasicAuth": "SD Basic Auth"
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "updatedAt": "2021-07-27T13:21:51.889Z"
+}
