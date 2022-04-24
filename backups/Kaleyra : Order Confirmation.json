@@ -274,7 +274,10 @@
         520
       ],
       "credentials": {
-        "httpHeaderAuth": "SD-Dms-Token"
+        "httpHeaderAuth": {
+          "id": "10",
+          "name": "SD-Dms-Token"
+        }
       }
     },
     {
@@ -310,7 +313,10 @@
         350
       ],
       "credentials": {
-        "httpHeaderAuth": "SD-Dms-Token"
+        "httpHeaderAuth": {
+          "id": "10",
+          "name": "SD-Dms-Token"
+        }
       }
     },
     {
@@ -336,7 +342,10 @@
         350
       ],
       "credentials": {
-        "httpHeaderAuth": "SD-Dms-Token"
+        "httpHeaderAuth": {
+          "id": "10",
+          "name": "SD-Dms-Token"
+        }
       }
     },
     {
@@ -370,7 +379,10 @@
         350
       ],
       "credentials": {
-        "httpBasicAuth": "basic creds"
+        "httpBasicAuth": {
+          "id": "30",
+          "name": "basic creds"
+        }
       }
     },
     {
@@ -412,7 +424,10 @@
         520
       ],
       "credentials": {
-        "httpBasicAuth": "basic creds"
+        "httpBasicAuth": {
+          "id": "30",
+          "name": "basic creds"
+        }
       }
     },
     {
@@ -504,7 +519,10 @@
       ],
       "webhookId": "cb191b9c-ddaa-4fbe-9291-c056b947357c",
       "credentials": {
-        "httpBasicAuth": "SD Basic Auth"
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
       }
     },
     {
@@ -522,5 +540,6 @@
   ],
   "settings": {},
   "staticData": null,
+  "tags": [],
   "updatedAt": "2022-04-07T12:32:26.056Z"
 }
