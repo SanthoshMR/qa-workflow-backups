@@ -1,0 +1,350 @@
+{
+  "active": false,
+  "connections": {
+    "extracting subject and po_number": {
+      "main": [
+        [
+          {
+            "node": "Extract the tr values",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Move Binary Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reading the Email": {
+      "main": [
+        [
+          {
+            "node": "extracting subject and po_number",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract the tr values": {
+      "main": [
+        [
+          {
+            "node": "extracting the buyer details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "extracting the buyer details": {
+      "main": [
+        [
+          {
+            "node": "globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Move Binary Data": {
+      "main": [
+        [
+          {
+            "node": "post the file to dms",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "globals": {
+      "main": [
+        [
+          {
+            "node": "Merging the globals and file Id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "post the file to dms": {
+      "main": [
+        [
+          {
+            "node": "Merging the globals and file Id",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merging the globals and file Id": {
+      "main": [
+        [
+          {
+            "node": "posting the globals and Id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-02-24T05:45:02.529Z",
+  "id": "32",
+  "name": "extracting the data from mail and posting the data to dms(balco)",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let po=items[0].json.subject.match(/\\d+/g)\nitems[0].json.po_number=po\nlet sb=items[0].json.subject.split(\":\");\nitems[0].json.subject=sb[1]\nitems[0].json.attachmentIndex = items[0].binary ? Object.values(items[0].binary).findIndex(key => key.mimeType === \"application/pdf\") : -1;\nitems[0].json.data = items[0].binary[items[0].json.attachmentIndex];\n\n\nreturn items;\n"
+      },
+      "name": "extracting subject and po_number",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        590,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "format": "resolved",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "name": "Reading the Email",
+      "type": "n8n-nodes-base.emailReadImap",
+      "typeVersion": 1,
+      "position": [
+        410,
+        300
+      ],
+      "credentials": {
+        "imap": "Imap creds(sai)"
+      }
+    },
+    {
+      "parameters": {
+        "dataPropertyName": "=html",
+        "extractionValues": {
+          "values": [
+            {
+              "key": "item",
+              "cssSelector": "tr",
+              "returnArray": true
+            },
+            {
+              "key": "prducts",
+              "cssSelector": "td",
+              "returnArray": true
+            }
+          ]
+        },
+        "options": {
+          "trimValues": false
+        }
+      },
+      "name": "Extract the tr values",
+      "type": "n8n-nodes-base.htmlExtract",
+      "typeVersion": 1,
+      "position": [
+        790,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let item_length = items[0].json.item.length\nfor(i=0;i<item_length;i++){\n    if(items[0].json.item[i].includes(\"Buyer Name:\")){\n       let line=items[0].json.item[i].split(\":\")\n       items[0].json.Buyer_name=line[1]\n    }else if(items[0].json.item[i].includes(\"Buyer Contact Number:\")){\n       let line=items[0].json.item[i].split(\":\")\n       items[0].json.Buyer_phone=line[1]\n    }else if(items[0].json.item[i].includes(\"Buyer Email Address:\")){\n       let line=items[0].json.item[i].split(\":\")\n       items[0].json.Buyer_email=line[1]\n    }else if(items[0].json.item[i].includes(\"Item text:\")){\n       let line=items[0].json.item[i+1]\n       //let list=line[1].split(\";\");\n       items[0].json.items_list=line;\n    }\n}\n\nreturn items;"
+      },
+      "name": "extracting the buyer details",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "setAllData": false,
+        "sourceKey": "=attachment_{{$node[\"extracting subject and po_number\"].json[\"attachmentIndex\"]}}",
+        "options": {
+          "keepSource": true,
+          "keepAsBase64": true
+        }
+      },
+      "name": "Move Binary Data",
+      "type": "n8n-nodes-base.moveBinaryData",
+      "typeVersion": 1,
+      "position": [
+        790,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "buyer_name",
+              "value": "={{$json[\"Buyer_name\"]}}"
+            },
+            {
+              "name": "buyer_email",
+              "value": "={{$json[\"Buyer_email\"]}}"
+            },
+            {
+              "name": "po_number",
+              "value": "={{$node[\"extracting subject and po_number\"].json[\"po_number\"][0]}}"
+            },
+            {
+              "name": "from_mail",
+              "value": "={{$node[\"extracting subject and po_number\"].json[\"from\"][\"value\"][0][\"address\"]}}"
+            },
+            {
+              "name": "to_mail",
+              "value": "={{$node[\"extracting subject and po_number\"].json[\"to\"][\"value\"][0][\"address\"]}}"
+            },
+            {
+              "name": "subject",
+              "value": "={{$node[\"extracting subject and po_number\"].json[\"subject\"]}}"
+            },
+            {
+              "name": "items_list",
+              "value": "={{$json[\"items_list\"]}}"
+            }
+          ],
+          "number": [
+            {
+              "name": "buyer_contact",
+              "value": "={{$json[\"Buyer_phone\"]}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1210,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "https://dmsqa.shakedeal.com/files",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {
+          "bodyContentType": "multipart-form-data"
+        },
+        "sendBinaryData": true,
+        "binaryPropertyName": "=input_file:attachment_{{$node[\"Move Binary Data\"].json[\"attachmentIndex\"]}}"
+      },
+      "name": "post the file to dms",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        420
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header Auth sai creds"
+      }
+    },
+    {
+      "parameters": {
+        "mode": "mergeByIndex"
+      },
+      "name": "Merging the globals and file Id",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 1,
+      "position": [
+        1280,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "https://dmsqa.shakedeal.com/items/routing_client_orders",
+        "allowUnauthorizedCerts": true,
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "={{$node[\"globals\"].parameter[\"values\"][\"string\"][0][\"name\"]}}",
+              "value": "={{$json[\"buyer_name\"]}}"
+            },
+            {
+              "name": "={{$node[\"globals\"].parameter[\"values\"][\"string\"][1][\"name\"]}}",
+              "value": "={{$json[\"buyer_email\"]}}"
+            },
+            {
+              "name": "=input_file",
+              "value": "={{$json[\"data\"][\"id\"]}}"
+            },
+            {
+              "name": "={{$node[\"globals\"].parameter[\"values\"][\"string\"][2][\"name\"]}}",
+              "value": "={{$json[\"po_number\"]}}"
+            },
+            {
+              "name": "={{$node[\"globals\"].parameter[\"values\"][\"string\"][3][\"name\"]}}",
+              "value": "={{$json[\"from_mail\"]}}"
+            },
+            {
+              "name": "={{$node[\"globals\"].parameter[\"values\"][\"string\"][4][\"name\"]}}",
+              "value": "={{$json[\"to_mail\"]}}"
+            },
+            {
+              "name": "={{$node[\"globals\"].parameter[\"values\"][\"number\"][0][\"name\"]}}",
+              "value": "={{$json[\"buyer_contact\"]}}"
+            },
+            {
+              "name": "={{$node[\"globals\"].parameter[\"values\"][\"string\"][5][\"name\"]}}",
+              "value": "={{$json[\"subject\"]}}"
+            },
+            {
+              "name": "={{$node[\"globals\"].parameter[\"values\"][\"string\"][6][\"name\"]}}",
+              "value": "={{$json[\"items_list\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "posting the globals and Id",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1490,
+        420
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header Auth sai creds"
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "updatedAt": "2021-03-24T11:27:36.901Z"
+}
