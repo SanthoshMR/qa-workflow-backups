@@ -393,7 +393,10 @@
         740
       ],
       "credentials": {
-        "imap": "Imap creds(sai)"
+        "imap": {
+          "id": "18",
+          "name": "Imap creds(sai)"
+        }
       }
     },
     {
@@ -534,7 +537,10 @@
         980
       ],
       "credentials": {
-        "httpHeaderAuth": "header Auth sai creds"
+        "httpHeaderAuth": {
+          "id": null,
+          "name": "header Auth sai creds"
+        }
       }
     },
     {
@@ -615,7 +621,10 @@
         660
       ],
       "credentials": {
-        "httpHeaderAuth": "header Auth sai creds"
+        "httpHeaderAuth": {
+          "id": null,
+          "name": "header Auth sai creds"
+        }
       }
     },
     {
@@ -636,7 +645,10 @@
         610
       ],
       "credentials": {
-        "httpHeaderAuth": "header Auth sai creds"
+        "httpHeaderAuth": {
+          "id": null,
+          "name": "header Auth sai creds"
+        }
       }
     },
     {
@@ -678,7 +690,10 @@
         760
       ],
       "credentials": {
-        "httpHeaderAuth": "header Auth sai creds"
+        "httpHeaderAuth": {
+          "id": null,
+          "name": "header Auth sai creds"
+        }
       }
     },
     {
@@ -696,7 +711,10 @@
         740
       ],
       "credentials": {
-        "httpHeaderAuth": "header Auth sai creds"
+        "httpHeaderAuth": {
+          "id": null,
+          "name": "header Auth sai creds"
+        }
       }
     },
     {
@@ -843,7 +861,10 @@
         650
       ],
       "credentials": {
-        "httpHeaderAuth": "header Auth sai creds"
+        "httpHeaderAuth": {
+          "id": null,
+          "name": "header Auth sai creds"
+        }
       }
     },
     {
@@ -860,7 +881,10 @@
         760
       ],
       "credentials": {
-        "httpHeaderAuth": "header Auth sai creds"
+        "httpHeaderAuth": {
+          "id": null,
+          "name": "header Auth sai creds"
+        }
       }
     },
     {
@@ -905,7 +929,10 @@
         690
       ],
       "credentials": {
-        "httpHeaderAuth": "header Auth sai creds"
+        "httpHeaderAuth": {
+          "id": null,
+          "name": "header Auth sai creds"
+        }
       }
     },
     {
@@ -922,12 +949,16 @@
         690
       ],
       "credentials": {
-        "smtp": "smtp(sai)creds"
+        "smtp": {
+          "id": "17",
+          "name": "smtp(sai)creds"
+        }
       },
       "disabled": true
     }
   ],
   "settings": {},
   "staticData": null,
+  "tags": [],
   "updatedAt": "2021-03-24T11:26:52.801Z"
 }
