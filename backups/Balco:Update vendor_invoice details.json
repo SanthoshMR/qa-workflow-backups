@@ -1,0 +1,288 @@
+{
+  "active": true,
+  "connections": {
+    "Wait for vendor_invoice details": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Get the invoice details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the invoice details": {
+      "main": [
+        [
+          {
+            "node": "Construction for updating vendor_invoice details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Construction for updating vendor_invoice details": {
+      "main": [
+        [
+          {
+            "node": "Update the vendor_invoice details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update the vendor_invoice details": {
+      "main": [
+        [
+          {
+            "node": "Get all the vendor_invoices based on order ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get all the vendor_invoices based on order ": {
+      "main": [
+        [
+          {
+            "node": "Construct for Updating shakedeal_payments",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Construct for Updating shakedeal_payments": {
+      "main": [
+        [
+          {
+            "node": "SplitInBatches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SplitInBatches": {
+      "main": [
+        [
+          {
+            "node": "Update the shakedeal_payments",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update the shakedeal_payments": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "createdAt": "2021-04-07T09:00:31.499Z",
+  "id": "59",
+  "name": "Balco:Update vendor_invoice details",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "get_vendor_invoice_details",
+        "options": {}
+      },
+      "name": "Wait for vendor_invoice details",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        500,
+        380
+      ],
+      "webhookId": "d80a62ed-5a62-4d89-af48-81b88e567fab",
+      "credentials": {
+        "httpBasicAuth": "Balco_basic_auth"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_vendor_invoice_details/{{$node[\"Wait for vendor_invoice details\"].json[\"body\"][\"item\"]}}?fields=vendor_payment,total_paid_amount,total_percentage_paid,remaining_to_pay,invoice_value,shakedeal_payments.sd_mozart_shakedeal_payments_id.*,order.order_id",
+        "options": {}
+      },
+      "name": "Get the invoice details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        870,
+        380
+      ],
+      "credentials": {
+        "httpHeaderAuth": "Balcoqa-Dms-Token"
+      }
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "dms_url",
+              "value": "={{ $node[\"Wait for vendor_invoice details\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ? \"https://zeus.shakedeal.com\" : \"https://balcoqa.mozart.shakedeal.com\" }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        690,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let invoice_amount = $node[\"Get the invoice details\"].json.data[\"invoice_value\"];\nlet paid_amount = $node[\"Get the invoice details\"].json.data[\"total_paid_amount\"];\n\n\n\nlet remaining_to_pay = invoice_amount-paid_amount\nlet total_percentage_paid = (paid_amount/invoice_amount)*100;\n\nif(total_percentage_paid>0&&total_percentage_paid<90){\n   items[0].json.vendor_payment = \"partiallypaid\"\n   \n   \n}else if(total_percentage_paid>90){\n    items[0].json.vendor_payment = \"paymentreleased\"\n\n}else items[0].json.vendor_payment = \"paymentpending\"\n\n\n\nitems[0].json.invoice_amount =invoice_amount \nitems[0].json.paid_amount = paid_amount \nitems[0].json.remaining_to_pay = remaining_to_pay \nitems[0].json.total_percentage_paid = total_percentage_paid \nreturn items;"
+      },
+      "name": "Construction for updating vendor_invoice details",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1090,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_vendor_invoice_details/{{$node[\"Wait for vendor_invoice details\"].json[\"body\"][\"item\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "remaining_to_pay",
+              "value": "={{$node[\"Construction for updating vendor_invoice details\"].json[\"remaining_to_pay\"]}}"
+            },
+            {
+              "name": "total_percentage_paid",
+              "value": "={{$node[\"Construction for updating vendor_invoice details\"].json[\"total_percentage_paid\"]}}"
+            },
+            {
+              "name": "vendor_payment",
+              "value": "={{$node[\"Construction for updating vendor_invoice details\"].json[\"vendor_payment\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update the vendor_invoice details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1310,
+        380
+      ],
+      "credentials": {
+        "httpHeaderAuth": "Balcoqa-Dms-Token"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_vendor_invoice_details?filter={\"shakedeal_payments\":{\"sd_mozart_shakedeal_payments_id\":{\"invoice_number\":{\"_eq\":\"{{$node[\"Get the invoice details\"].json[\"data\"][\"shakedeal_payments\"][0][\"sd_mozart_shakedeal_payments_id\"][\"invoice_number\"]}}\"}}}}&fields=shakedeal_payments.sd_mozart_shakedeal_payments_id.*",
+        "options": {}
+      },
+      "name": "Get all the vendor_invoices based on order ",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1530,
+        380
+      ],
+      "credentials": {
+        "httpHeaderAuth": "Balcoqa-Dms-Token"
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "functionCode": "let shakedeal_payments =  $node[\"Get the invoice details\"].json.data[\"shakedeal_payments\"]\nlet update_shakedeal_payments = []\n\nshakedeal_payments.forEach(function(obj,index){\n        let advice_amount = obj[\"sd_mozart_shakedeal_payments_id\"][\"payment_paid\"]\n        let used_amount = obj[\"sd_mozart_shakedeal_payments_id\"][\"utilized_amount\"]\n        let remaining_balance = advice_amount-used_amount\n        update_shakedeal_payments[index]={};\n        update_shakedeal_payments[index].id= obj[\"sd_mozart_shakedeal_payments_id\"][\"id\"];\n        update_shakedeal_payments[index].remaining_balance_amount = remaining_balance \n        \n        \n        \n\n\n\n})\n\nlet split=[]\nupdate_shakedeal_payments.forEach(function(obj,index){\n      split[index] ={}\n      split[index].json = obj\n\n})\n\nreturn split"
+      },
+      "name": "Construct for Updating shakedeal_payments",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1730,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "batchSize": 100,
+        "options": {}
+      },
+      "name": "SplitInBatches",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 1,
+      "position": [
+        1930,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_shakedeal_payments/{{$node[\"SplitInBatches\"].json[\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "remaining_balance_amount",
+              "value": "={{$node[\"SplitInBatches\"].json[\"remaining_balance_amount\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update the shakedeal_payments",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2130,
+        380
+      ],
+      "credentials": {
+        "httpHeaderAuth": "Balcoqa-Dms-Token"
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "updatedAt": "2021-04-07T14:27:54.903Z"
+}
