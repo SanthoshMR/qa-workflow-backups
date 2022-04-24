@@ -1,0 +1,334 @@
+{
+  "active": true,
+  "connections": {
+    "Receive Approval Request Data": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Get Customer Details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Customer Details": {
+      "main": [
+        [
+          {
+            "node": "Check if Existing Customer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check if Existing Customer": {
+      "main": [
+        [
+          {
+            "node": "Create Approval Request",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create Customer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Customer": {
+      "main": [
+        [
+          {
+            "node": "Create Approval Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Approval Request": {
+      "main": [
+        [
+          {
+            "node": "Get Approval Email Template",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Approval Email Template": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-01-08T09:18:52.671Z",
+  "id": "25",
+  "name": "SD Store: Order for Approval Workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        250,
+        150
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "dmsUrl",
+              "value": "={{ $node[\"Receive Approval Request Data\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ? \"https://zeus.shakedeal.com\" : \"https://dmsqa.shakedeal.com\" }}"
+            },
+            {
+              "name": "workflowsFromEmail",
+              "value": "SD Workflows <workflows@shakedeal.com>"
+            },
+            {
+              "name": "approverGroupEmail",
+              "value": "={{ $node[\"Receive Approval Request Data\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ? \"voucher.ops.approver@shakedeal.com\" : \"vinay.kumar@shakedeal.com\" }}"
+            },
+            {
+              "name": "accountsEmail",
+              "value": "={{ $node[\"Receive Approval Request Data\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ? \"accounts@shakedeal.com\" : \"dev-notifications@shakedeal.com\" }}"
+            },
+            {
+              "name": "dmsIP",
+              "value": "139.59.34.52"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        420,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "sdorder-for-approval",
+        "responseMode": "lastNode",
+        "responseData": "allEntries",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "X-SD-Order-For-Approval",
+                "value": "f84e04d7-576c-451b-844d-e88b5789ae9d"
+              }
+            ]
+          }
+        }
+      },
+      "name": "Receive Approval Request Data",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ],
+      "webhookId": "bcc7a133-5c7f-4d06-83f3-f6eb8c5b663e",
+      "credentials": {
+        "httpBasicAuth": "SD Basic Auth"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dmsUrl\"]}}/items/customers/{{$node[\"Receive Approval Request Data\"].json[\"body\"][\"customer_email\"]}}",
+        "options": {}
+      },
+      "name": "Get Customer Details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        590,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": "SD-Dms-Token"
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [],
+          "boolean": [
+            {
+              "value1": "={{!!$node[\"Get Customer Details\"].json[\"data\"][\"id\"]}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "Check if Existing Customer",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        780,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"dmsUrl\"]}}/items/customers",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "company",
+              "value": "={{$node[\"Receive Approval Request Data\"].json[\"body\"][\"customer_company\"]}}"
+            },
+            {
+              "name": "first_name",
+              "value": "={{$node[\"Receive Approval Request Data\"].json[\"body\"][\"customer_firstname\"]}}"
+            },
+            {
+              "name": "last_name",
+              "value": "={{$node[\"Receive Approval Request Data\"].json[\"body\"][\"customer_lastname\"]}}"
+            },
+            {
+              "name": "id",
+              "value": "={{$node[\"Receive Approval Request Data\"].json[\"body\"][\"customer_email\"]}}"
+            },
+            {
+              "name": "address",
+              "value": "={{$node[\"Receive Approval Request Data\"].json[\"body\"][\"customer_address\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Create Customer",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        910,
+        490
+      ],
+      "credentials": {
+        "httpHeaderAuth": "SD-Dms-Token"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"dmsUrl\"]}}/items/approval_request",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "id",
+              "value": "={{$node[\"Receive Approval Request Data\"].json[\"body\"][\"reference_number\"]}}"
+            },
+            {
+              "name": "sales_agent_name",
+              "value": "={{$node[\"Receive Approval Request Data\"].json[\"body\"][\"sales_person_name\"]}}"
+            },
+            {
+              "name": "sales_agent_email",
+              "value": "={{$node[\"Receive Approval Request Data\"].json[\"body\"][\"sales_person_email\"]}}"
+            },
+            {
+              "name": "total_order_value",
+              "value": "={{$node[\"Receive Approval Request Data\"].json[\"body\"][\"total_order_value\"]}}"
+            },
+            {
+              "name": "advance_amount",
+              "value": "={{$node[\"Receive Approval Request Data\"].json[\"body\"][\"advance_paid\"]}}"
+            },
+            {
+              "name": "payment_terms",
+              "value": "={{$node[\"Receive Approval Request Data\"].json[\"body\"][\"payment_terms\"]}}"
+            },
+            {
+              "name": "customer",
+              "value": "={{$node[\"Receive Approval Request Data\"].json[\"body\"][\"customer_email\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Create Approval Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": "SD-Dms-Token"
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{$node[\"Globals\"].json[\"workflowsFromEmail\"]}}",
+        "toEmail": "={{$node[\"Globals\"].json[\"approverGroupEmail\"]}}",
+        "subject": "Gift Voucher Ops: Credit Order for Approval",
+        "html": "=<style id=\"stndz-style\"></style>\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1, shrink-to-fit=no\">\n<meta name=\"description\" content=\"\">\n<style type=\"text/css\">.tg  {border-collapse:collapse;border-spacing:0;margin:0px auto;}.tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;word-break:normal;}.tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}.tg .tg-1wig{font-weight:bold;text-align:left;vertical-align:top}.tg .tg-0lax{text-align:left;vertical-align:top}@media screen and (max-width: 767px) {.tg {width: auto !important;}.tg col {width: auto !important;}.tg-wrap {overflow-x: auto;-webkit-overflow-scrolling: touch;margin: auto 0px;}}</style>\n\n\n<!-- Bootstrap core CSS -->\n<link href=\"https://marketing.shakedeal.com/assets/templates/5fe306e5a4c97/css/bootstrap.min.css\" rel=\"stylesheet\">\n<link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons+Outlined\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons+Outlined\" rel=\"stylesheet\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u0\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/skin.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u1\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/content.inline.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u0\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/skin.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u1\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/content.inline.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u0\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/skin.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u1\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/content.inline.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u0\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/skin.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u1\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/content.inline.min.css\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons+Outlined\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons+Outlined\" rel=\"stylesheet\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u0\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/skin.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u1\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/content.inline.min.css\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons+Outlined\" rel=\"stylesheet\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u0\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/skin.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u1\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/content.inline.min.css\">\n<style id=\"stndz-style\"></style>\n\n<main role=\"main\">\n      <div class=\"py-5 bg-light\" id=\"mce_8\" style=\"position: relative;\" spellcheck=\"false\"><div class=\"container\" id=\"mce_12\" style=\"position: relative; text-align: center;\" spellcheck=\"false\"><!-- <div class=\"text-center mb-4\">\n            <div><img src=\"https://marketing.shakedeal.com/assets/templates/5ffea7e691f59/image/logo.png\" width=\"350px\" /></div>\n          </div> --> <img id=\"zW2lO\" builder-element=\"\" builder-draggable=\"\" class=\"image-after-change\" src=\"https://marketing.shakedeal.com/files/5fbe3d99407d6/SDLogoColorSmall.png\" style=\"width: 200px; height: 40px; margin: auto;\">\n<h2 class=\"mt-4 mb-4 autocomplete\" id=\"mce_12\" style=\"position: relative;\" spellcheck=\"false\">Gift Order Credit Approval Required</h2>\n<p><span style=\"font-size: 1.25rem; position: relative;\" class=\"autocomplete\" id=\"mce_0\" spellcheck=\"false\">A gifting order with credit terms: {{$json[\"credit_terms\"]}} and below details requires your approval. Please approve/reject this request here: <a href=\"{{$node[\"Globals\"].json[\"dmsUrl\"]}}/admin/collections/approval_request/{{$json[\"reference_number\"]}}\">View Approval Request</a></span></p>\n{{$json[\"approval_details\"]}}\n</main>",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        1450,
+        300
+      ],
+      "credentials": {
+        "smtp": "AWS SES Creds"
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let approvalDetails = '<div class=\"tg-wrap builder-class-element-selected mce-content-body\" id=\"mce_9\" style=\"position: relative;\" spellcheck=\"false\" contenteditable=\"true\"><table class=\"tg mce-item-table\"><tbody><tr><td class=\"tg-1wig\"><div class=\"tinymce-td-fix\" id=\"mce_11\" style=\"position: relative;\" spellcheck=\"false\" data-mce-style=\"position: relative;\">Customer Name</div></td><td class=\"tg-0lax\">{{customer_name}}</td></tr><tr><td class=\"tg-1wig\">Customer Company</td><td class=\"tg-0lax\">{{customer_company}}</td></tr><tr><td class=\"tg-1wig\">Customer Email</td><td class=\"tg-0lax\"><div class=\"tinymce-td-fix\" id=\"mce_10\" style=\"position: relative;\" spellcheck=\"false\" data-mce-style=\"position: relative;\">{{customer_email}}</div></td></tr><tr><td class=\"tg-1wig\">Total Order Value</td><td class=\"tg-0lax\">{{total_order_value}}</td></tr><tr><td class=\"tg-1wig\">Advance</td><td class=\"tg-0lax\">{{advance_amount}}</td></tr><tr><td class=\"tg-1wig\">Credit Terms</td><td class=\"tg-0lax\">{{credit_terms}}</td></tr><tr><td class=\"tg-1wig\">Sales Agent</td><td class=\"tg-0lax\">{{sales_agent_name}}</td></tr><tr><td class=\"tg-1wig\">Products</td><td class=\"tg-0lax\">{{products}}</td></tr></tbody></table></div>';\nlet newItem = {json: {}};\nlet paymentTerms = '';\nswitch($item(0).$node[\"Receive Approval Request Data\"].json[\"body\"][\"payment_terms\"]) {\n  case \"advance\":\n    paymentTerms = \"Advance\";\n    break;\n  case \"on_delivery\":\n    paymentTerms = \"On Delivery\";\n    break;\n  case \"cheque_on_delivery\":\n    paymentTerms = \"Cheque On Delivery\";\n    break;\n  case \"net3\":\n    paymentTerms = \"3 Days Credit\";\n    break;\n  case \"net5\":\n    paymentTerms = \"5 Days Credit\";\n    break;\n  case \"net7\":\n    paymentTerms = \"7 Days Credit\";\n    break;\n  case \"net10\":\n    paymentTerms = \"10 Days Credit\";\n    break;\n  case \"net15\":\n    paymentTerms = \"15 Days Credit\";\n    break;\n  case \"net21\":\n    paymentTerms = \"21 Days Credit\";\n    break;\n  case \"net30\":\n    paymentTerms = \"30 Days Credit\";\n    break;\n  case \"net45\":\n    paymentTerms = \"45 Days Credit\";\n    break;\n  case \"net60\":\n    paymentTerms = \"60 Days Credit\";\n    break;\n}\n\nlet customerName = $item(0).$node[\"Receive Approval Request Data\"].json[\"body\"][\"customer_firstname\"] + ' ' + $item(0).$node[\"Receive Approval Request Data\"].json[\"body\"][\"customer_lastname\"];\nlet customerEmail = $item(0).$node[\"Receive Approval Request Data\"].json[\"body\"][\"customer_email\"];\nlet customerCompany = $item(0).$node[\"Receive Approval Request Data\"].json[\"body\"][\"customer_company\"];\nlet orderValue = $item(0).$node[\"Receive Approval Request Data\"].json[\"body\"][\"total_order_value\"];\nlet advance = $item(0).$node[\"Receive Approval Request Data\"].json[\"body\"][\"advance_paid\"];\nlet creditTerms = $item(0).$node[\"Receive Approval Request Data\"].json[\"body\"][\"payment_terms\"];\nlet salesAgent = $item(0).$node[\"Receive Approval Request Data\"].json[\"body\"][\"sales_person_name\"];\nlet products = $item(0).$node[\"Receive Approval Request Data\"].json[\"body\"][\"products\"].join(\"\");\nproducts = products.replace(\"\\r\\n\", \"<br />\");\napprovalDetails = approvalDetails.replace(\"{{customer_name}}\", customerName);\napprovalDetails = approvalDetails.replace(\"{{customer_email}}\", customerEmail);\napprovalDetails = approvalDetails.replace(\"{{customer_company}}\", customerCompany);\napprovalDetails = approvalDetails.replace(\"{{total_order_value}}\", orderValue);\napprovalDetails = approvalDetails.replace(\"{{advance_amount}}\", advance);\napprovalDetails = approvalDetails.replace(\"{{credit_terms}}\", paymentTerms);\napprovalDetails = approvalDetails.replace(\"{{sales_agent_name}}\", salesAgent);\napprovalDetails = approvalDetails.replace(\"{{products}}\", products);\nnewItem.json.approval_details = approvalDetails;\nnewItem.json.credit_terms = paymentTerms;\nnewItem.json.reference_number = $item(0).$node[\"Receive Approval Request Data\"].json[\"body\"][\"reference_number\"];\nreturn [newItem];"
+      },
+      "name": "Get Approval Email Template",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1260,
+        300
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "updatedAt": "2021-07-29T05:30:49.682Z"
+}
