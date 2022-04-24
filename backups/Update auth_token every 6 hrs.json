@@ -91,12 +91,16 @@
         360
       ],
       "credentials": {
-        "httpHeaderAuth": "Balco_header_auth"
+        "httpHeaderAuth": {
+          "id": "16",
+          "name": "Balco_header_auth"
+        }
       },
       "disabled": true
     }
   ],
   "settings": {},
   "staticData": null,
+  "tags": [],
   "updatedAt": "2021-03-31T17:58:33.914Z"
 }
