@@ -1,0 +1,1632 @@
+{
+  "active": true,
+  "connections": {
+    "filter & get assigner based on priority": {
+      "main": [
+        [
+          {
+            "node": "Get member details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get the status ": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "wait for order": {
+      "main": [
+        [
+          {
+            "node": "globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "post the order to order history": {
+      "main": [
+        [
+          {
+            "node": "capture id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "update the assignee status ": {
+      "main": [
+        [
+          {
+            "node": "Check for order",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create the order in DMS": {
+      "main": [
+        [
+          {
+            "node": "Prepare order data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get the orderid": {
+      "main": [
+        [
+          {
+            "node": "Check the order history",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update the assignee in DMS orders": {
+      "main": [
+        [
+          {
+            "node": "Update order data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "capture id": {
+      "main": [
+        [
+          {
+            "node": "update the assignee status ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "globals": {
+      "main": [
+        [
+          {
+            "node": "Get the status and team",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the team": {
+      "main": [
+        [
+          {
+            "node": "get the status ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for order": {
+      "main": [
+        [
+          {
+            "node": "Condition for create or update",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare order data": {
+      "main": [
+        [
+          {
+            "node": "post to SD store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update order data": {
+      "main": [
+        [
+          {
+            "node": "post to SD_store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get member details": {
+      "main": [
+        [
+          {
+            "node": "post the order to order history",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Get Operation Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "filter & get assigner based on priority",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Operation Agent": {
+      "main": [
+        [
+          {
+            "node": "Post to order history",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post to order history": {
+      "main": [
+        [
+          {
+            "node": "Get member to team id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get member to team id": {
+      "main": [
+        [
+          {
+            "node": "Check for order",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Condition for create or update": {
+      "main": [
+        [
+          {
+            "node": "Create order in order history",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "get the orderid",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "check for customer",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create the order source",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for order source": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create the order source": {
+      "main": [
+        [
+          {
+            "node": "check for customer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the status and team": {
+      "main": [
+        [
+          {
+            "node": "Get the team",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check the order history": {
+      "main": [
+        [
+          {
+            "node": "IF1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF1": {
+      "main": [
+        [
+          {
+            "node": "create order history",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Post order history",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create order history": {
+      "main": [
+        [
+          {
+            "node": "Update the assignee in DMS orders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post order history": {
+      "main": [
+        [
+          {
+            "node": "Update order details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update order details": {
+      "main": [
+        [
+          {
+            "node": "Get member_team id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create order in order history": {
+      "main": [
+        [
+          {
+            "node": "Check for order source",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get member_team id": {
+      "main": [
+        [
+          {
+            "node": "Update the assignee status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update the assignee status": {
+      "main": [
+        [
+          {
+            "node": "Update order data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check for customer": {
+      "main": [
+        [
+          {
+            "node": "IF2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF2": {
+      "main": [
+        [
+          {
+            "node": "create the order in DMS",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "create a user",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create a user": {
+      "main": [
+        [
+          {
+            "node": "create the order in DMS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-07-13T12:03:28.824Z",
+  "id": "75",
+  "name": "Order_Aged: Assign order to member",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        160,
+        110
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"globals\"].json[\"dms_url\"]}}/items/sd_assignee_details?filter={\"_and\": [{\"team_name\": {\"team_name\":{\"_eq\":\"{{$node[\"Get the status and team\"].json[\"team\"]}}\"}}},{\"status\":{\"_eq\":false}}]}&sort=priority&limit=1",
+        "options": {}
+      },
+      "name": "filter & get assigner based on priority",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1060,
+        280
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"globals\"].json[\"dms_url\"]}}/items/orders",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "assigned_by",
+              "value": "={{$node[\"globals\"].json[\"assigned_by\"]}}"
+            },
+            {
+              "name": "assigned_to",
+              "value": "={{$node[\"Get the status and team\"].json[\"action\"]===\"new\"?$node[\"Get Operation Agent\"].json[\"data\"][0][\"operation_agent\"]:$node[\"Get member details\"].json[\"data\"][\"id\"]}}"
+            },
+            {
+              "name": "order_status",
+              "value": "={{$node[\"Get the status and team\"].json[\"status\"]==\"OVC\" || $node[\"Get the status and team\"].json[\"status\"]==\"OVP\" || $node[\"Get the status and team\"].json[\"status\"]==\"OVI\" ?\"OV\":$node[\"Get the status and team\"].json[\"status\"]}}"
+            },
+            {
+              "name": "id",
+              "value": "={{$node[\"Get the status and team\"].json[\"order_id\"]}}"
+            },
+            {
+              "name": "order_date",
+              "value": "={{$node[\"wait for order\"].json[\"body\"][\"order_detail\"][\"order_date\"]}}"
+            },
+            {
+              "name": "order_value",
+              "value": "={{$node[\"wait for order\"].json[\"body\"][\"order_detail\"][\"order_value\"]}}"
+            },
+            {
+              "name": "team",
+              "value": "={{$node[\"Get the team\"].json[\"data\"][0][\"id\"]}}"
+            },
+            {
+              "name": "order_type",
+              "value": "={{$node[\"wait for order\"].json[\"body\"][\"order_detail\"][\"order_type\"]}}"
+            },
+            {
+              "name": "order_source",
+              "value": "={{$node[\"wait for order\"].json[\"body\"][\"order_detail\"][\"source_of_order\"]}}"
+            },
+            {
+              "name": "customer",
+              "value": "={{$node[\"check for customer\"].json[\"data\"].length !== 0? $node[\"check for customer\"].json[\"data\"][0][\"id\"]:$node[\"create a user\"].json[\"data\"][\"id\"]}}"
+            },
+            {
+              "name": "order_tax",
+              "value": "={{$node[\"wait for order\"].json[\"body\"][\"order_detail\"][\"order_tax\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "create the order in DMS",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3530,
+        60
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"globals\"].json[\"sdStore_url\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "hash",
+              "value": "={{$node[\"globals\"].json[\"hash\"]}}"
+            },
+            {
+              "name": "action",
+              "value": "={{$node[\"globals\"].json[\"action\"]}}"
+            },
+            {
+              "name": "wfs_data",
+              "value": "={{$node[\"Prepare order data\"].json[\"order_object\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "post to SD store",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3910,
+        60
+      ],
+      "credentials": {
+        "httpBasicAuth": "basic creds"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"globals\"].json[\"dms_url\"]}}/items/orders/{{$node[\"Get the status and team\"].json[\"order_id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "assigned_to",
+              "value": "={{$node[\"Get the status and team\"].json[\"action\"]===\"new\"?$node[\"Get Operation Agent\"].json[\"data\"][0][\"operation_agent\"]:$node[\"Get member details\"].json[\"data\"][\"id\"]}}"
+            },
+            {
+              "name": "order_status",
+              "value": "={{$node[\"Get the status and team\"].json[\"status\"]==\"OVC\" || $node[\"Get the status and team\"].json[\"status\"]==\"OVP\" || $node[\"Get the status and team\"].json[\"status\"]==\"OVI\" ?\"OV\":$node[\"Get the status and team\"].json[\"status\"]}}"
+            },
+            {
+              "name": "team",
+              "value": "={{$node[\"Get the team\"].json[\"data\"][0][\"id\"]}}"
+            },
+            {
+              "name": "order_date",
+              "value": "={{$node[\"wait for order\"].json[\"body\"][\"order_detail\"][\"order_date\"]}}"
+            },
+            {
+              "name": "entity",
+              "value": "={{$node[\"wait for order\"].json[\"body\"][\"order_detail\"][\"sd_entity_id \"]}}"
+            },
+            {
+              "name": "shipment_type",
+              "value": "={{$node[\"wait for order\"].json[\"body\"][\"order_detail\"][\"shipment_type_id\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update the assignee in DMS orders",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3370,
+        400
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"globals\"].json[\"sdStore_url\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "hash",
+              "value": "={{$node[\"globals\"].json[\"hash\"]}}"
+            },
+            {
+              "name": "action",
+              "value": "={{$node[\"globals\"].json[\"action\"]}}"
+            },
+            {
+              "name": "wfs_data",
+              "value": "={{$node[\"Update order data\"].json[\"order_object\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "post to SD_store",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        4080,
+        460
+      ],
+      "credentials": {
+        "httpBasicAuth": "basic creds"
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "//let order=$node[\"wait for order\"].json[\"body\"]\nlet orderid=$node[\"wait for order\"].json[\"body\"][\"order_detail\"].orderid\nlet team_id =$node[\"wait for order\"].json[\"body\"].team_id\nlet order_status = $node[\"wait for order\"].json[\"body\"][\"order_detail\"].order_status\n\n\nlet team1=$node[\"globals\"].json[\"team1\"]\nlet team2=$node[\"globals\"].json[\"team2\"]\nlet team3=$node[\"globals\"].json[\"team3\"]\nlet team4=$node[\"globals\"].json[\"team4\"]\nlet team5=$node[\"globals\"].json[\"team5\"]\nlet team6=$node[\"globals\"].json[\"team6\"]\nlet team7=$node[\"globals\"].json[\"team7\"]\nlet team8=$node[\"globals\"].json[\"team8\"]\nlet team9=$node[\"globals\"].json[\"team9\"]\nlet team10=$node[\"globals\"].json[\"team10\"]\nlet team11=$node[\"globals\"].json[\"team11\"]\nlet tea12=$node[\"globals\"].json[\"team12\"]\nlet team13=$node[\"globals\"].json[\"team13\"]\nlet team14=$node[\"globals\"].json[\"team14\"]\n\nlet status1=$node[\"globals\"].json[\"status1\"]\nlet status2=$node[\"globals\"].json[\"status2\"]\nlet status3=$node[\"globals\"].json[\"status3\"]\nlet status4=$node[\"globals\"].json[\"status4\"]\nlet status5=$node[\"globals\"].json[\"status5\"]\nlet status6=$node[\"globals\"].json[\"status6\"]\nlet status7=$node[\"globals\"].json[\"status7\"]\nlet status8=$node[\"globals\"].json[\"status8\"]\nlet status9=$node[\"globals\"].json[\"status9\"]\nlet status10=$node[\"globals\"].json[\"status10\"]\nlet status11=$node[\"globals\"].json[\"status11\"]\nlet status12=$node[\"globals\"].json[\"status12\"]\nlet status13=$node[\"globals\"].json[\"status13\"]\nlet status14=$node[\"globals\"].json[\"status14\"]\nlet team = $node[\"Get the team\"].json[\"data\"][\"team_name\"]\n items[0].json.team_name = team\n\nif(order_status=== \"J\"){\n   items[0].json.status=status1\n}else if(order_status=== \"O\"){\n    items[0].json.status= team === team3?status3:status2\n }else if(order_status=== \"P\"){\n    if(team === team5){\n      items[0].json.status=status5\n    }else if(team === team6){\n      items[0].json.status=status6\n    }else{\n      items[0].json.status=status4\n    }\n }else if(order_status=== \"A\"){\n   items[0].json.status=status7\n }else if(order_status=== \"H\"){\n   items[0].json.status=status8\n }else if(order_status=== \"C\"){\n   items[0].json.status=status9\n }else if(order_status=== \"L\"){\n   items[0].json.status= team === team11?status11:status10\n }else if(order_status=== \"G\"){\n   items[0].json.status=status12\n }else if(order_status=== \"I\"){\n   items[0].json.status=status13\n }else if(order_status=== \"K\"){\n   items[0].json.status=status14\n }\nlet team18 = $node[\"globals\"].json[\"team18\"];\nlet team19 = $node[\"globals\"].json[\"team19\"];\nlet action  = \"\"\nif($node[\"Get the team\"].json[\"data\"][\"team_name\"] === team18 || $node[\"Get the team\"].json[\"data\"][\"team_name\"] === team19){\n   action = \"new\";\n}else {\n   action= \"existing\"\n}\nitems[0].json.action = action\nitems[0].json.orderid=orderid\nitems[0].json.team_id=team_id\nreturn items;"
+      },
+      "name": "get the status ",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        730,
+        300
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "sd_order",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "sd_order_assignee",
+                "value": "5439261085263752"
+              }
+            ]
+          }
+        }
+      },
+      "name": "wait for order",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -10,
+        300
+      ],
+      "webhookId": "ec07cf39-40ac-4609-8c37-fb5186426a61",
+      "credentials": {
+        "httpBasicAuth": "basic creds"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"globals\"].json[\"dms_url\"]}}/items/sd_order_history",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "order_id",
+              "value": "={{$node[\"wait for order\"].json[\"body\"][\"order_detail\"][\"order_id\"]}}"
+            },
+            {
+              "name": "order_status",
+              "value": "={{$node[\"Get the status and team\"].json[\"status\"]}}"
+            },
+            {
+              "name": "assigned_to",
+              "value": "={{$node[\"Get member details\"].json[\"data\"][\"id\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "post the order to order history",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1440,
+        280
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"globals\"].json[\"dms_url\"]}}/items/sd_assignee_details/{{$node[\"capture id\"].json[\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "status",
+              "value": "={{$node[\"capture id\"].json[\"true_status\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "update the assignee status ",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1820,
+        280
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"globals\"].json[\"dms_url\"]}}/items/sd_order_details?filter={\"order_id\":{\"_eq\":\"{{$node[\"wait for order\"].json[\"body\"][\"order_detail\"][\"order_id\"]}}\"}}",
+        "options": {}
+      },
+      "name": "get the orderid",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2370,
+        450
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "id",
+              "value": "={{$node[\"filter & get assigner based on priority\"].json[\"data\"][0][\"id\"]}}"
+            }
+          ],
+          "boolean": [
+            {
+              "name": "true_status",
+              "value": true
+            },
+            {
+              "name": "false_status"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "capture id",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1630,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "dms_url",
+              "value": "=https://dmsqa.shakedeal.com"
+            },
+            {
+              "name": "team1",
+              "value": "=Payment Pending"
+            },
+            {
+              "name": "team2",
+              "value": "=Open"
+            },
+            {
+              "name": "team3",
+              "value": "=Assigned to Vendor"
+            },
+            {
+              "name": "team4",
+              "value": "=Processed"
+            },
+            {
+              "name": "team5",
+              "value": "=Shipment Booked"
+            },
+            {
+              "name": "team6",
+              "value": "=Packing Completed"
+            },
+            {
+              "name": "team7",
+              "value": "=Manifest"
+            },
+            {
+              "name": "team8",
+              "value": "=In Transit"
+            },
+            {
+              "name": "team9",
+              "value": "=Completed"
+            },
+            {
+              "name": "team10",
+              "value": "=RTO"
+            },
+            {
+              "name": "team11",
+              "value": "=RTO Completed"
+            },
+            {
+              "name": "team12",
+              "value": "=Cancel Request"
+            },
+            {
+              "name": "team13",
+              "value": "=Cancelled"
+            },
+            {
+              "name": "team14",
+              "value": "=Return Request"
+            },
+            {
+              "name": "status1",
+              "value": "=J"
+            },
+            {
+              "name": "status2",
+              "value": "=open"
+            },
+            {
+              "name": "status3",
+              "value": "=OV"
+            },
+            {
+              "name": "status4",
+              "value": "=processing"
+            },
+            {
+              "name": "status5",
+              "value": "=PS"
+            },
+            {
+              "name": "status6",
+              "value": "=PP"
+            },
+            {
+              "name": "status7",
+              "value": "=A"
+            },
+            {
+              "name": "status8",
+              "value": "=H"
+            },
+            {
+              "name": "status9",
+              "value": "=completed"
+            },
+            {
+              "name": "status10",
+              "value": "=L"
+            },
+            {
+              "name": "status11",
+              "value": "=LC"
+            },
+            {
+              "name": "status12",
+              "value": "=G"
+            },
+            {
+              "name": "status13",
+              "value": "=cancelled"
+            },
+            {
+              "name": "status14",
+              "value": "=KK"
+            },
+            {
+              "name": "assigned_by",
+              "value": "=example@gmail.com"
+            },
+            {
+              "name": "hash",
+              "value": "=wfs%#hash"
+            },
+            {
+              "name": "action",
+              "value": "=assign_order_to_member"
+            },
+            {
+              "name": "sdStore_url",
+              "value": "=https://sdqa.shakedeal.com/index.php?dispatch=wfs_update.initiate_update"
+            },
+            {
+              "name": "order_type1",
+              "value": "=online general"
+            },
+            {
+              "name": "order_type2",
+              "value": "=online digital"
+            },
+            {
+              "name": "order_type3",
+              "value": "=crm general"
+            },
+            {
+              "name": "order_type4",
+              "value": "=crm voucher"
+            },
+            {
+              "name": "order_type5",
+              "value": "=qoc general"
+            },
+            {
+              "name": "order_type6",
+              "value": "=qoc routing"
+            },
+            {
+              "name": "order_type7",
+              "value": "=enterprise general"
+            },
+            {
+              "name": "order_type8",
+              "value": "=enterprise digital"
+            },
+            {
+              "name": "team15",
+              "value": "=Digital Card"
+            },
+            {
+              "name": "team16",
+              "value": "=CRM Voucher"
+            },
+            {
+              "name": "team17",
+              "value": "=QOC Routing"
+            },
+            {
+              "name": "team18",
+              "value": "=CRM General"
+            },
+            {
+              "name": "team19",
+              "value": "=QOC General"
+            },
+            {
+              "name": "source1",
+              "value": "=QOC"
+            },
+            {
+              "name": "source2",
+              "value": "=Online"
+            },
+            {
+              "name": "source3",
+              "value": "=CRM"
+            },
+            {
+              "name": "source_type1",
+              "value": "=Physical"
+            },
+            {
+              "name": "source_type2",
+              "value": "=Digital"
+            },
+            {
+              "name": "source_type3",
+              "value": "=Voucher"
+            },
+            {
+              "name": "source_type4",
+              "value": "=Routing"
+            },
+            {
+              "name": "order_prefix",
+              "value": "=OD"
+            },
+            {
+              "name": "team20",
+              "value": "=Archive"
+            },
+            {
+              "name": "status15",
+              "value": "=M"
+            },
+            {
+              "name": "team21",
+              "value": "=COD Unconfirmed"
+            },
+            {
+              "name": "status16",
+              "value": "=OU"
+            },
+            {
+              "name": "team22",
+              "value": "=Offline Voucher"
+            },
+            {
+              "name": "team23",
+              "value": "=JIT Delhi"
+            },
+            {
+              "name": "status17",
+              "value": "=OVC"
+            },
+            {
+              "name": "status18",
+              "value": "=OVP"
+            },
+            {
+              "name": "status19",
+              "value": "=OVI"
+            }
+          ],
+          "number": []
+        },
+        "options": {}
+      },
+      "name": "globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        200,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"globals\"].json[\"dms_url\"]}}/items/sd_teams?filter={\"team_name\":{\"_eq\":\"{{$node[\"Get the status and team\"].json[\"team\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Get the team",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        560,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"globals\"].json[\"dms_url\"]}}/items/orders?filter={\"id\":{\"_eq\":\"{{$node[\"Get the status and team\"].json[\"order_id\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Check for order",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2000,
+        280
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let order = $node[\"wait for order\"].json[\"body\"][\"order_detail\"][\"order_id\"]\nlet team18 = $node[\"globals\"].json[\"team18\"];\nlet team19 = $node[\"globals\"].json[\"team19\"];\nlet id = \"\"\nif($node[\"Get the status and team\"].json[\"team\"] === team18 || $node[\"Get the status and team\"].json[\"team\"] === team19){\n   id = $node[\"Get member to team id\"].json[\"data\"][0][\"id\"];\n}else {\n   id = $node[\"filter & get assigner based on priority\"].json[\"data\"][0][\"id\"]\n}\nlet order_object={};\norder_object.order_id= order;\norder_object.member_to_team_id=id;\nitems[0].json.order_object= order_object\nreturn items;\n"
+      },
+      "name": "Prepare order data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        3730,
+        60
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let order = $node[\"wait for order\"].json[\"body\"][\"order_detail\"][\"order_id\"]\nlet team18 = $node[\"globals\"].json[\"team18\"];\nlet team19 = $node[\"globals\"].json[\"team19\"];\nlet id = \"\"\nif($node[\"Check the order history\"].json[\"data\"].length !== 0 ){\n   id = $node[\"Get member_team id\"].json[\"data\"][0][\"id\"]\n}else{\n   if($node[\"Get the status and team\"].json[\"team\"] === team18 || $node[\"Get the status and team\"].json[\"team\"]=== team19){\n   id = $node[\"Get member to team id\"].json[\"data\"][0][\"id\"];\n  }else {\n   id = $node[\"filter & get assigner based on priority\"].json[\"data\"][0][\"id\"]\n  } \n}\n\n\nlet order_object={};\norder_object.order_id= order ;\norder_object.member_to_team_id= id\nitems[0].json.order_object= order_object\nreturn items;\n"
+      },
+      "name": "Update order data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        3810,
+        470
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"globals\"].json[\"dms_url\"]}}/items/sd_members/{{$node[\"filter & get assigner based on priority\"].json[\"data\"][0][\"user_id\"]}}",
+        "options": {}
+      },
+      "name": "Get member details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1240,
+        280
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    },
+    {
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{$node[\"Get the status and team\"].json[\"team\"]}}",
+        "rules": {
+          "rules": [
+            {
+              "value2": "={{$node[\"globals\"].json[\"team18\"]}}"
+            },
+            {
+              "value2": "={{$node[\"globals\"].json[\"team19\"]}}"
+            }
+          ]
+        },
+        "fallbackOutput": 1
+      },
+      "name": "Switch",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [
+        880,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"globals\"].json[\"dms_url\"]}}/items/sd_operation?filter={\"sales_agent\":{\"email\":{\"email\":{\"_eq\":\"{{$node[\"wait for order\"].json[\"body\"][\"order_detail\"][\"sales_agent\"][\"email\"]}}\"}}}}",
+        "options": {}
+      },
+      "name": "Get Operation Agent",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        70
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"globals\"].json[\"dms_url\"]}}/items/sd_order_history",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "order_id",
+              "value": "={{$node[\"wait for order\"].json[\"body\"][\"order_detail\"][\"order_id\"]}}"
+            },
+            {
+              "name": "order_status",
+              "value": "={{$node[\"Get the status and team\"].json[\"status\"]}}"
+            },
+            {
+              "name": "assigned_to",
+              "value": "={{$node[\"Get Operation Agent\"].json[\"data\"][0][\"operation_agent\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Post to order history",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1480,
+        70
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"globals\"].json[\"dms_url\"]}}/items/sd_assignee_details?filter={\"_and\": [{\"user_id\": {\"_eq\":\"{{$node[\"Get Operation Agent\"].json[\"data\"][0][\"operation_agent\"]}}\"}},{\"team_name\":{\"_eq\":\"{{$node[\"Get the team\"].json[\"data\"][0][\"id\"]}}\"}}]}",
+        "options": {}
+      },
+      "name": "Get member to team id",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1770,
+        70
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [],
+          "number": [
+            {
+              "value1": "={{$node[\"Check for order\"].json[\"data\"].length}}",
+              "operation": "equal"
+            }
+          ]
+        }
+      },
+      "name": "Condition for create or update",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        2170,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{Object.keys($node[\"Check for order source\"].json[\"data\"][0]).join(', ')}}",
+              "operation": "contains",
+              "value2": "=id"
+            }
+          ],
+          "number": []
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        2680,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"globals\"].json[\"dms_url\"]}}/items/sd_order_source?filter={\"id\":{\"_eq\":\"{{$node[\"wait for order\"].json[\"body\"][\"order_detail\"][\"source_of_order\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Check for order source",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2520,
+        100
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"globals\"].json[\"dms_url\"]}}/items/sd_order_source",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "id",
+              "value": "={{$node[\"wait for order\"].json[\"body\"][\"order_detail\"][\"source_of_order\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Create the order source",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2850,
+        250
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let order_source = $node[\"wait for order\"].json[\"body\"][\"order_detail\"][\"source_of_order\"];\nlet source_type = $node[\"wait for order\"].json[\"body\"][\"order_detail\"][\"order_type\"];\nlet order_status = $node[\"wait for order\"].json[\"body\"][\"order_detail\"].order_status\nlet entity = $node[\"wait for order\"].json[\"body\"][\"order_detail\"][\"sd_entity_id\"];\nlet shipment_type = $node[\"wait for order\"].json[\"body\"][\"order_detail\"][\"shipment_type_id\"];\nlet status = \"\"\nlet order = $node[\"wait for order\"].json[\"body\"][\"order_detail\"][\"order_id\"];\n\nif(order_status.toUpperCase() === \"O\"){\n   status = $node[\"globals\"].json[\"status2\"]\n}else if(order_status.toUpperCase() === \"P\"){\n   status = $node[\"globals\"].json[\"status4\"]\n}else if(order_status.toUpperCase() === \"C\" ){\n   status = $node[\"globals\"].json[\"status9\"]\n}else if(order_status.toUpperCase() === \"I\"){\n   status = $node[\"globals\"].json[\"status13\"]\n}else{\n   status = order_status.toUpperCase() \n}\n\nlet source = \"\";\nlet team = \"\";\nif(order_source === \"1\"){\n   source = $node[\"globals\"].json[\"source1\"]\n}else if(order_source === \"2\"){\n    source = $node[\"globals\"].json[\"source2\"]\n}else if(order_source === \"3\"){\n    source = $node[\"globals\"].json[\"source3\"]\n}else {\n    source = $node[\"globals\"].json[\"source2\"]\n}\nif(source === $node[\"globals\"].json[\"source1\"]){\n    if(source_type === \"4\"){\n      team = $node[\"globals\"].json[\"team17\"]\n    }\n    else{\n      team = $node[\"globals\"].json[\"team19\"]\n    }\n}else if(source === $node[\"globals\"].json[\"source2\"]){\n    if(source_type === \"2\"){\n      team = $node[\"globals\"].json[\"team15\"]\n    }else if(source_type === \"3\"){\n      team = $node[\"globals\"].json[\"team22\"]\n    }else if(shipment_type == \"1\" && entity == \"2\" && (status == $node[\"globals\"].json[\"status7\"] || status == $node[\"globals\"].json[\"status6\"] || status == $node[\"globals\"].json[\"status4\"] || status == $node[\"globals\"].json[\"status5\"]  ||status == $node[\"globals\"].json[\"status18\"]|| status == $node[\"globals\"].json[\"status19\"])){\n      team = $node[\"globals\"].json[\"team23\"]\n    }else{\n       if( status  === $node[\"globals\"].json[\"status1\"]){\n           team = $node[\"globals\"].json[\"team1\"]\n       }else if(status === $node[\"globals\"].json[\"status2\"]){\n           team = $node[\"globals\"].json[\"team2\"]\n       }else if(status === $node[\"globals\"].json[\"status3\"] || status === $node[\"globals\"].json[\"status17\"] || status === $node[\"globals\"].json[\"status18\"] || status === $node[\"globals\"].json[\"status19\"]){\n           team = $node[\"globals\"].json[\"team3\"]\n       }else if(status === $node[\"globals\"].json[\"status4\"]){\n           team = $node[\"globals\"].json[\"team4\"]\n       }else if(status === $node[\"globals\"].json[\"status5\"]){\n           team = $node[\"globals\"].json[\"team5\"]\n       }else if(status === $node[\"globals\"].json[\"status6\"]){\n           team = $node[\"globals\"].json[\"team6\"]\n       }else if(status === $node[\"globals\"].json[\"status7\"]){\n           team = $node[\"globals\"].json[\"team7\"]\n       }else if(status === $node[\"globals\"].json[\"status8\"]){\n           team = $node[\"globals\"].json[\"team8\"]\n       }else if(status === $node[\"globals\"].json[\"status9\"]){\n           team = $node[\"globals\"].json[\"team9\"]\n       }else if(status === $node[\"globals\"].json[\"status10\"]){\n           team = $node[\"globals\"].json[\"team10\"]\n       }else if(status === $node[\"globals\"].json[\"status11\"]){\n           team = $node[\"globals\"].json[\"team11\"]\n       }else if(status === $node[\"globals\"].json[\"status12\"]){\n           team = $node[\"globals\"].json[\"team12\"]\n       }else if(status === $node[\"globals\"].json[\"status13\"]){\n           team = $node[\"globals\"].json[\"team13\"]\n       }else if(status === $node[\"globals\"].json[\"status14\"]){\n           team = $node[\"globals\"].json[\"team14\"]\n       }else if(status === $node[\"globals\"].json[\"status15\"]){\n           team = $node[\"globals\"].json[\"team20\"]\n       }else if(status === $node[\"globals\"].json[\"status16\"]){\n           team = $node[\"globals\"].json[\"team21\"]\n       }\n    }\n}else if(source === $node[\"globals\"].json[\"source3\"]){\n    if(source_type === \"3\"){\n      team = $node[\"globals\"].json[\"team16\"]\n    }else{\n      team = $node[\"globals\"].json[\"team18\"]\n    }\n}\nlet team18 = $node[\"globals\"].json[\"team18\"];\nlet team19 = $node[\"globals\"].json[\"team19\"];\nlet action  = \"\"\nif(team === team18 || team === team19){\n   action = \"new\";\n}else {\n   action= \"existing\"\n}\n\nitems[0].json.order_id = $node[\"globals\"].json[\"order_prefix\"] + order \nitems[0].json.action = action\nitems[0].json.team = team;\nitems[0].json.source = source;\nitems[0].json.status = status;\nreturn items;\n"
+      },
+      "name": "Get the status and team",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        380,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"globals\"].json[\"dms_url\"]}}/items/sd_order_history?filter={\"_and\": [{\"order_id\": {\"_eq\":\"{{$node[\"Get the status and team\"].json[\"order_id\"]}}\"}},{\"order_status\":{\"_eq\":\"{{$node[\"Get the status and team\"].json[\"status\"]}}\"}}]}",
+        "options": {}
+      },
+      "name": "Check the order history",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2580,
+        450
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [],
+          "number": [
+            {
+              "value1": "={{$node[\"Check the order history\"].json[\"data\"].length}}",
+              "operation": "equal"
+            }
+          ]
+        }
+      },
+      "name": "IF1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        2740,
+        450
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"globals\"].json[\"dms_url\"]}}/items/sd_order_history",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "order_id",
+              "value": "={{$node[\"Get the status and team\"].json[\"order_id\"]}}"
+            },
+            {
+              "name": "order_status",
+              "value": "={{$node[\"Get the status and team\"].json[\"status\"]==\"OVC\" || $node[\"Get the status and team\"].json[\"status\"]==\"OVP\" || $node[\"Get the status and team\"].json[\"status\"]==\"OVI\" ?\"OV\":$node[\"Get the status and team\"].json[\"status\"]}}"
+            },
+            {
+              "name": "assigned_to",
+              "value": "={{$node[\"Get the status and team\"].json[\"action\"]===\"new\"?$node[\"Get Operation Agent\"].json[\"data\"][0][\"operation_agent\"]:$node[\"Get member details\"].json[\"data\"][\"id\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "create order history",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3050,
+        400
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"globals\"].json[\"dms_url\"]}}/items/sd_order_history",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "order_id",
+              "value": "={{$node[\"Get the status and team\"].json[\"order_id\"]}}"
+            },
+            {
+              "name": "order_status",
+              "value": "={{$node[\"Get the status and team\"].json[\"status\"]==\"OVC\" || $node[\"Get the status and team\"].json[\"status\"]==\"OVP\" || $node[\"Get the status and team\"].json[\"status\"]==\"OVI\" ?\"OV\":$node[\"Get the status and team\"].json[\"status\"]}}"
+            },
+            {
+              "name": "assigned_to",
+              "value": "={{$node[\"Check the order history\"].json[\"data\"][0][\"assigned_to\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Post order history",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2930,
+        600
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"globals\"].json[\"dms_url\"]}}/items/orders/{{$node[\"Get the status and team\"].json[\"order_id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "assigned_to",
+              "value": "={{$node[\"Check the order history\"].json[\"data\"][0][\"assigned_to\"]}}"
+            },
+            {
+              "name": "order_status",
+              "value": "={{$node[\"Get the status and team\"].json[\"status\"]==\"OVC\" || $node[\"Get the status and team\"].json[\"status\"]==\"OVP\" || $node[\"Get the status and team\"].json[\"status\"]==\"OVI\" ?\"OV\":$node[\"Get the status and team\"].json[\"status\"]}}"
+            },
+            {
+              "name": "team",
+              "value": "={{$node[\"Get the team\"].json[\"data\"][0][\"id\"]}}"
+            },
+            {
+              "name": "order_date",
+              "value": "={{$node[\"wait for order\"].json[\"body\"][\"order_detail\"][\"order_date\"]}}"
+            },
+            {
+              "name": "entity",
+              "value": "={{$node[\"wait for order\"].json[\"body\"][\"order_detail\"][\"sd_entity_id \"]}}"
+            },
+            {
+              "name": "shipment_type",
+              "value": "={{$node[\"wait for order\"].json[\"body\"][\"order_detail\"][\"shipment_type_id\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update order details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3130,
+        600
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"globals\"].json[\"dms_url\"]}}/items/sd_order_history",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "order_id",
+              "value": "={{$node[\"Get the status and team\"].json[\"order_id\"]}}"
+            },
+            {
+              "name": "order_status",
+              "value": "={{$node[\"Get the status and team\"].json[\"status\"]==\"OVC\" || $node[\"Get the status and team\"].json[\"status\"]==\"OVP\" || $node[\"Get the status and team\"].json[\"status\"]==\"OVI\" ?\"OV\":$node[\"Get the status and team\"].json[\"status\"]}}"
+            },
+            {
+              "name": "assigned_to",
+              "value": "={{$node[\"Get the status and team\"].json[\"action\"]===\"new\"?$node[\"Get Operation Agent\"].json[\"data\"][0][\"operation_agent\"]:$node[\"Get member details\"].json[\"data\"][\"id\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Create order in order history",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2320,
+        100
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"globals\"].json[\"dms_url\"]}}/items/sd_assignee_details?filter={\"_and\": [{\"user_id\": {\"_eq\":\"{{$node[\"Check the order history\"].json[\"data\"][0][\"assigned_to\"]}}\"}},{\"team_name\":{\"_eq\":\"{{$node[\"Get the team\"].json[\"data\"][0][\"id\"]}}\"}}]}",
+        "options": {}
+      },
+      "name": "Get member_team id",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3340,
+        600
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"globals\"].json[\"dms_url\"]}}/items/sd_assignee_details/{{$node[\"capture id\"].json[\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "status",
+              "value": "={{$node[\"capture id\"].json[\"false_status\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update the assignee status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3560,
+        600
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"globals\"].json[\"dms_url\"]}}/items/customers?filter={\"id\":{\"_eq\":\"{{$node[\"wait for order\"].json[\"body\"][\"order_detail\"][\"customer\"][\"email\"]}}\"}}",
+        "options": {}
+      },
+      "name": "check for customer",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3000,
+        80
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"check for customer\"].json[\"data\"].length}}",
+              "operation": "notEqual"
+            }
+          ]
+        }
+      },
+      "name": "IF2",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        3160,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"globals\"].json[\"dms_url\"]}}/items/customers",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "id",
+              "value": "={{$node[\"wait for order\"].json[\"body\"][\"order_detail\"][\"customer\"][\"email\"]}}"
+            },
+            {
+              "name": "first_name",
+              "value": "={{$node[\"wait for order\"].json[\"body\"][\"order_detail\"][\"customer\"][\"first_name\"]}}"
+            },
+            {
+              "name": "last_name",
+              "value": "={{$node[\"wait for order\"].json[\"body\"][\"order_detail\"][\"customer\"][\"last_name\"]}}"
+            },
+            {
+              "name": "company",
+              "value": "={{$node[\"wait for order\"].json[\"body\"][\"order_detail\"][\"customer\"][\"company\"]}}"
+            },
+            {
+              "name": "address",
+              "value": "={{$node[\"wait for order\"].json[\"body\"][\"order_detail\"][\"customer\"][\"address\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "create a user",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3320,
+        170
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "updatedAt": "2022-02-22T13:46:01.400Z"
+}
