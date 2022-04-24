@@ -1,0 +1,359 @@
+{
+  "active": true,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Capture Values",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Capture Values": {
+      "main": [
+        [
+          {
+            "node": "Decide Action based on Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Decide Action based on Status": {
+      "main": [
+        [
+          {
+            "node": "Set Shipment to Active",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update order status to Processed",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update order status to InTransit",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Decide Action",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Decide Action": {
+      "main": [
+        [
+          {
+            "node": "Update order status to RTO",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update order status to completed",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update order status to cancelled",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update order status to failed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2020-12-05T04:22:13.739Z",
+  "id": "1",
+  "name": "SD Order Status Workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        310,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "update-order-status",
+        "responseMode": "lastNode",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "X-SD-Order-Status",
+                "value": "4addb789-4960-4128-b4c6-ead961354422"
+              }
+            ]
+          }
+        }
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        310,
+        330
+      ],
+      "webhookId": "af3a359a-9f4e-41ca-b12e-269af140ecf0",
+      "credentials": {
+        "httpBasicAuth": "SD Basic Auth"
+      }
+    },
+    {
+      "parameters": {
+        "table": "={{$node[\"Capture Values\"].json[\"tableName\"]}}",
+        "columns": "id, order_status, customer_email, sales_contact_email"
+      },
+      "name": "Set Shipment to Active",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        900,
+        150
+      ],
+      "credentials": {
+        "postgres": "n8n - Postgres"
+      }
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "customer_name",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"customerName\"]}}"
+            },
+            {
+              "name": "customer_email",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"email\"]}}"
+            },
+            {
+              "name": "customer_mobile",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"phone\"]}}"
+            },
+            {
+              "name": "order_status",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"orderStatus\"]}}"
+            },
+            {
+              "name": "id",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"orderId\"]}}"
+            },
+            {
+              "name": "sales_contact_email",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"salesContactEmail\"]}}"
+            },
+            {
+              "name": "tableName",
+              "value": "={{ $node[\"Webhook\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ? \"active_shipments\" : \"active_shipments_qa\" }}"
+            }
+          ],
+          "number": []
+        },
+        "options": {}
+      },
+      "name": "Capture Values",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        500,
+        330
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=UPDATE public.{{$node[\"Capture Values\"].json[\"tableName\"]}} SET order_status = 'processed', processed_date=NOW() WHERE id='{{$node[\"Webhook\"].json[\"body\"][\"orderId\"]}}'"
+      },
+      "name": "Update order status to Processed",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        900,
+        320
+      ],
+      "credentials": {
+        "postgres": "n8n - Postgres"
+      }
+    },
+    {
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{$node[\"Capture Values\"].json[\"order_status\"]}}",
+        "rules": {
+          "rules": [
+            {
+              "value2": "open"
+            },
+            {
+              "value2": "processed",
+              "output": 1
+            },
+            {
+              "value2": "intransit",
+              "output": 2
+            }
+          ]
+        },
+        "fallbackOutput": 3
+      },
+      "name": "Decide Action based on Status",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [
+        680,
+        330
+      ]
+    },
+    {
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{$node[\"Capture Values\"].json[\"order_status\"]}}",
+        "rules": {
+          "rules": [
+            {
+              "value2": "rto"
+            },
+            {
+              "value2": "complete",
+              "output": 1
+            },
+            {
+              "value2": "cancelled",
+              "output": 2
+            },
+            {
+              "value2": "failed",
+              "output": 3
+            }
+          ]
+        }
+      },
+      "name": "Decide Action",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [
+        900,
+        650
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=UPDATE public.{{$node[\"Capture Values\"].json[\"tableName\"]}} SET order_status = 'intransit', intransit_date=NOW() WHERE id='{{$node[\"Webhook\"].json[\"body\"][\"orderId\"]}}'"
+      },
+      "name": "Update order status to InTransit",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        900,
+        480
+      ],
+      "credentials": {
+        "postgres": "n8n - Postgres"
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=UPDATE public.{{$node[\"Capture Values\"].json[\"tableName\"]}} SET order_status='completed',is_active=false, completed_date=NOW() WHERE id='{{$node[\"Webhook\"].json[\"body\"][\"orderId\"]}}'"
+      },
+      "name": "Update order status to completed",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        820
+      ],
+      "credentials": {
+        "postgres": "n8n - Postgres"
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=UPDATE public.{{$node[\"Capture Values\"].json[\"tableName\"]}} SET order_status='cancelled',is_active=false,cancelled_date=NOW() WHERE id='{{$node[\"Webhook\"].json[\"body\"][\"orderId\"]}}'"
+      },
+      "name": "Update order status to cancelled",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        990
+      ],
+      "credentials": {
+        "postgres": "n8n - Postgres"
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=UPDATE public.{{$node[\"Capture Values\"].json[\"tableName\"]}} SET order_status='failed',is_active=false,failed_date=NOW() WHERE id='{{$node[\"Webhook\"].json[\"body\"][\"orderId\"]}}'"
+      },
+      "name": "Update order status to failed",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        1170
+      ],
+      "credentials": {
+        "postgres": "n8n - Postgres"
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=UPDATE public.{{$node[\"Capture Values\"].json[\"tableName\"]}} SET order_status='rto', is_active=false, rto_date=NOW() WHERE id='{{$node[\"Webhook\"].json[\"body\"][\"orderId\"]}}'"
+      },
+      "name": "Update order status to RTO",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        650
+      ],
+      "credentials": {
+        "postgres": "n8n - Postgres"
+      }
+    }
+  ],
+  "settings": {
+    "timezone": "Asia/Calcutta",
+    "errorWorkflow": "8"
+  },
+  "staticData": null,
+  "updatedAt": "2021-02-05T17:45:04.454Z"
+}
