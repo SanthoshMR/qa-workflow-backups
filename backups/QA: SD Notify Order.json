@@ -223,7 +223,10 @@
         100
       ],
       "credentials": {
-        "postgres": "n8n - Postgres"
+        "postgres": {
+          "id": "1",
+          "name": "n8n - Postgres"
+        }
       }
     },
     {
@@ -239,7 +242,10 @@
         270
       ],
       "credentials": {
-        "postgres": "n8n - Postgres"
+        "postgres": {
+          "id": "1",
+          "name": "n8n - Postgres"
+        }
       }
     },
     {
@@ -255,7 +261,10 @@
         460
       ],
       "credentials": {
-        "postgres": "n8n - Postgres"
+        "postgres": {
+          "id": "1",
+          "name": "n8n - Postgres"
+        }
       }
     },
     {
@@ -275,7 +284,10 @@
         370
       ],
       "credentials": {
-        "smtp": "AWS SES Creds"
+        "smtp": {
+          "id": "7",
+          "name": "AWS SES Creds"
+        }
       }
     },
     {
@@ -360,5 +372,6 @@
     "errorWorkflow": "8"
   },
   "staticData": null,
+  "tags": [],
   "updatedAt": "2021-02-08T11:57:51.512Z"
 }
