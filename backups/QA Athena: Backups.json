@@ -1,0 +1,242 @@
+{
+  "active": false,
+  "connections": {
+    "Cron": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Write Credentials to a File",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Write Workflows to a File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write Credentials to a File": {
+      "main": [
+        [
+          {
+            "node": "Read Credentials File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Credentials File": {
+      "main": [
+        [
+          {
+            "node": "Backup Credentials File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write Workflows to a File": {
+      "main": [
+        [
+          {
+            "node": "Read Workflows File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Workflows File": {
+      "main": [
+        [
+          {
+            "node": "Backup Workflows File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2022-04-24T10:05:54.011Z",
+  "id": "112",
+  "name": "QA Athena: Backups",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "hour": 22
+            }
+          ]
+        }
+      },
+      "name": "Cron",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        250,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "credsFilePath",
+              "value": "/root/backups/creds.json"
+            },
+            {
+              "name": "workflowsFilePath",
+              "value": "/root/backups/workflows.json"
+            },
+            {
+              "name": "backupCredsFilePath",
+              "value": "Athena/QABackups/Creds.json"
+            },
+            {
+              "name": "backupWorkflowsFilePath",
+              "value": "Athena/QABackups/Workflows.json"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        450,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "command": "=n8n export:credentials --all --output={{$node[\"Globals\"].json[\"credsFilePath\"]}}"
+      },
+      "name": "Write Credentials to a File",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        640,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "filePath": "={{$node[\"Globals\"].json[\"credsFilePath\"]}}"
+      },
+      "name": "Read Credentials File",
+      "type": "n8n-nodes-base.readBinaryFile",
+      "typeVersion": 1,
+      "position": [
+        830,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "path": "={{$node[\"Globals\"].json[\"backupCredsFilePath\"]}}",
+        "binaryDataUpload": true
+      },
+      "name": "Backup Credentials File",
+      "type": "n8n-nodes-base.nextCloud",
+      "typeVersion": 1,
+      "position": [
+        1010,
+        300
+      ],
+      "credentials": {
+        "nextCloudApi": {
+          "id": "43",
+          "name": "SD Cloud"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "command": "=n8n export:workflow --all --output={{$node[\"Globals\"].json[\"workflowsFilePath\"]}}"
+      },
+      "name": "Write Workflows to a File",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        640,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "filePath": "={{$node[\"Globals\"].json[\"workflowsFilePath\"]}}"
+      },
+      "name": "Read Workflows File",
+      "type": "n8n-nodes-base.readBinaryFile",
+      "typeVersion": 1,
+      "position": [
+        830,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "path": "={{$node[\"Globals\"].json[\"backupWorkflowsFilePath\"]}}",
+        "binaryDataUpload": true
+      },
+      "name": "Backup Workflows File",
+      "type": "n8n-nodes-base.nextCloud",
+      "typeVersion": 1,
+      "position": [
+        1010,
+        500
+      ],
+      "credentials": {
+        "nextCloudApi": {
+          "id": "43",
+          "name": "SD Cloud"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2022-04-24T10:44:01.676Z"
+}
