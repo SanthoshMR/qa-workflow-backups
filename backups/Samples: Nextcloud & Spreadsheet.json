@@ -106,7 +106,10 @@
         90
       ],
       "credentials": {
-        "nextCloudApi": "SD Cloud"
+        "nextCloudApi": {
+          "id": "43",
+          "name": "SD Cloud"
+        }
       }
     },
     {
@@ -147,7 +150,10 @@
         320
       ],
       "credentials": {
-        "nextCloudApi": "SD Cloud"
+        "nextCloudApi": {
+          "id": "43",
+          "name": "SD Cloud"
+        }
       }
     },
     {
@@ -233,12 +239,16 @@
         90
       ],
       "credentials": {
-        "nextCloudApi": "SD Cloud"
+        "nextCloudApi": {
+          "id": "43",
+          "name": "SD Cloud"
+        }
       },
       "disabled": true
     }
   ],
   "settings": {},
   "staticData": null,
+  "tags": [],
   "updatedAt": "2021-02-04T17:45:20.466Z"
 }
