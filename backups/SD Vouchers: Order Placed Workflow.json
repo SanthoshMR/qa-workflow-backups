@@ -1,0 +1,259 @@
+{
+  "active": true,
+  "connections": {
+    "Receive Order Details": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Capture order values": {
+      "main": [
+        [
+          {
+            "node": "Add Order to Voucher Ops",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add Order to Voucher Ops": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Capture order values",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2020-12-18T12:42:24.779Z",
+  "id": "10",
+  "name": "SD Vouchers: Order Placed Workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        160,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "sd-order-placed-qa",
+        "responseMode": "lastNode",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "X-SD-Order-Placed",
+                "value": "8ff81eb0-5b1d-486b-9ca6-a4b7fcba49ba"
+              }
+            ]
+          }
+        }
+      },
+      "name": "Receive Order Details",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        160,
+        360
+      ],
+      "webhookId": "af3a359a-9f4e-41ca-b12e-269af140ecf0",
+      "credentials": {
+        "httpBasicAuth": "SD Basic Auth"
+      }
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "id",
+              "value": "={{$node[\"Receive Order Details\"].json[\"body\"][\"order_id\"]}}"
+            },
+            {
+              "name": "utr",
+              "value": "={{$node[\"Receive Order Details\"].json[\"body\"][\"utr\"]}}"
+            },
+            {
+              "name": "order_value",
+              "value": "={{$node[\"Receive Order Details\"].json[\"body\"][\"order_cost\"]}}"
+            },
+            {
+              "name": "order_tax",
+              "value": "={{$node[\"Receive Order Details\"].json[\"body\"][\"tax\"]}}"
+            },
+            {
+              "name": "sales_person_name",
+              "value": "={{$node[\"Receive Order Details\"].json[\"body\"][\"sales_person\"]}}"
+            },
+            {
+              "name": "sales_person_email",
+              "value": "={{$node[\"Receive Order Details\"].json[\"body\"][\"sales_person_email\"]}}"
+            }
+          ],
+          "boolean": []
+        },
+        "options": {}
+      },
+      "name": "Capture order values",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        490,
+        360
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"dmsUrl\"]}}/items/orders",
+        "allowUnauthorizedCerts": true,
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "id",
+              "value": "={{$node[\"Capture order values\"].json[\"id\"]}}"
+            },
+            {
+              "name": "utr",
+              "value": "={{$node[\"Capture order values\"].json[\"utr\"]}}"
+            },
+            {
+              "name": "order_value",
+              "value": "={{$node[\"Capture order values\"].json[\"order_value\"]}}"
+            },
+            {
+              "name": "order_tax",
+              "value": "={{$node[\"Capture order values\"].json[\"order_tax\"]}}"
+            },
+            {
+              "name": "sales_agent_name",
+              "value": "={{$node[\"Capture order values\"].json[\"sales_person_name\"]}}"
+            },
+            {
+              "name": "sales_agent_email",
+              "value": "={{$node[\"Capture order values\"].json[\"sales_person_email\"]}}"
+            },
+            {
+              "name": "order_source",
+              "value": "={{$node[\"Globals\"].json[\"order_source\"]}}"
+            },
+            {
+              "name": "order_type",
+              "value": "={{$node[\"Globals\"].json[\"order_type\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Add Order to Voucher Ops",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        680,
+        360
+      ],
+      "credentials": {
+        "httpHeaderAuth": "SD-Dms-Token"
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{$node[\"Globals\"].json[\"workflowsFromEmail\"]}}",
+        "toEmail": "={{$node[\"Globals\"].json[\"accountsEmail\"]}}",
+        "ccEmail": "={{$node[\"Globals\"].json[\"voucherOpsEmail\"]}}",
+        "subject": "=SD Gift Voucher Order Placed: {{$node[\"Capture order values\"].json[\"id\"]}}",
+        "html": "=<style id=\"stndz-style\"></style>\n    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, shrink-to-fit=no\">\n    <meta name=\"description\" content=\"\">\n    <meta name=\"author\" content=\"Mark Otto, Jacob Thornton, and Bootstrap contributors\">\n    <meta name=\"generator\" content=\"AcelleSystemLayouts\">\n    \n\n    <!-- Bootstrap core CSS -->\n    <link href=\"https://marketing.shakedeal.com/assets/templates/5fbfa20a972d7/css/bootstrap.min.css\" rel=\"stylesheet\">\n  <link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons+Outlined\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons+Outlined\" rel=\"stylesheet\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u0\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/skin.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u1\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/content.inline.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u0\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/skin.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u1\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/content.inline.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u0\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/skin.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u1\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/content.inline.min.css\">\n  <style id=\"stndz-style\"></style>\n    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, shrink-to-fit=no\">\n    <meta name=\"description\" content=\"\">\n    <meta name=\"author\" content=\"Mark Otto, Jacob Thornton, and Bootstrap contributors\">\n    <meta name=\"generator\" content=\"AcelleSystemLayouts\">\n    \n\n    <!-- Bootstrap core CSS -->\n    <link href=\"https://marketing.shakedeal.com/assets/templates/5fbfa20a972d7/css/bootstrap.min.css\" rel=\"stylesheet\">\n  <link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons+Outlined\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons+Outlined\" rel=\"stylesheet\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u0\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/skin.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u1\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/content.inline.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u0\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/skin.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u1\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/content.inline.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u0\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/skin.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u1\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/content.inline.min.css\">\n  <style id=\"stndz-style\"></style>\n    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, shrink-to-fit=no\">\n    <meta name=\"description\" content=\"\">\n    <meta name=\"author\" content=\"Mark Otto, Jacob Thornton, and Bootstrap contributors\">\n    <meta name=\"generator\" content=\"AcelleSystemLayouts\">\n    \n\n    <!-- Bootstrap core CSS -->\n    <link href=\"https://marketing.shakedeal.com/assets/templates/5fbfa20a972d7/css/bootstrap.min.css\" rel=\"stylesheet\">\n  <link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons+Outlined\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons+Outlined\" rel=\"stylesheet\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u0\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/skin.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u1\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/content.inline.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u0\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/skin.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u1\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/content.inline.min.css\">\n  <style id=\"stndz-style\"></style>\n    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, shrink-to-fit=no\">\n    <meta name=\"description\" content=\"\">\n    <meta name=\"author\" content=\"Mark Otto, Jacob Thornton, and Bootstrap contributors\">\n    <meta name=\"generator\" content=\"AcelleSystemLayouts\">\n    \n\n    <!-- Bootstrap core CSS -->\n    <link href=\"https://marketing.shakedeal.com/assets/templates/5fbfa20a972d7/css/bootstrap.min.css\" rel=\"stylesheet\">\n  <link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons+Outlined\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons+Outlined\" rel=\"stylesheet\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u0\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/skin.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u1\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/content.inline.min.css\">\n      \n    <main role=\"main\">\n      <div class=\"py-5 bg-light\" id=\"mce_8\" style=\"position: relative;\" spellcheck=\"false\"><div class=\"container\" id=\"mce_12\" style=\"position: relative; text-align: center;\" spellcheck=\"false\"><!-- <div class=\"text-center mb-4\">\n            <div><img src=\"https://marketing.shakedeal.com/assets/templates/5fbfa20a972d7/image/logo.png\" width=\"350px\" /></div>\n          </div> --> <img id=\"zW2lO\" builder-element=\"\" builder-draggable=\"\" class=\"image-after-change\" src=\"https://marketing.shakedeal.com/files/5fbe3d99407d6/SDLogoColorSmall.png\" style=\"width: 200px; height: 40px; margin: auto;\">\n<h2 class=\"mt-4 mb-4\" id=\"mce_12\" style=\"position: relative;\" spellcheck=\"false\"><br>A New Gifting Order: {{$node[\"Capture order values\"].json[\"id\"]}}</h2>\n<p><span style=\"font-size: 1.25rem; position: relative;\" class=\"\" id=\"mce_0\" spellcheck=\"false\">A new gifting order with order id: {{$node[\"Capture order values\"].json[\"id\"]}} with UTR: {{$node[\"Capture order values\"].json[\"utr\"]}} is placed. Please confirm the payment here:  <a href=\"{{$node[\"Globals\"].json[\"dmsUrl\"]}}/admin/collections/orders/{{$node[\"Capture order values\"].json[\"id\"]}}\" class=\"\">Confirm Payment</a> </span></p>\n<div class=\"\" id=\"mce_8\" style=\"position: relative;\" spellcheck=\"false\"></div>\n<div class=\"row\"></div></div></div>\n    </main>",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        850,
+        360
+      ],
+      "credentials": {
+        "smtp": "AWS SES Creds"
+      }
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "dmsUrl",
+              "value": "={{ $node[\"Receive Order Details\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ? \"https://zeus.shakedeal.com\" : \"https://dmsqa.shakedeal.com\" }}"
+            },
+            {
+              "name": "workflowsFromEmail",
+              "value": "SD Workflows <workflows@shakedeal.com>"
+            },
+            {
+              "name": "voucherOpsEmail",
+              "value": "={{ $node[\"Receive Order Details\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ? \"voucher.ops@shakedeal.com\" : \"dev-notifications@shakedeal.com\" }}"
+            },
+            {
+              "name": "accountsEmail",
+              "value": "={{ $node[\"Receive Order Details\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ? \"accounts@shakedeal.com\" : \"dev-notifications@shakedeal.com\" }}"
+            },
+            {
+              "name": "dmsIP",
+              "value": "139.59.34.52"
+            },
+            {
+              "name": "order_source",
+              "value": "=3"
+            },
+            {
+              "name": "order_type",
+              "value": "=3"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        330,
+        360
+      ]
+    }
+  ],
+  "settings": {
+    "timezone": "Asia/Calcutta",
+    "errorWorkflow": "8"
+  },
+  "staticData": null,
+  "updatedAt": "2021-08-02T09:28:16.384Z"
+}
