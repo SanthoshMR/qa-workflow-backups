@@ -1,0 +1,350 @@
+{
+  "active": true,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Get the order status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update the status": {
+      "main": [
+        [
+          {
+            "node": "JSON Parse",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "JSON Parse": {
+      "main": [
+        [
+          {
+            "node": "Update the status in SD store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the order status": {
+      "main": [
+        [
+          {
+            "node": "Get the order_status from sd_orders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the order_status from sd_orders": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Update the status in cod orders",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update the status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-05-04T11:11:58.908Z",
+  "id": "65",
+  "name": "Kaleyra : Call back",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "path": "4793f894-52e7-42ca-b30e-fb7d265d9372",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        330,
+        460
+      ],
+      "webhookId": "4793f894-52e7-42ca-b30e-fb7d265d9372"
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "dms_url",
+              "value": "=https://dmsqa.shakedeal.com"
+            },
+            {
+              "name": "status",
+              "value": "={{$node[\"Webhook\"].json[\"query\"][\"dtmf\"]===\"2\"?\"cancelled\":\"confirmed\"}}"
+            },
+            {
+              "name": "order_id",
+              "value": "={{\"OD\"+$node[\"Webhook\"].json[\"query\"][\"orderid\"]}}"
+            },
+            {
+              "name": "hash",
+              "value": "=d2ZzJSNoYXNoQDEyMw=="
+            },
+            {
+              "name": "sdStore_url",
+              "value": "=https://sdqa.shakedeal.com/index.php?dispatch=wfs_update.cod_update"
+            }
+          ],
+          "number": [
+            {
+              "name": "cod_status",
+              "value": "={{$node[\"Webhook\"].json[\"query\"][\"dtmf\"]===\"2\"?2:1}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        520,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_cod_orders/{{$node[\"Globals\"].json[\"order_id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "status",
+              "value": "={{$node[\"Webhook\"].json[\"query\"][\"dtmf\"]===\"\"?\"pending\":$node[\"Globals\"].json[\"status\"]}}"
+            },
+            {
+              "name": "attempts_made",
+              "value": "={{$node[\"Get the order status\"].json[\"data\"][\"attempts_made\"]===5?5:$node[\"Get the order status\"].json[\"data\"][\"attempts_made\"]+1}}"
+            }
+          ]
+        }
+      },
+      "name": "Update the status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1280,
+        600
+      ],
+      "credentials": {
+        "httpHeaderAuth": "SD-Dms-Token"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"sdStore_url\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "hash",
+              "value": "={{$node[\"Globals\"].json[\"hash\"]}}"
+            },
+            {
+              "name": "order_id",
+              "value": "={{$node[\"Webhook\"].json[\"query\"][\"orderid\"]}}"
+            },
+            {
+              "name": "cod_status",
+              "value": "={{$node[\"Webhook\"].json[\"query\"][\"dtmf\"]===\"\"?0:$node[\"Globals\"].json[\"cod_status\"]}}"
+            },
+            {
+              "name": "json",
+              "value": "={{$node[\"JSON Parse\"].json[\"json\"]}}"
+            },
+            {
+              "name": "attempts",
+              "value": "={{$node[\"Update the status\"].json[\"data\"][\"attempts_made\"]>5?5:$node[\"Update the status\"].json[\"data\"][\"attempts_made\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update the status in SD store",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1740,
+        600
+      ],
+      "credentials": {
+        "httpBasicAuth": "basic creds"
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let json_obj = $node[\"Update the status\"].json[\"data\"][\"json\"];\n\n\nitems[0].json.json = JSON.parse(json_obj)\nreturn items;"
+      },
+      "name": "JSON Parse",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1500,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_cod_orders/{{$node[\"Globals\"].json[\"order_id\"]}}",
+        "options": {}
+      },
+      "name": "Get the order status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        690,
+        460
+      ],
+      "credentials": {
+        "httpHeaderAuth": "SD-Dms-Token"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/orders/{{$node[\"Globals\"].json[\"order_id\"]}}",
+        "options": {}
+      },
+      "name": "Get the order_status from sd_orders",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        900,
+        460
+      ],
+      "credentials": {
+        "httpHeaderAuth": "SD-Dms-Token"
+      }
+    },
+    {
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{$node[\"Get the order_status from sd_orders\"].json[\"data\"][\"order_status\"]}}",
+        "rules": {
+          "rules": [
+            {
+              "value2": "=cancelled"
+            },
+            {
+              "value2": "=G",
+              "output": 1
+            }
+          ]
+        },
+        "fallbackOutput": 2
+      },
+      "name": "Switch",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [
+        1080,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_cod_orders/{{$node[\"Globals\"].json[\"order_id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "status",
+              "value": "=cancelled"
+            }
+          ]
+        }
+      },
+      "name": "Update the status in cod orders",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1310,
+        250
+      ],
+      "credentials": {
+        "httpHeaderAuth": "SD-Dms-Token"
+      }
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1290,
+        440
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "updatedAt": "2022-02-10T06:46:44.370Z"
+}
