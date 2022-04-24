@@ -1,0 +1,364 @@
+{
+  "active": false,
+  "connections": {
+    "Cron": {
+      "main": [
+        [
+          {
+            "node": "Set Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Config": {
+      "main": [
+        [
+          {
+            "node": "Get Open Orders",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get Processed Orders",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get InTransit Orders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Set Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Open Orders": {
+      "main": [
+        [
+          {
+            "node": "Open Orders File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Open Orders File": {
+      "main": [
+        [
+          {
+            "node": "Merge Open & Processed Files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Processed Orders": {
+      "main": [
+        [
+          {
+            "node": "Processed Orders File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get InTransit Orders": {
+      "main": [
+        [
+          {
+            "node": "InTransit Orders File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Processed Orders File": {
+      "main": [
+        [
+          {
+            "node": "Merge Open & Processed Files",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "InTransit Orders File": {
+      "main": [
+        [
+          {
+            "node": "Merge with InTransit Files",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge Open & Processed Files": {
+      "main": [
+        [
+          {
+            "node": "Merge with InTransit Files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge with InTransit Files": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2020-12-05T17:14:56.055Z",
+  "id": "5",
+  "name": "QA: SD Notify Order",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "hour": 8
+            }
+          ]
+        }
+      },
+      "name": "Cron",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        240,
+        370
+      ],
+      "color": "#2B1860"
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "tableName",
+              "value": "=active_shipments_qa"
+            },
+            {
+              "name": "emailAddresses",
+              "value": "=santhosh@shakedeal.com,vinay.kumar@shakedeal.com,chidanand@shakedeal.com"
+            },
+            {
+              "name": "environment",
+              "value": "qa"
+            }
+          ],
+          "number": [
+            {
+              "name": "openIntervalInDays",
+              "value": 2
+            },
+            {
+              "name": "processedIntervalInDays",
+              "value": 2
+            },
+            {
+              "name": "intransitIntervalInDays",
+              "value": 5
+            }
+          ]
+        },
+        "options": {
+          "dotNotation": true
+        }
+      },
+      "name": "Set Config",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        410,
+        270
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=SELECT id AS Order_ID, order_status, sales_contact_email, to_char(created_date, 'DD Mon YYYY HH:MI:SSPM') created_date FROM public.{{$json[\"tableName\"]}} WHERE order_status='open' AND created_date< now() - '{{$json[\"openIntervalInDays\"]}} days'::interval"
+      },
+      "name": "Get Open Orders",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        610,
+        100
+      ],
+      "credentials": {
+        "postgres": "n8n - Postgres"
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=SELECT id AS Order_ID, order_status, sales_contact_email, to_char(created_date, 'DD Mon YYYY HH:MI:SSPM') created_date, to_char(processed_date, 'DD Mon YYYY HH:MI:SSPM') processed_date FROM public.{{$json[\"tableName\"]}} WHERE order_status='processed' AND processed_date< now() - '{{$json[\"processedIntervalInDays\"]}} days'::interval"
+      },
+      "name": "Get Processed Orders",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        610,
+        270
+      ],
+      "credentials": {
+        "postgres": "n8n - Postgres"
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=SELECT id AS Order_ID, order_status, sales_contact_email, to_char(created_date, 'DD Mon YYYY HH:MI:SSPM') created_date, to_char(processed_date, 'DD Mon YYYY HH:MI:SSPM') processed_date, to_char(intransit_date, 'DD Mon YYYY HH:MI:SSPM') intransit_date FROM public.{{$json[\"tableName\"]}} WHERE order_status='intransit' AND intransit_date< now() - '{{$json[\"intransitIntervalInDays\"]}} days'::interval"
+      },
+      "name": "Get InTransit Orders",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        610,
+        460
+      ],
+      "credentials": {
+        "postgres": "n8n - Postgres"
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "SD Workflows<workflows@shakedeal.com>",
+        "toEmail": "={{$node[\"Set Config\"].json[\"emailAddresses\"]}}",
+        "subject": "SD Store: Orders breaching SLAs!",
+        "html": "=<style id=\"stndz-style\"></style>\n    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, shrink-to-fit=no\">\n    <meta name=\"description\" content=\"\">\n    <meta name=\"author\" content=\"Mark Otto, Jacob Thornton, and Bootstrap contributors\">\n    <meta name=\"generator\" content=\"AcelleSystemLayouts\">\n    \n\n    <!-- Bootstrap core CSS -->\n    <link href=\"https://marketing.shakedeal.com/assets/templates/601ce7d72fe1f/css/bootstrap.min.css\" rel=\"stylesheet\">\n  <link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons+Outlined\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons+Outlined\" rel=\"stylesheet\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u0\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/skin.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u1\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/content.inline.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u0\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/skin.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u1\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/content.inline.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u0\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/skin.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u1\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/content.inline.min.css\">\n  <style id=\"stndz-style\"></style>\n    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, shrink-to-fit=no\">\n    <meta name=\"description\" content=\"\">\n    <meta name=\"author\" content=\"Santhosh Reddy\"> <main role=\"main\">\n      <div class=\"py-5 bg-light builder-class-element-selected mce-content-body\" id=\"mce_8\" style=\"position: relative;\" spellcheck=\"false\" contenteditable=\"true\"><div class=\"container\" id=\"mce_12\" style=\"position: relative; text-align: center;\" spellcheck=\"false\" data-mce-style=\"position: relative; text-align: center;\"><!-- <div class=\"text-center mb-4\">\n            <div><img src=\"https://marketing.shakedeal.com/assets/templates/601ce7d72fe1f/image/logo.png\" width=\"350px\" /></div>\n          </div> --> <img id=\"zW2lO\" builder-element=\"\" builder-draggable=\"\" class=\"image-after-change\" src=\"https://marketing.shakedeal.com/files/5fbe3d99407d6/SDLogoColorSmall.png\" style=\"width: 200px; height: 40px; margin: auto;\" data-mce-src=\"https://marketing.shakedeal.com/files/5fbe3d99407d6/SDLogoColorSmall.png\" data-mce-style=\"width: 200px; height: 40px; margin: auto;\"><h2 class=\"mt-4 mb-4\" id=\"mce_12\" style=\"position: relative;\" spellcheck=\"false\" data-mce-style=\"position: relative;\">Oh ho! These orders need your attention!</h2><p><span style=\"font-size: 1.25rem; position: relative;\" class=\"\" id=\"mce_0\" spellcheck=\"false\" data-mce-style=\"font-size: 1.25rem; position: relative;\">These orders with different statuses are past due their SLAs. Please have a look and take necessary actions.</span></p><div class=\"\" id=\"mce_8\" style=\"position: relative;\" spellcheck=\"false\" data-mce-style=\"position: relative;\"><br></div><div class=\"row\"><br></div></div></div>\n    </main>",
+        "attachments": "open_orders, processed_orders, intransit_orders",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        1220,
+        370
+      ],
+      "credentials": {
+        "smtp": "AWS SES Creds"
+      }
+    },
+    {
+      "parameters": {
+        "operation": "toFile",
+        "fileFormat": "xlsx",
+        "binaryPropertyName": "open_orders",
+        "options": {
+          "fileName": "OpenOrders.xlsx",
+          "sheetName": "Sheet"
+        }
+      },
+      "name": "Open Orders File",
+      "type": "n8n-nodes-base.spreadsheetFile",
+      "typeVersion": 1,
+      "position": [
+        810,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "toFile",
+        "fileFormat": "xlsx",
+        "binaryPropertyName": "processed_orders",
+        "options": {
+          "fileName": "ProcessedOrders.xlsx"
+        }
+      },
+      "name": "Processed Orders File",
+      "type": "n8n-nodes-base.spreadsheetFile",
+      "typeVersion": 1,
+      "position": [
+        810,
+        270
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "toFile",
+        "fileFormat": "xlsx",
+        "binaryPropertyName": "intransit_orders",
+        "options": {
+          "fileName": "InTransitOrders.xlsx"
+        }
+      },
+      "name": "InTransit Orders File",
+      "type": "n8n-nodes-base.spreadsheetFile",
+      "typeVersion": 1,
+      "position": [
+        810,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "mergeByIndex"
+      },
+      "name": "Merge Open & Processed Files",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 1,
+      "position": [
+        1010,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "mergeByIndex"
+      },
+      "name": "Merge with InTransit Files",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 1,
+      "position": [
+        1010,
+        370
+      ]
+    }
+  ],
+  "settings": {
+    "timezone": "Asia/Calcutta",
+    "errorWorkflow": "8"
+  },
+  "staticData": null,
+  "updatedAt": "2021-02-08T11:57:51.512Z"
+}
