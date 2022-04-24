@@ -1,0 +1,100 @@
+{
+  "active": false,
+  "connections": {
+    "HTTP Request": {
+      "main": [
+        []
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set": {
+      "main": [
+        [
+          {
+            "node": "Edit Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2020-12-05T17:39:23.807Z",
+  "id": "6",
+  "name": "Samples: Image Manipulation",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "composite",
+        "options": {}
+      },
+      "name": "Edit Image",
+      "type": "n8n-nodes-base.editImage",
+      "position": [
+        840,
+        300
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "url": "https://docs.n8n.io/assets/img/final-workflow.f380b957.png",
+        "responseFormat": "file",
+        "options": {}
+      },
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        450,
+        300
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "action",
+              "value": "border"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        650,
+        300
+      ]
+    }
+  ],
+  "settings": {
+    "timezone": "Asia/Calcutta",
+    "saveManualExecutions": true
+  },
+  "staticData": null,
+  "updatedAt": "2020-12-31T06:23:29.002Z"
+}
