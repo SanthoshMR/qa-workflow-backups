@@ -278,7 +278,10 @@
       ],
       "webhookId": "3ff65486-2549-40aa-b2a7-3d1489c264cd",
       "credentials": {
-        "httpBasicAuth": "SD Basic Auth"
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
       }
     },
     {
@@ -356,7 +359,10 @@
         340
       ],
       "credentials": {
-        "httpHeaderAuth": "header auth creds"
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
       }
     },
     {
@@ -392,7 +398,10 @@
         160
       ],
       "credentials": {
-        "httpHeaderAuth": "header auth creds"
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
       }
     },
     {
@@ -453,7 +462,10 @@
         250
       ],
       "credentials": {
-        "httpHeaderAuth": "header auth creds"
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
       }
     },
     {
@@ -511,7 +523,10 @@
         130
       ],
       "credentials": {
-        "httpHeaderAuth": "header auth creds"
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
       }
     },
     {
@@ -565,7 +580,10 @@
         580
       ],
       "credentials": {
-        "httpHeaderAuth": "header auth creds"
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
       }
     },
     {
@@ -609,7 +627,10 @@
       "retryOnFail": false,
       "maxTries": 2,
       "credentials": {
-        "httpHeaderAuth": "header auth creds"
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
       }
     },
     {
@@ -683,7 +704,10 @@
       "retryOnFail": false,
       "maxTries": 2,
       "credentials": {
-        "httpHeaderAuth": "header auth creds"
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
       }
     },
     {
@@ -720,7 +744,10 @@
         490
       ],
       "credentials": {
-        "httpHeaderAuth": "header auth creds"
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
       }
     },
     {
@@ -762,7 +789,10 @@
         670
       ],
       "credentials": {
-        "httpHeaderAuth": "header auth creds"
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
       }
     },
     {
@@ -841,7 +871,10 @@
       "retryOnFail": false,
       "maxTries": 2,
       "credentials": {
-        "httpHeaderAuth": "header auth creds"
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
       }
     },
     {
@@ -891,11 +924,15 @@
         390
       ],
       "credentials": {
-        "httpHeaderAuth": "header auth creds"
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
       }
     }
   ],
   "settings": {},
   "staticData": null,
+  "tags": [],
   "updatedAt": "2021-09-27T09:10:55.724Z"
 }
