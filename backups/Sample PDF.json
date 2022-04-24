@@ -1,0 +1,137 @@
+{
+  "active": true,
+  "connections": {
+    "IMAP Email": {
+      "main": [
+        [
+          {
+            "node": "Decide Action",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Decide Action": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Do Nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-04-14T20:09:08.099Z",
+  "id": "61",
+  "name": "Sample PDF",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        250,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "format": "resolved",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "name": "IMAP Email",
+      "type": "n8n-nodes-base.emailReadImap",
+      "typeVersion": 1,
+      "position": [
+        250,
+        350
+      ],
+      "credentials": {
+        "imap": "Sample Gmail"
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let action = \"\";\nlet from = items[0].json.from;\nlet subject = items[0].json.subject;\nlet readPDF = /ReadPDF/.exec(subject);\n  if (!!readPDF) {\n    action = \"ReadPDF\";\n    items[0].json.attachmentIndex = items[0].binary ? Object.values(items[0].binary).findIndex(key => key.mimeType === \"application/pdf\") : -1;\n    items[0].json.data = items[0].binary[items[0].json.attachmentIndex];\n  }\n  \nitems[0].json.attachmentIndex = items[0].binary ? Object.values(items[0].binary).findIndex(key => key.mimeType === \"application/pdf\") : -1;\nitems[0].json.data = items[0].binary[items[0].json.attachmentIndex];\nitems[0].json.action = action;\nreturn items;\n"
+      },
+      "name": "Decide Action",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        450,
+        350
+      ]
+    },
+    {
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{$node[\"Decide Action\"].json[\"action\"]}}",
+        "rules": {
+          "rules": [
+            {
+              "value2": "ReadPDF"
+            }
+          ]
+        },
+        "fallbackOutput": 1
+      },
+      "name": "Switch",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [
+        640,
+        350
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {},
+      "name": "Do Nothing",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        850,
+        450
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "const pdf = require('pdf-parse');\n\nfunction render_page(pageData) {\n  //check documents https://mozilla.github.io/pdf.js/\n  let render_options = {\n    //replaces all occurrences of whitespace with standard spaces (0x20). The default value is `false`.\n    normalizeWhitespace: false,\n    //do not attempt to combine same line TextItem's. The default value is `false`.\n    disableCombineTextItems: false,\n  };\n\n  return pageData.getTextContent(render_options).then(function (textContent) {\n    let lastY,\n      text = \"\";\n    for (let item of textContent.items) {\n      text += `\\n${item.str}`;\n    }\n    return text;\n  });\n}\n\nlet options = {\n  pagerender: render_page,\n  max: 15,\n};\n\nconst binaryData = Buffer.from(items[0].binary[\"attachment_\" + items[0].json.attachmentIndex].data, \"base64\");\nitems[0].json.content = await pdf(binaryData, options);\nitems[0].json.content.text = items[0].json.content.text.split(\"\\n\");\nreturn items;"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        850,
+        250
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "updatedAt": "2021-04-15T04:32:28.220Z"
+}
