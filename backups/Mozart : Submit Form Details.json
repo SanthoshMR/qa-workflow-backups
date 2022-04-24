@@ -1,0 +1,272 @@
+{
+  "active": true,
+  "connections": {
+    "Post the data": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "reCAPTCHA Verification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "reCAPTCHA Verification": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Post the data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait for Personal details": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2022-01-12T05:17:31.824Z",
+  "id": "103",
+  "name": "Mozart : Submit Form Details",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_form_details",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "name",
+              "value": "={{$node[\"Wait for Personal details\"].json[\"body\"][\"name\"]}}"
+            },
+            {
+              "name": "email_address",
+              "value": "={{$node[\"Wait for Personal details\"].json[\"body\"][\"email\"]}}"
+            },
+            {
+              "name": "phone_number",
+              "value": "={{parseInt($node[\"Wait for Personal details\"].json[\"body\"][\"phone\"])}}"
+            },
+            {
+              "name": "message",
+              "value": "={{$node[\"Wait for Personal details\"].json[\"body\"][\"message\"]}}"
+            },
+            {
+              "name": "company_name",
+              "value": "={{$node[\"Wait for Personal details\"].json[\"body\"][\"company\"]}}"
+            },
+            {
+              "name": "designation",
+              "value": "={{$node[\"Wait for Personal details\"].json[\"body\"][\"designation\"]}}"
+            },
+            {
+              "name": "size_of_company",
+              "value": "={{$node[\"Wait for Personal details\"].json[\"body\"][\"size\"]}}"
+            }
+          ]
+        },
+        "headerParametersUi": {
+          "parameter": []
+        }
+      },
+      "name": "Post the data",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1160,
+        210
+      ],
+      "credentials": {
+        "httpHeaderAuth": "SD-Dms-Token"
+      }
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "dms_url",
+              "value": "=https://zeus.shakedeal.com"
+            },
+            {
+              "name": "to_email",
+              "value": "=sairam.reddy@shakedeal.com,chidanand@shakedeal.com,shreyas.ananth@shakedeal.com,vinay.kumar@shakedeal.com"
+            },
+            {
+              "name": "from_email",
+              "value": "=Mozart@shakedeal.com"
+            },
+            {
+              "name": "recaptcha_secret",
+              "value": "=6LeUm3weAAAAAMPzM0QkzB6lHO_1OPY0A6Bkf9Cb"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        670,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{$node[\"Globals\"].json[\"from_email\"]}}",
+        "toEmail": "={{$node[\"Globals\"].json[\"to_email\"]}}",
+        "subject": "=Mozart Enquiry Details",
+        "text": "=Hi Team,\n\nPlease find the requirements :\n\nCompany Name : {{$node[\"Wait for Personal details\"].json[\"body\"][\"company\"]}}\nName : {{$node[\"Wait for Personal details\"].json[\"body\"][\"name\"]}}\nWork email : {{$node[\"Wait for Personal details\"].json[\"body\"][\"email\"]}}\nMob no : {{parseInt($node[\"Wait for Personal details\"].json[\"body\"][\"phone\"])}}\nComments : {{$node[\"Wait for Personal details\"].json[\"body\"][\"message\"]}}",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        200
+      ],
+      "credentials": {
+        "smtp": "AWS SES Creds"
+      }
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "=https://www.google.com/recaptcha/api/siteverify",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": []
+        },
+        "queryParametersUi": {
+          "parameter": [
+            {
+              "name": "secret",
+              "value": "={{$node[\"Globals\"].json[\"recaptcha_secret\"]}}"
+            },
+            {
+              "name": "response",
+              "value": "={{$node[\"Wait for Personal details\"].json[\"body\"][\"token\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "reCAPTCHA Verification",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        820,
+        300
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1160,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$node[\"reCAPTCHA Verification\"].json[\"success\"]}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        970,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "mozart_form_details",
+        "responseMode": "lastNode",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              }
+            ]
+          }
+        }
+      },
+      "name": "Wait for Personal details",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        470,
+        300
+      ],
+      "webhookId": "5a572ee8-fd1b-4c55-aff3-73559e26ba3c"
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "updatedAt": "2022-02-16T05:42:47.954Z"
+}
