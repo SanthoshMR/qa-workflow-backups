@@ -1,0 +1,1545 @@
+{
+  "active": true,
+  "connections": {
+    "Move Binary Data": {
+      "main": [
+        [
+          {
+            "node": "post the file to dms",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "post the file to dms": {
+      "main": [
+        [
+          {
+            "node": "Merging the globals and file Id",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merging the globals and file Id": {
+      "main": [
+        [
+          {
+            "node": "Check for PO",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML Extract": {
+      "main": [
+        [
+          {
+            "node": "extracting the Shipping adress",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read PDF": {
+      "main": [
+        [
+          {
+            "node": "Extracting PO details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "post product details": {
+      "main": [
+        [
+          {
+            "node": "Checking the order_type",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "post vendor details": {
+      "main": [
+        [
+          {
+            "node": "constructing_product_vendor_mapping",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Buyer Details": {
+      "main": [
+        [
+          {
+            "node": "Get shakedeal POC",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get vendor Details": {
+      "main": [
+        [
+          {
+            "node": "Creating new vendor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "post buyer details": {
+      "main": [
+        [
+          {
+            "node": "construct for user_details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get product details": {
+      "main": [
+        [
+          {
+            "node": "Create new product",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "post the po_details": {
+      "main": [
+        [
+          {
+            "node": "SA is informed that PO is generated",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "extracting the Shipping adress": {
+      "main": [
+        [
+          {
+            "node": "Capture PO data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "constructing po_details": {
+      "main": [
+        [
+          {
+            "node": "post the po_details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "constructing_product_vendor_mapping": {
+      "main": [
+        [
+          {
+            "node": "Get product_vendor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check from_adress & to_adress": {
+      "main": [
+        [
+          {
+            "node": "HTML Extract",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Read PDF",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Move Binary Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Do Nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the index of attachment": {
+      "main": [
+        [
+          {
+            "node": "Check from_adress & to_adress",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "construct for user_details": {
+      "main": [
+        [
+          {
+            "node": "Post to the user_details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post to the user_details": {
+      "main": [
+        [
+          {
+            "node": "Checking condition  whether user exists ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "construct to post product_vendor": {
+      "main": [
+        [
+          {
+            "node": "Checking whether to post product_vendor_mapping",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "post the product_vendor_mapping": {
+      "main": [
+        [
+          {
+            "node": "constructing po_details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get user_id": {
+      "main": [
+        [
+          {
+            "node": "get product details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get shakedeal POC": {
+      "main": [
+        [
+          {
+            "node": "Creating user",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait for PO Email": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Conditon for  checking whether user exists or create new user": {
+      "main": [
+        [
+          {
+            "node": "post buyer details",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Checking condition  whether user exists ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Checking condition whether to post the products ": {
+      "main": [
+        [
+          {
+            "node": "post product details",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Checking the order_type",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Checking condition whether to post the vendors ": {
+      "main": [
+        [
+          {
+            "node": "post vendor details",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "constructing_product_vendor_mapping",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Checking whether to post product_vendor_mapping": {
+      "main": [
+        [
+          {
+            "node": "post the product_vendor_mapping",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "constructing po_details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Checking condition  whether user exists ": {
+      "main": [
+        [
+          {
+            "node": "Get user_id",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "get product details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extracting PO details": {
+      "main": [
+        [
+          {
+            "node": "Capture PO data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Creating user": {
+      "main": [
+        [
+          {
+            "node": "Conditon for  checking whether user exists or create new user",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create new product": {
+      "main": [
+        [
+          {
+            "node": "Checking condition whether to post the products ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Creating new vendor": {
+      "main": [
+        [
+          {
+            "node": "Checking condition whether to post the vendors ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Capture PO data": {
+      "main": [
+        [
+          {
+            "node": "Merging the globals and file Id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Get the index of attachment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get product_vendor": {
+      "main": [
+        [
+          {
+            "node": "construct to post product_vendor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Checking the order_type": {
+      "main": [
+        [
+          {
+            "node": "Get vendor Details",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get product_ids",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get product_ids": {
+      "main": [
+        [
+          {
+            "node": "Get the product_vendor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the product_vendor": {
+      "main": [
+        [
+          {
+            "node": "Create new product_vendor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create new product_vendor": {
+      "main": [
+        [
+          {
+            "node": "Checking condition whether to post product_vendor ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Checking condition whether to post product_vendor ": {
+      "main": [
+        [
+          {
+            "node": "Post the product_vendor",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "constructing for PO",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post the product_vendor": {
+      "main": [
+        [
+          {
+            "node": "constructing for PO",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "constructing for PO": {
+      "main": [
+        [
+          {
+            "node": "Post the PO",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post the PO": {
+      "main": [
+        [
+          {
+            "node": "SA is informed that PO is generated1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for PO": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get Buyer Details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-03-24T06:19:09.339Z",
+  "id": "50",
+  "name": "Balco : Reading PO, Products, Vendors Details  From Mail Workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        20,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "setAllData": false,
+        "sourceKey": "=attachment_{{$node[\"Get the index of attachment\"].json[\"attachmentIndex\"]}}",
+        "options": {
+          "keepSource": true,
+          "keepAsBase64": true
+        }
+      },
+      "name": "Move Binary Data",
+      "type": "n8n-nodes-base.moveBinaryData",
+      "typeVersion": 1,
+      "position": [
+        860,
+        630
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/files",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {
+          "bodyContentType": "multipart-form-data"
+        },
+        "sendBinaryData": true,
+        "binaryPropertyName": "=input_file:attachment_{{$node[\"Move Binary Data\"].json[\"attachmentIndex\"]}}"
+      },
+      "name": "post the file to dms",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        630
+      ],
+      "credentials": {
+        "httpHeaderAuth": "Balcoqa-Dms-Token"
+      }
+    },
+    {
+      "parameters": {
+        "mode": "mergeByIndex"
+      },
+      "name": "Merging the globals and file Id",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 1,
+      "position": [
+        1360,
+        470
+      ]
+    },
+    {
+      "parameters": {
+        "dataPropertyName": "html",
+        "extractionValues": {
+          "values": [
+            {
+              "key": "item",
+              "cssSelector": "tr",
+              "returnArray": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "HTML Extract",
+      "type": "n8n-nodes-base.htmlExtract",
+      "typeVersion": 1,
+      "position": [
+        840,
+        270
+      ]
+    },
+    {
+      "parameters": {
+        "binaryPropertyName": "=attachment_{{$node[\"Get the index of attachment\"].json[\"attachmentIndex\"]}}"
+      },
+      "name": "Read PDF",
+      "type": "n8n-nodes-base.readPDF",
+      "typeVersion": 1,
+      "position": [
+        860,
+        460
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_products",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {
+          "bodyContentType": "json"
+        },
+        "bodyParametersJson": "={{$node[\"Create new product\"].json[\"postProducts\"]}}"
+      },
+      "name": "post product details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        4110,
+        340
+      ],
+      "credentials": {
+        "httpHeaderAuth": "Balcoqa-Dms-Token"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_vendors",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Creating new vendor\"].json[\"postVendors\"]}}"
+      },
+      "name": "post vendor details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        5080,
+        370
+      ],
+      "credentials": {
+        "httpHeaderAuth": "Balcoqa-Dms-Token"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/users?filter={ \"email\": { \"_eq\": \"{{$node[\"Extracting PO details\"].json[\"buyer_email\"]}}\" }}",
+        "allowUnauthorizedCerts": true,
+        "options": {}
+      },
+      "name": "Get Buyer Details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1830,
+        510
+      ],
+      "credentials": {
+        "httpHeaderAuth": "Balcoqa-Dms-Token"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_vendors?filter={\"vendor_email\":{\"_in\":\"{{$node[\"Extracting PO details\"].json[\"vendor_email\"]}}\"}}",
+        "allowUnauthorizedCerts": true,
+        "options": {}
+      },
+      "name": "Get vendor Details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        4480,
+        470
+      ],
+      "credentials": {
+        "httpHeaderAuth": "Balcoqa-Dms-Token"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/users",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Creating user\"].json[\"user\"]}}"
+      },
+      "name": "post buyer details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2570,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": "Balcoqa-Dms-Token"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_products?filter={ \"product_code\": { \"_in\": \"{{$node[\"Extracting PO details\"].json[\"product_code\"]}}\" }}",
+        "options": {}
+      },
+      "name": "get product details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3590,
+        530
+      ],
+      "credentials": {
+        "httpHeaderAuth": "Balcoqa-Dms-Token"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_po_details",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$json[\"po_details\"]}}"
+      },
+      "name": "post the po_details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        6470,
+        510
+      ],
+      "credentials": {
+        "httpHeaderAuth": "Balcoqa-Dms-Token"
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let item_length = items[0].json.item.length;\n\nfor(i=0;i<item_length;i++){\n    \n    if(items[0].json.item[i].includes(\"Item text:\")){\n       let line=items[0].json.item[i+1];\n       //let list=line[1].split(\";\");\n       items[0].json.items_list=line;\n    }else if(items[0].json.item[i].includes(\"Ship All Items To\")){\n       items[0].json.shippingAdress=items[0].json.item[i+1];\n    }\n}\n\nreturn items"
+      },
+      "name": "extracting the Shipping adress",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        270
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let data = items[0].json.data;\nlet po_file = $node[\"Merging the globals and file Id\"].json[\"data\"][\"id\"];\nlet po_num = $node[\"Merging the globals and file Id\"].json[\"po_num\"];\nlet po_value= $node[\"Merging the globals and file Id\"].json[\"po_value\"];\nlet po_status =$node[\"Merging the globals and file Id\"].json[\"po_status\"];\nlet po_date =$node[\"Merging the globals and file Id\"].json[\"po_date\"];\nlet po_type= $node[\"Merging the globals and file Id\"].json[\"po_type\"];\nlet issuer_id= $node[\"Creating user\"].json[\"action\"]===\"user exists\"?$node[\"Get user_id\"].json.data[0][\"id\"]:$node[\"Post to the user_details\"].json.data[\"id\"];\nlet po_deliver_date = $node[\"Extracting PO details\"].json[\"max_date\"];\nlet req_quantity = $node[\"constructing_product_vendor_mapping\"].json[\"req_quantity\"];\nlet product_deliverDate = $node[\"constructing_product_vendor_mapping\"].json[\"product_deliverDate\"];\nlet product_price = $node[\"constructing_product_vendor_mapping\"].json[\"product_price\"];\n\nlet concated_products = $node[\"constructing_product_vendor_mapping\"].json[\"concatedProducts\"];\nlet po_products = $node[\"Extracting PO details\"].json[\"products\"];\n\nlet shakedeal_poc_id = $node[\"Get shakedeal POC\"].json.data[0].id;\n\n\n\nlet existing_product_vendor = $node[\"Get product_vendor\"].json.data;\nlet product_vendor_action = $node[\"construct to post product_vendor\"].json.action;\n\nif(product_vendor_action === \"post the product_vendor\"){\n     let posted_product_vendor = $node[\"post the product_vendor_mapping\"].json.data;\n     items[0].json.posted_product_vendor = posted_product_vendor; \n\n}\n\nif(product_vendor_action === \"post the product_vendor\"){\n   if(existing_product_vendor.length>0){\n      let concated_product_vendor = existing_product_vendor.concat(items[0].json.posted_product_vendor);\n      items[0].json.concated_product_vendor = concated_product_vendor;\n   \n   }else items[0].json.concated_product_vendor = items[0].json.posted_product_vendor;\n\n}else items[0].json.concated_product_vendor = existing_product_vendor;\n\nlet concated_product_vendor  = items[0].json.concated_product_vendor;\n\nlet product_vendor = [];\n\nif(concated_product_vendor.length>1){\n    concated_product_vendor.forEach(function(obj,index){\n         product_vendor[index] ={};\n         product_vendor[index].sd_mozart_vendor_product_mapping_id=obj[\"id\"];\n      \n         let result_Product = concated_products.find(product=>product[\"id\"]===obj[\"product\"]);\n         let result_poProduct = po_products.find(po=>po[\"product_code\"]===result_Product[\"product_code\"]);\n         product_vendor[index].req_qty =  result_poProduct[\"product_quantity\"];\n         product_vendor[index].delivery_date = new Date(result_poProduct[\"po_deliver_date\"]).toISOString();\n         product_vendor[index].product_total = result_poProduct[\"productvalueWithTax\"]\n\n     })\n\n}else {\n         if(Array.isArray(concated_product_vendor)){\n            items[0].json.prod_ven_id = concated_product_vendor[0][\"id\"];\n         \n         }else items[0].json.prod_ven_id  = concated_product_vendor[\"id\"];\n         \n         product_vendor[0] ={};\n         product_vendor[0].sd_mozart_vendor_product_mapping_id=items[0].json.prod_ven_id;\n         product_vendor[0].req_qty= req_quantity[0];\n         product_vendor[0].delivery_date = new Date(product_deliverDate[0]).toISOString();\n         product_vendor[0].product_total = product_price[0];\n        \n}\n\nlet po_details=[];\npo_details[0]={};\npo_details[0].po_file=po_file;\npo_details[0].po_num=po_num;\npo_details[0].po_value=po_value;\npo_details[0].po_status=po_status;\npo_details[0].po_date=new Date(po_date).toISOString();\npo_details[0].po_type=po_type;\npo_details[0].issuer_name=issuer_id;\npo_details[0].shakedeal_poc_details = shakedeal_poc_id; \n//po_details[0].product_ids=product_ids;\npo_details[0].po_deliver_date =new Date(po_deliver_date).toISOString(); \npo_details[0].products= product_vendor; \n\n\nitems[0].json.po_products = po_products; \nitems[0].json.concated_products = concated_products; \nitems[0].json.po_details = po_details;\nreturn items\n"
+      },
+      "name": "constructing po_details",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        6250,
+        510
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "\nlet vendors =  $node[\"Extracting PO details\"].json[\"vendors\"];\nlet products =  $node[\"Extracting PO details\"].json[\"products\"];\n\nlet productAction =  $node[\"Create new product\"].json[\"action\"];\nlet vendorAction =  $node[\"Creating new vendor\"].json[\"action\"];\n\n\nlet existingVendorData = $node[\"Get vendor Details\"].json.data;\nif(vendorAction ===\"post the vendors\" ){\n     let postedVendorData = $node[\"post vendor details\"].json.data;\n     items[0].json.postedVendorData = postedVendorData;\n     \n}\nlet existingProductData = $node[\"get product details\"].json.data;\nif(productAction === \"post the products\" ){\n   let postedProductData = $node[\"post product details\"].json.data;\n   items[0].json.postedProductData = postedProductData;\n}\nlet prodven =  $node[\"Extracting PO details\"].json[\"prodven\"];\n\nif(productAction===\"post the products\"){\n   if(existingProductData.length>0){\n      let concatedProducts = existingProductData .concat(items[0].json.postedProductData);\n      items[0].json.concatedProducts=concatedProducts;\n   }else items[0].json.concatedProducts = items[0].json.postedProductData;\n}else items[0].json.concatedProducts = existingProductData;\n\nif(vendorAction ===\"post the vendors\"){\n  if(existingVendorData.length>0){\n     let concatedVendors = existingVendorData.concat(items[0].json.postedVendorData);\n     items[0].json.concatedVendors =concatedVendors;\n  }else items[0].json.concatedVendors = items[0].json.postedVendorData;\n\n}else items[0].json.concatedVendors = existingVendorData;\n\nlet req_quantity = [];\nlet product_deliverDate = [];\nlet product_price = [];\n\nlet product_vendor_mapping=[];\nif(items[0].json.concatedVendors .length>1){\n    items[0].json.concatedProducts.forEach(function(obj,index){\n        for(i=0;i<prodven .length;i++){\n            if(obj[\"product_code\"]===prodven[i][\"productCode\"]){\n               let email = prodven[i][\"email\"];\n               let vendorObj = items[0].json.concatedVendors.find(obj=>obj[\"vendor_email\"]===email);\n               product_vendor_mapping[index]={};\n               product_vendor_mapping[index].product=obj[\"id\"];\n               product_vendor_mapping[index].vendor= vendorObj[\"id\"];\n               //junction[index].bid= items[0].json.buyerId;\n               let quantity = prodven[i][\"quantity\"];\n               if(quantity.includes(\",\")){\n                  splittedQuantity=quantity.split(\",\").join(\"\");\n                  req_quantity .push(parseInt(splittedQuantity)) ;              \n               }else req_quantity .push(parseInt(prodven[i][\"quantity\"]));\n               product_deliverDate.push(prodven[i][\"product_deliverDate\"]);\n               product_price.push(prodven[i][\"product_price\"]);\n            }\n       \n        }\n\n   })\n}else{\n    if(items[0].json.concatedProducts.length>1){\n       items[0].json.concatedProducts.forEach(function(obj,index){\n          product_vendor_mapping[index]={};\n          product_vendor_mapping[index].product=obj[\"id\"];\n          product_vendor_mapping[index].vendor= Array.isArray(items[0].json.concatedVendors)?items[0].json.concatedVendors[0][\"id\"]:items[0].json.concatedVendors[\"id\"];\n          //junction[index].bid =  items[0].json.buyerId;\n          let result = products.find(value=>value[\"product_code\"]===obj[\"product_code\"]);\n          let quantity = result[\"product_quantity\"];\n          if(quantity.includes(\",\")){\n              splittedQuantity=quantity.split(\",\").join(\"\");\n              req_quantity .push(parseInt(splittedQuantity));\n         \n          }else req_quantity .push(parseInt(result[\"product_quantity\"]));\n          //product_ids[index].qty_req=result[\"product_quantity\"];\n          product_deliverDate.push(result[\"po_deliver_date\"]);\n          product_price.push(result[\"productvalueWithTax\"]);\n    \n       })\n    }else {\n        \n        if(Array.isArray(items[0].json.concatedProducts)){\n           items[0].json.prod_code = items[0].json.concatedProducts[0][\"product_code\"]\n           items[0].json.prod_id  = items[0].json.concatedProducts[0][\"id\"]\n          \n        }else {\n           items[0].json.prod_code = items[0].json.concatedProducts[\"product_code\"]\n           items[0].json.prod_id  = items[0].json.concatedProducts[\"id\"]\n          \n        \n        }\n        \n        if(Array.isArray(items[0].json.concatedVendors )){\n           items[0].json.ven_id= items[0].json.concatedVendors[0][\"id\"]\n          \n        }else items[0].json.ven_id= items[0].json.concatedVendors[\"id\"]\n        \n        product_vendor_mapping[0]={};\n        product_vendor_mapping[0].product= items[0].json.prod_id;\n        product_vendor_mapping[0].vendor= items[0].json.ven_id;\n        let result = products.find(value=>value[\"product_code\"]=== items[0].json.prod_code);\n        let quantity = result[\"product_quantity\"];\n        if(quantity.includes(\",\")){\n              splittedQuantity=quantity.split(\",\").join(\"\");\n              req_quantity .push(parseInt(splittedQuantity));\n         \n        }else req_quantity .push(parseInt(result[\"product_quantity\"]));\n          //product_ids[index].qty_req=result[\"product_quantity\"];\n          product_deliverDate.push(result[\"po_deliver_date\"]);\n          product_price.push(result[\"productvalueWithTax\"]);\n    \n    \n    }\n}\n\n\nproduct_ids = [];\nvendor_ids=[];\n\nproduct_vendor_mapping.forEach(function(obj,index){\n        product_ids.push(obj[\"product\"]);\n        vendor_ids.push(obj[\"vendor\"]);\n\n\n\n})\n\nitems[0].json.product_price = product_price;\nitems[0].json.product_ids = product_ids;\nitems[0].json.vendor_ids = vendor_ids;\n\nitems[0].json.product_vendor_mapping = product_vendor_mapping;\nitems[0].json.req_quantity =req_quantity;\nitems[0].json.prodven = prodven; \nitems[0].json.productAction =productAction;\nitems[0].json.vendorAction =vendorAction; \nitems[0].json.existingVendorData = existingVendorData; \nitems[0].json.product_deliverDate = product_deliverDate;\n\nitems[0].json.existingProductData = existingProductData; \n\nitems[0].json.vendors = vendors; \nitems[0].json.products = products;\n\nreturn items;\n\n"
+      },
+      "name": "constructing_product_vendor_mapping",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        5290,
+        490
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Get the index of attachment\"].json[\"fromEmails\"]}}",
+              "operation": "contains",
+              "value2": "={{$node[\"Get the index of attachment\"].json[\"from\"][\"value\"][0][\"address\"]}}"
+            },
+            {
+              "value1": "={{$node[\"Get the index of attachment\"].json[\"to\"][\"value\"][0][\"address\"]}}",
+              "value2": "sairam.shakedeal+routing@gmail.com"
+            }
+          ],
+          "number": [
+            {
+              "value1": "={{$node[\"Get the index of attachment\"].json[\"attachmentIndex\"]}}",
+              "operation": "notEqual",
+              "value2": -1
+            }
+          ]
+        }
+      },
+      "name": "Check from_adress & to_adress",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        590,
+        490
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "items[0].json.attachmentIndex = items[0].binary ? Object.values(items[0].binary).findIndex(key => key.mimeType === \"application/pdf\") : -1;\nif(items[0].json.attachmentIndex !== -1){\n  items[0].json.data = items[0].binary[items[0].json.attachmentIndex];\n}\n\n\nlet fromEmails = [\"sairam.reddy@shakedeal.com\",\"ordersender-prod@ansmtp.ariba.com\",\"chidanand@shakedeal.com\"];\n\nitems[0].json.fromEmails = fromEmails;\n\nreturn items\n"
+      },
+      "name": "Get the index of attachment",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        380,
+        490
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let id = $node[\"post buyer details\"].json.data[\"id\"];\nlet user_phone = $node[\"Extracting PO details\"].json[\"buyer_contact\"];\nlet user_details = [];\nuser_details[0] = {};\nuser_details[0].user = id ;\nuser_details[0].phone_number = user_phone ;\nitems[0].json.user_details = user_details;\nreturn items"
+      },
+      "name": "construct for user_details",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        2770,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_user_details",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$json[\"user_details\"]}}"
+      },
+      "name": "Post to the user_details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2960,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": "Balcoqa-Dms-Token"
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let data = items[0].json.data;\nlet product_vendor = $node[\"constructing_product_vendor_mapping\"].json[\"product_vendor_mapping\"];\n\nlet resultFilter = \n   product_vendor.filter(product_vendor=>\n     !data.some(\n      data=> data.product=== product_vendor.product\n    )\n  );\nitems[0].json.post_product_vendor = resultFilter;\nif(resultFilter.length>0){\n   items[0].json.action = \"post the product_vendor\";\n}else items[0].json.action = \"dont post the product_vendor\";\nreturn items"
+      },
+      "name": "construct to post product_vendor",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        5660,
+        490
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_vendor_product_mapping",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"construct to post product_vendor\"].json[\"post_product_vendor\"]}}"
+      },
+      "name": "post the product_vendor_mapping",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        6050,
+        390
+      ],
+      "credentials": {
+        "httpHeaderAuth": "Balcoqa-Dms-Token"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_user_details?filter={\"user\":{\"_eq\":\"{{$node[\"Get Buyer Details\"].json.data[0][\"id\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Get user_id",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3340,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": "Balcoqa-Dms-Token"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/users?filter={\"email\":{\"_eq\":\"{{$node[\"Globals\"].json[\"poc_email\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Get shakedeal POC",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2010,
+        510
+      ],
+      "credentials": {
+        "httpHeaderAuth": "Balcoqa-Dms-Token"
+      }
+    },
+    {
+      "parameters": {
+        "format": "resolved",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "name": "Wait for PO Email",
+      "type": "n8n-nodes-base.emailReadImap",
+      "typeVersion": 1,
+      "position": [
+        20,
+        490
+      ],
+      "credentials": {
+        "imap": "Imap creds(sai)"
+      }
+    },
+    {
+      "parameters": {},
+      "name": "Do Nothing",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        860,
+        810
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [],
+          "string": [
+            {
+              "value1": "={{$json[\"action\"]}}",
+              "value2": "create user"
+            }
+          ]
+        }
+      },
+      "name": "Conditon for  checking whether user exists or create new user",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        2370,
+        510
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json[\"action\"]}}",
+              "value2": "post the products"
+            }
+          ]
+        }
+      },
+      "name": "Checking condition whether to post the products ",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        3960,
+        530
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json[\"action\"]}}",
+              "value2": "post the vendors"
+            }
+          ]
+        }
+      },
+      "name": "Checking condition whether to post the vendors ",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        4880,
+        470
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json[\"action\"]}}",
+              "value2": "post the product_vendor"
+            }
+          ]
+        }
+      },
+      "name": "Checking whether to post product_vendor_mapping",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        5850,
+        490
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Creating user\"].json[\"action\"]}}",
+              "value2": "user exists"
+            }
+          ]
+        }
+      },
+      "name": "Checking condition  whether user exists ",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        3140,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "\n\nlet product_name = [];\nlet product_code=[];\nlet product_quantity=[];\nlet material_description=[];\nlet vendor_name=[];\nlet vendor_phone=[];\nlet vendor_companyName=[];\nlet vendor_email=[];\nlet vendor_adress=[];\nlet po_deliverDate=[];\nlet productvalueWithTax=[];\nlet hsn_code = [];\nlet uom = [];\n\n\n\nconst pdf = require('pdf-parse');\n\nfunction render_page(pageData) {\n  //check documents https://mozilla.github.io/pdf.js/\n  let render_options = {\n    //replaces all occurrences of whitespace with standard spaces (0x20). The default value is `false`.\n    normalizeWhitespace: false,\n    //do not attempt to combine same line TextItem's. The default value is `false`.\n    disableCombineTextItems: false,\n  };\n\n  return pageData.getTextContent(render_options).then(function (textContent) {\n    let lastY,\n      text = \"\";\n    for (let item of textContent.items) {\n      text += `\\n${item.str}`;\n    }\n    return text;\n  });\n}\n\nlet options = {\n  pagerender: render_page,\n  max: 15,\n};\n\nconst binaryData = Buffer.from(items[0].binary[\"attachment_\" + $node[\"Get the index of attachment\"].json[\"attachmentIndex\"]].data, \"base64\");\nitems[0].json.content = await pdf(binaryData, options);\nlet lines=  items[0].json.content.text.split(\"\\n\");\nitems[0].json.all_lines = lines;\nlet lenLines = items[0].json.all_lines.length;\n\nfor(i=0;i<lenLines;i++){\n   if(lines[i].includes(\"PO Number :\")){\n      let po_line = lines[i].split(\":\");\n      items[0].json.po_number = po_line[1].trim();\n   \n   }else if(lines[i].startsWith(\"Date :\")){\n      items[0].json.po_date = lines[i-4].includes(\"Purchase Order Details\")?lines[i-1]:lines[i+1];\n   \n   \n   }else if(lines[i].includes(\"Buyer :\")){\n      items[0].json.buyer_name =lines[i-2].includes(\"Buyer Details\")?lines[i-1]:lines[i+1];\n   \n   }else if(lines[i].includes(\"Contact :\")){\n      items[0].json.buyer_contact =lines[i-4].includes(\"Buyer Details\")?parseInt(lines[i-1]):parseInt(lines[i+1]);\n   \n   }else if(lines[i].startsWith(\"Mail ID :\")){\n      items[0].json.buyer_email = lines[i-6].includes(\"Buyer Details\")?lines[i-1]:lines[i+1];\n   \n   }else if(lines[i].includes(\"Contact Details -\")||lines[i].includes(\"Details of Original Vendor\")){\n      vendor_name.push(lines[i+2].trim());\n      //vendor_adress.push(lines[i+3]);\n      //let line_phone = lines[i+6].split(\"/\");\n      //vendor_phone.push(line_phone[1]);\n    //  let email_line = lines[i+7].split(\":\");\n     // vendor_email.push(email_line[1]);\n    \n   }else if(lines[i].includes(\"Item No\")){\n      if(lines[i+12].includes(\"THIS IS SYSTEM GENERATED DOCUMENT AND HENCE DOES NOT REQUIRE ANY SIGNATURE. PLEASE TREAT THIS AS ORIGINAL AND SUBMIT YOUR ORDER ACKNOWLEDGEMENT.\")){\n         if(lines[i+21].match(/^[0-9]+$/)!==null){\n            product_code.push(lines[i+20]);\n            product_name.push(lines[i+22]);\n            product_quantity.push(lines[i+23]);\n            po_deliverDate.push(lines[i+25]);\n            hsn_code.push(lines[i+21]);\n            uom.push(lines[i+24]);\n         }else{\n            product_code.push(lines[i+20]);\n            product_name.push(lines[i+21]);\n            product_quantity.push(lines[i+22]);\n            po_deliverDate.push(lines[i+24]);\n            uom.push(lines[i+23]);\n        \n         }\n      \n      }else{\n         if(lines[i+11].match(/^[0-9]+$/)!==null){\n            product_code.push(lines[i+10]);\n            product_name.push(lines[i+12]);\n            product_quantity.push(lines[i+13]);\n            po_deliverDate.push(lines[i+15]);\n            hsn_code.push(lines[i+11]);\n            uom.push(lines[i+14]);\n         }else{\n             product_code.push(lines[i+10]);\n             product_name.push(lines[i+11]);\n             product_quantity.push(lines[i+12]);\n             po_deliverDate.push(lines[i+14]);\n             uom.push(lines[i+13]);\n            \n         \n         }\n      \n      }\n      \n   }else if(lines[i].includes(\"Material Long Text:\")){\n       \n         material_description.push(lines[i+1]);\n    \n   \n   }else if(lines[i].includes(\"Total With Tax :\")){\n         let product_price = lines[i+1].match(/\\d+/g) != null?lines[i+1].split(\",\").join(''):lines[i-1].split(\",\").join('');\n         productvalueWithTax.push(parseFloat(product_price));\n   \n   \n   }else if(lines[i].includes(\"Grand Total :\")){\n         let po_value_line = lines[i+1].match(/\\d+/g) != null?lines[i+1].split(\",\").join(''):lines[i-1].split(\",\").join('');\n         items[0].json.po_value = parseFloat(po_value_line);\n   \n   \n   }else if(lines[i].startsWith(\"ACTUAL VENDOR:\")){\n        \n           \n              let vendor_name_line = lines[i].split(\":\")\n              vendor_name.push(vendor_name_line[1].trim());\n              let vendor_mobile_line = lines[i+4].match(/\\d+/g);\n             \n              //let vendor_email_line = lines[i+1].includes(\"Email :\")?lines[i+1].split(\":\"):lines[i+5].split(\":\");\n             // vendor_email.push(vendor_email_line[1].trim());\n              \n            \n        \n   \n   }else if(lines[i].includes(\"Original Supplier\")||lines[i].includes(\"ORGINAL SUPPLIER\")||lines[i].includes(\"ORIGINAL SUPPLIER\")||lines[i].includes(\"CONTACT DETAILS:-\")||lines[i].includes(\"VENDOR NAME & DETAILS :\")||lines[i].includes(\"ORIGINAL VENDOR CONTACT DETAILS:\")||lines[i].includes(\"Vendor Details -\")||lines[i].includes(\"VENDOR CONTRACT DETAIL\")||lines[i].includes(\"Original supplier details are as follows\")||lines[i].includes(\"THE PO ITEM IS PROCURED FROM BELOW VENDOR\")||lines[i].includes(\"Actual Vendor\")||lines[i].includes(\"Principle vendor\")){\n          vendor_name.push(lines[i+1].trim());\n          //let vendor_email_line = lines[i+2].split(\":\");\n         // let email = vendor_email_line[1].replace(\"Web\",\"\")\n         // vendor_email.push(email.trim())\n   \n   }else if(lines[i].includes(\" Vendor Name & Details for Material Code\")){\n          vendor_companyName.push(lines[i+1].trim());\n          vendor_name.push(lines[i+2].trim());\n          let contact = lines[i+3].includes(\"Mob no -\")?lines[i+3].replace(\"Mob no -\",\" \"):lines[i+3].replace(\"Mob no\",\" \");\n          vendor_phone.push(contact.trim());\n          let email=lines[i+4].includes(\"Address\")?lines[i+5].split(\"-\"):lines[i+4].split(\"-\");\n          vendor_email.push(email[1].trim());\n    \n   \n   }else if(lines[i].includes(\"OEM Vendor\")||lines[i].includes(\"OEM VENDOR\")){\n          let vendor_name_line = lines[i].split(\"-\");\n          vendor_name.push(vendor_name_line[1].trim());\n         // let vendor_addresss_line = lines[i+1].split(\"-\");\n         // vendor_adress.push(vendor_addresss_line[1].trim());\n          //let vendor_email_line = lines[i+2].split(\"-\");\n        //  vendor_email.push(vendor_email_line[1].trim());\n        //  let vendor_phone_line = lines[i+3].split(\"-\");\n        //  vendor_phone.push(vendor_phone_line[1].trim());\n   \n   }else if(lines[i].startsWith(\"ORIGINAL VENDOR\")||lines[i].startsWith(\"Original Vendor\")||lines[i].startsWith(\"VENDOR:\")){\n          let vendor_name_line = lines[i].split(\":\");\n          vendor_name.push(vendor_name_line[1].trim());\n   \n   }else if(lines[i].startsWith(\"SUPPLIER DETAILS\")){\n          vendor_name.push(lines[i+2].trim());\n   \n   }\n\n}\n\n\nlet length = vendor_name.length;\n\nlet p=[];\nproduct_name .forEach(function(item,index){\n      \n       p[index] = {};\n      \n       p[index].product_name =product_name[index] ;\n       p[index].product_quantity=product_quantity[index];\n       p[index].product_code=product_code[index];\n       p[index].productvalueWithTax=productvalueWithTax[index];\n       p[index].description=material_description[index];\n      \n       p[index].po_deliver_date = po_deliverDate[index];\n       p[index].hsn_code = hsn_code[index]\n       p[index].uom = uom[index]\n           \n       \n    })\n    \nitems[0].json.products=p;\n\nlet v=[];\nvendor_name.forEach(function(item,index){\n      v[index] = {};\n      v[index].vendor_name=vendor_name[index];\n      v[index].vendor_phone=vendor_phone[index];\n      v[index].vendor_company=vendor_companyName[index];\n      v[index].vendor_email=vendor_email[index];\n      v[index].vendor_address=vendor_adress[index];\n\n\n})\nitems[0].json.vendors=v;\n\n//for mapping the vendor and products\n\nlet prodven=[];\nif(vendor_name.length>1){\n   for(i=0;i<lenLines;i++){\n       product_code.forEach(function(value,index){\n             if(lines[i].includes(value+\" \"+\"Qtys\")){\n                prodven[index]={};\n                prodven[index].productCode = value;\n                let replaceEmail =lines[i+4].includes(\"Email ID\") ?lines[i+4].split(\"-\"):lines[i+5].split(\"-\");\n                prodven[index].email = replaceEmail[1].trim();\n               \n                let result = p.find(obj=>obj[\"product_code\"]===value);\n                prodven[index].quantity= result[\"product_quantity\"];\n                prodven[index].product_deliverDate = result[\"po_deliver_date\"];\n                prodven[index].product_price = result[\"productvalueWithTax\"];\n                \n                \n       \n            }\n  \n      })\n   }\n}\n\n\nlet max =po_deliverDate[0];\n\npo_deliverDate.forEach(function(value,index){\n       max = new Date(value) > new Date(max)? value: max;\n      \n\n\n})\n//items[0].json.dates =dates \nif(vendor_name.length>0){\n   items[0].json.order_type = \"routing\";\n\n}else items[0].json.order_type = \"rfq\";\n\n\nitems[0].json.max_date = max; \n\n\n\nitems[0].json.prodven = prodven;\n\n\nitems[0].json.product_name=product_name;\nitems[0].json.product_code=product_code;\nitems[0].json.product_quantity=product_quantity;\nitems[0].json.material_description=material_description;\nitems[0].json.vendor_name=vendor_name;\nitems[0].json.vendor_phone=vendor_phone;\nitems[0].json.vendor_email=vendor_email;\nitems[0].json.vendor_companyName=vendor_companyName;\nitems[0].json.po_deliverDate = po_deliverDate;\nitems[0].json.productvalueWithTax = productvalueWithTax;\nitems[0].json.vendor_adress=vendor_adress;\n\n\n\nreturn items\n"
+      },
+      "name": "Extracting PO details",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1110,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "\nlet action=\"\";\nlet email = $node[\"Capture PO data\"].json[\"buyer_email\"];\n\nlet shakedeal_poc_id = $node[\"Get shakedeal POC\"].json.data[0].id;\n\nitems[0].json.buyerEmail=email;\n\nlet data = $node[\"Get Buyer Details\"].json.data;\n\nlet po_role = $node[\"Globals\"].json[\"po_issuer_role\"];\n\n\nitems[0].json.length = data.length;\nif(data.length>0){\n   action=\"user exists\";\n}else action = \"create user\";\n\nlet user_name = $node[\"Extracting PO details\"].json[\"buyer_name\"];\nlet user_email = $node[\"Extracting PO details\"].json[\"buyer_email\"];\nlet user_phone = $node[\"Extracting PO details\"].json[\"buyer_contact\"];\nlet password= user_name+\"@2021\";\n\nlet user_details = [];\nuser_details[0]={};\nlet user = [];\nuser[0]={};\nuser[0].first_name = user_name;\nuser[0].email = user_email;\nuser_details[0].phone = user_phone ;\nuser[0].password = password;\nuser[0].role = po_role;\nuser_details[0].user = user ;\n\nitems[0].json.user = user;\nitems[0].json.user_details = user_details ;\n\nitems[0].json.action =action;\nreturn items"
+      },
+      "name": "Creating user",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        2190,
+        510
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "\nlet action = \"\";\nlet product_name = $node[\"Extracting PO details\"].json[\"product_name\"];\nlet product_code = $node[\"Extracting PO details\"].json[\"product_code\"];\nlet products = $node[\"Extracting PO details\"].json[\"products\"];\n\n\nlet data = items[0].json.data;\n\n\n\n\n\n\nlet resultFilter = \n   products.filter(products=>\n     !data.some(\n      data=> data.product_code === products.product_code \n    )\n  );\n\n\n\nitems[0].json.length= resultFilter .length;\nif(resultFilter .length>0){\n   action=\"post the products\";\n\n}else action = \"no products to post\";\n\nitems[0].json.postProducts=resultFilter ;\nitems[0].json.products=products;\n\n\n\nitems[0].json.action = action;\n\n\n\nreturn items;"
+      },
+      "name": "Create new product",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        3770,
+        530
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "\nlet email = $node[\"Extracting PO details\"].json[\"vendor_email\"];\n\nlet vendors = $node[\"Extracting PO details\"].json[\"vendors\"];\n\nitems[0].json.vendorEmail=email;\n\nlet data = items[0].json.data;\n\nlet resultFilter = \n   vendors.filter(vendors=>\n     !data.some(\n      data=> data.vendor_email=== vendors.vendor_email\n    )\n  );\n\n\n\nitems[0].json.length= resultFilter .length;\nif(resultFilter .length>0){\n   action=\"post the vendors\";\n\n}else action = \"no vendors to post\";\n\nitems[0].json.postVendors=resultFilter;\nitems[0].json.vendors =vendors;\n\n\n\nitems[0].json.action = action;\n\n\n\nreturn items\n"
+      },
+      "name": "Creating new vendor",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        4670,
+        470
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "buyer_name",
+              "value": "={{$node[\"Extracting PO details\"].json[\"buyer_name\"]}}"
+            },
+            {
+              "name": "buyer_email",
+              "value": "={{$node[\"Extracting PO details\"].json[\"buyer_email\"]}}"
+            },
+            {
+              "name": "po_num",
+              "value": "={{$node[\"Extracting PO details\"].json[\"po_number\"]}}"
+            },
+            {
+              "name": "from_mail",
+              "value": "={{$node[\"Get the index of attachment\"].json[\"from\"][\"value\"][0][\"address\"]}}"
+            },
+            {
+              "name": "to_mail",
+              "value": "={{$node[\"Get the index of attachment\"].json[\"to\"][\"value\"][0][\"address\"]}}"
+            },
+            {
+              "name": "items_list",
+              "value": "={{$node[\"extracting the Shipping adress\"].json[\"items_list\"]}}"
+            },
+            {
+              "name": "po_date",
+              "value": "={{$node[\"Extracting PO details\"].json[\"po_date\"]}}"
+            },
+            {
+              "name": "po_deliver_date",
+              "value": "= {{$node[\"Extracting PO details\"].json[\"po_deliverDate\"]}}"
+            },
+            {
+              "name": "po_type",
+              "value": "routing"
+            },
+            {
+              "name": "po_status",
+              "value": "open"
+            },
+            {
+              "name": "shipment_address",
+              "value": "={{$node[\"extracting the Shipping adress\"].json[\"shippingAdress\"]}}"
+            },
+            {
+              "name": "vendor_email",
+              "value": "={{$node[\"Extracting PO details\"].json[\"vendorEmail\"]}}"
+            },
+            {
+              "name": "vendor_name",
+              "value": "={{$node[\"Extracting PO details\"].json[\"vendorName\"]}}"
+            },
+            {
+              "name": "products",
+              "value": "={{$node[\"Extracting PO details\"].json[\"products\"]}}"
+            },
+            {
+              "name": "vendors",
+              "value": "={{$node[\"Extracting PO details\"].json[\"vendors\"]}}"
+            }
+          ],
+          "number": [
+            {
+              "name": "phone",
+              "value": "={{$node[\"Extracting PO details\"].json[\"buyer_phone\"]}}"
+            },
+            {
+              "name": "po_value",
+              "value": "={{$node[\"Extracting PO details\"].json[\"po_value\"]}}"
+            }
+          ],
+          "boolean": []
+        },
+        "options": {}
+      },
+      "name": "Capture PO data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1260,
+        270
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "dms_url",
+              "value": "=https://balcoqa.mozart.shakedeal.com"
+            },
+            {
+              "name": "sales_agent_email",
+              "value": "=sairam.reddy@shakedeal.com"
+            },
+            {
+              "name": "po_issuer_role",
+              "value": "=f68840a4-b03f-4ecb-84b7-a17576f1a385"
+            },
+            {
+              "name": "poc_email",
+              "value": "=sales@routing.com"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        190,
+        490
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_vendor_product_mapping?filter={\"_and\": [{\"product\": {\"_in\":\"{{$node[\"constructing_product_vendor_mapping\"].json[\"product_ids\"]}}\"}},{\"vendor\": {\"_in\":\"{{$node[\"constructing_product_vendor_mapping\"].json[\"vendor_ids\"]}}\"}}]}",
+        "allowUnauthorizedCerts": true,
+        "options": {}
+      },
+      "name": "Get product_vendor",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        5470,
+        490
+      ],
+      "credentials": {
+        "httpHeaderAuth": "Balcoqa-Dms-Token"
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "handyalasairam9177@gmail.com",
+        "toEmail": "={{$node[\"Globals\"].json[\"sales_agent_email\"]}}",
+        "subject": "=Balco: A new PO is received with PO number: {{$node[\"Extracting PO details\"].json[\"po_number\"]}}",
+        "html": "=<!DoCtYPe html><html lang=\"en\"><head><style id=\"stndz-\nstyle\"></style>\n<meta http-equiv=\"Content-Type\" content=\"text\n/html; charset=UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width,\ninitial-scale=1, shrink-to-fit=no\">\n<meta name=\"description\" content=\"\">\n<meta name=\"author\" content=\"Mark Otto, Jacob\nThornton, and Bootstrap contributors\">\n<meta name=\"generator\" content=\"\nAcelleSystemLayouts\">\n<!-- Bootstrap core CSS -->\n<link href=\"https://marketing.shakedeal.com/assets\n/templates/60584da7bdf65/css/bootstrap.min.css\" rel=\"\nstylesheet\">\n<script id=\"spHTMLFormElementPrototypeScript\">\n(function()\n{\ntry\n{\nvar sp_old_HTMLFormElementPrototype_submit =\nHTMLFormElement.prototype.submit;\nHTMLFormElement.prototype.submit = function\n(AEvent)\n{\ntry\n{\nvar spEvent = document.createEvent('Event');\nspEvent.initEvent('sp_submit', true, true);\nthis.dispatchEvent(spEvent);\n}\ncatch(ErrorMessage)\n{\nconsole.error('spFormElementPrototype()\nError sending \"sp_submit\" event from HTMLFormElement.\nprototype.submit: ' + ErrorMessage);\n}\nsp_old_HTMLFormElementPrototype_submit.apply\n(this);\n};\n}\ncatch(ErrorMessage)\n{\nconsole.error('spFormElementPrototype() Error\nattaching to HTMLFormElement.prototype.submit: ' +\nErrorMessage);\n}\ntry\n{\nif (typeof __doPostBack == 'function')\n{\nvar sp_old__doPostBack = __doPostBack;\n__doPostBack = function(eventTarget,\neventArgument)\n{\ntry\n{\nvar spEvent = document.createEvent\n('Event');\nspEvent.initEvent('sp_submit', true, true);\nwindow.dispatchEvent(spEvent);\n}\ncatch(ErrorMessage)\n{\nconsole.error('spFormElementPrototype()\nError sending \"sp_submit\" event from __doPostBack(): '\n+ ErrorMessage);\n}\nsp_old__doPostBack(eventTarget,\neventArgument);\n};\n}\n}\ncatch(ErrorMessage)\n{\nconsole.error('spFormElementPrototype() Error\nattaching to __doPostBack(): ' + ErrorMessage);\n}\n})();</script><link href=\"https://fonts.googleapis.\ncom/icon?family=Material+Icons\" rel=\"stylesheet\"><link\nhref=\"https://fonts.googleapis.com/icon?\nfamily=Material+Icons+Outlined\" rel=\"stylesheet\"></head>\n\n<body data-new-gr-c-s-check-loaded=\"14.990.0\" data-\ngr-ext-installed=\"\">\n<main role=\"main\">\n<div class=\"py-5 bg-light\">\n<div class=\"container\">\n<h1 class=\"my-4 display-4 text-center\">A new PO is received with PO number:{{$node[\"Extracting PO details\"].json[\"po_number\"]}} and PO type : Routing</h1>\n<p class=\"lead text-center\">Please create a SDStore order against this PO: {{$node[\"Extracting PO details\"].json[\"po_number\"]}}.</p>\n<div><img class=\"my-2\" src=\"\" width=\"100%\" /></div>\n</div>\n</div>\n</main><footer class=\"text-muted py-5\">\n<div class=\"container\">\n<div class=\"row\">\n<div class=\"col-md-8\">\n<p class=\"mb-1\">Copyright &copy; OpCommerce Online PVT\nLTD, All rights reserved.</p>\n<p class=\"mb-0\">Please email us on <a href=\"\nsupport@shakedeal.com\">support@shakedeal.com</a> in\ncase of any queries.\n</div>\n<div class=\"col-md-4\">\n<p class=\"float-right\"><a href=\"#\">Back to top</a></p>\n</div>\n</div>\n</div>\n</footer>\n</body></html>",
+        "options": {}
+      },
+      "name": "SA is informed that PO is generated",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        6700,
+        510
+      ],
+      "credentials": {
+        "smtp": "smtp(sai)creds"
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Extracting PO details\"].json[\"order_type\"]}}",
+              "value2": "routing"
+            }
+          ]
+        }
+      },
+      "name": "Checking the order_type",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        4280,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let productAction = $node[\"Create new product\"].json[\"action\"];\nlet existingProductData = $node[\"get product details\"].json.data;\n\n\nif(productAction === \"post the products\"){\n   let postedProductData = $node[\"post product details\"].json.data;\n   items[0].json.postedProductData = postedProductData; \n\n}\n\nif(productAction === \"post the products\"){\n   if(existingProductData.length>0){\n      let concatedProducts = existingProductData.concat(items[0].json.postedProductData);\n      items[0].json.concatedProducts = concatedProducts;\n   }else items[0].json.concatedProducts = items[0].json.postedProductData;\n}else items[0].json.concatedProducts = existingProductData; \n\n\nlet products = items[0].json.concatedProducts;\n\nlet product_ids = [];\nlet vendor_ids = [];\nlet product_code=[];\n\nif(products.length>0){\n     items[0].json.concatedProducts.forEach(function(obj,index){\n         if(!product_code.includes(obj[\"product_code\"])){\n            product_code.push(obj[\"product_code\"]);\n            product_ids.push(obj[\"id\"]);\n            vendor_ids.push(null);\n         }\n    })\n}else product_ids.push(products[\"id\"]);\n\n\nitems[0].json.product_ids = product_ids; \nitems[0].json.vendor_ids = vendor_ids; \nitems[0].json.existingProductData = existingProductData; \n\n\nreturn items\n"
+      },
+      "name": "Get product_ids",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        4490,
+        790
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_vendor_product_mapping?filter={\"_and\": [{\"product\": {\"_in\":\"{{$node[\"Get product_ids\"].json[\"product_ids\"]}}\"}},{\"vendor\": {\"_in\":0}}]}",
+        "allowUnauthorizedCerts": true,
+        "options": {}
+      },
+      "name": "Get the product_vendor",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        4670,
+        790
+      ],
+      "credentials": {
+        "httpHeaderAuth": "Balcoqa-Dms-Token"
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let products = $node[\"Get product_ids\"].json[\"concatedProducts\"];\nlet product_ids = $node[\"Get product_ids\"].json[\"product_ids\"];\nlet existing_product_vendor = $node[\"Get the product_vendor\"].json.data;\n\nlet resultFilter  = product_ids.filter(products=>!existing_product_vendor.some(existing_product_vendor=>existing_product_vendor.product === products));\n\nitems[0].json.resultFilter  = resultFilter;  \npost_product_vendor=[];\nresultFilter.forEach(function(value,index){\n       post_product_vendor[index] = {};\n       post_product_vendor[index].product = value;\n\n})\n\n\nitems[0].json.post_product_vendor = post_product_vendor;\nif(resultFilter.length>0){\n   items[0].json.action = \"post the product_vendor\";\n   \n}else items[0].json.action = \"dont post the product_vendor\";\n\nitems[0].json.existing_product_vendor = existing_product_vendor;\n\nitems[0].json.products = products; \n\n\nreturn items;\n"
+      },
+      "name": "Create new product_vendor",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        4890,
+        790
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Create new product_vendor\"].json[\"action\"]}}",
+              "value2": "post the product_vendor"
+            }
+          ]
+        }
+      },
+      "name": "Checking condition whether to post product_vendor ",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        5130,
+        790
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_vendor_product_mapping",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Create new product_vendor\"].json[\"post_product_vendor\"]}}"
+      },
+      "name": "Post the product_vendor",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        5350,
+        680
+      ],
+      "credentials": {
+        "httpHeaderAuth": "Balcoqa-Dms-Token"
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let po_file = $node[\"Merging the globals and file Id\"].json[\"data\"][\"id\"];\nlet po_num = $node[\"Merging the globals and file Id\"].json[\"po_num\"];\nlet po_value= $node[\"Merging the globals and file Id\"].json[\"po_value\"];\nlet po_status =$node[\"Merging the globals and file Id\"].json[\"po_status\"];\nlet po_date =$node[\"Merging the globals and file Id\"].json[\"po_date\"];\n//let po_type= $node[\"Merging the globals and file Id\"].json[\"po_type\"];\nlet issuer_id= $node[\"Creating user\"].json[\"action\"]===\"user exists\"?$node[\"Get user_id\"].json.data[0][\"id\"]:$node[\"Post to the user_details\"].json.data[\"id\"];\nlet po_deliver_date = $node[\"Extracting PO details\"].json[\"max_date\"];\nlet req_quantity = $node[\"Extracting PO details\"].json[\"product_quantity\"];\nlet product_deliverDate = $node[\"Extracting PO details\"].json[\"po_deliverDate\"];\nlet product_price = $node[\"Extracting PO details\"].json[\"productvalueWithTax\"];\nlet productAction =  $node[\"Create new product\"].json[\"action\"];\nlet po_products = $node[\"Extracting PO details\"].json[\"products\"];\nlet existingProductData = $node[\"get product details\"].json.data;\nlet shakedeal_poc_id = $node[\"Get shakedeal POC\"].json.data[0].id;\n\nlet existing_product_vendor = $node[\"Get the product_vendor\"].json.data;\nlet product_vendor_action = $node[\"Create new product_vendor\"].json.action;\n\nif(productAction===\"post the products\"){\n   if(existingProductData.length>0){\n      let concatedProducts = existingProductData .concat(items[0].json.postedProductData);\n      items[0].json.concatedProducts=concatedProducts;\n   }else items[0].json.concatedProducts = items[0].json.postedProductData;\n}else items[0].json.concatedProducts = existingProductData;\n\nlet concated_products = items[0].json.concatedProducts\n\nif(product_vendor_action === \"post the product_vendor\"){\n     let posted_product_vendor = $node[\"Post the product_vendor\"].json.data;\n     items[0].json.posted_product_vendor = posted_product_vendor;\n\n}\n\nif(product_vendor_action === \"post the product_vendor\"){\n   if(existing_product_vendor.length>0){\n      let concated_product_vendor = existing_product_vendor.concat(items[0].json.posted_product_vendor);\n      items[0].json.concated_product_vendor = concated_product_vendor;\n   \n   }else items[0].json.concated_product_vendor = items[0].json.posted_product_vendor;\n\n}else items[0].json.concated_product_vendor = existing_product_vendor; \n\nlet concat_product_vendor  = items[0].json.concated_product_vendor;\n\nlet product_vendor = [];\n\nif(concat_product_vendor.length>1){\n      for(i=0;i<concat_product_vendor.length;i++){                 \n        product_vendor[i] ={};\n        product_vendor[i].sd_mozart_vendor_product_mapping_id=concat_product_vendor[i][\"id\"];\n        product_vendor[i].req_qty= req_quantity[i];\n        product_vendor[i].delivery_date = new Date(product_deliverDate[i]).toISOString();\n        product_vendor[i].product_total = product_price[i];\n       \n}\n\n\n}else {\n    product_vendor[0] = {};\n    product_vendor[0].sd_mozart_vendor_product_mapping_id =product_vendor_action === \"post the product_vendor\"?concat_product_vendor[\"id\"]:concat_product_vendor[0][\"id\"];  \n    product_vendor[0].req_qty = req_quantity[0];\n    product_vendor[0].delivery_date = new Date(product_deliverDate[0]).toISOString();\n    product_vendor[0].product_total = product_price[0];\n\n\n}\n\nlet po_details=[];\npo_details[0]={};\npo_details[0].po_file=po_file;\npo_details[0].po_num=po_num;\npo_details[0].po_value=po_value;\npo_details[0].po_status=po_status;\npo_details[0].po_date=new Date(po_date).toISOString();\npo_details[0].po_type=\"rfq\";\npo_details[0].issuer_name=issuer_id;\npo_details[0].shakedeal_poc_details = shakedeal_poc_id;\npo_details[0].po_deliver_date =new Date(po_deliver_date).toISOString();\npo_details[0].products= product_vendor; \nitems[0].json.po_details = po_details;\n\n\nreturn items;"
+      },
+      "name": "constructing for PO",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        5590,
+        810
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_po_details",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"constructing for PO\"].json[\"po_details\"]}}"
+      },
+      "name": "Post the PO",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        5790,
+        810
+      ],
+      "credentials": {
+        "httpHeaderAuth": "Balcoqa-Dms-Token"
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "handyalasairam9177@gmail.com",
+        "toEmail": "={{$node[\"Globals\"].json[\"sales_agent_email\"]}}",
+        "subject": "=Balco: A new PO is received with PO number: {{$node[\"Extracting PO details\"].json[\"po_number\"]}}",
+        "html": "=<!DoCtYPe html><html lang=\"en\"><head><style id=\"stndz-\nstyle\"></style>\n<meta http-equiv=\"Content-Type\" content=\"text\n/html; charset=UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width,\ninitial-scale=1, shrink-to-fit=no\">\n<meta name=\"description\" content=\"\">\n<meta name=\"author\" content=\"Mark Otto, Jacob\nThornton, and Bootstrap contributors\">\n<meta name=\"generator\" content=\"\nAcelleSystemLayouts\">\n<!-- Bootstrap core CSS -->\n<link href=\"https://marketing.shakedeal.com/assets\n/templates/60584da7bdf65/css/bootstrap.min.css\" rel=\"\nstylesheet\">\n<script id=\"spHTMLFormElementPrototypeScript\">\n(function()\n{\ntry\n{\nvar sp_old_HTMLFormElementPrototype_submit =\nHTMLFormElement.prototype.submit;\nHTMLFormElement.prototype.submit = function\n(AEvent)\n{\ntry\n{\nvar spEvent = document.createEvent('Event');\nspEvent.initEvent('sp_submit', true, true);\nthis.dispatchEvent(spEvent);\n}\ncatch(ErrorMessage)\n{\nconsole.error('spFormElementPrototype()\nError sending \"sp_submit\" event from HTMLFormElement.\nprototype.submit: ' + ErrorMessage);\n}\nsp_old_HTMLFormElementPrototype_submit.apply\n(this);\n};\n}\ncatch(ErrorMessage)\n{\nconsole.error('spFormElementPrototype() Error\nattaching to HTMLFormElement.prototype.submit: ' +\nErrorMessage);\n}\ntry\n{\nif (typeof __doPostBack == 'function')\n{\nvar sp_old__doPostBack = __doPostBack;\n__doPostBack = function(eventTarget,\neventArgument)\n{\ntry\n{\nvar spEvent = document.createEvent\n('Event');\nspEvent.initEvent('sp_submit', true, true);\nwindow.dispatchEvent(spEvent);\n}\ncatch(ErrorMessage)\n{\nconsole.error('spFormElementPrototype()\nError sending \"sp_submit\" event from __doPostBack(): '\n+ ErrorMessage);\n}\nsp_old__doPostBack(eventTarget,\neventArgument);\n};\n}\n}\ncatch(ErrorMessage)\n{\nconsole.error('spFormElementPrototype() Error\nattaching to __doPostBack(): ' + ErrorMessage);\n}\n})();</script><link href=\"https://fonts.googleapis.\ncom/icon?family=Material+Icons\" rel=\"stylesheet\"><link\nhref=\"https://fonts.googleapis.com/icon?\nfamily=Material+Icons+Outlined\" rel=\"stylesheet\"></head>\n\n<body data-new-gr-c-s-check-loaded=\"14.990.0\" data-\ngr-ext-installed=\"\">\n<main role=\"main\">\n<div class=\"py-5 bg-light\">\n<div class=\"container\">\n<h1 class=\"my-4 display-4 text-center\">A new PO is received with PO number:{{$node[\"Extracting PO details\"].json[\"po_number\"]}} and PO type : RFQ</h1>\n<p class=\"lead text-center\">Please create a SDStore order against this PO: {{$node[\"Extracting PO details\"].json[\"po_number\"]}}.</p>\n<div><img class=\"my-2\" src=\"\" width=\"100%\" /></div>\n</div>\n</div>\n</main><footer class=\"text-muted py-5\">\n<div class=\"container\">\n<div class=\"row\">\n<div class=\"col-md-8\">\n<p class=\"mb-1\">Copyright &copy; OpCommerce Online PVT\nLTD, All rights reserved.</p>\n<p class=\"mb-0\">Please email us on <a href=\"\nsupport@shakedeal.com\">support@shakedeal.com</a> in\ncase of any queries.\n</div>\n<div class=\"col-md-4\">\n<p class=\"float-right\"><a href=\"#\">Back to top</a></p>\n</div>\n</div>\n</div>\n</footer>\n</body></html>",
+        "options": {}
+      },
+      "name": "SA is informed that PO is generated1",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        6010,
+        810
+      ],
+      "credentials": {
+        "smtp": "smtp(sai)creds"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_po_details?filter={\"po_num\":{\"_eq\":\"{{$node[\"Extracting PO details\"].json[\"po_number\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Check for PO",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1510,
+        470
+      ],
+      "credentials": {
+        "httpHeaderAuth": "Balcoqa-Dms-Token"
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Check for PO\"].json[\"data\"].length}}",
+              "operation": "notEqual"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1640,
+        470
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "handyalasairam9177@gmail.com",
+        "toEmail": "={{$node[\"Globals\"].json[\"sales_agent_email\"]}}",
+        "subject": "=Balco :This PO already exits with PO number: {{$node[\"Extracting PO details\"].json[\"po_number\"]}}",
+        "html": "=<!DoCtYPe html><html lang=\"en\"><head><style id=\"stndz-\nstyle\"></style>\n<meta http-equiv=\"Content-Type\" content=\"text\n/html; charset=UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width,\ninitial-scale=1, shrink-to-fit=no\">\n<meta name=\"description\" content=\"\">\n<meta name=\"author\" content=\"Mark Otto, Jacob\nThornton, and Bootstrap contributors\">\n<meta name=\"generator\" content=\"\nAcelleSystemLayouts\">\n<!-- Bootstrap core CSS -->\n<link href=\"https://marketing.shakedeal.com/assets\n/templates/60584da7bdf65/css/bootstrap.min.css\" rel=\"\nstylesheet\">\n<script id=\"spHTMLFormElementPrototypeScript\">\n(function()\n{\ntry\n{\nvar sp_old_HTMLFormElementPrototype_submit =\nHTMLFormElement.prototype.submit;\nHTMLFormElement.prototype.submit = function\n(AEvent)\n{\ntry\n{\nvar spEvent = document.createEvent('Event');\nspEvent.initEvent('sp_submit', true, true);\nthis.dispatchEvent(spEvent);\n}\ncatch(ErrorMessage)\n{\nconsole.error('spFormElementPrototype()\nError sending \"sp_submit\" event from HTMLFormElement.\nprototype.submit: ' + ErrorMessage);\n}\nsp_old_HTMLFormElementPrototype_submit.apply\n(this);\n};\n}\ncatch(ErrorMessage)\n{\nconsole.error('spFormElementPrototype() Error\nattaching to HTMLFormElement.prototype.submit: ' +\nErrorMessage);\n}\ntry\n{\nif (typeof __doPostBack == 'function')\n{\nvar sp_old__doPostBack = __doPostBack;\n__doPostBack = function(eventTarget,\neventArgument)\n{\ntry\n{\nvar spEvent = document.createEvent\n('Event');\nspEvent.initEvent('sp_submit', true, true);\nwindow.dispatchEvent(spEvent);\n}\ncatch(ErrorMessage)\n{\nconsole.error('spFormElementPrototype()\nError sending \"sp_submit\" event from __doPostBack(): '\n+ ErrorMessage);\n}\nsp_old__doPostBack(eventTarget,\neventArgument);\n};\n}\n}\ncatch(ErrorMessage)\n{\nconsole.error('spFormElementPrototype() Error\nattaching to __doPostBack(): ' + ErrorMessage);\n}\n})();</script><link href=\"https://fonts.googleapis.\ncom/icon?family=Material+Icons\" rel=\"stylesheet\"><link\nhref=\"https://fonts.googleapis.com/icon?\nfamily=Material+Icons+Outlined\" rel=\"stylesheet\"></head>\n\n<body data-new-gr-c-s-check-loaded=\"14.990.0\" data-\ngr-ext-installed=\"\">\n<main role=\"main\">\n<div class=\"py-5 bg-light\">\n<div class=\"container\">\n<h1 class=\"my-4 display-4 text-center\">This PO already exits with PO number:{{$node[\"Extracting PO details\"].json[\"po_number\"]}}</h1>\n<div><img class=\"my-2\" src=\"\" width=\"100%\" /></div>\n</div>\n</div>\n</main><footer class=\"text-muted py-5\">\n<div class=\"container\">\n<div class=\"row\">\n<div class=\"col-md-8\">\n<p class=\"mb-1\">Copyright &copy; OpCommerce Online PVT\nLTD, All rights reserved.</p>\n<p class=\"mb-0\">Please email us on <a href=\"\nsupport@shakedeal.com\">support@shakedeal.com</a> in\ncase of any queries.\n</div>\n<div class=\"col-md-4\">\n<p class=\"float-right\"><a href=\"#\">Back to top</a></p>\n</div>\n</div>\n</div>\n</footer>\n</body></html>",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        1820,
+        320
+      ],
+      "credentials": {
+        "smtp": "smtp(sai)creds"
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "updatedAt": "2022-04-19T14:12:48.191Z"
+}
