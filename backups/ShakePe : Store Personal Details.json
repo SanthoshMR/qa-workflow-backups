@@ -1,0 +1,272 @@
+{
+  "active": true,
+  "connections": {
+    "Wait for Personal details": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "reCAPTCHA Verification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post the data": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "reCAPTCHA Verification": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Post the data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-08-25T06:49:25.447Z",
+  "id": "95",
+  "name": "ShakePe : Store Personal Details",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "shakePe_personal_details",
+        "responseMode": "lastNode",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              }
+            ]
+          }
+        }
+      },
+      "name": "Wait for Personal details",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        390,
+        310
+      ],
+      "webhookId": "5a572ee8-fd1b-4c55-aff3-73559e26ba3c"
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_shakepe_personal_details",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "name",
+              "value": "={{$node[\"Wait for Personal details\"].json[\"body\"][\"name\"]}}"
+            },
+            {
+              "name": "email_address",
+              "value": "={{$node[\"Wait for Personal details\"].json[\"body\"][\"email\"]}}"
+            },
+            {
+              "name": "phone_number",
+              "value": "={{parseInt($node[\"Wait for Personal details\"].json[\"body\"][\"phone\"])}}"
+            },
+            {
+              "name": "message",
+              "value": "={{$node[\"Wait for Personal details\"].json[\"body\"][\"message\"]}}"
+            },
+            {
+              "name": "company_name",
+              "value": "={{$node[\"Wait for Personal details\"].json[\"body\"][\"company\"]}}"
+            },
+            {
+              "name": "designation",
+              "value": "={{$node[\"Wait for Personal details\"].json[\"body\"][\"designation\"]}}"
+            },
+            {
+              "name": "size_of_company",
+              "value": "={{$node[\"Wait for Personal details\"].json[\"body\"][\"size\"]}}"
+            }
+          ]
+        },
+        "headerParametersUi": {
+          "parameter": []
+        }
+      },
+      "name": "Post the data",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1110,
+        210
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "dms_url",
+              "value": "=https://dmsqa.shakedeal.com"
+            },
+            {
+              "name": "to_email",
+              "value": "=sairam.reddy@shakedeal.com,chidanand@shakedeal.com,shreyas.ananth@shakedeal.com,vinay.kumar@shakedeal.com"
+            },
+            {
+              "name": "from_email",
+              "value": "=ShakePe@shakedeal.com"
+            },
+            {
+              "name": "recaptcha_secret",
+              "value": "=6LeKBxoeAAAAALK_Y4uvyWi5LGSn0decasHg82F2"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        570,
+        310
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{$node[\"Globals\"].json[\"from_email\"]}}",
+        "toEmail": "={{$node[\"Globals\"].json[\"to_email\"]}}",
+        "subject": "=ShakePe Enquiry Details",
+        "text": "=Hi Team,\n\nPlease find the requirements :\n\nCompany Name : {{$node[\"Wait for Personal details\"].json[\"body\"][\"company\"]}}\nName : {{$node[\"Wait for Personal details\"].json[\"body\"][\"name\"]}}\nWork email : {{$node[\"Wait for Personal details\"].json[\"body\"][\"email\"]}}\nMob no : {{parseInt($node[\"Wait for Personal details\"].json[\"body\"][\"phone\"])}}\nComments : {{$node[\"Wait for Personal details\"].json[\"body\"][\"message\"]}}",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        1320,
+        210
+      ],
+      "credentials": {
+        "smtp": "AWS SES Creds"
+      }
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "=https://www.google.com/recaptcha/api/siteverify",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": []
+        },
+        "queryParametersUi": {
+          "parameter": [
+            {
+              "name": "secret",
+              "value": "={{$node[\"Globals\"].json[\"recaptcha_secret\"]}}"
+            },
+            {
+              "name": "response",
+              "value": "={{$node[\"Wait for Personal details\"].json[\"body\"][\"token\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "reCAPTCHA Verification",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        760,
+        310
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1130,
+        430
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$node[\"reCAPTCHA Verification\"].json[\"success\"]}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        930,
+        310
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "updatedAt": "2022-01-18T06:10:50.152Z"
+}
