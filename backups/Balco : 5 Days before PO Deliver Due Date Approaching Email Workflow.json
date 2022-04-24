@@ -1,0 +1,139 @@
+{
+  "active": true,
+  "connections": {
+    "Cron": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Setting 5th day from present date",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Setting 5th day from present date": {
+      "main": [
+        [
+          {
+            "node": "Postgres",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-03-21T14:56:30.740Z",
+  "id": "45",
+  "name": "Balco : 5 Days before PO Deliver Due Date Approaching Email Workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        130,
+        180
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "hour": 10
+            }
+          ]
+        }
+      },
+      "name": "Cron",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        394,
+        414
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "dms_url",
+              "value": "=https://balcoqa.mozart.shakedeal.com"
+            },
+            {
+              "name": "sales_agent_email",
+              "value": "=sairam.reddy@shakedeal.com"
+            },
+            {
+              "name": "operations_agent_email",
+              "value": "=handyalasairam9177@gmail.com"
+            }
+          ],
+          "number": [
+            {
+              "name": "due",
+              "value": 5
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        570,
+        410
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=update sd_mozart_po_details  set delivery_status ='2_due_in_5_days' where po_deliver_date='{{$node[\"Setting 5th day from present date\"].json[\"date\"]}}' and po_status !='complete'"
+      },
+      "name": "Postgres",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        950,
+        410
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": "balcoqa postgres credentials"
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "var someDate = new Date();\nvar numberOfDaysToAdd = $node[\"Globals\"].json[\"due\"]\nsomeDate.setDate(someDate.getDate() + numberOfDaysToAdd);\n\nvar dd =parseInt(someDate.getDate());\nvar day = dd < 10 ? '0' + dd : dd;\nvar mm =parseInt(someDate.getMonth() + 1);\nvar month = mm < 10 ? '0' + mm : mm;\nvar y = someDate.getFullYear();\n\nvar someFormattedDate = y+'-'+month +'-'+day;\n\nitems[0].json.date=someFormattedDate\nreturn items;\n"
+      },
+      "name": "Setting 5th day from present date",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        750,
+        410
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "updatedAt": "2021-12-14T12:49:51.369Z"
+}
