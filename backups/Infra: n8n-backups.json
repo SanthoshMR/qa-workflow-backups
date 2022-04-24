@@ -49,7 +49,7 @@
       "main": [
         [
           {
-            "node": "N8N Workflows",
+            "node": "Authenticate",
             "type": "main",
             "index": 0
           }
@@ -195,6 +195,17 @@
           }
         ]
       ]
+    },
+    "Authenticate": {
+      "main": [
+        [
+          {
+            "node": "N8N Workflows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2020-12-30T18:51:07.629Z",
@@ -227,7 +238,16 @@
       "parameters": {
         "authentication": "basicAuth",
         "url": "https://qan8n.shakedeal.com/rest/workflows",
-        "options": {}
+        "allowUnauthorizedCerts": true,
+        "options": {},
+        "headerParametersUi": {
+          "parameter": [
+            {
+              "name": "Cookie",
+              "value": "= {{$node[\"Authenticate\"].json[\"headers\"][\"set-cookie\"][0]}}"
+            }
+          ]
+        }
       },
       "name": "N8N Workflows",
       "type": "n8n-nodes-base.httpRequest",
@@ -237,7 +257,10 @@
       ],
       "typeVersion": 1,
       "credentials": {
-        "httpBasicAuth": "SD-Basic-Auth-Temp"
+        "httpBasicAuth": {
+          "id": "9",
+          "name": "SD-Basic-Auth-Temp"
+        }
       }
     },
     {
@@ -248,7 +271,8 @@
         "owner": "={{$node[\"Globals\"].json[\"repo\"][\"owner\"]}}",
         "repository": "={{$node[\"Globals\"].json[\"repo\"][\"name\"]}}",
         "filePath": "={{$node[\"Globals\"].json[\"repo\"][\"path\"]}}{{$json[\"name\"]}}.json",
-        "asBinaryProperty": false
+        "asBinaryProperty": false,
+        "additionalParameters": {}
       },
       "name": "GitHub",
       "type": "n8n-nodes-base.github",
@@ -259,7 +283,10 @@
       "typeVersion": 1,
       "alwaysOutputData": true,
       "credentials": {
-        "githubOAuth2Api": "Github OAuth2 API"
+        "githubOAuth2Api": {
+          "id": "42",
+          "name": "Github OAuth2 API"
+        }
       },
       "continueOnFail": true
     },
@@ -277,7 +304,15 @@
       "parameters": {
         "authentication": "basicAuth",
         "url": "=https://qan8n.shakedeal.com/rest/workflows/{{$json[\"id\"]}}",
-        "options": {}
+        "options": {},
+        "headerParametersUi": {
+          "parameter": [
+            {
+              "name": "Cookie",
+              "value": "= {{$node[\"Authenticate\"].json[\"headers\"][\"set-cookie\"][0]}}"
+            }
+          ]
+        }
       },
       "name": "N8N Workflow Detail",
       "type": "n8n-nodes-base.httpRequest",
@@ -287,7 +322,10 @@
       ],
       "typeVersion": 1,
       "credentials": {
-        "httpBasicAuth": "SD-Basic-Auth-Temp"
+        "httpBasicAuth": {
+          "id": "9",
+          "name": "SD-Basic-Auth-Temp"
+        }
       }
     },
     {
@@ -367,7 +405,10 @@
       ],
       "typeVersion": 1,
       "credentials": {
-        "githubOAuth2Api": "Github OAuth2 API"
+        "githubOAuth2Api": {
+          "id": "42",
+          "name": "Github OAuth2 API"
+        }
       }
     },
     {
@@ -388,7 +429,10 @@
       ],
       "typeVersion": 1,
       "credentials": {
-        "githubOAuth2Api": "Github OAuth2 API"
+        "githubOAuth2Api": {
+          "id": "42",
+          "name": "Github OAuth2 API"
+        }
       }
     },
     {
@@ -462,6 +506,29 @@
         550
       ],
       "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "HEAD",
+        "url": "https://qan8n.shakedeal.com/rest/login",
+        "options": {
+          "fullResponse": true
+        }
+      },
+      "name": "Authenticate",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        660,
+        540
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "9",
+          "name": "SD-Basic-Auth-Temp"
+        }
+      }
     }
   ],
   "settings": {
@@ -470,5 +537,6 @@
     "errorWorkflow": "8"
   },
   "staticData": null,
-  "updatedAt": "2022-04-24T09:57:28.895Z"
+  "tags": [],
+  "updatedAt": "2022-04-24T12:17:02.457Z"
 }
