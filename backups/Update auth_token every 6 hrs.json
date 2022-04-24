@@ -1,0 +1,102 @@
+{
+  "active": false,
+  "connections": {
+    "Cron": {
+      "main": [
+        [
+          {
+            "node": "Get the auth_token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the auth_token": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-03-31T17:57:21.730Z",
+  "id": "57",
+  "name": "Update auth_token every 6 hrs",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "mode": "everyX",
+              "value": 6
+            }
+          ]
+        }
+      },
+      "name": "Cron",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        560,
+        360
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "name": "Get the auth_token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        760,
+        360
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "auth_token"
+            }
+          ]
+        }
+      },
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        960,
+        360
+      ],
+      "credentials": {
+        "httpHeaderAuth": "Balco_header_auth"
+      },
+      "disabled": true
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "updatedAt": "2021-03-31T17:58:33.914Z"
+}
