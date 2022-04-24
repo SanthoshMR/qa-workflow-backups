@@ -1,0 +1,601 @@
+{
+  "active": false,
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Set Table Names",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Table Names": {
+      "main": [
+        [
+          {
+            "node": "Run for Each Table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Fields from QA": {
+      "main": [
+        [
+          {
+            "node": "Run for each field",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert field records": {
+      "main": [
+        [
+          {
+            "node": "No more fields?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Run for Each Table": {
+      "main": [
+        [
+          {
+            "node": "Get Collection from QA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Collection from QA": {
+      "main": [
+        [
+          {
+            "node": "Insert collection records",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert collection records": {
+      "main": [
+        [
+          {
+            "node": "Get Fields from QA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get relations from QA": {
+      "main": [
+        [
+          {
+            "node": "Run for each relation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Run for each field": {
+      "main": [
+        [
+          {
+            "node": "Format field record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format field record": {
+      "main": [
+        [
+          {
+            "node": "Insert field records",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format relationship record": {
+      "main": [
+        [
+          {
+            "node": "Insert relationship records",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert relationship records": {
+      "main": [
+        [
+          {
+            "node": "No more relations?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Run for each relation": {
+      "main": [
+        [
+          {
+            "node": "Format relationship record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "No more relations?": {
+      "main": [
+        [
+          {
+            "node": "Get presets from QA",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Run for each relation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "No more fields?": {
+      "main": [
+        [
+          {
+            "node": "Get relations from QA",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Run for each field",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Run for each preset": {
+      "main": [
+        [
+          {
+            "node": "Format preset record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format preset record": {
+      "main": [
+        [
+          {
+            "node": "Insert preset records",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert preset records": {
+      "main": [
+        [
+          {
+            "node": "No more presets?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "No more presets?": {
+      "main": [
+        [
+          {
+            "node": "No more tables?",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Run for each preset",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get presets from QA": {
+      "main": [
+        [
+          {
+            "node": "Run for each preset",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "No more tables?": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-01-07T03:40:54.284Z",
+  "id": "23",
+  "name": "Infra: Deploy DMS tables from QA to PROD",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "const newItems = [{json: {tableName: 'customers'}}];\nreturn newItems;"
+      },
+      "name": "Set Table Names",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        410,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "batchSize": 1,
+        "options": {}
+      },
+      "name": "Run for Each Table",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 1,
+      "position": [
+        580,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=select * from directus_fields where collection='{{$node[\"Run for Each Table\"].json[\"tableName\"]}}';"
+      },
+      "name": "Get Fields from QA",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        600,
+        480
+      ],
+      "credentials": {
+        "postgres": "Dms - QA"
+      }
+    },
+    {
+      "parameters": {
+        "table": "directus_fields",
+        "columns": "={{ Object.keys($json).join(',')}}"
+      },
+      "name": "Insert field records",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        440,
+        700
+      ],
+      "credentials": {
+        "postgres": "Dms - Prod"
+      }
+    },
+    {
+      "parameters": {
+        "table": "directus_collections",
+        "columns": "={{ Object.keys($json).join(',')}}"
+      },
+      "name": "Insert collection records",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        430,
+        480
+      ],
+      "credentials": {
+        "postgres": "Dms - Prod"
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=select * from directus_collections where collection='{{$json[\"tableName\"]}}';"
+      },
+      "name": "Get Collection from QA",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        250,
+        480
+      ],
+      "credentials": {
+        "postgres": "Dms - QA"
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "SD Workflows <workflows@shakedeal.com>",
+        "toEmail": "Workflow Admin <webmaster@shakedeal.com>",
+        "subject": "DMS QA -> PROD Deployment Successful!",
+        "html": "QA to PROD deployment has been completed successfully.",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        990,
+        1080
+      ],
+      "credentials": {
+        "smtp": "AWS SES Creds"
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=select * from directus_relations where many_collection='{{$node[\"Run for Each Table\"].json[\"tableName\"]}}';"
+      },
+      "name": "Get relations from QA",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        790,
+        700
+      ],
+      "credentials": {
+        "postgres": "Dms - QA"
+      }
+    },
+    {
+      "parameters": {
+        "batchSize": 1,
+        "options": {}
+      },
+      "name": "Run for each field",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 1,
+      "position": [
+        790,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "delete items[0].json.id\nitems[0].json.translations = JSON.stringify(items[0].json.translations);\nreturn items;"
+      },
+      "name": "Format field record",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        250,
+        700
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "delete items[0].json.id;\nreturn items;\n"
+      },
+      "name": "Format relationship record",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        250,
+        900
+      ]
+    },
+    {
+      "parameters": {
+        "table": "directus_relations",
+        "columns": "={{ Object.keys($json).join(',')}}"
+      },
+      "name": "Insert relationship records",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        430,
+        900
+      ],
+      "credentials": {
+        "postgres": "Dms - Prod"
+      }
+    },
+    {
+      "parameters": {
+        "batchSize": 1,
+        "options": {}
+      },
+      "name": "Run for each relation",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 1,
+      "position": [
+        990,
+        700
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$node[\"Run for each relation\"].context[\"noItemsLeft\"]}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "No more relations?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        600,
+        900
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$node[\"Run for each field\"].context[\"noItemsLeft\"]}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "No more fields?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        600,
+        700
+      ]
+    },
+    {
+      "parameters": {
+        "batchSize": 1,
+        "options": {}
+      },
+      "name": "Run for each preset",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 1,
+      "position": [
+        990,
+        900
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "delete items[0].json.id;\nreturn items;\n"
+      },
+      "name": "Format preset record",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        250,
+        1080
+      ]
+    },
+    {
+      "parameters": {
+        "table": "directus_presets",
+        "columns": "={{ Object.keys($json).join(',')}}"
+      },
+      "name": "Insert preset records",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        430,
+        1080
+      ],
+      "credentials": {
+        "postgres": "Dms - Prod"
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$node[\"Run for each preset\"].context[\"noItemsLeft\"]}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "No more presets?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        600,
+        1080
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=select * from directus_presets where directus_presets.user IS NULL AND collection='{{$node[\"Run for Each Table\"].json[\"tableName\"]}}';"
+      },
+      "name": "Get presets from QA",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        790,
+        900
+      ],
+      "credentials": {
+        "postgres": "Dms - QA"
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$node[\"Run for Each Table\"].context[\"noItemsLeft\"]}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "No more tables?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        790,
+        1080
+      ]
+    }
+  ],
+  "settings": {
+    "timezone": "Asia/Calcutta",
+    "errorWorkflow": "8"
+  },
+  "staticData": null,
+  "updatedAt": "2021-02-01T18:57:20.933Z"
+}
