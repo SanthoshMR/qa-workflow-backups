@@ -161,7 +161,10 @@
         670
       ],
       "credentials": {
-        "imap": "SD Ops Email Creds"
+        "imap": {
+          "id": null,
+          "name": "SD Ops Email Creds"
+        }
       }
     },
     {
@@ -176,7 +179,10 @@
         560
       ],
       "credentials": {
-        "nextCloudApi": "SD Cloud"
+        "nextCloudApi": {
+          "id": "43",
+          "name": "SD Cloud"
+        }
       }
     },
     {
@@ -193,7 +199,10 @@
         730
       ],
       "credentials": {
-        "msg91Api": "SD Msg91"
+        "msg91Api": {
+          "id": null,
+          "name": "SD Msg91"
+        }
       }
     },
     {
@@ -210,7 +219,10 @@
         730
       ],
       "credentials": {
-        "googleApi": "SD Ops Google Sheets - Gift Cards"
+        "googleApi": {
+          "id": null,
+          "name": "SD Ops Google Sheets - Gift Cards"
+        }
       }
     },
     {
@@ -230,5 +242,6 @@
     "errorWorkflow": "8"
   },
   "staticData": null,
+  "tags": [],
   "updatedAt": "2021-02-09T09:31:37.299Z"
 }
