@@ -1,0 +1,309 @@
+{
+  "active": true,
+  "connections": {
+    "Get the PO Number": {
+      "main": [
+        [
+          {
+            "node": "Get the payment_advice file details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Payment Advice": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Get the PO Number",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set": {
+      "main": [
+        [
+          {
+            "node": "ACC Informed that payment advice is available by WFS.",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the payment_advice file details": {
+      "main": [
+        [
+          {
+            "node": "Read PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read PDF": {
+      "main": [
+        [
+          {
+            "node": "Extracting the payment_advice data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extracting the payment_advice data": {
+      "main": [
+        [
+          {
+            "node": "Update the invoice_details ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update the invoice_details ": {
+      "main": [
+        [
+          {
+            "node": "Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-03-23T10:32:24.991Z",
+  "id": "47",
+  "name": "Balco : Payment Advice File Uploaded Workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        230,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "handyalasairam9177@gmail.com",
+        "toEmail": "={{$node[\"Globals\"].json[\"accounts_agent_email\"]}}",
+        "ccEmail": "={{$node[\"Globals\"].json[\"sales_agent_email\"]}}",
+        "subject": "=Balco: Payment Advice received for PO: {{$node[\"Get the PO Number\"].json[\"data\"][0][\"order\"][\"po_num\"][\"po_num\"]}}",
+        "html": "=<!DoCtYPe html><html lang=\"en\"><head><style id=\"stndzstyle\"></style>\n <meta http-equiv=\"Content-Type\" content=\"text\n/html; charset=UTF-8\">\n <meta name=\"viewport\" content=\"width=device-width,\ninitial-scale=1, shrink-to-fit=no\">\n <meta name=\"description\" content=\"\">\n <meta name=\"author\" content=\"Mark Otto, Jacob\nThornton, and Bootstrap contributors\">\n <meta name=\"generator\" content=\"\nAcelleSystemLayouts\">\n\n <!-- Bootstrap core CSS -->\n <link href=\"https://marketing.shakedeal.com/assets\n/templates/60584da7bdf65/css/bootstrap.min.css\" rel=\"\nstylesheet\">\n <script id=\"spHTMLFormElementPrototypeScript\">\n(function()\n {\n try\n {\n var sp_old_HTMLFormElementPrototype_submit = \nHTMLFormElement.prototype.submit;\n HTMLFormElement.prototype.submit = function\n(AEvent)\n {\n try\n {\n var spEvent = document.createEvent('Event');\n spEvent.initEvent('sp_submit', true, true);\n this.dispatchEvent(spEvent);\n }\n catch(ErrorMessage)\n {\n console.error('spFormElementPrototype()\nError sending \"sp_submit\" event from HTMLFormElement.\nprototype.submit: ' + ErrorMessage);\n }\n sp_old_HTMLFormElementPrototype_submit.apply\n(this);\n };\n }\n catch(ErrorMessage)\n {\n console.error('spFormElementPrototype() Error\nattaching to HTMLFormElement.prototype.submit: ' +\nErrorMessage);\n }\n try\n {\n if (typeof __doPostBack == 'function')\n {\n var sp_old__doPostBack = __doPostBack;\n __doPostBack = function(eventTarget,\neventArgument)\n {\n try\n {\n var spEvent = document.createEvent\n('Event');\n spEvent.initEvent('sp_submit', true, true);\n window.dispatchEvent(spEvent);\n }\n catch(ErrorMessage)\n {\n console.error('spFormElementPrototype()\nError sending \"sp_submit\" event from __doPostBack(): '\n+ ErrorMessage);\n }\n sp_old__doPostBack(eventTarget,\neventArgument);\n };\n }\n }\n catch(ErrorMessage)\n {\n console.error('spFormElementPrototype() Error\nattaching to __doPostBack(): ' + ErrorMessage);\n }\n })();</script><link href=\"https://fonts.googleapis.\ncom/icon?family=Material+Icons\" rel=\"stylesheet\"><link\nhref=\"https://fonts.googleapis.com/icon?\nfamily=Material+Icons+Outlined\" rel=\"stylesheet\"></head>\n\n <body data-new-gr-c-s-check-loaded=\"14.990.0\" datagr-ext-installed=\"\">\n<main role=\"main\">\n<div class=\"py-5 bg-light\">\n<div class=\"container\">\n<h1 class=\"my-4 display-4 text-center\">Payment Advice for PO :{{$node[\"Get the PO Number\"].json[\"data\"][0][\"order\"][\"po_num\"][\"po_num\"]}}  has been received</h1>\n<p class=\"lead text-center\">Please check the payment advice document and mark the status of PO :{{$node[\"Get the PO Number\"].json[\"data\"][0][\"order\"][\"po_num\"][\"po_num\"]}}  with order : {{$node[\"Set\"].json[\"order_id\"]}} for invoice : {{$node[\"Set\"].json[\"invoice_numberr\"]}} as complete if funds have been received. </p>\n<div><img class=\"my-2\" src=\"\" width=\"100%\" /></div>\n</div> \n</div>\n</main><footer class=\"text-muted py-5\">\n<div class=\"container\">\n<div class=\"row\">\n<div class=\"col-md-8\">\n<p class=\"mb-1\">Copyright &copy; OpCommerce Online PVT\nLTD, All rights reserved.</p>\n<p class=\"mb-0\">Please email us on <a href=\"\nsupport@shakedeal.com\">support@shakedeal.com</a> in\ncase of any queries.\n</div>\n<div class=\"col-md-4\">\n<p class=\"float-right\"><a href=\"#\">Back to top</a></p>\n</div>\n</div>\n</div>\n</footer>\n</body></html>",
+        "options": {}
+      },
+      "name": "ACC Informed that payment advice is available by WFS.",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        1970,
+        350
+      ],
+      "credentials": {
+        "smtp": "smtp(sai)creds"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_payment_advise?filter={\"sd_mozart_shakedeal_payments\":{\"payment_advice_file\":{\"_eq\":\"{{$node[\"Get Payment Advice\"].json[\"body\"][\"payload\"][\"payment_advice_file\"]}}\"}}}&fields=id,order.order_id,order.po_num.po_num,sd_mozart_shakedeal_payments.*",
+        "options": {}
+      },
+      "name": "Get the PO Number",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        790,
+        350
+      ],
+      "credentials": {
+        "httpHeaderAuth": "Balcoqa-Dms-Token"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "get_payment_advice",
+        "options": {}
+      },
+      "name": "Get Payment Advice",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        420,
+        350
+      ],
+      "webhookId": "7a589e61-c4c4-4599-9ac2-345775be471c",
+      "credentials": {
+        "httpBasicAuth": "Balco_basic_auth"
+      }
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "dms_url",
+              "value": "={{ $node[\"Get Payment Advice\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ? \"https://balco.mozart.shakedeal.com\" : \"https://balcoqa.mozart.shakedeal.com\" }}"
+            },
+            {
+              "name": "sales_agent_email",
+              "value": "={{ $node[\"Get Payment Advice\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ? \"sales@gmail.com\" : \"sairam.reddy@shakedeal.com\" }}"
+            },
+            {
+              "name": "accounts_agent_email",
+              "value": "={{ $node[\"Get Payment Advice\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ? \"accounts@gmail.com\" : \"sairam.reddy@shakedeal.com\" }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        620,
+        350
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "order_id",
+              "value": "={{$node[\"Get the PO Number\"].json[\"data\"][0][\"order\"][\"order_id\"]}}"
+            },
+            {
+              "name": "po_number",
+              "value": "={{$node[\"Get the PO Number\"].json[\"data\"][0][\"order\"][\"po_num\"][\"po_num\"]}}"
+            },
+            {
+              "name": "invoice_numberr",
+              "value": "={{$node[\"Extracting the payment_advice data\"].json[\"invoice_number\"]}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1780,
+        350
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://balcoqa.mozart.shakedeal.com/assets/{{Array.isArray($node[\"Get Payment Advice\"].json[\"body\"][\"payload\"])?$node[\"Get Payment Advice\"].json[\"body\"][\"payload\"][0][\"payment_advice_file\"]:$node[\"Get Payment Advice\"].json[\"body\"][\"payload\"][\"payment_advice_file\"]}}",
+        "allowUnauthorizedCerts": true,
+        "responseFormat": "file",
+        "dataPropertyName": "file",
+        "options": {}
+      },
+      "name": "Get the payment_advice file details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        990,
+        350
+      ],
+      "credentials": {
+        "httpHeaderAuth": "Balcoqa-Dms-Token"
+      }
+    },
+    {
+      "parameters": {
+        "binaryPropertyName": "file"
+      },
+      "name": "Read PDF",
+      "type": "n8n-nodes-base.readPDF",
+      "typeVersion": 1,
+      "position": [
+        1190,
+        350
+      ],
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "functionCode": "let allLines = $node[\"Read PDF\"].json[\"text\"].split(\"\\n\")\nlet payment_advices = $node[\"Get the PO Number\"].json[\"data\"][0][\"sd_mozart_shakedeal_payments\"]\nitems[0].json.text = allLines \n\n\nfor(i=0;i<allLines.length;i++){\n    if(allLines[i].includes(\"INV\")){\n       let trimLine = allLines[i].trim()\n       let splittedLine =trimLine.split(\" \");\n       let trimAmountLine = allLines[i+1].trim();\n       let splitAmountLine = trimAmountLine.split(\" \");\n       items[0].json.invoice_amount = parseFloat(splitAmountLine[0])\n       items[0].json.invoice_number = splittedLine[0]\n    \n    \n    }else if(allLines[i].includes(\"Bank Ref\")){\n           let utrLine= allLines[i].split(\":\");\n          \n        \n           items[0].json.utr = utrLine[1]\n    \n    \n    }\n    \n\n\n}\nlet filtered_payment_obj = payment_advices.filter(obj=>obj[\"payment_advice_file\"]==$node[\"Get Payment Advice\"].json[\"body\"][\"payload\"][\"payment_advice_file\"])\nlet payment_advice = []\npayment_advice[0] = {}\npayment_advice[0].payment_utr =  items[0].json.utr\npayment_advice[0].invoice_number = items[0].json.invoice_number\npayment_advice[0].payment_paid=  items[0].json.invoice_amount\nitems[0].json.filtered_payment_obj = filtered_payment_obj \nitems[0].json.payment_advice =payment_advice \nreturn items;"
+      },
+      "name": "Extracting the payment_advice data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1390,
+        350
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "=https://balcoqa.mozart.shakedeal.com/items/sd_mozart_shakedeal_payments/{{$node[\"Extracting the payment_advice data\"].json[\"filtered_payment_obj\"][0][\"id\"]}}",
+        "allowUnauthorizedCerts": true,
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "payment_utr",
+              "value": "={{$node[\"Extracting the payment_advice data\"].json[\"utr\"]}}"
+            },
+            {
+              "name": "payment_paid",
+              "value": "={{$node[\"Extracting the payment_advice data\"].json[\"invoice_amount\"]}}"
+            },
+            {
+              "name": "invoice_number",
+              "value": "={{$node[\"Extracting the payment_advice data\"].json[\"invoice_number\"]}}"
+            },
+            {
+              "name": "order",
+              "value": "={{$node[\"Get the PO Number\"].json[\"data\"][0][\"order\"][\"order_id\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update the invoice_details ",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1600,
+        350
+      ],
+      "credentials": {
+        "httpHeaderAuth": "Balcoqa-Dms-Token"
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "updatedAt": "2022-04-11T12:52:57.995Z"
+}
