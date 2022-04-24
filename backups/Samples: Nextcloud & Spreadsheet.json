@@ -1,0 +1,244 @@
+{
+  "active": false,
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nextcloud": {
+      "main": [
+        [
+          {
+            "node": "Spreadsheet File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Spreadsheet File": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Spreadsheet File1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Spreadsheet File1": {
+      "main": [
+        [
+          {
+            "node": "Nextcloud1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2020-12-25T18:04:54.198Z",
+  "id": "16",
+  "name": "Samples: Nextcloud & Spreadsheet",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        380,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "path": "Invoices/Sample.xlsx"
+      },
+      "name": "Nextcloud",
+      "type": "n8n-nodes-base.nextCloud",
+      "typeVersion": 1,
+      "position": [
+        380,
+        90
+      ],
+      "credentials": {
+        "nextCloudApi": "SD Cloud"
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "name": "Spreadsheet File",
+      "type": "n8n-nodes-base.spreadsheetFile",
+      "typeVersion": 1,
+      "position": [
+        570,
+        90
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "const newItems = []\n\nfor(let item of items) {\n  item.json.activated_date = new Date(Math.round((item.json.activated_date - 25569)*86400*1000));\n  item.json.expiry_date = new Date(Math.round((item.json.expiry_date - 25569)*86400*1000));\n  newItems.push(item);\n}\nreturn newItems;"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        760,
+        90
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "move",
+        "path": "Invoices/Sample.xlsx",
+        "toPath": "=Processed/{{$node[\"Function\"].json[\"file_name\"]}}"
+      },
+      "name": "Nextcloud1",
+      "type": "n8n-nodes-base.nextCloud",
+      "typeVersion": 1,
+      "position": [
+        1180,
+        320
+      ],
+      "credentials": {
+        "nextCloudApi": "SD Cloud"
+      }
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "activated_date",
+              "value": "2020-12-25T19:05:29.216Z"
+            },
+            {
+              "name": "expiry_date",
+              "value": "2021-12-24T19:05:29.216Z"
+            },
+            {
+              "name": "vendor_name",
+              "value": "Irewardz"
+            },
+            {
+              "name": "vendor_email",
+              "value": "irewardz@sample.com"
+            },
+            {
+              "name": "vendor_phone",
+              "value": "9999999999"
+            }
+          ],
+          "number": [
+            {
+              "name": "id",
+              "value": 123123125
+            },
+            {
+              "name": "denomination",
+              "value": 2500
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        580,
+        320
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 1,
+      "position": [
+        780,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "toFile",
+        "fileFormat": "xlsx",
+        "options": {}
+      },
+      "name": "Spreadsheet File1",
+      "type": "n8n-nodes-base.spreadsheetFile",
+      "typeVersion": 1,
+      "position": [
+        980,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "path": "Invoices/Sample.xlsx",
+        "binaryDataUpload": true
+      },
+      "name": "Nextcloud2",
+      "type": "n8n-nodes-base.nextCloud",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        90
+      ],
+      "credentials": {
+        "nextCloudApi": "SD Cloud"
+      },
+      "disabled": true
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "updatedAt": "2021-02-04T17:45:20.466Z"
+}
