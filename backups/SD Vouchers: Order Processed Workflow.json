@@ -1,0 +1,313 @@
+{
+  "active": true,
+  "connections": {
+    "Received Order Processed Details": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Capture PO Details": {
+      "main": [
+        [
+          {
+            "node": "Format PO Details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format PO Details": {
+      "main": [
+        [
+          {
+            "node": "Add PO Details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add PO Details": {
+      "main": [
+        [
+          {
+            "node": "Get PODetails Email Template",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get PODetails Email Template": {
+      "main": [
+        [
+          {
+            "node": "Notify Accounts Team",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Mark order as Processing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Capture PO Details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2020-12-18T12:41:16.349Z",
+  "id": "9",
+  "name": "SD Vouchers: Order Processed Workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        150,
+        150
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "sd-order-processed",
+        "responseMode": "lastNode",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "X-SD-Order-Processed",
+                "value": "4ae2af49-ed92-4348-97a5-f0a8a5105ed1"
+              }
+            ]
+          }
+        }
+      },
+      "name": "Received Order Processed Details",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        150,
+        300
+      ],
+      "webhookId": "af3a359a-9f4e-41ca-b12e-269af140ecf0",
+      "credentials": {
+        "httpBasicAuth": "SD Basic Auth"
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "const newItems = [];\nfor (let item of items[0].json.body) {\n  item.dmsUrl = $item(0).$node[\"Globals\"].json[\"dmsUrl\"];\n  newItems.push({json: item});\n}\nreturn newItems;"
+      },
+      "name": "Capture PO Details",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        470,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "boolean": [],
+          "string": [
+            {
+              "name": "id",
+              "value": "={{$node[\"Capture PO Details\"].json[\"po_id\"]}}"
+            },
+            {
+              "name": "parent_order",
+              "value": "={{$node[\"Capture PO Details\"].json[\"order_id\"]}}"
+            },
+            {
+              "name": "po_value",
+              "value": "={{$node[\"Capture PO Details\"].json[\"po_total\"]}}"
+            },
+            {
+              "name": "vendor_name",
+              "value": "={{$node[\"Capture PO Details\"].json[\"vendor_details\"][\"name\"]}}"
+            },
+            {
+              "name": "vendor_email",
+              "value": "={{$node[\"Capture PO Details\"].json[\"vendor_details\"][\"email\"]}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Format PO Details",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        650,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Capture PO Details\"].json[\"dmsUrl\"]}}/items/order_pos",
+        "allowUnauthorizedCerts": true,
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "id",
+              "value": "={{$node[\"Format PO Details\"].json[\"id\"]}}"
+            },
+            {
+              "name": "parent_order",
+              "value": "={{$node[\"Format PO Details\"].json[\"parent_order\"]}}"
+            },
+            {
+              "name": "po_value",
+              "value": "={{$node[\"Format PO Details\"].json[\"po_value\"]}}"
+            },
+            {
+              "name": "vendor_name",
+              "value": "={{$node[\"Format PO Details\"].json[\"vendor_name\"]}}"
+            },
+            {
+              "name": "vendor_email",
+              "value": "={{$node[\"Format PO Details\"].json[\"vendor_email\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Add PO Details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        840,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": "SD-Dms-Token"
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let poDetailsTemplate = '<tr class=\"\"><td class=\"text\" data-title=\"Order:\">{{order_id}}</td><td class=\"text\" data-title=\"PO:\">{{po_id}}</td><td class=\"number\" data-title=\"PO Value:\">{{po_value}}</td><td class=\"text \" data-title=\"Vendor Name:\">{{vendor_name}}</td><td class=\"text\" data-title=\"Vendor Email:\">{{vendor_email}}</td></tr>';\nlet newItem = {json: {}};\n\nlet poDetails = '';\nfor (const item of items) {\n  let data = item.json.data;\n  poDetails += poDetailsTemplate;\n  poDetails = poDetails.replace(\"{{order_id}}\", data.parent_order);\n  poDetails = poDetails.replace(\"{{po_id}}\", data.id);\n  poDetails = poDetails.replace(\"{{po_value}}\", data.po_value);\n  poDetails = poDetails.replace(\"{{vendor_name}}\", data.vendor_name);\n  poDetails = poDetails.replace(\"{{vendor_email}}\", data.vendor_email);\n  newItem.json.order_id = data.parent_order;\n}\nnewItem.json.po_details = poDetails;\nreturn [newItem];"
+      },
+      "name": "Get PODetails Email Template",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1010,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{$node[\"Globals\"].json[\"workflowsFromEmail\"]}}",
+        "toEmail": "={{$node[\"Globals\"].json[\"accountsEmail\"]}}",
+        "ccEmail": "={{$node[\"Globals\"].json[\"voucherOpsEmail\"]}}",
+        "subject": "=SD Gift Vouchers Order: {{$node[\"Get PODetails Email Template\"].json[\"order_id\"]}} Processed",
+        "html": "=<style id=\"stndz-style\"></style>\n    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, shrink-to-fit=no\">\n    <meta name=\"description\" content=\"\">\n    <meta name=\"author\" content=\"Mark Otto, Jacob Thornton, and Bootstrap contributors\">\n    <meta name=\"generator\" content=\"AcelleSystemLayouts\">\n    <style>\n\t/* info (hed, dek, source, credit) */\n.rg-container {\n  font-family: 'Lato', Helvetica, Arial, sans-serif;\n  font-size: 16px;\n  line-height: 1.4;\n  margin: 0;\n  padding: 1em 0.5em;\n  color: #222;\n}\n.rg-header {\n  margin-bottom: 1em;\n  text-align: left;\n}\n\n.rg-header > * {\n  display: block;\n}\n.rg-hed {\n  font-weight: bold;\n  font-size: 1.4em;\n}\n.rg-dek {\n  font-size: 1em;\n}\n\n.rg-source {\n  margin: 0;\n  font-size: 0.75em;\n  text-align: right;\n}\n.rg-source .pre-colon {\n  text-transform: uppercase;\n}\n\n.rg-source .post-colon {\n  font-weight: bold;\n}\n\n/* table */\ntable.rg-table {\n  width: 100%;\n  margin-bottom: 0.5em;\n  font-size: 1em;\n  border-collapse: collapse;\n  border-spacing: 0;\n}\ntable.rg-table tr {\n  -moz-box-sizing: border-box;\n  box-sizing: border-box;\n  margin: 0;\n  padding: 0;\n  border: 0;\n  font-size: 100%;\n  font: inherit;\n  vertical-align: baseline;\n  text-align: left;\n  color: #333;\n}\ntable.rg-table thead {\n  border-bottom: 3px solid #ddd;\n}\ntable.rg-table tr {\n  border-bottom: 1px solid #ddd;\n  color: #222;\n}\ntable.rg-table tr.highlight {\n  background-color: #dcf1f0 !important;\n}\ntable.rg-table.zebra tr:nth-child(even) {\n  background-color: #f6f6f6;\n}\ntable.rg-table th {\n  font-weight: bold;\n  padding: 0.35em;\n  font-size: 0.9em;\n}\ntable.rg-table td {\n  padding: 0.35em;\n  font-size: 0.9em;\n}\ntable.rg-table .highlight td {\n  font-weight: bold;\n}\ntable.rg-table th.number,\ntd.number {\n  text-align: right;\n}\n\n/* media queries */\n@media screen and (max-width: 600px) {\n  .rg-container {\n    max-width: 600px;\n    margin: 0 auto;\n  }\n  table.rg-table {\n    width: 100%;\n  }\n  table.rg-table tr.hide-mobile,\n  table.rg-table th.hide-mobile,\n  table.rg-table td.hide-mobile {\n    display: none;\n  }\n  table.rg-table thead {\n    display: none;\n  }\n  table.rg-table tbody {\n    width: 100%;\n  }\n  table.rg-table tr,\n  table.rg-table th,\n  table.rg-table td {\n    display: block;\n    padding: 0;\n  }\n  table.rg-table tr {\n    border-bottom: none;\n    margin: 0 0 1em 0;\n    padding: 0.5em;\n  }\n  table.rg-table tr.highlight {\n    background-color: inherit !important;\n  }\n  table.rg-table.zebra tr:nth-child(even) {\n    background-color: transparent;\n  }\n  table.rg-table.zebra td:nth-child(even) {\n    background-color: #f6f6f6;\n  }\n  table.rg-table tr:nth-child(even) {\n    background-color: transparent;\n  }\n  table.rg-table td {\n    padding: 0.5em 0 0.25em 0;\n    border-bottom: 1px dotted #ccc;\n    text-align: right;\n  }\n  table.rg-table td[data-title]:before {\n    content: attr(data-title);\n    font-weight: bold;\n    display: inline-block;\n    content: attr(data-title);\n    float: left;\n    margin-right: 0.5em;\n    font-size: 0.95em;\n  }\n  table.rg-table td:last-child {\n    padding-right: 0;\n    border-bottom: 2px solid #ccc;\n  }\n  table.rg-table td:empty {\n    display: none;\n  }\n  table.rg-table .highlight td {\n    background-color: inherit;\n    font-weight: normal;\n  }\n}\n\n</style>\n    \n\n    <!-- Bootstrap core CSS -->\n    <link href=\"https://marketing.shakedeal.com/assets/templates/5fe306e5a4c97/css/bootstrap.min.css\" rel=\"stylesheet\">\n  <link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons+Outlined\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons+Outlined\" rel=\"stylesheet\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u0\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/skin.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u1\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/content.inline.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u0\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/skin.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u1\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/content.inline.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u0\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/skin.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u1\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/content.inline.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u0\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/skin.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u1\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/content.inline.min.css\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons+Outlined\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons+Outlined\" rel=\"stylesheet\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u0\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/skin.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u1\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/content.inline.min.css\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons+Outlined\" rel=\"stylesheet\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u0\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/skin.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u1\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/content.inline.min.css\">\n  <style id=\"stndz-style\"></style>\n    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, shrink-to-fit=no\">\n    <meta name=\"description\" content=\"\">\n    <meta name=\"author\" content=\"Mark Otto, Jacob Thornton, and Bootstrap contributors\">\n    <meta name=\"generator\" content=\"AcelleSystemLayouts\">\n    \n\n    <!-- Bootstrap core CSS -->\n    <link href=\"https://marketing.shakedeal.com/assets/templates/5fe306e5a4c97/css/bootstrap.min.css\" rel=\"stylesheet\">\n  <link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons+Outlined\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons+Outlined\" rel=\"stylesheet\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u0\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/skin.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u1\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/content.inline.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u0\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/skin.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u1\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/content.inline.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u0\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/skin.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u1\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/content.inline.min.css\">\n  <style id=\"stndz-style\"></style>\n    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, shrink-to-fit=no\">\n    <meta name=\"description\" content=\"\">\n    <meta name=\"author\" content=\"Mark Otto, Jacob Thornton, and Bootstrap contributors\">\n    <meta name=\"generator\" content=\"AcelleSystemLayouts\">\n    \n\n    <!-- Bootstrap core CSS -->\n    <link href=\"https://marketing.shakedeal.com/assets/templates/5fe306e5a4c97/css/bootstrap.min.css\" rel=\"stylesheet\">\n  <link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons+Outlined\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons+Outlined\" rel=\"stylesheet\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u0\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/skin.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u1\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/content.inline.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u0\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/skin.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u1\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/content.inline.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u0\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/skin.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u1\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/content.inline.min.css\">\n  <style id=\"stndz-style\"></style>\n    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, shrink-to-fit=no\">\n    <meta name=\"description\" content=\"\">\n    <meta name=\"author\" content=\"Mark Otto, Jacob Thornton, and Bootstrap contributors\">\n    <meta name=\"generator\" content=\"AcelleSystemLayouts\">\n    \n\n    <!-- Bootstrap core CSS -->\n    <link href=\"https://marketing.shakedeal.com/assets/templates/5fe306e5a4c97/css/bootstrap.min.css\" rel=\"stylesheet\">\n  <link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons+Outlined\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons+Outlined\" rel=\"stylesheet\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u0\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/skin.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u1\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/content.inline.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u0\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/skin.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u1\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/content.inline.min.css\">\n  <style id=\"stndz-style\"></style>\n    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, shrink-to-fit=no\">\n    <meta name=\"description\" content=\"\">\n    <meta name=\"author\" content=\"Mark Otto, Jacob Thornton, and Bootstrap contributors\">\n    <meta name=\"generator\" content=\"AcelleSystemLayouts\">\n    \n\n    <!-- Bootstrap core CSS -->\n    <link href=\"https://marketing.shakedeal.com/assets/templates/5fe306e5a4c97/css/bootstrap.min.css\" rel=\"stylesheet\">\n  <link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons+Outlined\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons+Outlined\" rel=\"stylesheet\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u0\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/skin.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u1\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/content.inline.min.css\">\n      \n    <main role=\"main\">\n      <div class=\"py-5 bg-light\" id=\"mce_8\" style=\"position: relative;\" spellcheck=\"false\"><div class=\"container\" id=\"mce_12\" style=\"position: relative; text-align: center;\" spellcheck=\"false\"><!-- <div class=\"text-center mb-4\">\n            <div><img src=\"https://marketing.shakedeal.com/assets/templates/5fe306e5a4c97/image/logo.png\" width=\"350px\" /></div>\n          </div> --> <img id=\"zW2lO\" builder-element=\"\" builder-draggable=\"\" class=\"image-after-change\" src=\"https://marketing.shakedeal.com/files/5fbe3d99407d6/SDLogoColorSmall.png\" style=\"width: 200px; height: 40px; margin: auto;\">\n<h2 class=\"mt-4 mb-4\" id=\"mce_12\" style=\"position: relative;\" spellcheck=\"false\">Order ID: {{$node[\"Get PODetails Email Template\"].json[\"order_id\"]}} has been processed.</h2>\n<p><span style=\"font-size: 1.25rem; position: relative;\" class=\"\" id=\"mce_0\" spellcheck=\"false\">Order id: {{$node[\"Get PODetails Email Template\"].json[\"order_id\"]}} is processed with the below details. Please make necessary vendor payments and update the vendor payment UTRs here:&nbsp; <a href=\"{{$node[\"Globals\"].json[\"dmsUrl\"]}}/admin/collections/order_pos\" class=\"\">Update Vendor Payments</a>.</span></p>\n<div class=\"rg-container\">\n<table class=\"rg-table\" summary=\"Hed\">\n<thead>\n<tr>\n<th class=\"text\">Order:</th>\n<th class=\"text \">PO:</th>\n<th class=\"number \">PO Value:</th>\n<th class=\"text\">Vendor Name:</th>\n<th class=\"text\">Vendor Email:</th>\n</tr>\n</thead>\n<tbody>\n    {{$node[\"Get PODetails Email Template\"].json[\"po_details\"]}}\n</tbody>\n</table>\n<br>\n<p></p>\n<div class=\"\" id=\"mce_8\" style=\"position: relative;\" spellcheck=\"false\"></div>\n<div class=\"row\"></div>\n</div>\n</div></div></main>",
+        "options": {}
+      },
+      "name": "Notify Accounts Team",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        150
+      ],
+      "credentials": {
+        "smtp": "AWS SES Creds"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"dmsUrl\"]}}/items/orders/{{$node[\"Get PODetails Email Template\"].json[\"order_id\"]}}",
+        "allowUnauthorizedCerts": true,
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "order_status",
+              "value": "processing"
+            }
+          ]
+        }
+      },
+      "name": "Mark order as Processing",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        450
+      ],
+      "credentials": {
+        "httpHeaderAuth": "SD-Dms-Token"
+      }
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "dmsUrl",
+              "value": "={{ $node[\"Received Order Processed Details\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ? \"https://zeus.shakedeal.com\" : \"https://dmsqa.shakedeal.com\" }}"
+            },
+            {
+              "name": "workflowsFromEmail",
+              "value": "SD Workflows <workflows@shakedeal.com>"
+            },
+            {
+              "name": "voucherOpsEmail",
+              "value": "={{ $node[\"Received Order Processed Details\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ? \"voucher.ops@shakedeal.com\" : \"dev-notifications@shakedeal.com\" }}"
+            },
+            {
+              "name": "accountsEmail",
+              "value": "={{ $node[\"Received Order Processed Details\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ? \"accounts@shakedeal.com\" : \"dev-notifications@shakedeal.com\" }}"
+            },
+            {
+              "name": "dmsIP",
+              "value": "139.59.34.52"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        310,
+        300
+      ]
+    }
+  ],
+  "settings": {
+    "timezone": "Asia/Calcutta",
+    "errorWorkflow": "8"
+  },
+  "staticData": null,
+  "updatedAt": "2021-02-18T09:20:57.379Z"
+}
