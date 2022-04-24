@@ -1,0 +1,151 @@
+{
+  "active": true,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Check for Order",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for Order": {
+      "main": [
+        [
+          {
+            "node": "Update the packing status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-08-24T12:49:33.185Z",
+  "id": "94",
+  "name": "Vendor panel : Update packing status from SD store",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "sd_update_packing_status",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "sd_update_packing_status",
+                "value": "8521479632547896"
+              }
+            ]
+          }
+        }
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        510,
+        320
+      ],
+      "webhookId": "697174e7-8c33-49bc-a81e-30277886d1ac",
+      "credentials": {
+        "httpBasicAuth": "SD Basic Auth"
+      }
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "dms_url",
+              "value": "=https://vpanelqa.shakedeal.com"
+            },
+            {
+              "name": "order",
+              "value": "={{\"OD\"+$node[\"Webhook\"].json[\"body\"][\"order_id\"]}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        710,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/all_orders?filter={\"_and\": [{\"sd_order_number\":{\"_eq\":\"{{$node[\"Globals\"].json[\"order\"]}}\"}},{\"po_num\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"po_number\"]}}\"}}]}",
+        "options": {}
+      },
+      "name": "Check for Order",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        910,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/all_orders/{{$node[\"Check for Order\"].json[\"data\"][0][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "packing_status",
+              "value": "=packed"
+            }
+          ]
+        }
+      },
+      "name": "Update the packing status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1110,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "updatedAt": "2021-09-27T09:09:51.890Z"
+}
