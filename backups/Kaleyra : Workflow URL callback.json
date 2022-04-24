@@ -1,0 +1,561 @@
+{
+  "active": true,
+  "connections": {
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Get the order_status from sd_orders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait for call back": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the COD order details": {
+      "main": [
+        [
+          {
+            "node": "IF1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Update the status in DMS",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Construct for delay time",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update the attempts made in DMS": {
+      "main": [
+        [
+          {
+            "node": "Call the kaleyra api-voice",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Construct for delay time": {
+      "main": [
+        [
+          {
+            "node": "Update the attempts made in DMS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update the status in DMS": {
+      "main": [
+        [
+          {
+            "node": "Update status in sd_store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call the kaleyra api-voice": {
+      "main": [
+        [
+          {
+            "node": "Post to SD store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "JSON Parse": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF1": {
+      "main": [
+        [
+          {
+            "node": "JSON Parse",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the order_status from sd_orders": {
+      "main": [
+        [
+          {
+            "node": "IF2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF2": {
+      "main": [
+        [
+          {
+            "node": "NoOp1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get the COD order details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-08-04T10:24:45.769Z",
+  "id": "84",
+  "name": "Kaleyra : Workflow URL callback",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        230,
+        210
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "dms_url",
+              "value": "=https://dmsqa.shakedeal.com"
+            },
+            {
+              "name": "apikey",
+              "value": "=A6f1a72b6b3dc17f391582ec9f969898b"
+            },
+            {
+              "name": "ivr",
+              "value": "=129604"
+            },
+            {
+              "name": "order_id",
+              "value": "={{\"OD\"+$node[\"Wait for call back\"].json[\"query\"][\"order\"]}}"
+            },
+            {
+              "name": "no_response_status",
+              "value": "=no_response"
+            },
+            {
+              "name": "hash",
+              "value": "=d2ZzJSNoYXNoQDEyMw=="
+            },
+            {
+              "name": "sdStore_url",
+              "value": "=https://sdqa.shakedeal.com/index.php?dispatch=wfs_update.cod_update"
+            }
+          ],
+          "number": [
+            {
+              "name": "pending_status",
+              "value": "=0"
+            },
+            {
+              "name": "no_response",
+              "value": "=3"
+            },
+            {
+              "name": "max_attempt",
+              "value": "=5"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        180,
+        430
+      ]
+    },
+    {
+      "parameters": {
+        "path": "call_back",
+        "options": {
+          "responseHeaders": {
+            "entries": []
+          }
+        }
+      },
+      "name": "Wait for call back",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -10,
+        430
+      ],
+      "webhookId": "a7d9794b-8d9a-46e1-b5e4-973a093873a0"
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_cod_orders/{{$node[\"Globals\"].json[\"order_id\"]}}",
+        "options": {}
+      },
+      "name": "Get the COD order details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        720,
+        460
+      ],
+      "credentials": {
+        "httpHeaderAuth": "SD-Dms-Token"
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Get the COD order details\"].json[\"data\"][\"attempts_made\"]}}",
+              "operation": "largerEqual",
+              "value2": "=4"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1240,
+        360
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"sdStore_url\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "hash",
+              "value": "={{$node[\"Globals\"].json[\"hash\"]}}"
+            },
+            {
+              "name": "cod_status",
+              "value": "={{$node[\"Globals\"].json[\"no_response\"]}}"
+            },
+            {
+              "name": "order_id",
+              "value": "={{$node[\"Wait for call back\"].json[\"query\"][\"order\"]}}"
+            },
+            {
+              "name": "json",
+              "value": "={{$node[\"JSON Parse\"].json[\"json\"]}}"
+            },
+            {
+              "name": "attempts",
+              "value": "={{$node[\"Globals\"].json[\"max_attempt\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update status in sd_store",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1770,
+        180
+      ],
+      "credentials": {
+        "httpBasicAuth": "basic creds"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_cod_orders/{{$node[\"Globals\"].json[\"order_id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "attempts_made",
+              "value": "={{$node[\"Get the COD order details\"].json[\"data\"][\"attempts_made\"]+1}}"
+            }
+          ]
+        }
+      },
+      "name": "Update the attempts made in DMS",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1650,
+        460
+      ],
+      "credentials": {
+        "httpHeaderAuth": "SD-Dms-Token"
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let json_obj =JSON.parse($node[\"Get the COD order details\"].json[\"data\"][\"json\"]);\nlet attempt_made = $node[\"Get the COD order details\"].json[\"data\"][\"attempts_made\"];\nlet delay = 0;\nfunction getDelayTime(firstDate,secondDate) {\n   let date1= new Date(firstDate);\n   let date2 = new Date(secondDate)\n   let sec1 = date1.getTime() / 1000; \n   let sec2 = date2 .getTime() / 1000; \n   delay = sec2-sec1\n   return delay;\n}\nif(attempt_made === 0){\n   delay = getDelayTime(json_obj[\"1\"],json_obj[\"2\"])\n}else if(attempt_made === 1){\n   delay = getDelayTime(json_obj[\"2\"],json_obj[\"3\"])\n}else if(attempt_made === 2){\n   delay = getDelayTime(json_obj[\"3\"],json_obj[\"4\"])\n}else if(attempt_made === 3){\n   delay = getDelayTime(json_obj[\"4\"],json_obj[\"5\"])\n}\n\nitems[0].json.delay = delay \nitems[0].json.json_obj = json_obj \nreturn items;"
+      },
+      "name": "Construct for delay time",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1420,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_cod_orders/{{$node[\"Globals\"].json[\"order_id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "status",
+              "value": "={{$node[\"Globals\"].json[\"no_response_status\"]}}"
+            },
+            {
+              "name": "attempts_made",
+              "value": "={{$node[\"Globals\"].json[\"max_attempt\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update the status in DMS",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1500,
+        180
+      ],
+      "credentials": {
+        "httpHeaderAuth": "SD-Dms-Token"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"sdStore_url\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "hash",
+              "value": "={{$node[\"Globals\"].json[\"hash\"]}}"
+            },
+            {
+              "name": "cod_status",
+              "value": "={{$node[\"Globals\"].json[\"pending_status\"]}}"
+            },
+            {
+              "name": "order_id",
+              "value": "={{$node[\"Wait for call back\"].json[\"query\"][\"order\"]}}"
+            },
+            {
+              "name": "json",
+              "value": "={{$node[\"JSON Parse\"].json[\"json\"]}}"
+            },
+            {
+              "name": "attempts",
+              "value": "={{$node[\"Get the COD order details\"].json[\"data\"][\"attempts_made\"]+1}}"
+            }
+          ]
+        }
+      },
+      "name": "Post to SD store",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2060,
+        450
+      ],
+      "credentials": {
+        "httpBasicAuth": "basic creds"
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://api-voice.kaleyra.com/v1/?api_key={{$node[\"Globals\"].json[\"apikey\"]}}&method=dial.click2call&caller={{$node[\"Get the COD order details\"].json[\"data\"][\"mobile_number\"]}}&receiver=ivr:{{$node[\"Globals\"].json[\"ivr\"]}}&meta={\"orderid\":\"{{$node[\"Wait for call back\"].json[\"query\"][\"order\"]}}\",\"Name\":\"{{$node[\"Get the COD order details\"].json[\"data\"][\"customer_name\"]}}\"}&delay={{$node[\"Construct for delay time\"].json[\"delay\"]}}&retry=0&callback=https%3A%2F%2Fqan8n.shakedeal.com%2Fwebhook%2Fcall_back%3Ffrom%3D%7Bcaller%7D%26to%3D%7Breceiver%7D%26duration%3D%7Bduration%7D%26status%3D%7Bstatus2%7D%26order%3D{{$node[\"Wait for call back\"].json[\"query\"][\"order\"]}}",
+        "allowUnauthorizedCerts": true,
+        "options": {
+          "fullResponse": true
+        },
+        "headerParametersUi": {
+          "parameter": [
+            {
+              "name": "Authorization",
+              "value": "=Basic c2R3b3JrZmxvd3M6U0RXMHJrZmwwd3NAMTIz"
+            }
+          ]
+        },
+        "queryParametersUi": {
+          "parameter": [
+            {
+              "name": "format",
+              "value": "JSON"
+            }
+          ]
+        }
+      },
+      "name": "Call the kaleyra api-voice",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1860,
+        450
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let json_obj = $node[\"Get the COD order details\"].json[\"data\"][\"json\"];\n\n\nitems[0].json.json = JSON.parse(json_obj)\nreturn items;"
+      },
+      "name": "JSON Parse",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1090,
+        360
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Get the COD order details\"].json[\"data\"][\"status\"]}}",
+              "value2": "=pending"
+            }
+          ]
+        }
+      },
+      "name": "IF1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        890,
+        460
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        550
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/orders/{{$node[\"Globals\"].json[\"order_id\"]}}",
+        "options": {}
+      },
+      "name": "Get the order_status from sd_orders",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        380,
+        430
+      ],
+      "credentials": {
+        "httpHeaderAuth": "SD-Dms-Token"
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Get the order_status from sd_orders\"].json[\"data\"][\"order_status\"]}}",
+              "value2": "=G"
+            }
+          ]
+        }
+      },
+      "name": "IF2",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        550,
+        430
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "NoOp1",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        740,
+        270
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "updatedAt": "2022-02-10T06:46:09.266Z"
+}
