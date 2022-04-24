@@ -1,0 +1,255 @@
+{
+  "active": true,
+  "connections": {
+    "Move Binary Data": {
+      "main": [
+        [
+          {
+            "node": "Post the vendor invoice file to DMS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait for vendor invoice": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the vendor invoice from SD store": {
+      "main": [
+        [
+          {
+            "node": "Move Binary Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Get the vendor invoice from SD store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post the vendor invoice file to DMS": {
+      "main": [
+        [
+          {
+            "node": "Get the PO id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the PO id": {
+      "main": [
+        [
+          {
+            "node": "Post vendor invoice details to DMS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-08-25T13:45:00.067Z",
+  "id": "96",
+  "name": "Vendor Panel : Get the vendor Invoice from SD store",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "vendor_invoice_detail",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "sd_vendor_invoice",
+                "value": "5874123698745632"
+              }
+            ]
+          }
+        }
+      },
+      "name": "Wait for vendor invoice",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        510,
+        310
+      ],
+      "webhookId": "3d35bba0-4c60-45d2-b280-0c8559cbfa5e",
+      "credentials": {
+        "httpBasicAuth": "SD Basic Auth"
+      }
+    },
+    {
+      "parameters": {
+        "setAllData": false,
+        "destinationKey": "vendorInvoice",
+        "options": {
+          "keepSource": true,
+          "keepAsBase64": true
+        }
+      },
+      "name": "Move Binary Data",
+      "type": "n8n-nodes-base.moveBinaryData",
+      "typeVersion": 1,
+      "position": [
+        1060,
+        310
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "dms_url",
+              "value": "=https://vpanelqa.shakedeal.com"
+            },
+            {
+              "name": "order",
+              "value": "={{\"OD\"+$node[\"Wait for vendor invoice\"].json[\"body\"][\"order_detail\"][\"order_id\"]}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        710,
+        310
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{$node[\"Wait for vendor invoice\"].json[\"body\"][\"order_detail\"][\"vendor_invoice_pdf\"][\"name\"]}}",
+        "allowUnauthorizedCerts": true,
+        "responseFormat": "file",
+        "options": {}
+      },
+      "name": "Get the vendor invoice from SD store",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        860,
+        310
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/files",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {
+          "bodyContentType": "multipart-form-data"
+        },
+        "sendBinaryData": true
+      },
+      "name": "Post the vendor invoice file to DMS",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1250,
+        310
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/all_orders/{{$node[\"Get the PO id\"].json[\"data\"][0][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "vendor_invoice_number",
+              "value": "={{$node[\"Wait for vendor invoice\"].json[\"body\"][\"order_detail\"][\"invoice_number\"]}}"
+            },
+            {
+              "name": "vendor_invoice_date",
+              "value": "={{$node[\"Wait for vendor invoice\"].json[\"body\"][\"order_detail\"][\"invoice_date\"]}}"
+            },
+            {
+              "name": "vendor_invoice_value",
+              "value": "={{$node[\"Wait for vendor invoice\"].json[\"body\"][\"order_detail\"][\"invoice_value\"]}}"
+            },
+            {
+              "name": "vendor_invoice_file",
+              "value": "={{$node[\"Post the vendor invoice file to DMS\"].json[\"data\"][\"id\"]}}"
+            },
+            {
+              "name": "invoice_status",
+              "value": "=uploaded"
+            }
+          ]
+        }
+      },
+      "name": "Post vendor invoice details to DMS",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1650,
+        310
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/all_orders?filter={\"_and\": [{\"sd_order_number\":{\"_eq\":\"{{$node[\"Globals\"].json[\"order\"]}}\"}},{\"po_num\":{\"_eq\":\"{{$node[\"Wait for vendor invoice\"].json[\"body\"][\"order_detail\"][\"po_number\"]}}\"}}]}",
+        "options": {}
+      },
+      "name": "Get the PO id",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1450,
+        310
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "updatedAt": "2021-09-27T09:10:05.731Z"
+}
