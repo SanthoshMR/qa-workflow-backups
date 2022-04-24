@@ -1,0 +1,118 @@
+{
+  "active": false,
+  "connections": {
+    "Cron": {
+      "main": [
+        [
+          {
+            "node": "Access token generated using Refresh token ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Access token generated using Refresh token ": {
+      "main": [
+        [
+          {
+            "node": "Get an Invoice",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-07-22T08:55:51.832Z",
+  "id": "78",
+  "name": "E-Invoice: Get Invoice from Zoho",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        180,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {}
+          ]
+        }
+      },
+      "name": "Cron",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        530,
+        290
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://accounts.zoho.com/oauth/v2/token",
+        "options": {},
+        "queryParametersUi": {
+          "parameter": [
+            {
+              "name": "client_id",
+              "value": "1000.UF5SWAYP2AFJZY340NXOPSQEQ7RC8A"
+            },
+            {
+              "name": "grant_type",
+              "value": "refresh_token"
+            },
+            {
+              "name": "redirect_uri",
+              "value": "https://qan8n.shakedeal.com/webhook/get_invoice_zoho"
+            },
+            {
+              "name": "client_secret",
+              "value": "f17bf24f1a69269ca8134cd4771c4803505100ef2d"
+            },
+            {
+              "name": "refresh_token",
+              "value": "1000.b03a8e243078749ab914009b5f298d4d.e8c86b4957d724b6f93bb12ab282f049"
+            }
+          ]
+        }
+      },
+      "name": "Access token generated using Refresh token ",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        740,
+        290
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "https://books.zoho.com/api/v3/invoices/1763031000022507270?organization_id=685685414&accept=pdf",
+        "allowUnauthorizedCerts": true,
+        "responseFormat": "file",
+        "options": {}
+      },
+      "name": "Get an Invoice",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        940,
+        290
+      ],
+      "credentials": {
+        "httpHeaderAuth": "Prod_invoice creds"
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "updatedAt": "2021-07-22T11:42:40.148Z"
+}
