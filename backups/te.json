@@ -1,0 +1,74 @@
+{
+  "active": false,
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2022-03-17T07:15:27.390Z",
+  "id": "105",
+  "name": "te",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "items[0].json.myVariable = [\n853,\n854\n];\nitems[0].json.myVariable1 = [\n0,\n0\n];\nreturn items;"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        470,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://balcoqa.mozart.shakedeal.com/items/sd_mozart_vendor_product_mapping?filter={\"_and\": [{\"product\": {\"_in\":\"{{$node[\"Function\"].json[\"myVariable\"]}}\"}},{\"vendor\": {\"_in\":\"{{$node[\"Function\"].json[\"myVariable1\"]}}\"}}]}",
+        "options": {}
+      },
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        670,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": "Balcoqa-Dms-Token"
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "updatedAt": "2022-03-17T07:26:52.041Z"
+}
