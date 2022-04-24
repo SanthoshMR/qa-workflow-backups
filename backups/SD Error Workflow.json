@@ -1,0 +1,87 @@
+{
+  "active": false,
+  "connections": {
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Msg91",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2020-12-11T13:08:09.588Z",
+  "id": "8",
+  "name": "SD Error Workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        260,
+        260
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {},
+      "name": "Error Trigger",
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        470,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "from": "SHAKDL",
+        "to": "919886791181",
+        "message": "=The workflow: {{$node[\"Error Trigger\"].json[\"workflow\"][\"name\"]}} with ID: {{$node[\"Error Trigger\"].json[\"workflow\"][\"id\"]}} has errored. The last executed node was: {{$node[\"Error Trigger\"].json[\"execution\"][\"lastNodeExecuted\"]}}. The error was: {{$node[\"Error Trigger\"].json[\"execution\"][\"error\"][\"message\"]}}."
+      },
+      "name": "Msg91",
+      "type": "n8n-nodes-base.msg91",
+      "typeVersion": 1,
+      "position": [
+        720,
+        360
+      ],
+      "credentials": {
+        "msg91Api": "SD Msg91"
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "fromEmail": "workflows@shakedeal.com",
+        "toEmail": "webmaster@shakedeal.com, chidanand@shakedeal.com, vinay.kumar@shakedeal.com",
+        "subject": "=SD Workflows Error - {{$node[\"Error Trigger\"].json[\"workflow\"][\"name\"]}} (ID: {{$node[\"Error Trigger\"].json[\"workflow\"][\"id\"]}})",
+        "text": "=The workflow: {{$node[\"Error Trigger\"].json[\"workflow\"][\"name\"]}} with ID: {{$node[\"Error Trigger\"].json[\"workflow\"][\"id\"]}} has errored. The last executed node was: {{$node[\"Error Trigger\"].json[\"execution\"][\"lastNodeExecuted\"]}}. The error was: {{$node[\"Error Trigger\"].json[\"execution\"][\"error\"][\"message\"]}}.",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        720,
+        180
+      ],
+      "credentials": {
+        "smtp": "AWS SES Creds"
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "updatedAt": "2021-05-04T06:33:02.260Z"
+}
