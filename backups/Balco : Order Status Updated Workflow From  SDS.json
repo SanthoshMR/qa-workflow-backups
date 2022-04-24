@@ -1,0 +1,231 @@
+{
+  "active": true,
+  "connections": {
+    "Receive_order_status": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update the Status in Dms": {
+      "main": [
+        [
+          {
+            "node": "POI Informed the Order_status by WFS.",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the id": {
+      "main": [
+        [
+          {
+            "node": "Update the Status in Dms",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Constructing email heading,body_content based on order_status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Constructing email heading,body_content based on order_status": {
+      "main": [
+        [
+          {
+            "node": "Get the id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-02-23T10:17:37.111Z",
+  "id": "30",
+  "name": "Balco : Order Status Updated Workflow From  SDS",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        -40,
+        -80
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "update_status_in_dms",
+        "responseMode": "lastNode",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "sd_order_status",
+                "value": "46534643-64327468724"
+              }
+            ]
+          }
+        }
+      },
+      "name": "Receive_order_status",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        250,
+        120
+      ],
+      "webhookId": "084f66e5-8038-4f44-b38e-867d26d8a5b6",
+      "credentials": {
+        "httpBasicAuth": "Balco_basic_auth"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_orders/{{$json[\"data\"][0][\"id\"]}}",
+        "allowUnauthorizedCerts": true,
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "order_status",
+              "value": "={{$node[\"Globals\"].json[\"order_status\"]}}"
+            },
+            {
+              "name": "stopwebhookcall",
+              "value": "=true"
+            }
+          ]
+        },
+        "headerParametersUi": {
+          "parameter": []
+        }
+      },
+      "name": "Update the Status in Dms",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1060,
+        120
+      ],
+      "credentials": {
+        "httpHeaderAuth": "Balcoqa-Dms-Token"
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "handyalasairam9177@gmail.com",
+        "toEmail": "sairam.shakedeal@gmail.com",
+        "subject": "={{$node[\"Constructing email heading,body_content based on order_status\"].json[\"subject\"]}}",
+        "text": "=",
+        "html": "=<!DoCtYPe html><html lang=\"en\"><head><style id=\"stndzstyle\"></style>\n <meta http-equiv=\"Content-Type\" content=\"text\n/html; charset=UTF-8\">\n <meta name=\"viewport\" content=\"width=device-width,\ninitial-scale=1, shrink-to-fit=no\">\n <meta name=\"description\" content=\"\">\n <meta name=\"author\" content=\"Mark Otto, Jacob\nThornton, and Bootstrap contributors\">\n <meta name=\"generator\" content=\"\nAcelleSystemLayouts\">\n\n <!-- Bootstrap core CSS -->\n <link href=\"https://marketing.shakedeal.com/assets\n/templates/60584da7bdf65/css/bootstrap.min.css\" rel=\"\nstylesheet\">\n <script id=\"spHTMLFormElementPrototypeScript\">\n(function()\n {\n try\n {\n var sp_old_HTMLFormElementPrototype_submit = \nHTMLFormElement.prototype.submit;\n HTMLFormElement.prototype.submit = function\n(AEvent)\n {\n try\n {\n var spEvent = document.createEvent('Event');\n spEvent.initEvent('sp_submit', true, true);\n this.dispatchEvent(spEvent);\n }\n catch(ErrorMessage)\n {\n console.error('spFormElementPrototype()\nError sending \"sp_submit\" event from HTMLFormElement.\nprototype.submit: ' + ErrorMessage);\n }\n sp_old_HTMLFormElementPrototype_submit.apply\n(this);\n };\n }\n catch(ErrorMessage)\n {\n console.error('spFormElementPrototype() Error\nattaching to HTMLFormElement.prototype.submit: ' +\nErrorMessage);\n }\n try\n {\n if (typeof __doPostBack == 'function')\n {\n var sp_old__doPostBack = __doPostBack;\n __doPostBack = function(eventTarget,\neventArgument)\n {\n try\n {\n var spEvent = document.createEvent\n('Event');\n spEvent.initEvent('sp_submit', true, true);\n window.dispatchEvent(spEvent);\n }\n catch(ErrorMessage)\n {\n console.error('spFormElementPrototype()\nError sending \"sp_submit\" event from __doPostBack(): '\n+ ErrorMessage);\n }\n sp_old__doPostBack(eventTarget,\neventArgument);\n };\n }\n }\n catch(ErrorMessage)\n {\n console.error('spFormElementPrototype() Error\nattaching to __doPostBack(): ' + ErrorMessage);\n }\n })();</script><link href=\"https://fonts.googleapis.\ncom/icon?family=Material+Icons\" rel=\"stylesheet\"><link\nhref=\"https://fonts.googleapis.com/icon?\nfamily=Material+Icons+Outlined\" rel=\"stylesheet\"></head>\n\n <body data-new-gr-c-s-check-loaded=\"14.990.0\" datagr-ext-installed=\"\">\n<main role=\"main\">\n<div class=\"py-5 bg-light\">\n<div class=\"container\">\n<h1 class=\"my-4 display-4 text-center\">{{$node[\"Constructing email heading,body_content based on order_status\"].json[\"heading\"]}}</h1>\n<p class=\"lead text-center\">{{$node[\"Constructing email heading,body_content based on order_status\"].json[\"bodyContent\"]}}</p>\n<div><img class=\"my-2\" src=\"\" width=\"100%\" /></div>\n</div>\n</div>\n</main><footer class=\"text-muted py-5\">\n<div class=\"container\">\n<div class=\"row\">\n<div class=\"col-md-8\">\n<p class=\"mb-1\">Copyright &copy; OpCommerce Online PVT\nLTD, All rights reserved.</p>\n<p class=\"mb-0\">Please email us on <a href=\"\nsupport@shakedeal.com\">support@shakedeal.com</a> in\ncase of any queries.\n</div>\n<div class=\"col-md-4\">\n<p class=\"float-right\"><a href=\"#\">Back to top</a></p>\n</div>\n</div>\n</div>\n</footer>\n</body></html>",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "name": "POI Informed the Order_status by WFS.",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        1280,
+        120
+      ],
+      "credentials": {
+        "smtp": "smtp(sai)creds"
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_orders?filter={\"order_id\":{\"_eq\":\"{{$node[\"Constructing email heading,body_content based on order_status\"].json[\"add_prefix\"]}}\"}}",
+        "allowUnauthorizedCerts": true,
+        "options": {}
+      },
+      "name": "Get the id",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        850,
+        120
+      ],
+      "credentials": {
+        "httpHeaderAuth": "Balcoqa-Dms-Token"
+      }
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "order_id",
+              "value": "={{$json[\"body\"][\"order_id\"]}}"
+            },
+            {
+              "name": "order_status",
+              "value": "={{$json[\"body\"][\"order_status\"]}}"
+            },
+            {
+              "name": "po_number",
+              "value": "={{$node[\"Receive_order_status\"].json[\"body\"][\"purchase_order_no\"]}}"
+            },
+            {
+              "name": "dms_url",
+              "value": "={{ $node[\"Receive_order_status\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ? \"https://balco.mozart.shakedeal.com\" : \"https://balcoqa.mozart.shakedeal.com\" }}"
+            },
+            {
+              "name": "order_prefix",
+              "value": "=OD"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        460,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let orderNumber =  items[0].json[\"order_id\"]\nlet po_num =  items[0].json[\"po_number\"]\norderStatus= items[0].json[\"order_status\"]\nitems[0].json.orderStatus = orderStatus\nif(orderStatus ===\"processed\"){\n   items[0].json.subject = `Order ${orderNumber} for Purchase Order ${po_num} has been Processed`\n   items[0].json.heading = `Order ${orderNumber} against PO ${po_num} has processed`\n  items[0].json.bodyContent = `Order ${orderNumber} against PO ${po_num} \nhas been processed and will shortly shipped to it’s destination. \nWe will keep you updated with the status of your shipment.`\n}\nif(orderStatus===\"intransit\"){\n   items[0].json.subject = `Order ${orderNumber} for Purchase Order ${po_num} \nis In Transit`\n   items[0].json.heading = `Order ${orderNumber} against PO ${po_num} has \nbeen Dispatched`\n   items[0].json.bodyContent = `Order  ${orderNumber} against PO ${po_num} \nhas been Shipped and will arrive at it’s destination soon.`\n}\n\nif(orderStatus === \"complete\"){\n    items[0].json.subject = `Order ${orderNumber}  for Purchase Order ${po_num} \nhas reached it’s destination`\n    items[0].json.heading = `: Order ${orderNumber} against PO ${po_num} has \nreached it’s Destination.`\n     items[0].json.bodyContent = `: Order ${orderNumber} against PO ${po_num} \nhas been reached it’s destination and is now complete.`\n\n}\n\n\nlet order_prefix = $node[\"Globals\"].json[\"order_prefix\"]\nlet add_prefix = order_prefix+orderNumber \n\nitems[0].json.add_prefix = add_prefix \nreturn items;"
+      },
+      "name": "Constructing email heading,body_content based on order_status",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        650,
+        120
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "updatedAt": "2022-03-22T04:33:45.612Z"
+}
