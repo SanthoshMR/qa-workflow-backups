@@ -54,7 +54,10 @@
         300
       ],
       "credentials": {
-        "microsoftExcelOAuth2Api": "Microsoft excel creds"
+        "microsoftExcelOAuth2Api": {
+          "id": "34",
+          "name": "Microsoft excel creds"
+        }
       }
     },
     {
@@ -74,11 +77,15 @@
         300
       ],
       "credentials": {
-        "smtp": "SendGrid"
+        "smtp": {
+          "id": "36",
+          "name": "SendGrid"
+        }
       }
     }
   ],
   "settings": {},
   "staticData": null,
+  "tags": [],
   "updatedAt": "2021-11-03T12:54:45.763Z"
 }
