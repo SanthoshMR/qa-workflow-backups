@@ -1,0 +1,218 @@
+{
+  "active": true,
+  "connections": {
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Check for Order",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for Order": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Update the PO status",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "PO cancellation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-08-24T10:45:09.903Z",
+  "id": "93",
+  "name": "Vendor Panel : Update PO status from SD store",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "update_po_status",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "sd_po_status",
+                "value": "5214796321456987"
+              }
+            ]
+          }
+        }
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        480,
+        350
+      ],
+      "webhookId": "d9d496f9-5a31-42ce-9970-d95ad6a5a762",
+      "credentials": {
+        "httpBasicAuth": "SD Basic Auth"
+      }
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "dms_url",
+              "value": "=https://vpanelqa.shakedeal.com"
+            },
+            {
+              "name": "status",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"confirmed\"]===1?\"confirmed\":\"cancelled\"}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        650,
+        350
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/all_orders?filter={\"po_num\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"po_number\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Check for Order",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        850,
+        350
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/all_orders/{{$node[\"Check for Order\"].json[\"data\"][0][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "po_status",
+              "value": "={{$node[\"Globals\"].json[\"status\"]}}"
+            },
+            {
+              "name": "no_of_boxes",
+              "value": "={{parseInt($node[\"Webhook\"].json[\"body\"][\"no_of_boxes\"])}}"
+            }
+          ]
+        }
+      },
+      "name": "Update the PO status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1270,
+        250
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Globals\"].json[\"status\"]}}",
+              "value2": "=confirmed"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1050,
+        350
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/all_orders/{{$node[\"Check for Order\"].json[\"data\"][0][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "po_status",
+              "value": "={{$node[\"Globals\"].json[\"status\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "PO cancellation",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1270,
+        440
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "updatedAt": "2021-09-27T09:09:38.938Z"
+}
