@@ -1,0 +1,36 @@
+{
+  "active": true,
+  "connections": {},
+  "createdAt": "2021-05-14T14:15:11.433Z",
+  "id": "67",
+  "name": "E-invoice callback",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "path": "db5558ea-2947-4942-90ee-dfbaf359dacb",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        450,
+        450
+      ],
+      "webhookId": "db5558ea-2947-4942-90ee-dfbaf359dacb"
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "updatedAt": "2021-05-14T14:15:16.192Z"
+}
