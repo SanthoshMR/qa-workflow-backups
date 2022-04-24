@@ -1,0 +1,292 @@
+{
+  "active": false,
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Microsoft Excel": {
+      "main": [
+        [
+          {
+            "node": "Get member details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Set action",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Microsoft Excel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get member details": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Set action": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Create User",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-07-30T06:41:18.963Z",
+  "id": "81",
+  "name": "order_aged : 2 Automated adding users",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        30,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "worksheet",
+        "operation": "getContent",
+        "workbook": "A6E890F58473778D!1951",
+        "worksheet": "{60192A92-B56E-4B6D-9EEC-635AF1F02BD9}",
+        "range": "A1:C26"
+      },
+      "name": "Microsoft Excel",
+      "type": "n8n-nodes-base.microsoftExcel",
+      "typeVersion": 1,
+      "position": [
+        330,
+        300
+      ],
+      "credentials": {
+        "microsoftExcelOAuth2Api": "Microsoft excel creds"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get member details\"].json[\"dms_url\"]}}/users?filter={ \"email\": { \"_eq\": \"{{$node[\"Get member details\"].json[\"email\"]}}\" }}",
+        "allowUnauthorizedCerts": true,
+        "options": {
+          "batchSize": 1
+        }
+      },
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        770,
+        170
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Set action\"].json[\"action\"]}}",
+              "value2": "create"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1360,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "mergeByIndex",
+        "join": "outer"
+      },
+      "name": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 1,
+      "position": [
+        960,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "dms_url",
+              "value": "=http://11f1bcf3c22c.ngrok.io"
+            },
+            {
+              "name": "password",
+              "value": "=user@123"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        190,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "const returnItems = [];\n\nfor (const item of items) {\n  returnItems.push({\n    json: {\n       first_name:item.json[\"name\"],\n       last_name:item.json[\"name\"].slice(0,1),\n       email:item.json[\"email\"],\n       member_type:item.json[\"Member Type\"],\n       password:$node[\"Globals\"].json[\"password\"],\n       dms_url:$node[\"Globals\"].json[\"dms_url\"]\n    }\n  });\n}\n\nreturn returnItems;\n"
+      },
+      "name": "Get member details",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        530,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "const returnItems = [];\nfor (const item of items) {\n  returnItems.push({\n    json: {\n       id:item.json[\"data\"].length>0?item.json[\"data\"][0][\"id\"]:-1,\n       first_name:item.json[\"data\"].length>0?item.json[\"data\"][0][\"first_name\"]:item.json[\"first_name\"],\n       last_name:item.json[\"data\"].length>0?item.json[\"data\"][0][\"last_name\"]:item.json[\"last_name\"],\n       email:item.json[\"data\"].length>0?item.json[\"data\"][0][\"email\"]:item.json[\"email\"],\n       password:item.json[\"data\"].length>0?item.json[\"data\"][0][\"password\"]:item.json[\"password\"],\n       action:item.json[\"data\"].length>0?\"exits\":\"create\",\n       member_type:item.json[\"member_type\"]\n    }\n  });\n}\nreturn returnItems\n"
+      },
+      "name": "Set action",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1160,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Merge\"].json[\"dms_url\"]}}/users",
+        "options": {
+          "batchSize": 1
+        },
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "first_name",
+              "value": "={{$node[\"IF\"].json[\"first_name\"]}}"
+            },
+            {
+              "name": "last_name",
+              "value": "={{$node[\"IF\"].json[\"last_name\"]}}"
+            },
+            {
+              "name": "email",
+              "value": "={{$node[\"IF\"].json[\"email\"]}}"
+            },
+            {
+              "name": "password",
+              "value": "={{$node[\"IF\"].json[\"password\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Create User",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1540,
+        140
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    },
+    {
+      "parameters": {},
+      "name": "NoOp2",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1550,
+        380
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "updatedAt": "2021-07-30T13:18:12.655Z"
+}
