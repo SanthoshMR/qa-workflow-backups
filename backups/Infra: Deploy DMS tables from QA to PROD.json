@@ -306,7 +306,10 @@
         480
       ],
       "credentials": {
-        "postgres": "Dms - QA"
+        "postgres": {
+          "id": "13",
+          "name": "Dms - QA"
+        }
       }
     },
     {
@@ -322,7 +325,10 @@
         700
       ],
       "credentials": {
-        "postgres": "Dms - Prod"
+        "postgres": {
+          "id": null,
+          "name": "Dms - Prod"
+        }
       }
     },
     {
@@ -338,7 +344,10 @@
         480
       ],
       "credentials": {
-        "postgres": "Dms - Prod"
+        "postgres": {
+          "id": null,
+          "name": "Dms - Prod"
+        }
       }
     },
     {
@@ -354,7 +363,10 @@
         480
       ],
       "credentials": {
-        "postgres": "Dms - QA"
+        "postgres": {
+          "id": "13",
+          "name": "Dms - QA"
+        }
       }
     },
     {
@@ -373,7 +385,10 @@
         1080
       ],
       "credentials": {
-        "smtp": "AWS SES Creds"
+        "smtp": {
+          "id": "7",
+          "name": "AWS SES Creds"
+        }
       }
     },
     {
@@ -389,7 +404,10 @@
         700
       ],
       "credentials": {
-        "postgres": "Dms - QA"
+        "postgres": {
+          "id": "13",
+          "name": "Dms - QA"
+        }
       }
     },
     {
@@ -442,7 +460,10 @@
         900
       ],
       "credentials": {
-        "postgres": "Dms - Prod"
+        "postgres": {
+          "id": null,
+          "name": "Dms - Prod"
+        }
       }
     },
     {
@@ -534,7 +555,10 @@
         1080
       ],
       "credentials": {
-        "postgres": "Dms - Prod"
+        "postgres": {
+          "id": null,
+          "name": "Dms - Prod"
+        }
       }
     },
     {
@@ -569,7 +593,10 @@
         900
       ],
       "credentials": {
-        "postgres": "Dms - QA"
+        "postgres": {
+          "id": "13",
+          "name": "Dms - QA"
+        }
       }
     },
     {
@@ -597,5 +624,6 @@
     "errorWorkflow": "8"
   },
   "staticData": null,
+  "tags": [],
   "updatedAt": "2021-02-01T18:57:20.933Z"
 }
