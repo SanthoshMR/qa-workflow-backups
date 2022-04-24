@@ -65,7 +65,10 @@
       ],
       "webhookId": "bc857fa0-0dff-42a9-8661-7b00e5dc457d",
       "credentials": {
-        "httpBasicAuth": "Balco_basic_auth"
+        "httpBasicAuth": {
+          "id": "21",
+          "name": "Balco_basic_auth"
+        }
       }
     },
     {
@@ -116,7 +119,10 @@
         330
       ],
       "credentials": {
-        "httpHeaderAuth": "Balcoqa-Dms-Token"
+        "httpHeaderAuth": {
+          "id": "22",
+          "name": "Balcoqa-Dms-Token"
+        }
       }
     },
     {
@@ -135,11 +141,15 @@
         330
       ],
       "credentials": {
-        "smtp": "smtp(sai)creds"
+        "smtp": {
+          "id": "17",
+          "name": "smtp(sai)creds"
+        }
       }
     }
   ],
   "settings": {},
   "staticData": null,
+  "tags": [],
   "updatedAt": "2021-04-16T12:47:28.752Z"
 }
