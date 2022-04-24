@@ -91,7 +91,10 @@
         300
       ],
       "credentials": {
-        "httpHeaderAuth": "SD-Dms-Token"
+        "httpHeaderAuth": {
+          "id": "10",
+          "name": "SD-Dms-Token"
+        }
       }
     },
     {
@@ -107,11 +110,15 @@
         430
       ],
       "credentials": {
-        "nextCloudApi": "SD Cloud"
+        "nextCloudApi": {
+          "id": "43",
+          "name": "SD Cloud"
+        }
       }
     }
   ],
   "settings": {},
   "staticData": null,
+  "tags": [],
   "updatedAt": "2021-01-09T09:48:39.045Z"
 }
