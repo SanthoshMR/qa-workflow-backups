@@ -1,0 +1,604 @@
+{
+  "active": true,
+  "connections": {
+    "Receive Order Details": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Get the product_codes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the product_codes": {
+      "main": [
+        [
+          {
+            "node": "Get the products based on product_code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the products based on product_code": {
+      "main": [
+        [
+          {
+            "node": "create new product",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create new product": {
+      "main": [
+        [
+          {
+            "node": "Checking a condition whether to post the products ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Checking a condition whether to post the products ": {
+      "main": [
+        [
+          {
+            "node": "Post the products",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get product_ids",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post the products": {
+      "main": [
+        [
+          {
+            "node": "Get product_ids",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get product_ids": {
+      "main": [
+        [
+          {
+            "node": "Get the product_vendor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the product_vendor": {
+      "main": [
+        [
+          {
+            "node": "Create new product_vendor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create new product_vendor": {
+      "main": [
+        [
+          {
+            "node": "Checking condition whether to post product_vendor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Checking condition whether to post product_vendor": {
+      "main": [
+        [
+          {
+            "node": "Post the product_vendor",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get the po_id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post the product_vendor": {
+      "main": [
+        [
+          {
+            "node": "Get the po_id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Constructing for posting order": {
+      "main": [
+        [
+          {
+            "node": "Post the order",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post the order": {
+      "main": [
+        [
+          {
+            "node": "post order_value & order_id in payment_advice",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "post order_value & order_id in payment_advice": {
+      "main": [
+        [
+          {
+            "node": "Update payment_advice_id in order ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update payment_advice_id in order ": {
+      "main": [
+        [
+          {
+            "node": "Updating the shipping_adress in PO",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the po_id": {
+      "main": [
+        [
+          {
+            "node": "Constructing for posting order",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Updating the shipping_adress in PO": {
+      "main": [
+        [
+          {
+            "node": " Order Processing  Reminder Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-03-30T13:45:33.039Z",
+  "id": "55",
+  "name": "Balco : SDS order created workflow(RFQ)",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "rfq_order_created",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "rfq_order_created",
+                "value": "123455-567575-8687"
+              }
+            ]
+          }
+        }
+      },
+      "name": "Receive Order Details",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        540,
+        280
+      ],
+      "webhookId": "3610a6e3-1140-43be-9a08-edd1a35ff710",
+      "credentials": {
+        "httpBasicAuth": "Balco_basic_auth"
+      }
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "dms_url",
+              "value": "={{ $node[\"Receive Order Details\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ? \"https://balco.mozart.shakedeal.com\" : \"https://balcoqa.mozart.shakedeal.com\" }}"
+            },
+            {
+              "name": "sales_agent_email",
+              "value": "={{ $node[\"Receive Order Details\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ? \"sales@gmail.com\" : \"sairam.reddy@shakedeal.com\" }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        740,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let products=$node[\"Receive Order Details\"].json.body[\"products\"];\n\nlet product_codes = [];\n\nproducts.forEach(function(obj,index){\n        product_codes.push(obj[\"productcode\"])\n\n})\n\nitems[0].json.product_codes = product_codes \nitems[0].json.products = products\n\nreturn items;"
+      },
+      "name": "Get the product_codes",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        940,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_products?filter={\"product_code\":{\"_in\":\"{{$node[\"Get the product_codes\"].json[\"product_codes\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Get the products based on product_code",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1140,
+        280
+      ],
+      "credentials": {
+        "httpHeaderAuth": "Balcoqa-Dms-Token"
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let products = $node[\"Get the products based on product_code\"].json.data\nlet product_codes = $node[\"Get the product_codes\"].json[\"product_codes\"]\n\nlet placed_products = $node[\"Receive Order Details\"].json.body[\"products\"];\n\nlet resultFilter = product_codes.filter(product_codes =>!products.some(products =>products[\"product_code\"]===product_codes))\n\n\n\nif(resultFilter.length>0){\n   items[0].json.action = \"post the products\";\n   let post_products = []\n   resultFilter.forEach(function(value,index){\n             placed_products.forEach(function(obj){\n                   if(value===obj[\"productcode\"]){\n                       post_products[index]={};\n                       post_products[index].product_name = obj[\"product_name\"];\n                       post_products[index].product_code = obj[\"productcode\"];\n                       //post_products[index].description = obj[\"description\"]\n                   \n                   \n                   }\n             \n             })\n   \n   })\n   items[0].json.post_products = post_products \n}else items[0].json.action = \"no products to post\"\n\n\nitems[0].json.resultFilter = resultFilter \n\nitems[0].json.products = products \n\n\nreturn items;"
+      },
+      "name": "create new product",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"create new product\"].json[\"action\"]}}",
+              "value2": "post the products"
+            }
+          ]
+        }
+      },
+      "name": "Checking a condition whether to post the products ",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1540,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_products",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"create new product\"].json[\"post_products\"]}}"
+      },
+      "name": "Post the products",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1750,
+        190
+      ],
+      "credentials": {
+        "httpHeaderAuth": "Balcoqa-Dms-Token"
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let productAction = $node[\"create new product\"].json[\"action\"]\nlet existingProductData = $node[\"Get the products based on product_code\"].json.data;\n\n\nif(productAction === \"post the products\"){\n   let postedProductData = $node[\"Post the products\"].json.data;\n   items[0].json.postedProductData = postedProductData \n\n}\n\nif(productAction === \"post the products\"){\n   if(existingProductData.length>0){\n      let concatedProducts = existingProductData.concat(items[0].json.postedProductData)\n      items[0].json.concatedProducts = concatedProducts \n   }else items[0].json.concatedProducts = items[0].json.postedProductData \n}else items[0].json.concatedProducts = existingProductData \n\n\nlet products = items[0].json.concatedProducts;\n\nlet product_ids = [];\nlet vendor_ids = []\n\nproducts.forEach(function(obj,index){\n      product_ids.push(obj[\"id\"])\n      vendor_ids.push(null)\n\n})\n\nitems[0].json.product_ids = product_ids \nitems[0].json.vendor_ids = vendor_ids \nitems[0].json.existingProductData = existingProductData \n\n\nreturn items;"
+      },
+      "name": "Get product_ids",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1950,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_vendor_product_mapping?filter={\"_and\": [{\"product\": {\"_in\":\"{{$node[\"Get product_ids\"].json[\"product_ids\"]}}\"}},{\"vendor\": {\"_null\":null}}]}",
+        "allowUnauthorizedCerts": true,
+        "options": {}
+      },
+      "name": "Get the product_vendor",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2150,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": "Balcoqa-Dms-Token"
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let products = $node[\"Get product_ids\"].json[\"concatedProducts\"];\nlet product_ids = $node[\"Get product_ids\"].json[\"product_ids\"]\nlet existing_product_vendor = $node[\"Get the product_vendor\"].json.data\n\nlet resultFilter  = product_ids.filter(products=>!existing_product_vendor.some(existing_product_vendor=>existing_product_vendor.product === products))\n\nitems[0].json.resultFilter  = resultFilter  \npost_product_vendor=[];\nresultFilter.forEach(function(value,index){\n       post_product_vendor[index] = {}\n       post_product_vendor[index].product = value\n\n})\n\n\nitems[0].json.post_product_vendor = post_product_vendor;\nif(resultFilter.length>0){\n   items[0].json.action = \"post the product_vendor\";\n   \n}else items[0].json.action = \"dont post the product_vendor\"\n\nitems[0].json.existing_product_vendor = existing_product_vendor \n\nitems[0].json.products = products \n\n\nreturn items;"
+      },
+      "name": "Create new product_vendor",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        2380,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Create new product_vendor\"].json[\"action\"]}}",
+              "value2": "post the product_vendor"
+            }
+          ]
+        }
+      },
+      "name": "Checking condition whether to post product_vendor",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        2590,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_vendor_product_mapping",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Create new product_vendor\"].json[\"post_product_vendor\"]}}"
+      },
+      "name": "Post the product_vendor",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2790,
+        200
+      ],
+      "credentials": {
+        "httpHeaderAuth": "Balcoqa-Dms-Token"
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let po_id = items[0].json.data[0][\"id\"]\nlet placed_products = $node[\"Receive Order Details\"].json.body[\"products\"];\nlet existing_product_vendor = $node[\"Get the product_vendor\"].json.data;\nlet product_vendor_action = $node[\"Create new product_vendor\"].json.action;\nlet order_id = $node[\"Receive Order Details\"].json.body[\"orderid\"];\n \nlet order_value = $node[\"Receive Order Details\"].json.body[\"ordertotal\"];\n\nif(product_vendor_action === \"post the product_vendor\"){\n     let posted_product_vendor = $node[\"Post the product_vendor\"].json.data;\n     items[0].json.posted_product_vendor = posted_product_vendor \n\n}\n\nif(product_vendor_action === \"post the product_vendor\"){\n   if(existing_product_vendor.length>0){\n      let concated_product_vendor = existing_product_vendor.concat(items[0].json.posted_product_vendor)\n      items[0].json.concated_product_vendor = concated_product_vendor \n   \n   }else items[0].json.concated_product_vendor = items[0].json.posted_product_vendor\n\n}else items[0].json.concated_product_vendor = existing_product_vendor \n\nlet concated_product_vendor  = items[0].json.concated_product_vendor\n\nqty_placed =[]\nproduct_total =[]\n\nplaced_products.forEach(function(obj,index){\n        qty_placed.push(obj[\"quantity\"]);\n        product_total.push(obj[\"product_price\"])\n\n})\norder_details =[];\n\nconcated_product_vendor.forEach(function(obj,index){\n        order_details[index]={}\n        order_details[index].sd_mozart_vendor_product_mapping_id = obj[\"id\"]\n        order_details[index].qty_placed = qty_placed[index]\n        order_details[index].product_total = product_total[index]\n\n\n})\n\norder = []\norder[0]={}\norder[0].po_num = po_id\norder[0].order_id = order_id \norder[0].order_value = order_value \norder[0].order_status = \"open\"\norder[0].order_type = \"rfq\";\norder[0].order_details = order_details \n\nitems[0].json.order = order \n\nreturn items;"
+      },
+      "name": "Constructing for posting order",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        3200,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_orders",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Constructing for posting order\"].json[\"order\"]}}"
+      },
+      "name": "Post the order",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3390,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": "Balcoqa-Dms-Token"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_payment_advise",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "order",
+              "value": "={{Array.isArray($node[\"Post the order\"].json.data)?$node[\"Post the order\"].json.data[0][\"id\"]:$node[\"Post the order\"].json.data[\"id\"]}}"
+            },
+            {
+              "name": "order_value",
+              "value": "={{$node[\"Receive Order Details\"].json.body[\"ordertotal\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "post order_value & order_id in payment_advice",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3590,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": "Balcoqa-Dms-Token"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_orders/{{Array.isArray($node[\"Post the order\"].json[\"data\"])?$node[\"Post the order\"].json[\"data\"][0][\"id\"]:$node[\"Post the order\"].json[\"data\"][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "payment_details",
+              "value": "={{$node[\"post order_value & order_id in payment_advice\"].json[\"data\"][\"id\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update payment_advice_id in order ",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3810,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": "Balcoqa-Dms-Token"
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "handyalasairam9177@gmail.com",
+        "toEmail": "={{$node[\"Globals\"].json[\"sales_agent_email\"]}}",
+        "subject": "Order Created for Balco",
+        "html": "=<!DoCtYPe html><html lang=\"en\"><head><style id=\"stndzstyle\"></style>\n <meta http-equiv=\"Content-Type\" content=\"text\n/html; charset=UTF-8\">\n <meta name=\"viewport\" content=\"width=device-width,\ninitial-scale=1, shrink-to-fit=no\">\n <meta name=\"description\" content=\"\">\n <meta name=\"author\" content=\"Mark Otto, Jacob\nThornton, and Bootstrap contributors\">\n <meta name=\"generator\" content=\"\nAcelleSystemLayouts\">\n\n <!-- Bootstrap core CSS -->\n <link href=\"https://marketing.shakedeal.com/assets\n/templates/60584da7bdf65/css/bootstrap.min.css\" rel=\"\nstylesheet\">\n <script id=\"spHTMLFormElementPrototypeScript\">\n(function()\n {\n try\n {\n var sp_old_HTMLFormElementPrototype_submit = \nHTMLFormElement.prototype.submit;\n HTMLFormElement.prototype.submit = function\n(AEvent)\n {\n try\n {\n var spEvent = document.createEvent('Event');\n spEvent.initEvent('sp_submit', true, true);\n this.dispatchEvent(spEvent);\n }\n catch(ErrorMessage)\n {\n console.error('spFormElementPrototype()\nError sending \"sp_submit\" event from HTMLFormElement.\nprototype.submit: ' + ErrorMessage);\n }\n sp_old_HTMLFormElementPrototype_submit.apply\n(this);\n };\n }\n catch(ErrorMessage)\n {\n console.error('spFormElementPrototype() Error\nattaching to HTMLFormElement.prototype.submit: ' +\nErrorMessage);\n }\n try\n {\n if (typeof __doPostBack == 'function')\n {\n var sp_old__doPostBack = __doPostBack;\n __doPostBack = function(eventTarget,\neventArgument)\n {\n try\n {\n var spEvent = document.createEvent\n('Event');\n spEvent.initEvent('sp_submit', true, true);\n window.dispatchEvent(spEvent);\n }\n catch(ErrorMessage)\n {\n console.error('spFormElementPrototype()\nError sending \"sp_submit\" event from __doPostBack(): '\n+ ErrorMessage);\n }\n sp_old__doPostBack(eventTarget,\neventArgument);\n };\n }\n }\n catch(ErrorMessage)\n {\n console.error('spFormElementPrototype() Error\nattaching to __doPostBack(): ' + ErrorMessage);\n }\n })();</script><link href=\"https://fonts.googleapis.\ncom/icon?family=Material+Icons\" rel=\"stylesheet\"><link\nhref=\"https://fonts.googleapis.com/icon?\nfamily=Material+Icons+Outlined\" rel=\"stylesheet\"></head>\n\n <body data-new-gr-c-s-check-loaded=\"14.990.0\" datagr-ext-installed=\"\">\n<main role=\"main\">\n<div class=\"py-5 bg-light\">\n<div class=\"container\">\n<h1 class=\"my-4 display-4 text-center\">Order has been created for Balco with order : {{$node[\"Receive Order Details\"].json[\"body\"][\"orderid\"]}}</h1>\n<p class=\"lead text-center\">Please mark this order as processed from Balco Dashboard with order : {{$node[\"Receive Order Details\"].json[\"body\"][\"orderid\"]}} and order_type : RFQ</p>\n<div><img class=\"my-2\" src=\"\" width=\"100%\" /></div>\n</div>\n</div>\n</main><footer class=\"text-muted py-5\">\n<div class=\"container\">\n<div class=\"row\">\n<div class=\"col-md-8\">\n<p class=\"mb-1\">Copyright &copy; OpCommerce Online PVT\nLTD, All rights reserved.</p>\n<p class=\"mb-0\">Please email us on <a href=\"\nsupport@shakedeal.com\">support@shakedeal.com</a> in\ncase of any queries.\n</div>\n<div class=\"col-md-4\">\n<p class=\"float-right\"><a href=\"#\">Back to top</a></p>\n</div>\n</div>\n</div>\n</footer>\n</body></html>",
+        "options": {}
+      },
+      "name": " Order Processing  Reminder Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        4240,
+        320
+      ],
+      "credentials": {
+        "smtp": "smtp(sai)creds"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_po_details?filter={ \"po_num\": { \"_eq\": \"{{$node[\"Receive Order Details\"].json[\"body\"][\"purchase_order_no\"]}}\" }}&fields=products.sd_mozart_vendor_product_mapping_id.*,id",
+        "allowUnauthorizedCerts": true,
+        "options": {}
+      },
+      "name": "Get the po_id",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3010,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": "Balcoqa-Dms-Token"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_po_details/{{Array.isArray($node[\"Get the po_id\"].json.data)?$node[\"Get the po_id\"].json.data[0][\"id\"]:$node[\"Get the po_id\"].json.data[\"id\"]}}",
+        "allowUnauthorizedCerts": true,
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "shipment_address",
+              "value": "={{$node[\"Receive Order Details\"].json.body[\"shipping address\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Updating the shipping_adress in PO",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        4030,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": "Balcoqa-Dms-Token"
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "updatedAt": "2022-03-18T05:10:27.704Z"
+}
