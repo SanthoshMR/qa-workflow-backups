@@ -61,7 +61,10 @@
         310
       ],
       "credentials": {
-        "httpHeaderAuth": "zoho books creds"
+        "httpHeaderAuth": {
+          "id": "29",
+          "name": "zoho books creds"
+        }
       }
     },
     {
@@ -108,5 +111,6 @@
   ],
   "settings": {},
   "staticData": null,
+  "tags": [],
   "updatedAt": "2022-04-20T10:05:24.776Z"
 }
