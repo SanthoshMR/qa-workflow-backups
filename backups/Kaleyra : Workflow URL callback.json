@@ -260,7 +260,10 @@
         460
       ],
       "credentials": {
-        "httpHeaderAuth": "SD-Dms-Token"
+        "httpHeaderAuth": {
+          "id": "10",
+          "name": "SD-Dms-Token"
+        }
       }
     },
     {
@@ -322,7 +325,10 @@
         180
       ],
       "credentials": {
-        "httpBasicAuth": "basic creds"
+        "httpBasicAuth": {
+          "id": "30",
+          "name": "basic creds"
+        }
       }
     },
     {
@@ -348,7 +354,10 @@
         460
       ],
       "credentials": {
-        "httpHeaderAuth": "SD-Dms-Token"
+        "httpHeaderAuth": {
+          "id": "10",
+          "name": "SD-Dms-Token"
+        }
       }
     },
     {
@@ -390,7 +399,10 @@
         180
       ],
       "credentials": {
-        "httpHeaderAuth": "SD-Dms-Token"
+        "httpHeaderAuth": {
+          "id": "10",
+          "name": "SD-Dms-Token"
+        }
       }
     },
     {
@@ -432,7 +444,10 @@
         450
       ],
       "credentials": {
-        "httpBasicAuth": "basic creds"
+        "httpBasicAuth": {
+          "id": "30",
+          "name": "basic creds"
+        }
       }
     },
     {
@@ -522,7 +537,10 @@
         430
       ],
       "credentials": {
-        "httpHeaderAuth": "SD-Dms-Token"
+        "httpHeaderAuth": {
+          "id": "10",
+          "name": "SD-Dms-Token"
+        }
       }
     },
     {
@@ -557,5 +575,6 @@
   ],
   "settings": {},
   "staticData": null,
+  "tags": [],
   "updatedAt": "2022-02-10T06:46:09.266Z"
 }
