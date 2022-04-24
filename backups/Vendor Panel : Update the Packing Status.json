@@ -130,7 +130,10 @@
         320
       ],
       "credentials": {
-        "httpHeaderAuth": "header auth creds"
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
       }
     },
     {
@@ -149,7 +152,10 @@
       ],
       "webhookId": "9fdcdb62-f0b3-4ba0-ab44-28083fb54ca1",
       "credentials": {
-        "httpBasicAuth": "SD Basic Auth"
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
       }
     },
     {
@@ -185,5 +191,6 @@
   ],
   "settings": {},
   "staticData": null,
+  "tags": [],
   "updatedAt": "2021-09-27T09:09:13.286Z"
 }
