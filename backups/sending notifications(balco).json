@@ -1,0 +1,164 @@
+{
+  "active": false,
+  "connections": {
+    "Cron": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Function1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function1": {
+      "main": [
+        [
+          {
+            "node": "Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-02-23T12:42:04.540Z",
+  "id": "31",
+  "name": "sending notifications(balco)",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        -10,
+        70
+      ]
+    },
+    {
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "hour": 10
+            }
+          ]
+        }
+      },
+      "name": "Cron",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        440,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "//const today =(new Date().toLocaleString());\n\n//items[0].json.today = today;\n\nvar someDate = new Date();\nvar numberOfDaysToAdd = 9;\nsomeDate.setDate(someDate.getDate() + numberOfDaysToAdd);\n\nvar dd =parseInt(someDate.getDate());\nvar day = dd < 10 ? '0' + dd : dd;\nvar mm =parseInt(someDate.getMonth() + 1);\nvar month = mm < 10 ? '0' + mm : mm;\nvar y = someDate.getFullYear();\n\nvar someFormattedDate = y+'-'+month +'-'+day;\n\nitems[0].json.date=someFormattedDate\nreturn items;\n"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        640,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://dmsqa.shakedeal.com/items/routing_po_details?fields=po_deliver_date,po_num,issuer_email,issued_by?filter={ \"po_deliver_date\": { \"_lte\": \"{{$json[\"date\"]}}\" }}",
+        "allowUnauthorizedCerts": true,
+        "options": {}
+      },
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        840,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header Auth sai creds"
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let days=items[0].json.data;\nlet days10=$node[\"Function\"].json[\"date\"]\nvar someDate = new Date();\nvar numberOfDaysToAdd = 5;\nsomeDate.setDate(someDate.getDate() + numberOfDaysToAdd);\n\nvar dd =parseInt(someDate.getDate());\nvar day = dd < 10 ? '0' + dd : dd;\nvar mm =parseInt(someDate.getMonth() + 1);\nvar month = mm < 10 ? '0' + mm : mm;\nvar y = someDate.getFullYear();\n\nvar days5 = y+'-'+month +'-'+day;\nlet n10=[];\nlet n5=[];\n\ndays.forEach(function(day,index){\n    if(day.po_deliver_date>days5){\n       n10.push({json:day})\n    \n    }else{\n       n5.push({json:day})\n    }\n\n\n})\nitems[0].json.date5=days5;\nitems[0].json.date10=days10;\nitems[0].json.notifications_poDueDate_10days=n10;\nitems[0].json.notifications_poDueDate_5days=n5;\nreturn items;"
+      },
+      "name": "Function1",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        1460,
+        320
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "options": {}
+      },
+      "name": "Set",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1240,
+        320
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "updatedAt": "2021-03-24T11:27:15.149Z"
+}
