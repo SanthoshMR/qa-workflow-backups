@@ -43,7 +43,10 @@
       ],
       "webhookId": "cf257535-bcac-40cc-8835-a3fbd8789c5d",
       "credentials": {
-        "httpBasicAuth": "Balco_basic_auth"
+        "httpBasicAuth": {
+          "id": "21",
+          "name": "Balco_basic_auth"
+        }
       }
     },
     {
@@ -60,11 +63,15 @@
         410
       ],
       "credentials": {
-        "httpHeaderAuth": "Balcoqa-Dms-Token"
+        "httpHeaderAuth": {
+          "id": "22",
+          "name": "Balcoqa-Dms-Token"
+        }
       }
     }
   ],
   "settings": {},
   "staticData": null,
+  "tags": [],
   "updatedAt": "2021-04-05T17:56:56.948Z"
 }
