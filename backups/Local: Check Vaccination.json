@@ -1,0 +1,183 @@
+{
+  "active": false,
+  "connections": {
+    "Run Every 5 Mins": {
+      "main": [
+        [
+          {
+            "node": "Get Pincode & Contact Details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Pincode & Contact Details": {
+      "main": [
+        [
+          {
+            "node": "Check Vaccine Availability",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Vaccine Availability": {
+      "main": [
+        [
+          {
+            "node": "Check If Slot Found",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check If Slot Found": {
+      "main": [
+        [
+          {
+            "node": "If Slot Found",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If Slot Found": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-05-07T13:03:35.806Z",
+  "id": "66",
+  "name": "Local: Check Vaccination",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        250,
+        150
+      ]
+    },
+    {
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "mode": "everyX",
+              "value": 5,
+              "unit": "minutes"
+            }
+          ]
+        }
+      },
+      "name": "Run Every 5 Mins",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        250,
+        350
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "items[0].json.details = [{ name: 'Santhosh', number: '+919886791181', email: 'santhosh.mreddy@gmail.com', pinCode: '560016' }, \n  { name: 'Akash', number: '+919900214723', email: 'akashhegde1991@gmail.com', pinCode: '110001' }];\nreturn items[0].json.details.map(detail => {\n  const dt = new Date();\n  detail.date = `${dt.getDate()}-${dt.getMonth()}-${dt.getFullYear()}`;\n  return { json: detail }\n});"
+      },
+      "name": "Get Pincode & Contact Details",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        450,
+        350
+      ]
+    },
+    {
+      "parameters": {
+        "url": "=https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin?pincode={{$node[\"Get Pincode & Contact Details\"].json[\"pinCode\"]}}&date={{$node[\"Get Pincode & Contact Details\"].json[\"date\"]}}",
+        "options": {}
+      },
+      "name": "Check Vaccine Availability",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        660,
+        350
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "return items.map(item => {\n  item.json.slotFound = item.json.sessions.length > 0;\n  return item;\n});"
+      },
+      "name": "Check If Slot Found",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        860,
+        350
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$node[\"Check If Slot Found\"].json[\"slotFound\"]}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "If Slot Found",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1060,
+        350
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1250,
+        470
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let centerDetailsContent = '';\n\nitems[0].json.smsContent = `Vaccination slots are available for Pincode: ${items[0].json.sessions[0].pincode}! Available slots are ${items[0].json.slots.join(\", \")}.\n Check your email for more details.`;\nitems[0].json.sessions.forEach((session) => {\n  centerDetailsContent += `<br />\n    <b>Center Details:</b><br />\n    Name: ${session.name}<br />\n    Address: ${session.address}<br />\n    District: ${session.district}<br />\n    State: ${session.state}<br />\n    Available Capacity: ${session.available_capacity}<br />\n    Min Age Limit: ${session.min_age_limit}<br />\n    Vaccine: ${session.vaccine}<br />\n    Fee Type: ${session.fee_type}<br />\n    Slots: ${session.slots.join(\", \")}<br />\n  `;\n});\nitems[0].json.emailContent = `Vaccination slots are available for <b>Pincode: ${items[0].json.sessions[0].pincode}!</b>\n  Given below are the details: <br /><br /> ${centerDetailsContent}`;\n\nreturn items;"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1250,
+        250
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "updatedAt": "2021-05-07T15:25:34.042Z"
+}
