@@ -1,0 +1,95 @@
+{
+  "active": true,
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Activate Ops Email Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cron": {
+      "main": [
+        [
+          {
+            "node": "Activate Ops Email Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2020-12-10T06:35:32.248Z",
+  "id": "7",
+  "name": "Infra: Re-activate Email Workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        150
+      ]
+    },
+    {
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "hour": 7
+            }
+          ]
+        }
+      },
+      "name": "Cron",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        240,
+        310
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "PATCH",
+        "url": "https://n8n.shakedeal.com/rest/workflows/2",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "active",
+              "value": "={{true}}"
+            }
+          ]
+        },
+        "headerParametersUi": {
+          "parameter": [
+            {
+              "name": "authorization",
+              "value": "Basic c2R3b3JrZmxvd3M6U2hAa2VkZUBsQDEyMw=="
+            }
+          ]
+        }
+      },
+      "name": "Activate Ops Email Workflow",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        490,
+        310
+      ]
+    }
+  ],
+  "settings": {
+    "timezone": "Asia/Calcutta"
+  },
+  "staticData": null,
+  "updatedAt": "2020-12-31T06:54:04.644Z"
+}
