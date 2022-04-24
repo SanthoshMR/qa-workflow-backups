@@ -116,7 +116,10 @@
         320
       ],
       "credentials": {
-        "httpHeaderAuth": "header Auth sai creds"
+        "httpHeaderAuth": {
+          "id": null,
+          "name": "header Auth sai creds"
+        }
       }
     },
     {
@@ -160,5 +163,6 @@
   ],
   "settings": {},
   "staticData": null,
+  "tags": [],
   "updatedAt": "2021-03-24T11:27:15.149Z"
 }
