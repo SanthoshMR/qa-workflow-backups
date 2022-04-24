@@ -28,7 +28,10 @@
         300
       ],
       "credentials": {
-        "postgres": "n8n - Postgres"
+        "postgres": {
+          "id": "1",
+          "name": "n8n - Postgres"
+        }
       }
     },
     {
@@ -44,7 +47,10 @@
         300
       ],
       "credentials": {
-        "postgres": "n8n - Postgres"
+        "postgres": {
+          "id": "1",
+          "name": "n8n - Postgres"
+        }
       }
     },
     {
@@ -60,7 +66,10 @@
         300
       ],
       "credentials": {
-        "postgres": "n8n - Postgres"
+        "postgres": {
+          "id": "1",
+          "name": "n8n - Postgres"
+        }
       }
     },
     {
@@ -76,7 +85,10 @@
         490
       ],
       "credentials": {
-        "postgres": "n8n - Postgres"
+        "postgres": {
+          "id": "1",
+          "name": "n8n - Postgres"
+        }
       }
     },
     {
@@ -92,7 +104,10 @@
         490
       ],
       "credentials": {
-        "postgres": "Dms - QA"
+        "postgres": {
+          "id": "13",
+          "name": "Dms - QA"
+        }
       }
     },
     {
@@ -108,7 +123,10 @@
         500
       ],
       "credentials": {
-        "postgres": "n8n - Postgres"
+        "postgres": {
+          "id": "1",
+          "name": "n8n - Postgres"
+        }
       }
     },
     {
@@ -124,7 +142,10 @@
         300
       ],
       "credentials": {
-        "postgres": "n8n - Postgres"
+        "postgres": {
+          "id": "1",
+          "name": "n8n - Postgres"
+        }
       }
     },
     {
@@ -140,7 +161,10 @@
         500
       ],
       "credentials": {
-        "postgres": "n8n - Postgres"
+        "postgres": {
+          "id": "1",
+          "name": "n8n - Postgres"
+        }
       }
     },
     {
@@ -156,11 +180,15 @@
         400
       ],
       "credentials": {
-        "postgres": "n8n - Postgres"
+        "postgres": {
+          "id": "1",
+          "name": "n8n - Postgres"
+        }
       }
     }
   ],
   "settings": {},
   "staticData": null,
+  "tags": [],
   "updatedAt": "2021-02-09T16:30:06.725Z"
 }
