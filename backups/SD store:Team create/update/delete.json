@@ -1,0 +1,94 @@
+{
+  "active": true,
+  "connections": {
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "post to SD store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "wait for create/update team": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-04-30T10:59:30.267Z",
+  "id": "62",
+  "name": "SD store:Team create/update/delete",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        90,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        400,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "options": {}
+      },
+      "name": "post to SD store",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        600,
+        240
+      ],
+      "credentials": {
+        "httpBasicAuth": "SD Basic Auth"
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "new_team",
+        "options": {}
+      },
+      "name": "wait for create/update team",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        200,
+        240
+      ],
+      "webhookId": "7b21701b-a45a-426c-869d-73b40ad03e5c",
+      "credentials": {
+        "httpBasicAuth": "SD Basic Auth"
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "updatedAt": "2021-05-04T05:10:44.156Z"
+}
