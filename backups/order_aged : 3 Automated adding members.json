@@ -1,0 +1,249 @@
+{
+  "active": false,
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Microsoft Excel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Microsoft Excel": {
+      "main": [
+        [
+          {
+            "node": "Check for member",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Check for member": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Check for user",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for user": {
+      "main": [
+        [
+          {
+            "node": "Create member",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-07-30T10:10:58.240Z",
+  "id": "82",
+  "name": "order_aged : 3 Automated adding members",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        110,
+        310
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "worksheet",
+        "operation": "getContent",
+        "workbook": "A6E890F58473778D!1951",
+        "worksheet": "{60192A92-B56E-4B6D-9EEC-635AF1F02BD9}",
+        "range": "A1:C26"
+      },
+      "name": "Microsoft Excel",
+      "type": "n8n-nodes-base.microsoftExcel",
+      "typeVersion": 1,
+      "position": [
+        350,
+        310
+      ],
+      "credentials": {
+        "microsoftExcelOAuth2Api": "Microsoft excel creds"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=http://11f1bcf3c22c.ngrok.io/items/auto_members?filter={\"_and\": [{\"email\":{\"email\": {\"_eq\":\"{{$node[\"Microsoft Excel\"].json[\"email\"]}}\"}}},{\"member_type\":{\"_eq\":\"{{$node[\"Microsoft Excel\"].json[\"Member Type\"]}}\"}}]}",
+        "options": {}
+      },
+      "name": "Check for member",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        520,
+        200
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [],
+          "string": [
+            {
+              "value1": "={{$node[\"Function\"].json[\"action\"]}}",
+              "value2": "create"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "=http://11f1bcf3c22c.ngrok.io/items/auto_members",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "email",
+              "value": "={{$node[\"Check for user\"].json[\"data\"][0][\"id\"]}}"
+            },
+            {
+              "name": "member_type",
+              "value": "={{$node[\"IF\"].json[\"member_type\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Create member",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1440,
+        180
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=http://11f1bcf3c22c.ngrok.io/users?filter={\"email\":{\"_eq\":\"{{$node[\"IF\"].json[\"email\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Check for user",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1140,
+        180
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1250,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "mergeByIndex"
+      },
+      "name": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 1,
+      "position": [
+        700,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "const returnItems = [];\nfor (const item of items) {\n  returnItems.push({\n    json: {\n       email:item.json[\"email\"],\n       member_type:item.json[\"Member Type\"],\n       action:item.json[\"data\"].length>0?\"exits\":\"create\",\n    }\n  });\n}\nreturn returnItems\n"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        860,
+        300
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "updatedAt": "2021-07-30T13:18:25.476Z"
+}
