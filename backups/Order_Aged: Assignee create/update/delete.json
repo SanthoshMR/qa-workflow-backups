@@ -1,0 +1,186 @@
+{
+  "active": true,
+  "connections": {
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Get member id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "wait for create/update assignee": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare assignee object": {
+      "main": [
+        [
+          {
+            "node": "post to SD store ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get member id": {
+      "main": [
+        [
+          {
+            "node": "Prepare assignee object",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-04-30T12:21:21.486Z",
+  "id": "63",
+  "name": "Order_Aged: Assignee create/update/delete",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        80,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "dms_url",
+              "value": "=https://dmsqa.shakedeal.com"
+            },
+            {
+              "name": "sdStore_url",
+              "value": "=https://sdqa.shakedeal.com/index.php?dispatch=wfs_update.initiate_update"
+            },
+            {
+              "name": "hash",
+              "value": "=wfs%#hash"
+            },
+            {
+              "name": "action",
+              "value": "={{$node[\"wait for create/update assignee\"].json[\"body\"][\"action\"]===\"create\"?\"add_member_to_team\":\"update_member_to_team\"}}"
+            },
+            {
+              "name": "id",
+              "value": "={{Array.isArray($node[\"wait for create/update assignee\"].json[\"body\"][\"item\"])?$node[\"wait for create/update assignee\"].json[\"body\"][\"item\"][0]:$node[\"wait for create/update assignee\"].json[\"body\"][\"item\"]}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        410,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "new_assignee",
+        "options": {}
+      },
+      "name": "wait for create/update assignee",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        210,
+        260
+      ],
+      "webhookId": "ccaa7b7f-e4a0-482a-a14b-6989f240bcc5",
+      "credentials": {
+        "httpBasicAuth": "SD Basic Auth"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"sdStore_url\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "hash",
+              "value": "={{$node[\"Globals\"].json[\"hash\"]}}"
+            },
+            {
+              "name": "action",
+              "value": "={{$node[\"Globals\"].json[\"action\"]}}"
+            },
+            {
+              "name": "wfs_data",
+              "value": "={{$node[\"Prepare assignee object\"].json[\"assignee_object\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "post to SD store ",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        260
+      ],
+      "credentials": {
+        "httpBasicAuth": "SD Basic Auth"
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let item_id = $node[\"wait for create/update assignee\"].json[\"body\"][\"item\"]\nlet assignee_object={};\nassignee_object.id = $node[\"Globals\"].json[\"id\"]\nassignee_object.member_id= $node[\"Get member id\"].json[\"data\"][\"user_id\"];\nassignee_object.team_id= $node[\"Get member id\"].json[\"data\"][\"team_name\"]\nitems[0].json.assignee_object= assignee_object\nreturn items;\n"
+      },
+      "name": "Prepare assignee object",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        800,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_assignee_details/{{$node[\"Globals\"].json[\"id\"]}}",
+        "options": {}
+      },
+      "name": "Get member id",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        580,
+        260
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "updatedAt": "2021-07-27T13:21:22.895Z"
+}
