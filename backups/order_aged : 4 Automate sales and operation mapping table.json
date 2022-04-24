@@ -1,0 +1,282 @@
+{
+  "active": false,
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Microsoft Excel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Microsoft Excel": {
+      "main": [
+        [
+          {
+            "node": "Check for sales agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for sales agent": {
+      "main": [
+        [
+          {
+            "node": "Check for ops agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for ops agent": {
+      "main": [
+        [
+          {
+            "node": "Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set": {
+      "main": [
+        [
+          {
+            "node": "Check for mapping",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for mapping": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "create sales and ops mapping",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-07-30T11:01:38.237Z",
+  "id": "83",
+  "name": "order_aged : 4 Automate sales and operation mapping table",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        150,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "worksheet",
+        "operation": "getContent",
+        "workbook": "A6E890F58473778D!1951",
+        "worksheet": "{66A84EA3-335B-1144-B052-F0E06C4D9EA8}",
+        "range": "A1:D17"
+      },
+      "name": "Microsoft Excel",
+      "type": "n8n-nodes-base.microsoftExcel",
+      "typeVersion": 1,
+      "position": [
+        420,
+        300
+      ],
+      "credentials": {
+        "microsoftExcelOAuth2Api": "Microsoft excel creds"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=http://11f1bcf3c22c.ngrok.io/items/auto_members?filter={\"email\":{\"email\":{\"_eq\":\"{{$node[\"Microsoft Excel\"].json[\"sales_email\"]}}\"}}}&fields=email.*,email,member_type,id",
+        "options": {}
+      },
+      "name": "Check for sales agent",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        660,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=http://11f1bcf3c22c.ngrok.io/items/auto_members?filter={\"email\":{\"email\":{\"_eq\":\"{{$node[\"Microsoft Excel\"].json[\"ops_email\"]}}\"}}}&fields=email.*,email,member_type,id",
+        "options": {}
+      },
+      "name": "Check for ops agent",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        890,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "sales_email",
+              "value": "={{$node[\"Microsoft Excel\"].json[\"sales_email\"]}}"
+            },
+            {
+              "name": "ops_email",
+              "value": "={{$node[\"Microsoft Excel\"].json[\"ops_email\"]}}"
+            },
+            {
+              "name": "response_sales_email",
+              "value": "={{$node[\"Check for sales agent\"].json[\"data\"][0][\"email\"][\"email\"]}}"
+            },
+            {
+              "name": "response_ops_email",
+              "value": "={{$node[\"Check for ops agent\"].json[\"data\"][0][\"email\"][\"email\"]}}"
+            }
+          ],
+          "number": [
+            {
+              "name": "sales_id",
+              "value": "={{$node[\"Check for sales agent\"].json[\"data\"][0][\"id\"]}}"
+            },
+            {
+              "name": "ops_id",
+              "value": "={{$node[\"Check for ops agent\"].json[\"data\"][0][\"id\"]}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1070,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "=http://11f1bcf3c22c.ngrok.io/items/auto_operations",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "sales_agent",
+              "value": "={{$node[\"Set\"].json[\"sales_id\"]}}"
+            },
+            {
+              "name": "operation_agent",
+              "value": "={{$node[\"Set\"].json[\"ops_id\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "create sales and ops mapping",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1690,
+        200
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Check for mapping\"].json[\"data\"].length}}",
+              "operation": "equal"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1470,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=http://11f1bcf3c22c.ngrok.io/items/auto_operations?filter={\"_and\": [{\"sales_agent\":{\"_eq\":\"{{$node[\"Set\"].json[\"sales_id\"]}}\"}},{\"operation_agent\":{\"_eq\":\"{{$node[\"Set\"].json[\"ops_id\"]}}\"}}]}",
+        "options": {},
+        "queryParametersUi": {
+          "parameter": []
+        }
+      },
+      "name": "Check for mapping",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1270,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1700,
+        400
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "updatedAt": "2021-07-30T13:18:41.161Z"
+}
