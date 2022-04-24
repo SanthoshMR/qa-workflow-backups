@@ -633,7 +633,10 @@
         630
       ],
       "credentials": {
-        "httpHeaderAuth": "Balcoqa-Dms-Token"
+        "httpHeaderAuth": {
+          "id": "22",
+          "name": "Balcoqa-Dms-Token"
+        }
       }
     },
     {
@@ -703,7 +706,10 @@
         340
       ],
       "credentials": {
-        "httpHeaderAuth": "Balcoqa-Dms-Token"
+        "httpHeaderAuth": {
+          "id": "22",
+          "name": "Balcoqa-Dms-Token"
+        }
       }
     },
     {
@@ -724,7 +730,10 @@
         370
       ],
       "credentials": {
-        "httpHeaderAuth": "Balcoqa-Dms-Token"
+        "httpHeaderAuth": {
+          "id": "22",
+          "name": "Balcoqa-Dms-Token"
+        }
       }
     },
     {
@@ -742,7 +751,10 @@
         510
       ],
       "credentials": {
-        "httpHeaderAuth": "Balcoqa-Dms-Token"
+        "httpHeaderAuth": {
+          "id": "22",
+          "name": "Balcoqa-Dms-Token"
+        }
       }
     },
     {
@@ -760,7 +772,10 @@
         470
       ],
       "credentials": {
-        "httpHeaderAuth": "Balcoqa-Dms-Token"
+        "httpHeaderAuth": {
+          "id": "22",
+          "name": "Balcoqa-Dms-Token"
+        }
       }
     },
     {
@@ -781,7 +796,10 @@
         320
       ],
       "credentials": {
-        "httpHeaderAuth": "Balcoqa-Dms-Token"
+        "httpHeaderAuth": {
+          "id": "22",
+          "name": "Balcoqa-Dms-Token"
+        }
       }
     },
     {
@@ -798,7 +816,10 @@
         530
       ],
       "credentials": {
-        "httpHeaderAuth": "Balcoqa-Dms-Token"
+        "httpHeaderAuth": {
+          "id": "22",
+          "name": "Balcoqa-Dms-Token"
+        }
       }
     },
     {
@@ -819,7 +840,10 @@
         510
       ],
       "credentials": {
-        "httpHeaderAuth": "Balcoqa-Dms-Token"
+        "httpHeaderAuth": {
+          "id": "22",
+          "name": "Balcoqa-Dms-Token"
+        }
       }
     },
     {
@@ -931,7 +955,10 @@
         320
       ],
       "credentials": {
-        "httpHeaderAuth": "Balcoqa-Dms-Token"
+        "httpHeaderAuth": {
+          "id": "22",
+          "name": "Balcoqa-Dms-Token"
+        }
       }
     },
     {
@@ -964,7 +991,10 @@
         390
       ],
       "credentials": {
-        "httpHeaderAuth": "Balcoqa-Dms-Token"
+        "httpHeaderAuth": {
+          "id": "22",
+          "name": "Balcoqa-Dms-Token"
+        }
       }
     },
     {
@@ -981,7 +1011,10 @@
         320
       ],
       "credentials": {
-        "httpHeaderAuth": "Balcoqa-Dms-Token"
+        "httpHeaderAuth": {
+          "id": "22",
+          "name": "Balcoqa-Dms-Token"
+        }
       }
     },
     {
@@ -998,7 +1031,10 @@
         510
       ],
       "credentials": {
-        "httpHeaderAuth": "Balcoqa-Dms-Token"
+        "httpHeaderAuth": {
+          "id": "22",
+          "name": "Balcoqa-Dms-Token"
+        }
       }
     },
     {
@@ -1016,7 +1052,10 @@
         490
       ],
       "credentials": {
-        "imap": "Imap creds(sai)"
+        "imap": {
+          "id": "18",
+          "name": "Imap creds(sai)"
+        }
       }
     },
     {
@@ -1308,7 +1347,10 @@
         490
       ],
       "credentials": {
-        "httpHeaderAuth": "Balcoqa-Dms-Token"
+        "httpHeaderAuth": {
+          "id": "22",
+          "name": "Balcoqa-Dms-Token"
+        }
       }
     },
     {
@@ -1327,7 +1369,10 @@
         510
       ],
       "credentials": {
-        "smtp": "smtp(sai)creds"
+        "smtp": {
+          "id": "17",
+          "name": "smtp(sai)creds"
+        }
       }
     },
     {
@@ -1376,7 +1421,10 @@
         790
       ],
       "credentials": {
-        "httpHeaderAuth": "Balcoqa-Dms-Token"
+        "httpHeaderAuth": {
+          "id": "22",
+          "name": "Balcoqa-Dms-Token"
+        }
       }
     },
     {
@@ -1428,7 +1476,10 @@
         680
       ],
       "credentials": {
-        "httpHeaderAuth": "Balcoqa-Dms-Token"
+        "httpHeaderAuth": {
+          "id": "22",
+          "name": "Balcoqa-Dms-Token"
+        }
       }
     },
     {
@@ -1461,7 +1512,10 @@
         810
       ],
       "credentials": {
-        "httpHeaderAuth": "Balcoqa-Dms-Token"
+        "httpHeaderAuth": {
+          "id": "22",
+          "name": "Balcoqa-Dms-Token"
+        }
       }
     },
     {
@@ -1480,7 +1534,10 @@
         810
       ],
       "credentials": {
-        "smtp": "smtp(sai)creds"
+        "smtp": {
+          "id": "17",
+          "name": "smtp(sai)creds"
+        }
       }
     },
     {
@@ -1497,7 +1554,10 @@
         470
       ],
       "credentials": {
-        "httpHeaderAuth": "Balcoqa-Dms-Token"
+        "httpHeaderAuth": {
+          "id": "22",
+          "name": "Balcoqa-Dms-Token"
+        }
       }
     },
     {
@@ -1535,11 +1595,15 @@
         320
       ],
       "credentials": {
-        "smtp": "smtp(sai)creds"
+        "smtp": {
+          "id": "17",
+          "name": "smtp(sai)creds"
+        }
       }
     }
   ],
   "settings": {},
   "staticData": null,
+  "tags": [],
   "updatedAt": "2022-04-19T14:12:48.191Z"
 }
