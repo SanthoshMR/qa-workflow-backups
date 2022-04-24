@@ -64,7 +64,10 @@
         240
       ],
       "credentials": {
-        "httpBasicAuth": "SD Basic Auth"
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
       },
       "disabled": true
     },
@@ -84,11 +87,15 @@
       ],
       "webhookId": "7b21701b-a45a-426c-869d-73b40ad03e5c",
       "credentials": {
-        "httpBasicAuth": "SD Basic Auth"
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
       }
     }
   ],
   "settings": {},
   "staticData": null,
+  "tags": [],
   "updatedAt": "2021-05-04T05:10:44.156Z"
 }
