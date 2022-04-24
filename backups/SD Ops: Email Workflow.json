@@ -1,0 +1,234 @@
+{
+  "active": false,
+  "connections": {
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Move Binary Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Read Gift Voucher Contacts",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Do nothing.",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Do nothing.",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Move Binary Data": {
+      "main": [
+        [
+          {
+            "node": "Upload file to SD Cloud",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Decide Action": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait for Email": {
+      "main": [
+        [
+          {
+            "node": "Decide Action",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Gift Voucher Contacts": {
+      "main": [
+        [
+          {
+            "node": "Send SMSes with Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2020-12-05T04:27:46.283Z",
+  "id": "2",
+  "name": "SD Ops: Email Workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        200,
+        670
+      ]
+    },
+    {
+      "parameters": {
+        "setAllData": false,
+        "sourceKey": "=attachment_{{$node[\"Decide Action\"].json[\"attachmentIndex\"]}}",
+        "options": {
+          "keepSource": false,
+          "keepAsBase64": true
+        }
+      },
+      "name": "Move Binary Data",
+      "type": "n8n-nodes-base.moveBinaryData",
+      "typeVersion": 1,
+      "position": [
+        950,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{$node[\"Decide Action\"].json[\"action\"]}}",
+        "rules": {
+          "rules": [
+            {
+              "value2": "Attachment"
+            },
+            {
+              "value2": "SendSMS",
+              "output": 1
+            }
+          ]
+        },
+        "fallbackOutput": 3
+      },
+      "name": "Switch",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [
+        710,
+        670
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let action = \"\";\nlet from = items[0].json.from;\nlet subject = items[0].json.subject;\nlet sender = /santhosh@shakedeal.com/.exec(from);\nlet isSendSMS = /Send SMS/.exec(subject);\nlet isUploadDropboxFile = /Attachment/.exec(subject);\nif (!!sender) {\n  if (!!isSendSMS) {\n    action = \"SendSMS\";\n  } else if (!!isUploadDropboxFile) {\n    action = \"Attachment\";\n    items[0].json.attachmentIndex = items[0].binary ? Object.values(items[0].binary).findIndex(key => key.mimeType === \"text/csv\") : -1;\n    items[0].json.data = items[0].binary[items[0].json.attachmentIndex];\n  }\n}\nitems[0].json.action = action;\nreturn items;"
+      },
+      "name": "Decide Action",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        530,
+        670
+      ]
+    },
+    {
+      "parameters": {
+        "downloadAttachments": true,
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "name": "Wait for Email",
+      "type": "n8n-nodes-base.emailReadImap",
+      "typeVersion": 1,
+      "position": [
+        360,
+        670
+      ],
+      "credentials": {
+        "imap": "SD Ops Email Creds"
+      }
+    },
+    {
+      "parameters": {
+        "path": "=Invoices/{{$node[\"Decide Action\"].binary.attachment_0.fileName}}"
+      },
+      "name": "Upload file to SD Cloud",
+      "type": "n8n-nodes-base.nextCloud",
+      "typeVersion": 1,
+      "position": [
+        1160,
+        560
+      ],
+      "credentials": {
+        "nextCloudApi": "SD Cloud"
+      }
+    },
+    {
+      "parameters": {
+        "from": "SHAKDL",
+        "to": "=91{{$node[\"Read Gift Voucher Contacts\"].json[\"Phone\"]}}",
+        "message": "=Hi {{$node[\"Read Gift Voucher Contacts\"].json[\"Name\"]}}, Wow! Congratulations on winning under \"Bravo\". Greetings from Lupin Limited, Visakhapatnam. This is your Swiggy gift voucher of value INR 250, Code is {{$node[\"Read Gift Voucher Contacts\"].json[\"Code\"]}}. Expiry is {{$node[\"Read Gift Voucher Contacts\"].json[\"Validity\"]}}. To redeem your voucher click here https://www.swiggy.com/offer-terms."
+      },
+      "name": "Send SMSes with Code",
+      "type": "n8n-nodes-base.msg91",
+      "typeVersion": 1,
+      "position": [
+        1160,
+        730
+      ],
+      "credentials": {
+        "msg91Api": "SD Msg91"
+      }
+    },
+    {
+      "parameters": {
+        "sheetId": "1CaOSY_ndAG01pIXjeUNNzndOQoY2oT9P0p_8OaIOM2I",
+        "range": "=A:D",
+        "options": {}
+      },
+      "name": "Read Gift Voucher Contacts",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 1,
+      "position": [
+        950,
+        730
+      ],
+      "credentials": {
+        "googleApi": "SD Ops Google Sheets - Gift Cards"
+      }
+    },
+    {
+      "parameters": {},
+      "name": "Do nothing.",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        950,
+        890
+      ]
+    }
+  ],
+  "settings": {
+    "timezone": "Asia/Calcutta",
+    "saveManualExecutions": true,
+    "errorWorkflow": "8"
+  },
+  "staticData": null,
+  "updatedAt": "2021-02-09T09:31:37.299Z"
+}
