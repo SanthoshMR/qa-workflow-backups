@@ -72,7 +72,10 @@
         170
       ],
       "credentials": {
-        "smtp": "AWS SES Creds"
+        "smtp": {
+          "id": "7",
+          "name": "AWS SES Creds"
+        }
       }
     },
     {
@@ -168,5 +171,6 @@
   ],
   "settings": {},
   "staticData": null,
+  "tags": [],
   "updatedAt": "2021-03-08T04:53:56.264Z"
 }
