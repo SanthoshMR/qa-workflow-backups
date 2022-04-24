@@ -1,0 +1,217 @@
+{
+  "active": true,
+  "connections": {
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "FunctionItem",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Receive order details": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FunctionItem": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "Update the status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update the status": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-08-18T13:23:02.933Z",
+  "id": "87",
+  "name": "Vendor Panel : update PO Status",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "dms_url",
+              "value": "=https://vpanelqa.shakedeal.com"
+            },
+            {
+              "name": "hash",
+              "value": "=vpr%#hash"
+            },
+            {
+              "name": "action",
+              "value": "=update_order_confirmation_status"
+            },
+            {
+              "name": "sdStore_url",
+              "value": "=https://sdqa.shakedeal.com/index.php?dispatch=wfs_update.vendor_initiate_update"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        650,
+        450
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "update_status",
+        "options": {}
+      },
+      "name": "Receive order details",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        450,
+        450
+      ],
+      "webhookId": "5f76be05-859a-47ce-8231-a7b32da5f4c5",
+      "credentials": {
+        "httpBasicAuth": "SD Basic Auth"
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let data = $node[\"Receive order details\"].json[\"body\"][\"req_body\"]\n\nitem.data = data\nitem.myVariable = 1;\nreturn data;"
+      },
+      "name": "FunctionItem",
+      "type": "n8n-nodes-base.functionItem",
+      "typeVersion": 1,
+      "position": [
+        810,
+        450
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "functionCode": "let data = $node[\"Receive order details\"].json[\"body\"][\"req_body\"]\nconst returnItems = [];\nfor (const item of data) {\n  returnItems.push({\n    json: {\n       id:item[\"id\"],\n       url:$node[\"Globals\"].json[\"dms_url\"],\n       sd_url: $node[\"Globals\"].json[\"sdStore_url\"],\n       hash : $node[\"Globals\"].json[\"hash\"],\n       action : $node[\"Globals\"].json[\"action\"],\n       boxes:item[\"box\"],\n       vendor_data:{\n          confirmed:\"1\",\n\t\t  order_id:item[\"sd_order_number\"].slice(2),\n\t\t  po_number:item[\"po_num\"],\n\t\t  no_of_boxes:parseInt(item[\"box\"]),\n       }\n    }\n  });\n}\nreturn returnItems\nitems[0].json.myVariable = 1;\nreturn returnItems;"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        450
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Function\"].json[\"url\"]}}/items/all_orders/{{$node[\"Function\"].json[\"id\"]}}",
+        "options": {
+          "batchSize": 1
+        },
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "po_status",
+              "value": "=confirmed"
+            },
+            {
+              "name": "no_of_boxes",
+              "value": "={{$node[\"Function\"].json[\"boxes\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update the status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1220,
+        450
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "={{$node[\"Function\"].json[\"sd_url\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "hash",
+              "value": "={{$node[\"Function\"].json[\"hash\"]}}"
+            },
+            {
+              "name": "action",
+              "value": "={{$node[\"Function\"].json[\"action\"]}}"
+            },
+            {
+              "name": "vendor_data",
+              "value": "={{$node[\"Function\"].json[\"vendor_data\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1420,
+        450
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "updatedAt": "2021-09-27T09:09:00.724Z"
+}
