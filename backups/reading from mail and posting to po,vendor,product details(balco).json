@@ -1,0 +1,933 @@
+{
+  "active": false,
+  "connections": {
+    "extracting subject and po_number": {
+      "main": [
+        [
+          {
+            "node": "Read PDF",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTML Extract",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Move Binary Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reading the Email": {
+      "main": [
+        [
+          {
+            "node": "extracting subject and po_number",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "extracting the buyer details": {
+      "main": [
+        [
+          {
+            "node": "globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Move Binary Data": {
+      "main": [
+        [
+          {
+            "node": "post the file to dms",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "globals": {
+      "main": [
+        [
+          {
+            "node": "Merging the globals and file Id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "post the file to dms": {
+      "main": [
+        [
+          {
+            "node": "Merging the globals and file Id",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merging the globals and file Id": {
+      "main": [
+        [
+          {
+            "node": "Get Buyer Details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML Extract": {
+      "main": [
+        [
+          {
+            "node": "extracting the buyer details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read PDF": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "post product details": {
+      "main": [
+        [
+          {
+            "node": "Get vendor Details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "post vendor details": {
+      "main": [
+        [
+          {
+            "node": "Function6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function2": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Buyer Details": {
+      "main": [
+        [
+          {
+            "node": "Function2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get vendor Details": {
+      "main": [
+        [
+          {
+            "node": "Function3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function3": {
+      "main": [
+        [
+          {
+            "node": "IF2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "post buyer details",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function4": {
+      "main": [
+        [
+          {
+            "node": "IF1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NoOp": {
+      "main": [
+        [
+          {
+            "node": "Function5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF1": {
+      "main": [
+        [
+          {
+            "node": "post product details",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NoOp1": {
+      "main": [
+        [
+          {
+            "node": "Get vendor Details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF2": {
+      "main": [
+        [
+          {
+            "node": "post vendor details",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NoOp2": {
+      "main": [
+        [
+          {
+            "node": "Function6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "post buyer details": {
+      "main": [
+        [
+          {
+            "node": "Function5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get product details": {
+      "main": [
+        [
+          {
+            "node": "Function4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function5": {
+      "main": [
+        [
+          {
+            "node": "get product details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function6": {
+      "main": [
+        [
+          {
+            "node": "post the po_details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "post the po_details": {
+      "main": [
+        [
+          {
+            "node": "Function1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function1": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-03-19T08:38:56.896Z",
+  "id": "42",
+  "name": "reading from mail and posting to po,vendor,product details(balco)",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let po=items[0].json.subject.match(/\\d+/g)\nitems[0].json.po_number=po\n\nitems[0].json.attachmentIndex = items[0].binary ? Object.values(items[0].binary).findIndex(key => key.mimeType === \"application/pdf\") : -1;\nitems[0].json.data = items[0].binary[items[0].json.attachmentIndex];\n\n\nreturn items;\n"
+      },
+      "name": "extracting subject and po_number",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        930,
+        740
+      ]
+    },
+    {
+      "parameters": {
+        "format": "resolved",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "name": "Reading the Email",
+      "type": "n8n-nodes-base.emailReadImap",
+      "typeVersion": 1,
+      "position": [
+        750,
+        740
+      ],
+      "credentials": {
+        "imap": "Imap creds(sai)"
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let item_length = items[0].json.item.length\n\nfor(i=0;i<item_length;i++){\n    \n    if(items[0].json.item[i].includes(\"Item text:\")){\n       let line=items[0].json.item[i+1]\n       //let list=line[1].split(\";\");\n       items[0].json.items_list=line;\n    }else if(items[0].json.item[i].includes(\"Ship All Items To\")){\n       items[0].json.shippingAdress=items[0].json.item[i+1];\n    }\n}\n\nreturn items;"
+      },
+      "name": "extracting the buyer details",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1560,
+        470
+      ]
+    },
+    {
+      "parameters": {
+        "setAllData": false,
+        "sourceKey": "=attachment_{{$node[\"extracting subject and po_number\"].json[\"attachmentIndex\"]}}",
+        "options": {
+          "keepSource": true,
+          "keepAsBase64": true
+        }
+      },
+      "name": "Move Binary Data",
+      "type": "n8n-nodes-base.moveBinaryData",
+      "typeVersion": 1,
+      "position": [
+        1210,
+        980
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "buyer_name",
+              "value": "={{$node[\"Function\"].json[\"buyer_name\"]}}"
+            },
+            {
+              "name": "buyer_email",
+              "value": "={{$node[\"Function\"].json[\"buyer_email\"]}}"
+            },
+            {
+              "name": "po_num",
+              "value": "={{$node[\"Function\"].json[\"po_number\"]}}"
+            },
+            {
+              "name": "from_mail",
+              "value": "={{$node[\"extracting subject and po_number\"].json[\"from\"][\"value\"][0][\"address\"]}}"
+            },
+            {
+              "name": "to_mail",
+              "value": "={{$node[\"extracting subject and po_number\"].json[\"to\"][\"value\"][0][\"address\"]}}"
+            },
+            {
+              "name": "items_list",
+              "value": "={{$node[\"extracting the buyer details\"].json[\"items_list\"]}}"
+            },
+            {
+              "name": "po_date",
+              "value": "={{$node[\"Function\"].json[\"po_date\"]}}"
+            },
+            {
+              "name": "po_deliver_date",
+              "value": "= {{$node[\"Function\"].json[\"po_deliverDate\"]}}"
+            },
+            {
+              "name": "po_type",
+              "value": "routing"
+            },
+            {
+              "name": "po_status",
+              "value": "open"
+            },
+            {
+              "name": "shipment_address",
+              "value": "={{$node[\"extracting the buyer details\"].json[\"shippingAdress\"]}}"
+            },
+            {
+              "name": "vendor_email",
+              "value": "={{$node[\"Function\"].json[\"vendorEmail\"]}}"
+            },
+            {
+              "name": "vendor_name",
+              "value": "={{$node[\"Function\"].json[\"vendorName\"]}}"
+            },
+            {
+              "name": "products",
+              "value": "={{$node[\"Function\"].json[\"products\"]}}"
+            },
+            {
+              "name": "vendors",
+              "value": "={{$node[\"Function\"].json[\"vendors\"]}}"
+            }
+          ],
+          "number": [
+            {
+              "name": "phone",
+              "value": "={{$node[\"Function\"].json[\"buyer_phone\"]}}"
+            },
+            {
+              "name": "po_value",
+              "value": "={{$node[\"Function\"].json[\"po_value\"]}}"
+            }
+          ],
+          "boolean": []
+        },
+        "options": {}
+      },
+      "name": "globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1820,
+        470
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "https://dmsqa.shakedeal.com/files",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {
+          "bodyContentType": "multipart-form-data"
+        },
+        "sendBinaryData": true,
+        "binaryPropertyName": "=input_file:attachment_{{$node[\"Move Binary Data\"].json[\"attachmentIndex\"]}}"
+      },
+      "name": "post the file to dms",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1800,
+        980
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header Auth sai creds"
+      }
+    },
+    {
+      "parameters": {
+        "mode": "mergeByIndex"
+      },
+      "name": "Merging the globals and file Id",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 1,
+      "position": [
+        2180,
+        760
+      ]
+    },
+    {
+      "parameters": {
+        "dataPropertyName": "html",
+        "extractionValues": {
+          "values": [
+            {
+              "key": "item",
+              "cssSelector": "tr",
+              "returnArray": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "HTML Extract",
+      "type": "n8n-nodes-base.htmlExtract",
+      "typeVersion": 1,
+      "position": [
+        1260,
+        470
+      ]
+    },
+    {
+      "parameters": {
+        "binaryPropertyName": "=attachment_{{$node[\"extracting subject and po_number\"].json[\"attachmentIndex\"]}}"
+      },
+      "name": "Read PDF",
+      "type": "n8n-nodes-base.readPDF",
+      "typeVersion": 1,
+      "position": [
+        1420,
+        740
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "\nconst text = items[0].json.text.split('\\n');\nitems[0].json.all_lines = text ;\nlet lenLines = items[0].json.all_lines.length;\n\n\n\n\nlet product_name = [];\nlet product_code=[];\nlet product_quantity=[];\nlet material_description=[];\nlet vendor_name=[];\nlet vendor_phone=[];\nlet vendor_companyName=[];\nlet vendor_email=[];\nlet vendor_adress=[];\nlet po_deliverDate=[];\nlet productvalueWithTax=[]\n\n\nfor (i = 0; i < lenLines; i++){\n  \n  \n  if(text[i].includes(\"Grand Total :\")){\n    if(text[i+1].match(/\\d+/g) != null){\n      let convertedPoValue = text[i+1].split(\",\").join('');\n      items[0].json.po_value=parseFloat(convertedPoValue);\n    }else {\n       let convertedPoValue =text[i-1].split(\",\").join('');\n       items[0].json.po_value=parseFloat(convertedPoValue);\n    }\n  }else if(text[i].includes(\"SUPPLIER DETAILS: \")){\n \n    let concatedAdress=text[i+4].concat(text[i+5])\n    \n    vendor_name.push(text[i+7]);\n    vendor_email.push(text[i+10]);\n    vendor_companyName.push(text[i+2]);\n    vendor_phone.push(text[i+9]);\n    vendor_adress.push(concatedAdress);\n      \n  }else if(text[i].includes(\"PO Number :\")){\n      let splittedLine=text[i].split(\":\");\n      items[0].json.po_number=splittedLine[1];\n  }else if (text[i].includes(\"Material Description\")){\n      let hsnCode=items[0].json.hsnCode\n      if(text[i+6].includes(\"THIS IS SYSTEM GENERATED DOCUMENT AND HENCE DOES NOT REQUIRE ANY SIGNATURE. PLEASE TREAT THIS AS ORIGINAL AND SUBMIT YOUR ORDER ACKNOWLEDGEMENT.\")){\n       \n         if(/^[0-9]*[.]?[0-9]*$/.test(text[i+15])){\n           product_name.push(text[i+16]);\n           product_quantity.push(text[i+17]);\n           product_code.push(text[i+14]);\n      \n         \n            \n         }else{\n             let index=text[i+13].indexOf(\"M\");\n             let splittedCode=text[i+13].slice(index,index+15);\n             product_code.push(splittedCode);\n             product_name.push(text[i+14]);\n             product_quantity.push(text[i+15])\n             \n         }\n       }else{\n          if(/^[0-9]*[.]?[0-9]*$/.test(text[i+6]) && (text[i+6].length)>=4){\n             product_name.push(text[i+7]);\n             product_quantity.push(text[i+8])  \n             product_code.push(text[i+5]);\n          \n          }else{\n             let index=text[i+4].indexOf(\"M\");\n             let splittedCode=text[i+4].slice(index,index+15);\n             product_code.push(splittedCode);\n             product_name.push(text[i+5]);\n             product_quantity.push(text[i+6]);\n         } \n       }\n  }else if (text[i].includes(\"Priority :\")){\n    let splittedLine=text[i-3]===\"Version :\"?text[i-5].replace(\"Date :\",\" \"):text[i-4].replace(\"Date :\",\" \");\n    items[0].json.po_date=splittedLine;\n    let splittedString=text[i].replace(\"Priority :\",\" \");\n    items[0].json.priority = splittedString;\n  }else if(text[i].includes(\"Material Long Text:\")){\n    let concatedDescription = text[i+1]===\" \"?text[i+2].concat(text[i+4]):text[i+1].concat(text[i+2]);\n    material_description.push(concatedDescription);\n  }else if(text[i].includes(\"Buyer Details\")){\n    \n    items[0].json.buyer_name=text[i+1]===\"Buyer :\"?text[i+2]:text[i+1]\n    items[0].json.buyer_phone=text[i+1]===\"Buyer :\"?parseInt(text[i+4]):parseInt(text[i+3])\n    items[0].json.buyer_email=text[i+1]===\"Buyer :\"?text[i+6]:text[i+5]\n  }else if(text[i].includes(\"ORIGINAL VENDOR :\")){\n    let splittedString = text[i].split(\":\");\n    let partString = splittedString[1].split(\",\");\n \n    vendor_name.push(partString[0])\n    let splittedLine = text[i+3].split(\":\");\n \n    vendor_companyName.push(splittedLine[1])\n    let splitLine = text[i+6].split(/\\b(\\s)/);\n    let splitString = splitLine[0].split(\":\");\n  \n    vendor_phone.push(splitLine[2])\n    let splittedMail = splitLine[10].split(\":\")\n\n    vendor_email.push(splittedMail[1]);\n  }else if(text[i].includes(\"Vendor Name & Details for Material Code \")){\n    vendor_companyName.push(text[i+1]);\n    vendor_name.push(text[i+2]);\n    let replaceString = text[i+3].includes(\"Mob no -\")?text[i+3].replace(\"Mob no -\",\" \"):text[i+3].replace(\"Mob no\",\" \")\n    vendor_phone.push(replaceString);\n    let replaceEmail =text[i+4].includes(\"Email ID\") ?text[i+4].split(\"-\"):text[i+5].split(\"-\")\n    \n    vendor_email.push(replaceEmail[1])\n    \n  }else if(text[i].includes(\"Total With Tax :\")){\n     if(text[i+2].includes(\"Requisitioner :\")){\n        if(text[i].includes(\"Department :\")){\n           let value = text[i].split(\":\");\n           let parsedValue = value[1].replace(\"Total With Tax\",\"\")\n           let splittedValue = parsedValue.split(\",\").join(\"\");\n           productvalueWithTax.push(parseFloat(splittedValue))\n      \n        }else{\n           let parsedValue = text[i+1].split(\",\").join(\"\");\n           productvalueWithTax.push(parseFloat(parsedValue ))\n        }\n      }else{\n         let value = text[i].split(\":\");\n         let parsedValue = value[1].split(\",\").join(\"\");\n         productvalueWithTax.push(parseFloat(parsedValue))\n      }\n  }\n         \nif(text[i].includes(\"Delivery Date\")){\n  if(text[i-1].includes(\"Scheduled Qty\")){\n    \n     if(vendor_name.length>1){\n        let poDeliveryDate =text[i+2]\n        po_deliverDate.push(poDeliveryDate)   \n     \n     }\n   }\n  }      \n  \n}\nlet indexhsn=text.indexOf(\"HSN Code\");\n\nlet length = vendor_name.length;\n//items[0].json.len =length \nif(length===1){\n  po_deliverDate.push(text[indexhsn+11])\n}\n//products array\nlet p=[]\nproduct_name .forEach(function(item,index){\n      \n       p[index] = {};\n      \n       p[index].product_name =product_name[index] ;\n       p[index].product_quantity=product_quantity[index];\n       p[index].product_code=product_code[index];\n       p[index].productvalueWithTax=productvalueWithTax[index];\n       p[index].description=material_description[index]\n    })\n    \nitems[0].json.products=p\n//vendors array\nlet v=[];\nvendor_name.forEach(function(item,index){\n      v[index] = {};\n      v[index].vendor_name=vendor_name[index];\n      v[index].vendor_phone=vendor_phone[index];\n      v[index].vendor_company=vendor_companyName[index];\n      v[index].vendor_email=vendor_email[index];\n      v[index].vendor_address=vendor_adress[index];\n\n\n})\nitems[0].json.vendors=v\n\n//for mapping the vendor and products\n\nlet prodven=[]\nif(vendor_name.length>1){\n   for(i=0;i<lenLines;i++){\n       product_code.forEach(function(value,index){\n             if(text[i].includes(value+\" \"+\"Qtys\")){\n                prodven[index]={}\n                prodven[index].productCode = value;\n                let replaceEmail =text[i+4].includes(\"Email ID\") ?text[i+4].split(\"-\"):text[i+5].split(\"-\")\n                prodven[index].email = replaceEmail[1]\n               \n                let result = p.find(obj=>obj[\"product_code\"]===value)\n                prodven[index].quantity= result[\"product_quantity\"]\n                \n                \n       \n            }\n  \n      })\n   }\n}\nitems[0].json.prodven = prodven\n\n\nitems[0].json.product_name=product_name;\nitems[0].json.product_code=product_code;\nitems[0].json.product_quantity=product_quantity;\nitems[0].json.material_description=material_description\nitems[0].json.vendor_name=vendor_name;\nitems[0].json.vendor_phone=vendor_phone;\nitems[0].json.vendor_email=vendor_email;\nitems[0].json.vendor_companyName=vendor_companyName;\nitems[0].json.po_deliverDate = po_deliverDate;\nitems[0].json.productvalueWithTax = productvalueWithTax;\nitems[0].json.vendor_adress=vendor_adress\n\n\n\nreturn items\n"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1840,
+        740
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "=https://dmsqa.shakedeal.com/items/routing_product_details",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {
+          "bodyContentType": "json"
+        },
+        "bodyParametersJson": "={{$node[\"Function4\"].json[\"postProducts\"]}}"
+      },
+      "name": "post product details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3760,
+        660
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header Auth sai creds"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "https://dmsqa.shakedeal.com/items/routing_vendor_details",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Function3\"].json[\"postVendors\"]}}"
+      },
+      "name": "post vendor details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        4700,
+        610
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header Auth sai creds"
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "\n\nlet buyerId =  $node[\"Function2\"].json[\"length\"]>0?$node[\"Get Buyer Details\"].json.data[0][\"id\"]:$node[\"post buyer details\"].json.data[\"id\"]\nitems[0].json.buyerId =buyerId \nlet vendors =  $node[\"Function\"].json[\"vendors\"]\nlet products =  $node[\"Function\"].json[\"products\"]\n\nlet productAction =  $node[\"Function4\"].json[\"action\"]\nlet vendorAction =  $node[\"Function3\"].json[\"action\"]\n\n\nlet existingVendorData = $node[\"Get vendor Details\"].json.data\nif(vendorAction ===\"post the vendors\" ){\n     let postedVendorData = $node[\"post vendor details\"].json.data\n     items[0].json.postedVendorData = postedVendorData \n     \n}\nlet existingProductData = $node[\"get product details\"].json.data\nif(productAction === \"post the products\" ){\n   let postedProductData = $node[\"post product details\"].json.data\n   items[0].json.postedProductData = postedProductData \n}\nlet prodven =  $node[\"Function\"].json[\"prodven\"]\n\nif(productAction===\"post the products\"){\n   if(existingProductData.length>0){\n      let concatedProducts = existingProductData .concat(items[0].json.postedProductData )\n      items[0].json.concatedProducts=concatedProducts\n   }else items[0].json.concatedProducts = items[0].json.postedProductData\n}else items[0].json.concatedProducts = existingProductData\n\nif(vendorAction ===\"post the vendors\"){\n  if(existingVendorData.length>0){\n     let concatedVendors = existingVendorData.concat(items[0].json.postedVendorData)\n     items[0].json.concatedVendors =concatedVendors \n  }else items[0].json.concatedVendors = items[0].json.postedVendorData\n\n}else items[0].json.concatedVendors = existingVendorData \n\nlet junction=[]\nif(items[0].json.concatedVendors .length>1){\n    items[0].json.concatedProducts.forEach(function(obj,index){\n        for(i=0;i<prodven .length;i++){\n            if(obj[\"product_code\"]===prodven[i][\"productCode\"]){\n               let email = prodven[i][\"email\"]\n               let vendorObj = items[0].json.concatedVendors.find(obj=>obj[\"vendor_email\"]===email)\n               junction[index]={}\n               junction[index].pid = obj[\"id\"]\n               junction[index].vid = vendorObj[\"id\"]\n               junction[index].bid= items[0].json.buyerId\n               junction[index].quantity=  prodven[i][\"quantity\"]\n            }\n       \n        }\n\n   })\n}else{\n    items[0].json.concatedProducts.forEach(function(obj,index){\n         junction[index]={}\n         junction[index].pid = obj[\"id\"]\n         junction[index].vid = items[0].json.concatedVendors[\"id\"]\n         junction[index].bid =  items[0].json.buyerId\n         let result = products.find(value=>value[\"product_code\"]===obj[\"product_code\"])\n         junction[index].quantity = result[\"product_quantity\"]\n    \n    \n    })\n\n}\n\nitems[0].json.junction = junction\n\nitems[0].json.prodven = prodven \nitems[0].json.productAction =productAction \nitems[0].json.vendorAction =vendorAction \nitems[0].json.existingVendorData = existingVendorData \n\nitems[0].json.existingProductData = existingProductData \n\nitems[0].json.vendors = vendors \nitems[0].json.products = products \n\nreturn items;"
+      },
+      "name": "Function1",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        5370,
+        690
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "//let action=\"create user\"\nlet action=\"\"\nlet email = $node[\"globals\"].json[\"buyer_email\"]\n\nitems[0].json.buyerEmail=email\n\nlet data = items[0].json.data\n\n/*data.forEach(function(obj,index){\n   if(obj[\"email\"]===email){\n      items[0].json.id=obj[\"id\"]\n      action = \"user exits\"\n   }\n})\n*/\nitems[0].json.length = data.length\nif(data.length>0){\n   action=\"user exists\"\n}else action = \"create user\"\nitems[0].json.action =action\nreturn items;"
+      },
+      "name": "Function2",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        2590,
+        770
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://dmsqa.shakedeal.com/items/routing_user_details?filter={ \"email\": { \"_eq\": \"{{$node[\"Function\"].json[\"buyer_email\"]}}\" }}",
+        "allowUnauthorizedCerts": true,
+        "options": {}
+      },
+      "name": "Get Buyer Details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2410,
+        760
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header Auth sai creds"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://dmsqa.shakedeal.com/items/routing_vendor_details?filter={ \"vendor_email\": { \"_in\": \"{{$node[\"Function\"].json[\"vendor_email\"]}}\" }}",
+        "allowUnauthorizedCerts": true,
+        "options": {}
+      },
+      "name": "Get vendor Details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        4010,
+        740
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header Auth sai creds"
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "\nlet email = $node[\"Function\"].json[\"vendor_email\"]\n\nlet vendors = $node[\"Function\"].json[\"vendors\"]\n\nitems[0].json.vendorEmail=email\n\nlet data = items[0].json.data\n\nlet resultFilter = \n   vendors.filter(vendors=>\n     !data.some(\n      data=> data.vendor_email=== vendors.vendor_email\n    )\n  );\n\n\n\nitems[0].json.length= resultFilter .length\nif(resultFilter .length>0){\n   action=\"post the vendors\"\n\n}else action = \"no vendors to post\"\n\nitems[0].json.postVendors=resultFilter \nitems[0].json.vendors =vendors \n\n\n\nitems[0].json.action = action\n\n\n\nreturn items;\n"
+      },
+      "name": "Function3",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        4230,
+        740
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [],
+          "string": [
+            {
+              "value1": "={{$json[\"action\"]}}",
+              "value2": "create user"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        2740,
+        760
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        2940,
+        890
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "\nlet action = \"\"\nlet product_name = $node[\"Function\"].json[\"product_name\"]\nlet product_code = $node[\"Function\"].json[\"product_code\"]\nlet products = $node[\"Function\"].json[\"products\"]\n\n\nlet data = items[0].json.data\n\n\n\n\n\n\nlet resultFilter = \n   products.filter(products=>\n     !data.some(\n      data=> data.product_code === products.product_code \n    )\n  );\n\n\n\nitems[0].json.length= resultFilter .length\nif(resultFilter .length>0){\n   action=\"post the products\"\n\n}else action = \"no products to post\"\n\nitems[0].json.postProducts=resultFilter \nitems[0].json.products=products\n\n\n\nitems[0].json.action = action\n\n\n\nreturn items;"
+      },
+      "name": "Function4",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        3390,
+        760
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json[\"action\"]}}",
+              "value2": "post the products"
+            }
+          ]
+        }
+      },
+      "name": "IF1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        3550,
+        750
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "NoOp1",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        3740,
+        890
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json[\"action\"]}}",
+              "value2": "post the vendors"
+            }
+          ]
+        }
+      },
+      "name": "IF2",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        4480,
+        740
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "NoOp2",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        4730,
+        830
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "https://dmsqa.shakedeal.com/items/routing_user_details",
+        "allowUnauthorizedCerts": true,
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "name",
+              "value": "={{$node[\"globals\"].json[\"buyer_name\"]}}"
+            },
+            {
+              "name": "email",
+              "value": "={{$node[\"globals\"].json[\"buyer_email\"]}}"
+            },
+            {
+              "name": "phone_number",
+              "value": "={{$node[\"Function\"].json[\"buyer_phone\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "post buyer details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2930,
+        650
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header Auth sai creds"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://dmsqa.shakedeal.com/items/routing_product_details?filter={ \"product_code\": { \"_in\": \"{{$node[\"Function\"].json[\"product_code\"]}}\" }}",
+        "options": {}
+      },
+      "name": "get product details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3230,
+        760
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header Auth sai creds"
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let id = $node[\"Function2\"].json[\"action\"]===\"user exists\"?$node[\"Get Buyer Details\"].json.data[0][\"id\"]:$node[\"post buyer details\"].json.data[\"id\"]\nitems[0].json.id = id\nreturn items;"
+      },
+      "name": "Function5",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        3100,
+        760
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let buyerId =  $node[\"Function2\"].json[\"length\"]>0?$node[\"Get Buyer Details\"].json.data[0][\"id\"]:$node[\"post buyer details\"].json.data[\"id\"]\nitems[0].json.buyerId =buyerId \nlet vendors =  $node[\"Function\"].json[\"vendors\"]\nlet products =  $node[\"Function\"].json[\"products\"]\n\nlet productAction =  $node[\"Function4\"].json[\"action\"]\nlet vendorAction =  $node[\"Function3\"].json[\"action\"]\n\n\nlet existingVendorData = $node[\"Get vendor Details\"].json.data\nif(vendorAction ===\"post the vendors\" ){\n     let postedVendorData = $node[\"post vendor details\"].json.data\n     items[0].json.postedVendorData = postedVendorData \n     \n}\nlet existingProductData = $node[\"get product details\"].json.data\nif(productAction === \"post the products\" ){\n   let postedProductData = $node[\"post product details\"].json.data\n   items[0].json.postedProductData = postedProductData \n}\nlet prodven =  $node[\"Function\"].json[\"prodven\"]\n\nif(productAction===\"post the products\"){\n   if(existingProductData.length>0){\n      let concatedProducts = existingProductData .concat(items[0].json.postedProductData )\n      items[0].json.concatedProducts=concatedProducts\n   }else items[0].json.concatedProducts = items[0].json.postedProductData\n}else items[0].json.concatedProducts = existingProductData\n\nif(vendorAction ===\"post the vendors\"){\n  if(existingVendorData.length>0){\n     let concatedVendors = existingVendorData.concat(items[0].json.postedVendorData)\n     items[0].json.concatedVendors =concatedVendors \n  }else items[0].json.concatedVendors = items[0].json.postedVendorData\n\n}else items[0].json.concatedVendors = existingVendorData \n\nlet po_file = $node[\"Merging the globals and file Id\"].json[\"data\"][\"id\"]\nlet po_num = $node[\"Merging the globals and file Id\"].json[\"po_num\"]\nlet po_value= $node[\"Merging the globals and file Id\"].json[\"po_value\"]\nlet po_status =$node[\"Merging the globals and file Id\"].json[\"po_status\"]\nlet po_date =$node[\"Merging the globals and file Id\"].json[\"po_date\"]\nlet po_type= $node[\"Merging the globals and file Id\"].json[\"po_type\"]\nlet issuer_name=$node[\"Function5\"].json[\"id\"]\nlet po_deliver_date = $node[\"Function\"].json[\"po_deliverDate\"][0]\n\nlet product_ids=[]\nif(items[0].json.concatedVendors .length>1){\n    items[0].json.concatedProducts.forEach(function(obj,index){\n        for(i=0;i<prodven .length;i++){\n            if(obj[\"product_code\"]===prodven[i][\"productCode\"]){\n               let email = prodven[i][\"email\"]\n               let vendorObj = items[0].json.concatedVendors.find(obj=>obj[\"vendor_email\"]===email)\n               product_ids[index]={}\n               product_ids[index].routing_product_details_id=obj[\"id\"]\n               product_ids[index].routing_vendor_details_id= vendorObj[\"id\"]\n               //junction[index].bid= items[0].json.buyerId\n               let quantity = prodven[i][\"quantity\"]\n               if(quantity.includes(\",\")){\n                  splittedQuantity=quantity.split(\",\").join(\"\")\n                  product_ids[index].qty_req = splittedQuantity\n               \n               }else  product_ids[index].qty_req=prodven[i][\"quantity\"]\n              \n            }\n       \n        }\n\n   })\n}else{\n    items[0].json.concatedProducts.forEach(function(obj,index){\n         product_ids[index]={}\n         product_ids[index].routing_product_details_id=obj[\"id\"]\n         product_ids[index].routing_vendor_details_id= items[0].json.concatedVendors[\"id\"]\n         //junction[index].bid =  items[0].json.buyerId\n         let result = products.find(value=>value[\"product_code\"]===obj[\"product_code\"])\n         let quantity = result[\"product_quantity\"]\n         if(quantity.includes(\",\")){\n             splittedQuantity=quantity.split(\",\").join(\"\")\n             product_ids[index].qty_req = splittedQuantity\n         \n         }else product_ids[index].qty_req=result[\"product_quantity\"]\n         //product_ids[index].qty_req=result[\"product_quantity\"]\n    \n    \n    })\n\n}\nlet po_details=[];\npo_details[0]={}\npo_details[0].po_file=po_file;\npo_details[0].po_num=po_num;\npo_details[0].po_value=po_value\npo_details[0].po_status=po_status\npo_details[0].po_date=po_date\npo_details[0].po_type=po_type\npo_details[0].issuer_name=issuer_name\npo_details[0].product_ids=product_ids\npo_details[0].po_deliver_date =po_deliver_date \n\nitems[0].json.po_details=po_details\n\n//items[0].json.junction = junction\n\nitems[0].json.prodven = prodven \nitems[0].json.productAction =productAction \nitems[0].json.vendorAction =vendorAction \nitems[0].json.existingVendorData = existingVendorData \n\nitems[0].json.existingProductData = existingProductData \n\nitems[0].json.vendors = vendors \nitems[0].json.products = products \n\nreturn items;\nreturn items;"
+      },
+      "name": "Function6",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        4900,
+        690
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "https://dmsqa.shakedeal.com/items/routing_po_details",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Function6\"].json[\"po_details\"]}}"
+      },
+      "name": "post the po_details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        5140,
+        690
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header Auth sai creds"
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "handyalasairam9177@gmail.com",
+        "toEmail": "sairam.reddy@shakedeal.com",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        5570,
+        690
+      ],
+      "credentials": {
+        "smtp": "smtp(sai)creds"
+      },
+      "disabled": true
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "updatedAt": "2021-03-24T11:26:52.801Z"
+}
