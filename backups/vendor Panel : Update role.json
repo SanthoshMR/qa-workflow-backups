@@ -1,0 +1,371 @@
+{
+  "active": true,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Update the role in dms",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update the role in dms": {
+      "main": [
+        [
+          {
+            "node": "check for vendor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "Update the role in SD store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update the role in SD store": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check for vendor": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "update the vendor",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create the vendor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create the vendor": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "update the vendor": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-08-10T06:16:59.338Z",
+  "id": "85",
+  "name": "vendor Panel : Update role",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "update_role",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        380,
+        450
+      ],
+      "webhookId": "b79541f7-36e0-45c9-bc51-4e42e485dfbf",
+      "credentials": {
+        "httpBasicAuth": "SD Basic Auth"
+      }
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "dms_url",
+              "value": "=https://vpanelqa.shakedeal.com"
+            },
+            {
+              "name": "sdStore_url",
+              "value": "=https://sdqa.shakedeal.com/index.php?dispatch=wfs_update.vendor_initiate_update"
+            },
+            {
+              "name": "hash",
+              "value": "=vpr%#hash"
+            },
+            {
+              "name": "action",
+              "value": "=update_vendor_agreement_status"
+            },
+            {
+              "name": "workflow_from_email",
+              "value": "=handyalasairam9177@gmail.com"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        580,
+        450
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/users/{{$node[\"Webhook\"].json[\"body\"][\"data\"][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "role",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"data\"][\"role\"]}}"
+            },
+            {
+              "name": "vendor_accepted_date",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"data\"][\"date\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update the role in dms",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        760,
+        450
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"sdStore_url\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "hash",
+              "value": "={{$node[\"Globals\"].json[\"hash\"]}}"
+            },
+            {
+              "name": "action",
+              "value": "={{$node[\"Globals\"].json[\"action\"]}}"
+            },
+            {
+              "name": "vendor_data",
+              "value": "={{$node[\"Function\"].json[\"vendor_data\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update the role in SD store",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1780,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "var agreement_time = new Date()\nagreement_time.setHours(agreement_time.getHours() + 5);\nagreement_time.setMinutes(agreement_time.getMinutes() + 30);\nlet vendor_data={};\nvendor_data.agreement_status= \"1\";\nvendor_data.vendor_email= $node[\"Update the role in dms\"].json[\"data\"][\"email\"];\nvendor_data.signed_on = agreement_time.toISOString().replace(/T/, ' ').replace(/\\..+/, '')\n//vendor_data.signed_on = new Date().toISOString().replace(/T/, ' ').replace(/\\..+/, '')\nitems[0].json.vendor_data= vendor_data\nreturn items;\n"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1590,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{$node[\"Globals\"].json[\"workflow_from_email\"]}}",
+        "toEmail": "=vinay.kumar@shakedeal.com",
+        "subject": "=Action taken on Seller Agreement by {{$node[\"Update the role in dms\"].json[\"data\"][\"first_name\"]}}",
+        "text": "=Hey,\n\nThis is an auto generated email for the record that on {{$node[\"Function\"].json[\"vendor_data\"][\"signed_on\"]}} ,{{$node[\"Update the role in dms\"].json[\"data\"][\"first_name\"]}}  Accepted the Seller Contract with ShakeDeal.\n\nIn case of any queries please reach out to your ShakeDeal’s Seller Team POC.\n\nRegards,\n\nShakeDeal",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        1980,
+        440
+      ],
+      "credentials": {
+        "smtp": "smtp(sai)creds"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/vendor_details?filter={\"vendor\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"data\"][\"id\"]}}\"}}",
+        "options": {}
+      },
+      "name": "check for vendor",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        960,
+        450
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"check for vendor\"].json[\"data\"].length}}",
+              "operation": "notEqual"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        450
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/vendor_details",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "vendor",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"data\"][\"id\"]}}"
+            },
+            {
+              "name": "agreement_accepted_date",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"data\"][\"date\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Create the vendor",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1300,
+        600
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/vendor_details/{{$node[\"check for vendor\"].json[\"data\"][0][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "agreement_accepted_date",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"data\"][\"date\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "update the vendor",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1300,
+        370
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    }
+  ],
+  "settings": {
+    "timezone": "Asia/Calcutta"
+  },
+  "staticData": null,
+  "updatedAt": "2021-09-27T09:08:27.375Z"
+}
