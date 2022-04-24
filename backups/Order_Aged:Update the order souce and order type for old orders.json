@@ -1,0 +1,147 @@
+{
+  "active": false,
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Get the orders which having order source and order type empty",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the orders which having order source and order type empty": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "Update the order status and order type ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-07-28T05:00:19.475Z",
+  "id": "79",
+  "name": "Order_Aged:Update the order souce and order type for old orders",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "dms_url",
+              "value": "=https://dmsqa.shakedeal.com"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        450,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/order_details?filter={\"_and\": [{\"order_source\": {\"_null\":null}},{\"order_type\": {\"_null\":null}}]}",
+        "options": {}
+      },
+      "name": "Get the orders which having order source and order type empty",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        650,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let data = $node[\"Get the orders which having order source and order type empty\"].json[\"data\"]\nlet return_data = [];\ndata.forEach(function(obj,index){\n  return_data.push({\n  json:{\n      order_id:obj[\"id\"],\n      url : $node[\"Globals\"].json[\"dms_url\"]\n  }\n})\n\n})\n\n\nreturn return_data ;\n\n"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        850,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "= {{$node[\"Function\"].json[\"url\"]}}/items/order_details/{{$node[\"Function\"].json[\"order_id\"]}}",
+        "allowUnauthorizedCerts": true,
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "order_source",
+              "value": "=3"
+            },
+            {
+              "name": "order_type",
+              "value": "=3"
+            }
+          ]
+        }
+      },
+      "name": "Update the order status and order type ",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "updatedAt": "2021-07-28T07:19:57.035Z"
+}
