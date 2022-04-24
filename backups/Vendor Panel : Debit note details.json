@@ -1,0 +1,561 @@
+{
+  "active": true,
+  "connections": {
+    "Receive debit note details": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Check for order",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for order": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Check for Vendor",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get the Debit note",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for Vendor": {
+      "main": [
+        [
+          {
+            "node": "IF1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF1": {
+      "main": [
+        [
+          {
+            "node": "Get the Debit note file",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create a vendor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a vendor": {
+      "main": [
+        [
+          {
+            "node": "Get the Debit note file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Binary Data": {
+      "main": [
+        [
+          {
+            "node": "Post the debit note to DMS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the Debit note file": {
+      "main": [
+        [
+          {
+            "node": "Binary Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post the debit note to DMS": {
+      "main": [
+        [
+          {
+            "node": "Post the debit notes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the Debit note": {
+      "main": [
+        [
+          {
+            "node": "Convert Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert Data": {
+      "main": [
+        [
+          {
+            "node": "Post the debit note",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post the debit note": {
+      "main": [
+        [
+          {
+            "node": "Update the status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-08-23T05:36:17.056Z",
+  "id": "90",
+  "name": "Vendor Panel : Debit note details",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "debit_note_details",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "debit_notes",
+                "value": "8534126974563214"
+              }
+            ]
+          }
+        }
+      },
+      "name": "Receive debit note details",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        460,
+        340
+      ],
+      "webhookId": "d9887d8c-72ba-4d7c-a8ee-b377dbe17226",
+      "credentials": {
+        "httpBasicAuth": "SD Basic Auth"
+      }
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "dms_url",
+              "value": "=https://vpanelqa.shakedeal.com"
+            },
+            {
+              "name": "password",
+              "value": "=user@123"
+            },
+            {
+              "name": "order",
+              "value": "={{\"OD\"+$node[\"Receive debit note details\"].json[\"body\"][\"order_id\"]}}"
+            },
+            {
+              "name": "status",
+              "value": "={{$node[\"Receive debit note details\"].json[\"body\"][\"debit_note_status\"]===\"1\"?true:false}}"
+            },
+            {
+              "name": "role",
+              "value": "=15685fc3-326a-43f1-9bd7-f1d84eef7219"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        660,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/vendor_debit_notes",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "=po_number",
+              "value": "={{$node[\"Receive debit note details\"].json[\"body\"][\"po_number\"]}}"
+            },
+            {
+              "name": "=sd_order_number",
+              "value": "={{$node[\"Globals\"].json[\"order\"]}}"
+            },
+            {
+              "name": "=invoice_number",
+              "value": "={{$node[\"Receive debit note details\"].json[\"body\"][\"invoice_number\"]}}"
+            },
+            {
+              "name": "=debit_note_number",
+              "value": "={{$node[\"Receive debit note details\"].json[\"body\"][\"debit_note_number\"]}}"
+            },
+            {
+              "name": "=debit_note_date",
+              "value": "={{$node[\"Post the debit note to DMS\"].json[\"data\"][\"uploaded_on\"]}}"
+            },
+            {
+              "name": "=debit_note_value",
+              "value": "={{$node[\"Receive debit note details\"].json[\"body\"][\"debit_note_value\"]}}"
+            },
+            {
+              "name": "=debit_note_status",
+              "value": "={{$node[\"Globals\"].json[\"status\"]}}"
+            },
+            {
+              "name": "vendor",
+              "value": "={{$node[\"Check for Vendor\"].json[\"data\"].length>0?$node[\"Check for Vendor\"].json[\"data\"][0][\"id\"]:$node[\"Create a vendor\"].json[\"data\"][\"id\"]}}"
+            },
+            {
+              "name": "document",
+              "value": "={{$node[\"Post the debit note to DMS\"].json[\"data\"][\"id\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Post the debit notes",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2330,
+        220
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/vendor_debit_notes?filter={\"_and\": [{\"po_number\": {\"_eq\":\"{{$node[\"Receive debit note details\"].json[\"body\"][\"po_number\"]}}\"}},{\"sd_order_number\":{\"_eq\":\"{{$node[\"Globals\"].json[\"order\"]}}\"}}]}",
+        "options": {}
+      },
+      "name": "Check for order",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        860,
+        340
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [],
+          "number": [
+            {
+              "value1": "={{$node[\"Check for order\"].json[\"data\"].length}}",
+              "operation": "equal"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/vendor_debit_notes/{{$node[\"Check for order\"].json[\"data\"][0][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "debit_note_status",
+              "value": "={{$node[\"Globals\"].json[\"status\"]}}"
+            },
+            {
+              "name": "document",
+              "value": "={{$node[\"Post the debit note\"].json[\"data\"][\"id\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update the status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1910,
+        550
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/users?filter={\"email\":{\"_eq\":\"{{$node[\"Receive debit note details\"].json[\"body\"][\"vendor\"][\"email\"].trim()}}\"}}",
+        "options": {}
+      },
+      "name": "Check for Vendor",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1220,
+        240
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Check for Vendor\"].json[\"data\"].length}}",
+              "operation": "notEqual"
+            }
+          ]
+        }
+      },
+      "name": "IF1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1390,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/users",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "first_name",
+              "value": "={{$node[\"Receive debit note details\"].json[\"body\"][\"vendor\"][\"first_name\"]}}"
+            },
+            {
+              "name": "last_name",
+              "value": "={{$node[\"Receive debit note details\"].json[\"body\"][\"vendor\"][\"last_name\"]}}"
+            },
+            {
+              "name": "email",
+              "value": "={{$node[\"Receive debit note details\"].json[\"body\"][\"vendor\"][\"email\"].trim()}}"
+            },
+            {
+              "name": "password",
+              "value": "={{$node[\"Globals\"].json[\"password\"]}}"
+            },
+            {
+              "name": "role",
+              "value": "={{$node[\"Globals\"].json[\"role\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Create a vendor",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1590,
+        340
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    },
+    {
+      "parameters": {
+        "setAllData": false,
+        "destinationKey": "debit_note",
+        "options": {
+          "keepSource": true,
+          "keepAsBase64": true
+        }
+      },
+      "name": "Binary Data",
+      "type": "n8n-nodes-base.moveBinaryData",
+      "typeVersion": 1,
+      "position": [
+        1950,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{$node[\"Receive debit note details\"].json[\"body\"][\"debitnotespdf\"][\"name\"]}}",
+        "allowUnauthorizedCerts": true,
+        "responseFormat": "file",
+        "options": {}
+      },
+      "name": "Get the Debit note file",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1770,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/files",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {
+          "bodyContentType": "multipart-form-data"
+        },
+        "sendBinaryData": true
+      },
+      "name": "Post the debit note to DMS",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2130,
+        220
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{$node[\"Receive debit note details\"].json[\"body\"][\"debitnotespdf\"][\"name\"]}}",
+        "allowUnauthorizedCerts": true,
+        "responseFormat": "file",
+        "options": {}
+      },
+      "name": "Get the Debit note",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1260,
+        550
+      ]
+    },
+    {
+      "parameters": {
+        "setAllData": false,
+        "destinationKey": "debit_note",
+        "options": {
+          "keepSource": true,
+          "keepAsBase64": true
+        }
+      },
+      "name": "Convert Data",
+      "type": "n8n-nodes-base.moveBinaryData",
+      "typeVersion": 1,
+      "position": [
+        1470,
+        550
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/files",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {
+          "bodyContentType": "multipart-form-data"
+        },
+        "sendBinaryData": true
+      },
+      "name": "Post the debit note",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1680,
+        550
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    }
+  ],
+  "settings": {
+    "timezone": "Asia/Calcutta",
+    "saveExecutionProgress": "DEFAULT"
+  },
+  "staticData": null,
+  "updatedAt": "2021-09-27T09:10:44.308Z"
+}
