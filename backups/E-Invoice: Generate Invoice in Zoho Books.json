@@ -319,7 +319,10 @@
         180
       ],
       "credentials": {
-        "httpHeaderAuth": "zoho books creds"
+        "httpHeaderAuth": {
+          "id": "29",
+          "name": "zoho books creds"
+        }
       }
     },
     {
@@ -347,7 +350,10 @@
       "maxTries": 2,
       "waitBetweenTries": 2000,
       "credentials": {
-        "httpHeaderAuth": "zoho books creds"
+        "httpHeaderAuth": {
+          "id": "29",
+          "name": "zoho books creds"
+        }
       },
       "continueOnFail": true
     },
@@ -397,7 +403,10 @@
         370
       ],
       "credentials": {
-        "httpHeaderAuth": "zoho books creds"
+        "httpHeaderAuth": {
+          "id": "29",
+          "name": "zoho books creds"
+        }
       }
     },
     {
@@ -444,7 +453,10 @@
         190
       ],
       "credentials": {
-        "httpHeaderAuth": "zoho books creds"
+        "httpHeaderAuth": {
+          "id": "29",
+          "name": "zoho books creds"
+        }
       },
       "disabled": true
     },
@@ -508,7 +520,10 @@
       ],
       "webhookId": "b30792e0-2878-4a2d-947b-3a200313ce70",
       "credentials": {
-        "httpBasicAuth": "SD_Invoice_Bill creds"
+        "httpBasicAuth": {
+          "id": "28",
+          "name": "SD_Invoice_Bill creds"
+        }
       }
     },
     {
@@ -543,7 +558,10 @@
         370
       ],
       "credentials": {
-        "httpHeaderAuth": "header auth creds"
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
       },
       "disabled": true
     },
@@ -590,7 +608,10 @@
         350
       ],
       "credentials": {
-        "httpHeaderAuth": "zoho books creds"
+        "httpHeaderAuth": {
+          "id": "29",
+          "name": "zoho books creds"
+        }
       }
     },
     {
@@ -619,7 +640,10 @@
         370
       ],
       "credentials": {
-        "httpHeaderAuth": "zoho books creds"
+        "httpHeaderAuth": {
+          "id": "29",
+          "name": "zoho books creds"
+        }
       }
     },
     {
@@ -712,5 +736,6 @@
   ],
   "settings": {},
   "staticData": null,
+  "tags": [],
   "updatedAt": "2022-04-22T10:28:08.818Z"
 }
