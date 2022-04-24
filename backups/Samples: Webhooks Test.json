@@ -1,0 +1,120 @@
+{
+  "active": false,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2020-12-18T20:28:11.638Z",
+  "id": "11",
+  "name": "Samples: Webhooks Test",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        260,
+        150
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "sd-gv-payment-received",
+        "responseMode": "lastNode",
+        "options": {
+          "responseHeaders": {
+            "entries": []
+          }
+        }
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        260,
+        310
+      ],
+      "webhookId": "af3a359a-9f4e-41ca-b12e-269af140ecf0"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Webhook\"].json[\"headers\"][\"x-real-ip\"]}}",
+              "value2": "139.59.34.52"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        460,
+        310
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "workflows@shakedeal.com",
+        "toEmail": "santhosh@shakedeal.com",
+        "subject": "Authenticated Request.",
+        "text": "This is an authenticated request.",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        660,
+        180
+      ],
+      "credentials": {
+        "smtp": "AWS SES Creds"
+      }
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        660,
+        430
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "updatedAt": "2020-12-31T06:23:07.711Z"
+}
