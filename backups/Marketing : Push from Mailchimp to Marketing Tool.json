@@ -1,0 +1,209 @@
+{
+  "active": true,
+  "connections": {
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Prepare Yesterday Date",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mailchimp": {
+      "main": [
+        [
+          {
+            "node": "Prepare Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Data": {
+      "main": [
+        [
+          {
+            "node": "Push To Marketing Tool",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Daily Trigger": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Yesterday Date": {
+      "main": [
+        [
+          {
+            "node": "Mailchimp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-06-26T06:03:25.196Z",
+  "id": "69",
+  "name": "Marketing : Push from Mailchimp to Marketing Tool",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        290,
+        -100
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "list_name",
+              "value": "60d06b68af18d"
+            },
+            {
+              "name": "api_token",
+              "value": "zfgIyD87YxRpx3JVO0PxFVmLKfooajMM7CZgXxMdo1MrkhsapkBCRspRFteZ"
+            }
+          ],
+          "number": []
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        290,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "list": "e0c6614d4d",
+        "returnAll": true,
+        "options": {
+          "sinceLastChanged": "={{$node[\"Prepare Yesterday Date\"].json[\"date\"]}}"
+        }
+      },
+      "name": "Mailchimp",
+      "type": "n8n-nodes-base.mailchimp",
+      "typeVersion": 1,
+      "position": [
+        620,
+        100
+      ],
+      "credentials": {
+        "mailchimpApi": "SDStore_Mail_chimp_API"
+      }
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "=https://marketing.shakedeal.com/api/v1/subscribers?list_uid={{$node[\"Globals\"].parameter[\"values\"][\"string\"][0][\"value\"]}}",
+        "options": {
+          "batchInterval": 5000,
+          "batchSize": 1
+        },
+        "queryParametersUi": {
+          "parameter": [
+            {
+              "name": "api_token",
+              "value": "={{$node[\"Globals\"].parameter[\"values\"][\"string\"][1][\"value\"]}}"
+            },
+            {
+              "name": "EMAIL",
+              "value": "={{$node[\"Prepare Data\"].json[\"email\"]}}"
+            },
+            {
+              "name": "tag",
+              "value": "={{$node[\"Prepare Data\"].json[\"tag\"]}}"
+            },
+            {
+              "name": "FIRST_NAME",
+              "value": "={{$node[\"Prepare Data\"].json[\"firstname\"]}}"
+            },
+            {
+              "name": "LAST_NAME",
+              "value": "={{$node[\"Prepare Data\"].json[\"lastname\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Push To Marketing Tool",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        100
+      ],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "functionCode": "const returnItems = [];\n\nfor (const item of items) {\n  var tags=item.json[\"tags\"].map(function(tag) {\n      return tag['name'];\n  });\n  returnItems.push({\n    json: {\n       firstname:item.json[\"merge_fields\"][\"FNAME\"],\n       lastname:item.json[\"merge_fields\"][\"LNAME\"],\n       tag:tags.toString(),\n       email:item.json[\"email_address\"]\n    }\n  });\n}\n\nreturn returnItems;\n"
+      },
+      "name": "Prepare Data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        800,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "hour": 5
+            }
+          ]
+        }
+      },
+      "name": "Daily Trigger",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let date= new Date();\ndate.setDate(date.getDate() -1);\n\nlet dd =parseInt(date.getDate());\nlet day = dd < 10 ? '0' + dd : dd;\nlet mm =parseInt(date.getMonth() + 1);\nlet month = mm < 10 ? '0' + mm : mm;\nlet y = date.getFullYear();\n\nlet someFormattedDate = y+'-'+month +'-'+day;\n\nitems[0].json.date=someFormattedDate\nreturn items;\n"
+      },
+      "name": "Prepare Yesterday Date",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        450,
+        100
+      ]
+    }
+  ],
+  "settings": {
+    "timezone": "Asia/Calcutta"
+  },
+  "staticData": null,
+  "updatedAt": "2021-07-13T14:42:28.101Z"
+}
