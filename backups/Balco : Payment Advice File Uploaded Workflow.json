@@ -121,7 +121,10 @@
         350
       ],
       "credentials": {
-        "smtp": "smtp(sai)creds"
+        "smtp": {
+          "id": "17",
+          "name": "smtp(sai)creds"
+        }
       }
     },
     {
@@ -138,7 +141,10 @@
         350
       ],
       "credentials": {
-        "httpHeaderAuth": "Balcoqa-Dms-Token"
+        "httpHeaderAuth": {
+          "id": "22",
+          "name": "Balcoqa-Dms-Token"
+        }
       }
     },
     {
@@ -157,7 +163,10 @@
       ],
       "webhookId": "7a589e61-c4c4-4599-9ac2-345775be471c",
       "credentials": {
-        "httpBasicAuth": "Balco_basic_auth"
+        "httpBasicAuth": {
+          "id": "21",
+          "name": "Balco_basic_auth"
+        }
       }
     },
     {
@@ -235,7 +244,10 @@
         350
       ],
       "credentials": {
-        "httpHeaderAuth": "Balcoqa-Dms-Token"
+        "httpHeaderAuth": {
+          "id": "22",
+          "name": "Balcoqa-Dms-Token"
+        }
       }
     },
     {
@@ -299,11 +311,15 @@
         350
       ],
       "credentials": {
-        "httpHeaderAuth": "Balcoqa-Dms-Token"
+        "httpHeaderAuth": {
+          "id": "22",
+          "name": "Balcoqa-Dms-Token"
+        }
       }
     }
   ],
   "settings": {},
   "staticData": null,
+  "tags": [],
   "updatedAt": "2022-04-11T12:52:57.995Z"
 }
