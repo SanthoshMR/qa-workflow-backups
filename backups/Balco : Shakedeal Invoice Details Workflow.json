@@ -1,0 +1,333 @@
+{
+  "active": true,
+  "connections": {
+    "Get Invoice Details": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Get the shakedeal invoice",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Move Binary Data": {
+      "main": [
+        [
+          {
+            "node": "Post the file to DMS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post the file to DMS": {
+      "main": [
+        [
+          {
+            "node": "Add order_prefix",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the order_id": {
+      "main": [
+        [
+          {
+            "node": "Update Shakedeal Invoice Details in sd_orders ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Shakedeal Invoice Details in sd_orders ": {
+      "main": [
+        [
+          {
+            "node": "Get po_number",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get po_number": {
+      "main": [
+        [
+          {
+            "node": "ACC Informed that shakedeal invoice is available by WFS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the shakedeal invoice": {
+      "main": [
+        [
+          {
+            "node": "Move Binary Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add order_prefix": {
+      "main": [
+        [
+          {
+            "node": "Get the order_id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-03-25T14:15:39.921Z",
+  "id": "53",
+  "name": "Balco : Shakedeal Invoice Details Workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "shakedeal_invoice_details",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "sd_shakedeal_invoice",
+                "value": "325155-87767-668888"
+              }
+            ]
+          }
+        }
+      },
+      "name": "Get Invoice Details",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        530,
+        350
+      ],
+      "webhookId": "ae1aedbf-59f4-418f-b783-c8d7cc233b63",
+      "credentials": {
+        "httpBasicAuth": "Balco_basic_auth"
+      }
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "dms_url",
+              "value": "={{ $node[\"Get Invoice Details\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ? \"https://balco.mozart.shakedeal.com\" : \"https://balcoqa.mozart.shakedeal.com\" }}"
+            },
+            {
+              "name": "order_prefix",
+              "value": "=OD"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        700,
+        350
+      ]
+    },
+    {
+      "parameters": {
+        "setAllData": false,
+        "destinationKey": "invoice",
+        "options": {
+          "keepSource": true,
+          "keepAsBase64": true
+        }
+      },
+      "name": "Move Binary Data",
+      "type": "n8n-nodes-base.moveBinaryData",
+      "typeVersion": 1,
+      "position": [
+        1090,
+        350
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/files",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {
+          "bodyContentType": "multipart-form-data"
+        },
+        "sendBinaryData": true
+      },
+      "name": "Post the file to DMS",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1290,
+        350
+      ],
+      "credentials": {
+        "httpHeaderAuth": "Balcoqa-Dms-Token"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_orders?filter={\"order_id\":{\"_eq\":\"{{$node[\"Add order_prefix\"].json[\"add_prefix\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Get the order_id",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1700,
+        350
+      ],
+      "credentials": {
+        "httpHeaderAuth": "Balcoqa-Dms-Token"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_orders/{{Array.isArray($node[\"Get the order_id\"].json[\"data\"])?$node[\"Get the order_id\"].json[\"data\"][0][\"id\"]:$node[\"Get the order_id\"].json[\"data\"][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "invoice_number",
+              "value": "={{$node[\"Get Invoice Details\"].json[\"body\"][\"invoice_no\"]}}"
+            },
+            {
+              "name": "invoice_date",
+              "value": "={{new Date($node[\"Get Invoice Details\"].json[\"body\"][\"invoice_date\"]).toISOString()}}"
+            },
+            {
+              "name": "invoice_value",
+              "value": "={{$node[\"Get Invoice Details\"].json[\"body\"][\"invoice_total\"]}}"
+            },
+            {
+              "name": "view_shakedeal_invoice",
+              "value": "={{$node[\"Post the file to DMS\"].json[\"data\"][\"id\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update Shakedeal Invoice Details in sd_orders ",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1910,
+        350
+      ],
+      "credentials": {
+        "httpHeaderAuth": "Balcoqa-Dms-Token"
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "handyalasairam9177@gmail.com",
+        "toEmail": "sairam.reddy@shakedeal.com",
+        "subject": "=Balco: ShakeDeal invoice received for PO: {{$node[\"Get po_number\"].json[\"data\"][0][\"po_num\"][\"po_num\"]}}",
+        "html": "=<!DoCtYPe html><html lang=\"en\"><head><style id=\"stndzstyle\"></style>\n <meta http-equiv=\"Content-Type\" content=\"text\n/html; charset=UTF-8\">\n <meta name=\"viewport\" content=\"width=device-width,\ninitial-scale=1, shrink-to-fit=no\">\n <meta name=\"description\" content=\"\">\n <meta name=\"author\" content=\"Mark Otto, Jacob\nThornton, and Bootstrap contributors\">\n <meta name=\"generator\" content=\"\nAcelleSystemLayouts\">\n\n <!-- Bootstrap core CSS -->\n <link href=\"https://marketing.shakedeal.com/assets\n/templates/60584da7bdf65/css/bootstrap.min.css\" rel=\"\nstylesheet\">\n <script id=\"spHTMLFormElementPrototypeScript\">\n(function()\n {\n try\n {\n var sp_old_HTMLFormElementPrototype_submit = \nHTMLFormElement.prototype.submit;\n HTMLFormElement.prototype.submit = function\n(AEvent)\n {\n try\n {\n var spEvent = document.createEvent('Event');\n spEvent.initEvent('sp_submit', true, true);\n this.dispatchEvent(spEvent);\n }\n catch(ErrorMessage)\n {\n console.error('spFormElementPrototype()\nError sending \"sp_submit\" event from HTMLFormElement.\nprototype.submit: ' + ErrorMessage);\n }\n sp_old_HTMLFormElementPrototype_submit.apply\n(this);\n };\n }\n catch(ErrorMessage)\n {\n console.error('spFormElementPrototype() Error\nattaching to HTMLFormElement.prototype.submit: ' +\nErrorMessage);\n }\n try\n {\n if (typeof __doPostBack == 'function')\n {\n var sp_old__doPostBack = __doPostBack;\n __doPostBack = function(eventTarget,\neventArgument)\n {\n try\n {\n var spEvent = document.createEvent\n('Event');\n spEvent.initEvent('sp_submit', true, true);\n window.dispatchEvent(spEvent);\n }\n catch(ErrorMessage)\n {\n console.error('spFormElementPrototype()\nError sending \"sp_submit\" event from __doPostBack(): '\n+ ErrorMessage);\n }\n sp_old__doPostBack(eventTarget,\neventArgument);\n };\n }\n }\n catch(ErrorMessage)\n {\n console.error('spFormElementPrototype() Error\nattaching to __doPostBack(): ' + ErrorMessage);\n }\n })();</script><link href=\"https://fonts.googleapis.\ncom/icon?family=Material+Icons\" rel=\"stylesheet\"><link\nhref=\"https://fonts.googleapis.com/icon?\nfamily=Material+Icons+Outlined\" rel=\"stylesheet\"></head>\n\n <body data-new-gr-c-s-check-loaded=\"14.990.0\" datagr-ext-installed=\"\">\n<main role=\"main\">\n<div class=\"py-5 bg-light\">\n<div class=\"container\">\n<h1 class=\"my-4 display-4 text-center\">Shakedeal invoice for PO : {{$node[\"Get po_number\"].json[\"data\"][0][\"po_num\"][\"po_num\"]}} and Order: {{$node[\"Get Invoice Details\"].json[\"body\"][\"order_id\"]}} has been received </h1>\n<p class=\"lead text-center\">Please check the shakedeal invoice for  PO : {{$node[\"Get po_number\"].json[\"data\"][0][\"po_num\"][\"po_num\"]}} and Order : {{$node[\"Get Invoice Details\"].json[\"body\"][\"order_id\"]}},Check if funds have been received.</p>\n<div><img class=\"my-2\" src=\"\" width=\"100%\" /></div>\n</div>\n</div>\n</main><footer class=\"text-muted py-5\">\n<div class=\"container\">\n<div class=\"row\">\n<div class=\"col-md-8\">\n<p class=\"mb-1\">Copyright &copy; OpCommerce Online PVT\nLTD, All rights reserved.</p>\n<p class=\"mb-0\">Please email us on <a href=\"\nsupport@shakedeal.com\">support@shakedeal.com</a> in\ncase of any queries.\n</div>\n<div class=\"col-md-4\">\n<p class=\"float-right\"><a href=\"#\">Back to top</a></p>\n</div>\n</div>\n</div>\n</footer>\n</body></html>",
+        "options": {}
+      },
+      "name": "ACC Informed that shakedeal invoice is available by WFS",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        2320,
+        350
+      ],
+      "credentials": {
+        "smtp": "smtp(sai)creds"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_orders?filter={\"order_id\":{\"_eq\":\"{{$node[\"Get Invoice Details\"].json[\"body\"][\"order_id\"]}}\"}}&fields=po_num.po_num",
+        "options": {}
+      },
+      "name": "Get po_number",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2110,
+        350
+      ],
+      "credentials": {
+        "httpHeaderAuth": "Balcoqa-Dms-Token"
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{$node[\"Get Invoice Details\"].json[\"body\"][\"invoicepdf\"][\"name\"]}}",
+        "allowUnauthorizedCerts": true,
+        "responseFormat": "file",
+        "options": {}
+      },
+      "name": "Get the shakedeal invoice",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        880,
+        350
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let order_id = $node[\"Get Invoice Details\"].json[\"body\"][\"order_id\"]\nlet order_prefix = $node[\"Globals\"].json[\"order_prefix\"]\n\nlet add_prefix = order_prefix+order_id \n\nitems[0].json.add_prefix = add_prefix \nreturn items;"
+      },
+      "name": "Add order_prefix",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1490,
+        350
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "updatedAt": "2022-03-17T12:46:48.932Z"
+}
