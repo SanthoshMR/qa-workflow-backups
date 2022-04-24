@@ -107,7 +107,10 @@
       ],
       "alwaysOutputData": true,
       "credentials": {
-        "postgres": "balcoqa postgres credentials"
+        "postgres": {
+          "id": "37",
+          "name": "balcoqa postgres credentials"
+        }
       }
     },
     {
@@ -125,5 +128,6 @@
   ],
   "settings": {},
   "staticData": null,
+  "tags": [],
   "updatedAt": "2021-12-14T12:49:31.300Z"
 }
