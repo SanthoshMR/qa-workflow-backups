@@ -113,7 +113,10 @@
         100
       ],
       "credentials": {
-        "mailchimpApi": "SDStore_Mail_chimp_API"
+        "mailchimpApi": {
+          "id": "27",
+          "name": "SDStore_Mail_chimp_API"
+        }
       }
     },
     {
@@ -205,5 +208,6 @@
     "timezone": "Asia/Calcutta"
   },
   "staticData": null,
+  "tags": [],
   "updatedAt": "2021-07-13T14:42:28.101Z"
 }
