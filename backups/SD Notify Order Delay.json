@@ -1,0 +1,56 @@
+{
+  "active": false,
+  "connections": {},
+  "createdAt": "2020-12-05T04:29:14.891Z",
+  "id": "3",
+  "name": "SD Notify Order Delay",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        280,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "path": "notify-order-delay",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        280,
+        300
+      ],
+      "webhookId": "b4839d3f-2ed7-4210-91b0-2ffabf5785e7",
+      "credentials": {
+        "httpBasicAuth": "SD Basic Auth"
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT * FROM public.active_shipments WHERE id='SD1234'"
+      },
+      "name": "Get Schema",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        450,
+        300
+      ],
+      "credentials": {
+        "postgres": "n8n - Postgres"
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "updatedAt": "2021-01-21T14:47:43.206Z"
+}
