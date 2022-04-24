@@ -57,7 +57,10 @@
         360
       ],
       "credentials": {
-        "msg91Api": "SD Msg91"
+        "msg91Api": {
+          "id": null,
+          "name": "SD Msg91"
+        }
       },
       "disabled": true
     },
@@ -77,11 +80,15 @@
         180
       ],
       "credentials": {
-        "smtp": "AWS SES Creds"
+        "smtp": {
+          "id": "7",
+          "name": "AWS SES Creds"
+        }
       }
     }
   ],
   "settings": {},
   "staticData": null,
+  "tags": [],
   "updatedAt": "2021-05-04T06:33:02.260Z"
 }
