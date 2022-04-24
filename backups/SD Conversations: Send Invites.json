@@ -1,0 +1,104 @@
+{
+  "active": false,
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Download users file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download users file": {
+      "main": [
+        [
+          {
+            "node": "Read list of users",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read list of users": {
+      "main": [
+        [
+          {
+            "node": "Move to processed folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2020-12-29T13:56:44.350Z",
+  "id": "18",
+  "name": "SD Conversations: Send Invites",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        260,
+        650
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "path": "SDConversations/Users.xlsx"
+      },
+      "name": "Download users file",
+      "type": "n8n-nodes-base.nextCloud",
+      "typeVersion": 1,
+      "position": [
+        450,
+        650
+      ],
+      "credentials": {
+        "nextCloudApi": "SD Cloud"
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "rawData": true,
+          "readAsString": false
+        }
+      },
+      "name": "Read list of users",
+      "type": "n8n-nodes-base.spreadsheetFile",
+      "typeVersion": 1,
+      "position": [
+        650,
+        650
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "move",
+        "path": "SDConversations/Users.xlsx",
+        "toPath": "=SDConversations/Processed/Users{{new Date().toISOString()}}.xlsx"
+      },
+      "name": "Move to processed folder",
+      "type": "n8n-nodes-base.nextCloud",
+      "typeVersion": 1,
+      "position": [
+        850,
+        650
+      ],
+      "credentials": {
+        "nextCloudApi": "SD Cloud"
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "updatedAt": "2020-12-30T10:08:23.134Z"
+}
