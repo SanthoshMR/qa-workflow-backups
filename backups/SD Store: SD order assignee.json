@@ -1,0 +1,502 @@
+{
+  "active": false,
+  "connections": {
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "create the order in DMS",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "get the orderid",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "filter & get assigner based on priority": {
+      "main": [
+        [
+          {
+            "node": "post the order to order history",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get the status ": {
+      "main": [
+        [
+          {
+            "node": "filter & get assigner based on priority",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "wait for order": {
+      "main": [
+        [
+          {
+            "node": "globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "post the order to order history": {
+      "main": [
+        [
+          {
+            "node": "capture id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "update the assignee status ": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create the order in DMS": {
+      "main": [
+        [
+          {
+            "node": "post to SD store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get the orderid": {
+      "main": [
+        [
+          {
+            "node": "Update the assignee in DMS orders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update the assignee in DMS orders": {
+      "main": [
+        [
+          {
+            "node": "post to SD_store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "capture id": {
+      "main": [
+        [
+          {
+            "node": "update the assignee status ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "globals": {
+      "main": [
+        [
+          {
+            "node": "get the status ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-07-09T09:28:50.347Z",
+  "id": "71",
+  "name": "SD Store: SD order assignee",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"get the status \"].json[\"team_name\"]}}",
+              "value2": "New orders"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1790,
+        610
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"globals\"].json[\"dms_url\"]}}/items/sd_assignee_details?filter={\"_and\": [{\"team_name\": {\"team_name\":{\"_eq\":\"{{$node[\"get the status \"].json[\"team_name\"]}}\"}}},{\"status\":{\"_eq\":false}}]}&sort=priority&limit=1",
+        "options": {}
+      },
+      "name": "filter & get assigner based on priority",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        610
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"globals\"].json[\"dms_url\"]}}/items/sd_order_details",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "assigned_by",
+              "value": "={{$node[\"wait for order\"].json[\"body\"][\"assigned_by\"]}}"
+            },
+            {
+              "name": "assigned_to",
+              "value": "={{$node[\"filter & get assigner based on priority\"].json[\"data\"][0][\"user_id\"]}}"
+            },
+            {
+              "name": "order_status",
+              "value": "={{$node[\"get the status \"].json[\"status\"]}}"
+            },
+            {
+              "name": "order_id",
+              "value": "={{$node[\"wait for order\"].json[\"body\"][\"orderid\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "create the order in DMS",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1970,
+        510
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "url": "http://example.com",
+        "options": {}
+      },
+      "name": "post to SD store",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2180,
+        510
+      ],
+      "credentials": {
+        "httpBasicAuth": "basic creds"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"globals\"].json[\"dms_url\"]}}/items/sd_order_details/{{$node[\"get the orderid\"].json[\"data\"][0][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "assigned_to",
+              "value": "={{$node[\"filter & get assigner based on priority\"].json[\"data\"][0][\"user_id\"]}}"
+            },
+            {
+              "name": "order_status",
+              "value": "={{$node[\"get the status \"].json[\"status\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update the assignee in DMS orders",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2200,
+        710
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "options": {}
+      },
+      "name": "post to SD_store",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2420,
+        710
+      ],
+      "credentials": {
+        "httpBasicAuth": "basic upgrades"
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "functionCode": "let order=$node[\"wait for order\"].json[\"body\"]\nlet orderid=$node[\"wait for order\"].json[\"body\"].orderid\nlet order_status =$node[\"wait for order\"].json[\"body\"].status\n\nlet team1=$node[\"globals\"].json[\"team1\"]\nlet team2=$node[\"globals\"].json[\"team2\"]\nlet team3=$node[\"globals\"].json[\"team3\"]\nlet team4=$node[\"globals\"].json[\"team4\"]\nlet team5=$node[\"globals\"].json[\"team5\"]\nlet team6=$node[\"globals\"].json[\"team6\"]\n\nlet status1=$node[\"globals\"].json[\"status1\"]\nlet status2=$node[\"globals\"].json[\"status2\"]\nlet status3=$node[\"globals\"].json[\"status3\"]\nlet status4=$node[\"globals\"].json[\"status4\"]\nlet status5=$node[\"globals\"].json[\"status5\"]\nlet status6=$node[\"globals\"].json[\"status6\"]\n\nif(order_status === 1){\n   items[0].json.team_name = team1\n   items[0].json.status=status1\n}else if(order_status === 2){\n   items[0].json.team_name = team2\n   items[0].json.status=status2\n }else if(order_status === 3){\n   items[0].json.team_name = team3\n   items[0].json.status=status3\n }else if(order_status === 4){\n   items[0].json.team_name = team4\n   items[0].json.status=status4\n }else if(order_status === 5){\n   items[0].json.team_name = team5\n   items[0].json.status=status5\n }else if(order_status === 6){\n   items[0].json.team_name = team6\n   items[0].json.status=status6\n }\n\nitems[0].json.orderid=orderid\nitems[0].json.order_status=order_status\nreturn items;"
+      },
+      "name": "get the status ",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        810,
+        610
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "sd_order",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "sd_order_assignee",
+                "value": "5439261085263752"
+              }
+            ]
+          }
+        }
+      },
+      "name": "wait for order",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        460,
+        610
+      ],
+      "webhookId": "ec07cf39-40ac-4609-8c37-fb5186426a61",
+      "credentials": {
+        "httpBasicAuth": "basic creds"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"globals\"].json[\"dms_url\"]}}/items/sd_order_history",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "order_id",
+              "value": "={{$node[\"wait for order\"].json[\"body\"][\"orderid\"]}}"
+            },
+            {
+              "name": "order_status",
+              "value": "={{$node[\"get the status \"].json[\"status\"]}}"
+            },
+            {
+              "name": "assigned_to",
+              "value": "={{$node[\"filter & get assigner based on priority\"].json[\"data\"][0][\"user_id\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "post the order to order history",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1230,
+        610
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"globals\"].json[\"dms_url\"]}}/items/sd_assignee_details/{{$node[\"capture id\"].json[\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "status",
+              "value": "={{$node[\"capture id\"].json[\"status\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "update the assignee status ",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1610,
+        610
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"globals\"].json[\"dms_url\"]}}/items/sd_order_details?filter={\"order_id\":{\"_eq\":\"{{$node[\"wait for order\"].json[\"body\"][\"orderid\"]}}\"}}",
+        "options": {}
+      },
+      "name": "get the orderid",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1970,
+        710
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "id",
+              "value": "={{$node[\"filter & get assigner based on priority\"].json[\"data\"][0][\"id\"]}}"
+            }
+          ],
+          "boolean": [
+            {
+              "name": "status",
+              "value": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "capture id",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1420,
+        610
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "dms_url",
+              "value": "={{ $node[\"wait for order\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ? \"https://balco.mozart.shakedeal.com\" : \"http://3e749b34207b.ngrok.io\" }}"
+            },
+            {
+              "name": "team1",
+              "value": "=New orders"
+            },
+            {
+              "name": "team2",
+              "value": "=Assign to Vendor"
+            },
+            {
+              "name": "team3",
+              "value": "=Processed Orders"
+            },
+            {
+              "name": "team4",
+              "value": "=Shipment Created"
+            },
+            {
+              "name": "team5",
+              "value": "=Packing Completed"
+            },
+            {
+              "name": "team6",
+              "value": "=Manifests"
+            },
+            {
+              "name": "status1",
+              "value": "=open"
+            },
+            {
+              "name": "status2",
+              "value": "=assign_to_vendor"
+            },
+            {
+              "name": "status3",
+              "value": "=processed"
+            },
+            {
+              "name": "status4",
+              "value": "=intransit"
+            },
+            {
+              "name": "status5",
+              "value": "=packed"
+            },
+            {
+              "name": "status6",
+              "value": "=manifest"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        640,
+        610
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "updatedAt": "2021-07-13T12:03:53.927Z"
+}
