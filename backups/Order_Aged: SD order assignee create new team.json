@@ -1,0 +1,151 @@
+{
+  "active": true,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "globals": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "post to SD store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-07-09T10:11:20.377Z",
+  "id": "73",
+  "name": "Order_Aged: SD order assignee create new team",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        90,
+        110
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "team",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        300,
+        220
+      ],
+      "webhookId": "e973f215-c5c1-4428-a0ce-cf84711ece24",
+      "credentials": {
+        "httpBasicAuth": "SD Basic Auth"
+      }
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "SDstore_url",
+              "value": "=https://sdqa.shakedeal.com/index.php?dispatch=wfs_update.initiate_update"
+            },
+            {
+              "name": "hash",
+              "value": "=wfs%#hash"
+            },
+            {
+              "name": "action",
+              "value": "=add_team"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        500,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"globals\"].json[\"SDstore_url\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "hash",
+              "value": "={{$node[\"globals\"].json[\"hash\"]}}"
+            },
+            {
+              "name": "action",
+              "value": "={{$node[\"globals\"].json[\"action\"]}}"
+            },
+            {
+              "name": "wfs_data",
+              "value": "={{$node[\"Function\"].json[\"team_object\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "post to SD store",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        980,
+        220
+      ],
+      "credentials": {
+        "httpBasicAuth": "SD Basic Auth"
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let item_id = $node[\"Webhook\"].json[\"body\"][\"item\"]\nlet team_object={};\nteam_object.id= Array.isArray(item_id)?item_id[0]:item_id ;\nteam_object.name= $node[\"Webhook\"].json[\"body\"][\"payload\"][\"team_name\"];\nteam_object.status = $node[\"Webhook\"].json[\"body\"][\"action\"] === \"delete\"?\"0\":\"1\"\n\nitems[0].json.team_object = team_object\nreturn items;"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        740,
+        220
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "updatedAt": "2021-07-27T13:20:48.655Z"
+}
