@@ -31,12 +31,16 @@
         450
       ],
       "credentials": {
-        "slackOAuth2Api": "SlackOAuth"
+        "slackOAuth2Api": {
+          "id": "40",
+          "name": "SlackOAuth"
+        }
       },
       "notes": "test"
     }
   ],
   "settings": {},
   "staticData": null,
+  "tags": [],
   "updatedAt": "2022-02-16T09:43:11.430Z"
 }
