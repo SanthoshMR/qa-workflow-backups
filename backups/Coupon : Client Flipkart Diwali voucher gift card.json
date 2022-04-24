@@ -1,0 +1,84 @@
+{
+  "active": false,
+  "connections": {
+    "Microsoft Excel": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Microsoft Excel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-11-03T07:36:18.479Z",
+  "id": "98",
+  "name": "Coupon : Client Flipkart Diwali voucher gift card",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "worksheet",
+        "operation": "getContent",
+        "workbook": "A6E890F58473778D!1982",
+        "worksheet": "{0B4ED960-F2D5-4276-A748-E10A114CA4AD}",
+        "range": "A1:H15"
+      },
+      "name": "Microsoft Excel",
+      "type": "n8n-nodes-base.microsoftExcel",
+      "typeVersion": 1,
+      "position": [
+        410,
+        300
+      ],
+      "credentials": {
+        "microsoftExcelOAuth2Api": "Microsoft excel creds"
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "=<founders@shakedeal.com>ShakeDeal Founders",
+        "toEmail": "={{$node[\"Microsoft Excel\"].json[\"Email ID\"]}}",
+        "subject": "=Happy Diwali!- Flipkart e-Voucher",
+        "text": "=",
+        "html": "=<p>Hi {{$node[\"Microsoft Excel\"].json[\"Name\"]}},</p>\n</br>\n<h3 style=\"font-family: Arial, Helvetica, sans-serif;width: 682.4pt;\">Warm Diwali wishes to you and your loved ones! </h3></br>\n<p style=\"width: 682.4pt;\">We appreciate all your help and look forward to your continued support.</p></br>\n<p style=\"width: 682.4pt;\">Thank You for being our valued partner.</p></br>\n<p style=\"width: 682.4pt;\">Small token of 'Thanks' form ShakeDeal Family.</p></br>\n<p style=\"width: 682.4pt;\">Flipkart e-Voucher</p></br>\n<table class=\"x_-1420528032MsoNormalTable\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"371\" style=\"width: 279pt;border-collapse: collapse;\">\n<tbody>\n<tr style=\"height: 25.5pt;\">\n<td width=\"143\" style=\"width: 107.0pt;border: solid windowtext 1.0pt;background: rgb(102,102,153);padding: 0.0cm 5.4pt 0.0cm 5.4pt;height: 25.5pt;\">\n<p class=\"MsoNormal\" align=\"center\" style=\"text-align: center;\"><b><span style=\"color: white;\">Code</span></b></p>\n</td>\n<td width=\"73\" style=\"width: 55.0pt;border: solid windowtext 1.0pt;border-left: none;background: rgb(102,102,153);padding: 0.0cm 5.4pt 0.0cm 5.4pt;height: 25.5pt;\">\n<p class=\"MsoNormal\" align=\"center\" style=\"text-align: center;\"><b><span style=\"color: white;\">Pin</span></b></p>\n</td>\n<td width=\"107\" style=\"width: 80.0pt;border: solid windowtext 1.0pt;border-left: none;background: rgb(102,102,153);padding: 0.0cm 5.4pt 0.0cm 5.4pt;height: 25.5pt;\">\n<p class=\"MsoNormal\" align=\"center\" style=\"text-align: center;\"><b><span style=\"color: white;\">Amount</span></b></p>\n</td>\n<td width=\"108\" style=\"width: 81.0pt;border: solid windowtext 1.0pt;border-left: none;background: rgb(102,102,153);padding: 0.0cm 5.4pt 0.0cm 5.4pt;height: 25.5pt;\">\n<p class=\"MsoNormal\" align=\"center\" style=\"text-align: center;\"><b><span style=\"color: white;\">Expiry Date</span></b></p>\n</td>\n</tr>\n<tr style=\"height: 21.0pt;\">\n<td width=\"70\" nowrap=\"\" style=\"width: 52.4pt;border: solid windowtext 1.0pt;border-top: none;padding: 0.0cm 5.4pt 0.0cm 5.4pt;height: 21.0pt;border-right: solid windowtext 1.0pt;\">\n<p class=\"MsoNormal\"><span style=\"font-size: 10.0pt;font-family: Arial, sans-serif;\">{{$node[\"Microsoft Excel\"].json[\"Code\"]}}</span></p>\n</td>\n<td width=\"73\" nowrap=\"\" style=\"width: 55.0pt;border-top: none;border-left: none;border-bottom: solid windowtext 1.0pt;border-right: solid windowtext 1.0pt;padding: 0.0cm 5.4pt 0.0cm 5.4pt;height: 21.0pt;\">\n<p class=\"MsoNormal\" align=\"center\" style=\"text-align: center;\"><span style=\"font-size: 10.0pt;font-family: Arial, sans-serif;\">{{$node[\"Microsoft Excel\"].json[\"Pin\"]}}</span></p>\n</td>\n<td width=\"107\" nowrap=\"\" style=\"width: 80.0pt;border-top: none;border-left: none;border-bottom: solid windowtext 1.0pt;border-right: solid windowtext 1.0pt;padding: 0.0cm 5.4pt 0.0cm 5.4pt;height: 21.0pt;\">\n<p class=\"MsoNormal\" align=\"center\" style=\"text-align: center;\"><span style=\"font-size: 10.0pt;font-family: Arial, sans-serif;\">{{$node[\"Microsoft Excel\"].json[\"Balance\"]}}</span></p>\n</td>\n<td width=\"108\" nowrap=\"\" style=\"width: 81.0pt;border-top: none;border-left: none;border-bottom: solid windowtext 1.0pt;border-right: solid windowtext 1.0pt;padding: 0.0cm 5.4pt 0.0cm 5.4pt;height: 21.0pt;\">\n<p class=\"MsoNormal\" align=\"center\" style=\"text-align: center;\"><span style=\"font-size: 10.0pt;font-family: Arial, sans-serif;\">{{$node[\"Microsoft Excel\"].json[\"Expiry Date\"]}}</span></p>\n</td>\n</tr>\n</tbody>\n</table>\n</br></br>\n<p>Thanks and Regards,</p></br><p><b>ShakeDeal Founders.</b></p>",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        610,
+        300
+      ],
+      "credentials": {
+        "smtp": "SendGrid"
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "updatedAt": "2021-11-19T06:56:52.491Z"
+}
