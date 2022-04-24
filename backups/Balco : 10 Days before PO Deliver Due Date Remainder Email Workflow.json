@@ -1,0 +1,130 @@
+{
+  "active": true,
+  "connections": {
+    "Cron": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Setting tenth day from present date": {
+      "main": [
+        [
+          {
+            "node": "Postgres",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Setting tenth day from present date",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-03-20T07:40:45.089Z",
+  "id": "44",
+  "name": "Balco : 10 Days before PO Deliver Due Date Remainder Email Workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "hour": 10
+            }
+          ]
+        }
+      },
+      "name": "Cron",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        430,
+        370
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "var someDate = new Date();\nvar numberOfDaysToAdd = $node[\"Globals\"].json[\"due\"]\nsomeDate.setDate(someDate.getDate() + numberOfDaysToAdd);\n\nvar dd =parseInt(someDate.getDate());\nvar day = dd < 10 ? '0' + dd : dd;\nvar mm =parseInt(someDate.getMonth() + 1);\nvar month = mm < 10 ? '0' + mm : mm;\nvar y = someDate.getFullYear();\n\nvar someFormattedDate = y+'-'+month +'-'+day;\n\nitems[0].json.date=someFormattedDate\nreturn items;\n"
+      },
+      "name": "Setting tenth day from present date",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        760,
+        370
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "dms_url",
+              "value": "=https://balcoqa.mozart.shakedeal.com"
+            }
+          ],
+          "number": [
+            {
+              "name": "due",
+              "value": 10
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        580,
+        370
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=update sd_mozart_po_details  set delivery_status ='3_due_in_10_days' where po_deliver_date='{{$node[\"Setting tenth day from present date\"].json[\"date\"]}}' and po_status !='complete'"
+      },
+      "name": "Postgres",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        950,
+        370
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": "balcoqa postgres credentials"
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "updatedAt": "2021-12-14T12:50:08.214Z"
+}
