@@ -62,7 +62,10 @@
         650
       ],
       "credentials": {
-        "nextCloudApi": "SD Cloud"
+        "nextCloudApi": {
+          "id": "43",
+          "name": "SD Cloud"
+        }
       }
     },
     {
@@ -94,11 +97,15 @@
         650
       ],
       "credentials": {
-        "nextCloudApi": "SD Cloud"
+        "nextCloudApi": {
+          "id": "43",
+          "name": "SD Cloud"
+        }
       }
     }
   ],
   "settings": {},
   "staticData": null,
+  "tags": [],
   "updatedAt": "2020-12-30T10:08:23.134Z"
 }
