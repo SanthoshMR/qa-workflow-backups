@@ -71,7 +71,10 @@
         350
       ],
       "credentials": {
-        "imap": "Sample Gmail"
+        "imap": {
+          "id": "24",
+          "name": "Sample Gmail"
+        }
       }
     },
     {
@@ -133,5 +136,6 @@
   ],
   "settings": {},
   "staticData": null,
+  "tags": [],
   "updatedAt": "2021-04-15T04:32:28.220Z"
 }
