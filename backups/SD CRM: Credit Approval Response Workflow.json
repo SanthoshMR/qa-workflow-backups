@@ -1,0 +1,285 @@
+{
+  "active": true,
+  "connections": {
+    "Receive Approval Response": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Verify the Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Valid Source": {
+      "main": [
+        [
+          {
+            "node": "Get Approval Request Record",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify the Request": {
+      "main": [
+        [
+          {
+            "node": "Check Valid Source",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update CRM Webhook": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Approval Request Record": {
+      "main": [
+        [
+          {
+            "node": "Format Req. Values",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Req. Values": {
+      "main": [
+        [
+          {
+            "node": "Update CRM Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-01-14T04:03:38.930Z",
+  "id": "26",
+  "name": "SD CRM: Credit Approval Response Workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        200,
+        150
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "sd-crm-credit-approval",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "name": "Receive Approval Response",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        200,
+        300
+      ],
+      "webhookId": "ddeda73a-f5c0-44aa-a7c9-db2108ecaaa5",
+      "credentials": {
+        "httpBasicAuth": "SD Basic Auth"
+      }
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "dmsUrl",
+              "value": "={{ $node[\"Receive Approval Response\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ? \"https://zeus.shakedeal.com\" : \"https://dmsqa.shakedeal.com\" }}"
+            },
+            {
+              "name": "workflowsFromEmail",
+              "value": "SD Workflows <workflows@shakedeal.com>"
+            },
+            {
+              "name": "approverGroupEmail",
+              "value": "={{ $node[\"Receive Approval Response\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ? \"voucher.ops.approver@shakedeal.com\" : \"santhosh@shakedeal.com\" }}"
+            },
+            {
+              "name": "accountsEmail",
+              "value": "={{ $node[\"Receive Approval Response\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ? \"accounts@shakedeal.com\" : \"dev-notifications@shakedeal.com\" }}"
+            },
+            {
+              "name": "dmsIP",
+              "value": "139.59.34.52"
+            },
+            {
+              "name": "crmWebhookUrl",
+              "value": "={{ $node[\"Receive Approval Response\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ? \"https://crm.shakedeal.com/giftcardapproval/webhook\" : ($node[\"Receive Approval Response\"].json[\"headers\"][\"x-sd-env\"] === \"qa\" ? \"https://qacrm.shakedeal.com/giftcardapproval/webhook\" : \"http://devcrm.shakedeal.com/giftcardapproval/webhook\")}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        390,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [],
+          "boolean": [
+            {
+              "value1": "={{$node[\"Verify the Request\"].json[\"isValid\"]}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "Check Valid Source",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        750,
+        300
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        900,
+        450
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let isValid = false;\nlet body = items[0].json.body;\nlet headers = items[0].json.headers;\n\nif (headers[\"x-real-ip\"] === $item(0).$node[\"Globals\"].json[\"dmsIP\"] &&\n!!body.payload.status &&\n(body.payload.status === 'approved' || body.payload.status === 'declined')) {\n  isValid = true;\n}\nitems[0].json.isValid = isValid;\nreturn items;\n"
+      },
+      "name": "Verify the Request",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        570,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{$node[\"Globals\"].json[\"workflowsFromEmail\"]}}",
+        "toEmail": "={{$node[\"Get Approval Request Record\"].json[\"data\"][\"sales_agent_email\"]}}",
+        "ccEmail": "={{$node[\"Globals\"].json[\"approverGroupEmail\"]}}",
+        "subject": "=Gift Voucher Ops: Credit Order {{$node[\"Receive Approval Response\"].json[\"body\"][\"payload\"][\"status\"] === \"approved\" ? \"Approved!\" : \"Declined!\"}}",
+        "html": "=<style id=\"stndz-style\"></style>\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1, shrink-to-fit=no\">\n<meta name=\"description\" content=\"\">\n<style type=\"text/css\">.tg {border-collapse:collapse;border-spacing:0;margin:0px auto;}.tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;word-break:normal;}.tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}.tg .tg-1wig{font-weight:bold;text-align:left;vertical-align:top}.tg .tg-0lax{text-align:left;vertical-align:top}@media screen and (max-width: 767px) {.tg {width: auto !important;}.tg col {width: auto !important;}.tg-wrap {overflow-x: auto;-webkit-overflow-scrolling: touch;margin: auto 0px;}}</style>\n\n\n<!-- Bootstrap core CSS -->\n<link href=\"https://marketing.shakedeal.com/assets/templates/5fe306e5a4c97/css/bootstrap.min.css\" rel=\"stylesheet\">\n<link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons+Outlined\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons+Outlined\" rel=\"stylesheet\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u0\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/skin.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u1\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/content.inline.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u0\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/skin.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u1\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/content.inline.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u0\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/skin.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u1\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/content.inline.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u0\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/skin.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u1\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/content.inline.min.css\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons+Outlined\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons+Outlined\" rel=\"stylesheet\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u0\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/skin.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u1\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/content.inline.min.css\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons+Outlined\" rel=\"stylesheet\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u0\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/skin.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u1\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/content.inline.min.css\">\n<style id=\"stndz-style\"></style>\n\n<main role=\"main\">\n      <div class=\"py-5 bg-light builder-class-element-selected mce-content-body\" id=\"mce_8\" style=\"position: relative;\" spellcheck=\"false\" contenteditable=\"true\"><div class=\"container\" id=\"mce_12\" style=\"position: relative; text-align: center;\" spellcheck=\"false\" data-mce-style=\"position: relative; text-align: center;\"><!-- <div class=\"text-center mb-4\">\n            <div><img src=\"https://marketing.shakedeal.com/assets/templates/5ffffc66ca035/image/logo.png\" width=\"350px\" /></div>\n          </div> --> <img id=\"zW2lO\" builder-element=\"\" builder-draggable=\"\" class=\"image-after-change\" src=\"https://marketing.shakedeal.com/files/5fbe3d99407d6/SDLogoColorSmall.png\" style=\"width: 200px; height: 40px; margin: auto;\" data-mce-src=\"https://marketing.shakedeal.com/files/5fbe3d99407d6/SDLogoColorSmall.png\" data-mce-style=\"width: 200px; height: 40px; margin: auto;\"><h2 class=\"mt-4 mb-4\" id=\"mce_12\" style=\"position: relative;\" spellcheck=\"false\" data-mce-style=\"position: relative;\"><br>The Gifting order with Reference: {{$node[\"Format Req. Values\"].json[\"requestId\"]}}&nbsp;<refid class=\"\" id=\"mce_7\" spellcheck=\"false\" style=\"position: relative;\" data-mce-style=\"position: relative;\">and Credit terms: {{$node[\"Format Req. Values\"].json[\"payment_terms\"]}} </refid>&nbsp;is <span style=\"color: {{$node[\"Format Req. Values\"].json[\"statusColor\"]}};\" class=\"\" data-mce-style=\"color: {{$node[\"Format Req. Values\"].json[\"statusColor\"]}};\">{{$node[\"Format Req. Values\"].json[\"status\"]}}</span></h2><p><span style=\"font-size: 1.25rem; position: relative;\" class=\"\" id=\"mce_0\" spellcheck=\"false\" data-mce-style=\"font-size: 1.25rem; position: relative;\">{{$node[\"Format Req. Values\"].json[\"message\"]}}</span></p><p><span style=\"font-size: 1.25rem; position: relative;\" class=\"\" id=\"mce_0\" spellcheck=\"false\" data-mce-style=\"font-size: 1.25rem; position: relative;\">{{$node[\"Format Req. Values\"].json[\"declinedReasonText\"]}}</span></p><div class=\"\" id=\"mce_8\" style=\"position: relative;\" spellcheck=\"false\" data-mce-style=\"position: relative;\"><br></div><div class=\"row\"><br></div></div></div>\n    </main>",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        1390,
+        320
+      ],
+      "credentials": {
+        "smtp": "AWS SES Creds"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dmsUrl\"]}}/items/approval_request/{{$node[\"Receive Approval Response\"].json[\"body\"][\"item\"]}}",
+        "options": {}
+      },
+      "name": "Get Approval Request Record",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        900,
+        150
+      ],
+      "credentials": {
+        "httpHeaderAuth": "SD-Dms-Token"
+      }
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"crmWebhookUrl\"]}}",
+        "allowUnauthorizedCerts": true,
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "ref_number",
+              "value": "={{$node[\"Receive Approval Response\"].json[\"body\"][\"item\"][0]}}"
+            },
+            {
+              "name": "approval_status",
+              "value": "={{$node[\"Receive Approval Response\"].json[\"body\"][\"payload\"][\"status\"] === 'approved' ? 'Approved' : 'Declined'}}"
+            }
+          ]
+        }
+      },
+      "name": "Update CRM Webhook",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1280,
+        150
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "switch($item(0).$node[\"Get Approval Request Record\"].json[\"data\"][\"payment_terms\"]) {\n  case \"advance\":\n    items[0].json.payment_terms = \"Advance\";\n    break;\n  case \"on_delivery\":\n    items[0].json.payment_terms = \"On Delivery\";\n    break;\n  case \"cheque_on_delivery\":\n    items[0].json.payment_terms = \"Cheque On Delivery\";\n    break;\n  case \"net3\":\n    items[0].json.payment_terms = \"3 Days Credit\";\n    break;\n  case \"net5\":\n    items[0].json.payment_terms = \"5 Days Credit\";\n    break;\n  case \"net7\":\n    items[0].json.payment_terms = \"7 Days Credit\";\n    break;\n  case \"net10\":\n    items[0].json.payment_terms = \"10 Days Credit\";\n    break;\n  case \"net15\":\n    items[0].json.payment_terms = \"15 Days Credit\";\n    break;\n  case \"net21\":\n    items[0].json.payment_terms = \"21 Days Credit\";\n    break;\n  case \"net30\":\n    items[0].json.payment_terms = \"30 Days Credit\";\n    break;\n  case \"net45\":\n    items[0].json.payment_terms = \"45 Days Credit\";\n    break;\n  case \"net60\":\n    items[0].json.payment_terms = \"60 Days Credit\";\n    break;\n}\n\nitems[0].json.requestId = $item(0).$node[\"Receive Approval Response\"].json[\"body\"][\"item\"];\nitems[0].json.dmsUrl = $item(0).$node[\"Globals\"].json[\"dmsUrl\"] + \"/admin/collections/approval_request/\" + items[0].json.requestId;\n\nswitch($item(0).$node[\"Get Approval Request Record\"].json[\"data\"][\"status\"]) {\n  case \"approved\":\n    items[0].json.status = \"Approved!\";\n    items[0].json.statusColor = \"#169179\";\n    items[0].json.message = \"The order has also been placed successfully to SD Store!\";\n    items[0].json.declinedReasonText = \"\";\n    break;\n  case \"declined\":\n    items[0].json.status = \"Declined!\";\n    items[0].json.statusColor = \"#ba372a\";\n    items[0].json.message = \"You can check the details <a href='\" + items[0].json.dmsUrl + \"'>here</a>\";\n    items[0].json.declinedReason = !!$item(0).$node[\"Get Approval Request Record\"].json[\"data\"][\"declined_reason\"] ? $item(0).$node[\"Get Approval Request Record\"].json[\"data\"][\"declined_reason\"] : \"Not Available\";\n    items[0].json.declinedReasonText = \"Declined Reason: \" + items[0].json.declinedReason;\n    break;\n  default:\n    break;\n}\nreturn items;"
+      },
+      "name": "Format Req. Values",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        150
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "updatedAt": "2021-07-28T06:57:18.929Z"
+}
