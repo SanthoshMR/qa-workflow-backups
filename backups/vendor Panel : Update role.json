@@ -139,7 +139,10 @@
       ],
       "webhookId": "b79541f7-36e0-45c9-bc51-4e42e485dfbf",
       "credentials": {
-        "httpBasicAuth": "SD Basic Auth"
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
       }
     },
     {
@@ -206,7 +209,10 @@
         450
       ],
       "credentials": {
-        "httpHeaderAuth": "header auth creds"
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
       }
     },
     {
@@ -267,7 +273,10 @@
         440
       ],
       "credentials": {
-        "smtp": "smtp(sai)creds"
+        "smtp": {
+          "id": "17",
+          "name": "smtp(sai)creds"
+        }
       }
     },
     {
@@ -284,7 +293,10 @@
         450
       ],
       "credentials": {
-        "httpHeaderAuth": "header auth creds"
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
       }
     },
     {
@@ -333,7 +345,10 @@
         600
       ],
       "credentials": {
-        "httpHeaderAuth": "header auth creds"
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
       }
     },
     {
@@ -359,7 +374,10 @@
         370
       ],
       "credentials": {
-        "httpHeaderAuth": "header auth creds"
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
       }
     }
   ],
@@ -367,5 +385,6 @@
     "timezone": "Asia/Calcutta"
   },
   "staticData": null,
+  "tags": [],
   "updatedAt": "2021-09-27T09:08:27.375Z"
 }
