@@ -1,0 +1,95 @@
+{
+  "active": true,
+  "connections": {
+    "Webhook1": {
+      "main": [
+        [
+          {
+            "node": "Get the PO details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-03-19T09:41:06.445Z",
+  "id": "43",
+  "name": "Balco : Get the PO details",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "path": "54f6e213-1ee8-4034-8c13-87784082cfc7",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        2938,
+        551
+      ],
+      "webhookId": "54f6e213-1ee8-4034-8c13-87784082cfc7"
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "path": "get_po_details",
+        "responseMode": "lastNode",
+        "responseData": "allEntries",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "po_details",
+                "value": "4234234234-23213213"
+              }
+            ]
+          }
+        }
+      },
+      "name": "Webhook1",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        520,
+        350
+      ],
+      "webhookId": "f3c2ebb2-3e94-45c7-81fb-67f185a6356c",
+      "credentials": {
+        "httpBasicAuth": "Balco_basic_auth"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "https://dmsqa.shakedeal.com/items/routing_po_details",
+        "allowUnauthorizedCerts": true,
+        "options": {}
+      },
+      "name": "Get the PO details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        720,
+        350
+      ],
+      "credentials": {
+        "httpHeaderAuth": "Balcoqa-Dms-Token"
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "updatedAt": "2021-03-31T17:37:50.004Z"
+}
