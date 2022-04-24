@@ -153,7 +153,10 @@
         210
       ],
       "credentials": {
-        "httpHeaderAuth": "header auth creds"
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
       }
     },
     {
@@ -204,7 +207,10 @@
         210
       ],
       "credentials": {
-        "smtp": "AWS SES Creds"
+        "smtp": {
+          "id": "7",
+          "name": "AWS SES Creds"
+        }
       }
     },
     {
@@ -268,5 +274,6 @@
   ],
   "settings": {},
   "staticData": null,
+  "tags": [],
   "updatedAt": "2022-01-18T06:10:50.152Z"
 }
