@@ -177,7 +177,10 @@
         610
       ],
       "credentials": {
-        "httpHeaderAuth": "header auth creds"
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
       }
     },
     {
@@ -215,7 +218,10 @@
         510
       ],
       "credentials": {
-        "httpHeaderAuth": "header auth creds"
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
       }
     },
     {
@@ -232,7 +238,10 @@
         510
       ],
       "credentials": {
-        "httpBasicAuth": "basic creds"
+        "httpBasicAuth": {
+          "id": "30",
+          "name": "basic creds"
+        }
       }
     },
     {
@@ -262,7 +271,10 @@
         710
       ],
       "credentials": {
-        "httpHeaderAuth": "header auth creds"
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
       }
     },
     {
@@ -278,7 +290,10 @@
         710
       ],
       "credentials": {
-        "httpBasicAuth": "basic upgrades"
+        "httpBasicAuth": {
+          "id": null,
+          "name": "basic upgrades"
+        }
       },
       "disabled": true
     },
@@ -319,7 +334,10 @@
       ],
       "webhookId": "ec07cf39-40ac-4609-8c37-fb5186426a61",
       "credentials": {
-        "httpBasicAuth": "basic creds"
+        "httpBasicAuth": {
+          "id": "30",
+          "name": "basic creds"
+        }
       }
     },
     {
@@ -353,7 +371,10 @@
         610
       ],
       "credentials": {
-        "httpHeaderAuth": "header auth creds"
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
       }
     },
     {
@@ -379,7 +400,10 @@
         610
       ],
       "credentials": {
-        "httpHeaderAuth": "header auth creds"
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
       }
     },
     {
@@ -396,7 +420,10 @@
         710
       ],
       "credentials": {
-        "httpHeaderAuth": "header auth creds"
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
       }
     },
     {
@@ -498,5 +525,6 @@
   ],
   "settings": {},
   "staticData": null,
+  "tags": [],
   "updatedAt": "2021-07-13T12:03:53.927Z"
 }
