@@ -1,0 +1,238 @@
+{
+  "active": true,
+  "connections": {
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Get the vendor invoice from DMS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "Update the invoice status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Receive vendor invoice": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the vendor invoice from DMS": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update the invoice status": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-08-19T14:21:42.893Z",
+  "id": "89",
+  "name": "Vendor Panel : Upload vendor Invoice",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "dms_url",
+              "value": "=https://vpanelqa.shakedeal.com"
+            },
+            {
+              "name": "hash",
+              "value": "=vpr%#hash"
+            },
+            {
+              "name": "action",
+              "value": "=update_po_invoice_details"
+            },
+            {
+              "name": "sdStore_url",
+              "value": "=https://sdqa.shakedeal.com/index.php?dispatch=wfs_update.vendor_initiate_update"
+            },
+            {
+              "name": "invoice_prefix",
+              "value": "=INV"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        700,
+        310
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Function\"].json[\"url\"]}}/items/all_orders/{{$node[\"Function\"].json[\"id\"]}}",
+        "options": {
+          "batchSize": 1
+        },
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "vendor_invoice_number",
+              "value": "={{$node[\"Function\"].json[\"invoice_number\"]}}"
+            },
+            {
+              "name": "vendor_invoice_value",
+              "value": "={{$node[\"Function\"].json[\"invoice_value\"]}}"
+            },
+            {
+              "name": "vendor_invoice_date",
+              "value": "={{$node[\"Function\"].json[\"invoice_date\"]}}"
+            },
+            {
+              "name": "vendor_invoice_file",
+              "value": "={{$node[\"Function\"].json[\"fileId\"]}}"
+            },
+            {
+              "name": "invoice_status",
+              "value": "=uploaded"
+            }
+          ]
+        }
+      },
+      "name": "Update the invoice status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1310,
+        310
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let data = $node[\"Receive vendor invoice\"].json[\"body\"][\"req_body\"][\"pos\"]\nconst returnItems = [];\nfor (const item of data) {\n  returnItems.push({\n    json: {\n       id:item[\"id\"],\n       url:$node[\"Globals\"].json[\"dms_url\"],\n       prefix:$node[\"Globals\"].json[\"invoice_prefix\"],\n       sd_url: $node[\"Globals\"].json[\"sdStore_url\"],\n       hash : $node[\"Globals\"].json[\"hash\"],\n       action : $node[\"Globals\"].json[\"action\"],\n       invoice_number:$node[\"Receive vendor invoice\"].json[\"body\"][\"req_body\"][\"inv_num\"],\n\t   invoice_value:Math.floor($node[\"Receive vendor invoice\"].json[\"body\"][\"req_body\"][\"inv_value\"]),\n\t   invoice_date:$node[\"Receive vendor invoice\"].json[\"body\"][\"req_body\"][\"inv_date\"],\n \t   fileId : $node[\"Receive vendor invoice\"].json[\"body\"][\"req_body\"][\"fileId\"],\n       vendor_data:{\n           invoice_number:$node[\"Receive vendor invoice\"].json[\"body\"][\"req_body\"][\"inv_num\"],\n\t\t   invoice_value:$node[\"Receive vendor invoice\"].json[\"body\"][\"req_body\"][\"inv_value\"],\n\t\t   invoice_date:new Date($node[\"Receive vendor invoice\"].json[\"body\"][\"req_body\"][\"inv_date\"]).toISOString().replace(/T/, ' ').replace(/\\..+/, ''),\n\t\t   invoice_document:$node[\"Get the vendor invoice from DMS\"].json[\"data\"][\"filename_download\"],\n\t\t   order_id:item[\"sd_order_number\"].slice(2),\n\t\t   po_number:item[\"po_num\"],\n \t\t   url:`${$node[\"Globals\"].json[\"dms_url\"]}/assets/${$node[\"Receive vendor invoice\"].json[\"body\"][\"req_body\"][\"fileId\"]}`\n       }\n    }\n  });\n}\nreturn returnItems\n\n"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1110,
+        310
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "upload_vendor_invoice",
+        "options": {}
+      },
+      "name": "Receive vendor invoice",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        500,
+        310
+      ],
+      "webhookId": "899c4922-469b-482d-859b-5355699a0731",
+      "credentials": {
+        "httpBasicAuth": "SD Basic Auth"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/files/{{$node[\"Receive vendor invoice\"].json[\"body\"][\"req_body\"][\"fileId\"]}}",
+        "allowUnauthorizedCerts": true,
+        "options": {}
+      },
+      "name": "Get the vendor invoice from DMS",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        870,
+        310
+      ],
+      "credentials": {
+        "httpHeaderAuth": "header auth creds"
+      }
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "={{$node[\"Function\"].json[\"sd_url\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "hash",
+              "value": "={{$node[\"Function\"].json[\"hash\"]}}"
+            },
+            {
+              "name": "action",
+              "value": "={{$node[\"Function\"].json[\"action\"]}}"
+            },
+            {
+              "name": "vendor_data",
+              "value": "={{$node[\"Function\"].json[\"vendor_data\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1510,
+        310
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "updatedAt": "2021-09-27T09:09:27.092Z"
+}
