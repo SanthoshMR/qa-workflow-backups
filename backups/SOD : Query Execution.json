@@ -40,11 +40,15 @@
         300
       ],
       "credentials": {
-        "postgres": "sodqadmsdb"
+        "postgres": {
+          "id": "38",
+          "name": "sodqadmsdb"
+        }
       }
     }
   ],
   "settings": {},
   "staticData": null,
+  "tags": [],
   "updatedAt": "2021-12-22T09:13:03.412Z"
 }
