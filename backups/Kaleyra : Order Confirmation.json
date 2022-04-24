@@ -1,0 +1,526 @@
+{
+  "active": false,
+  "connections": {
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "Post to DMS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post to DMS": {
+      "main": [
+        [
+          {
+            "node": "Call the kaleyra api",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Check for manual attempts",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for manual attempts": {
+      "main": [
+        [
+          {
+            "node": "Update the manual attempts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update the manual attempts": {
+      "main": [
+        [
+          {
+            "node": "Manually call kaleyra api",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call the kaleyra api": {
+      "main": [
+        [
+          {
+            "node": "Post json object to SD",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Manually call kaleyra api": {
+      "main": [
+        [
+          {
+            "node": "JSON Parse",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait for COD orders": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "JSON Parse": {
+      "main": [
+        [
+          {
+            "node": "Post to SD store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-05-04T10:24:20.434Z",
+  "id": "64",
+  "name": "Kaleyra : Order Confirmation",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        120,
+        230
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "apikey",
+              "value": "=A6f1a72b6b3dc17f391582ec9f969898b"
+            },
+            {
+              "name": "ivr",
+              "value": "129604"
+            },
+            {
+              "name": "open_business_time",
+              "value": "=9:00:00"
+            },
+            {
+              "name": "close_business_time",
+              "value": "=21:00:00"
+            },
+            {
+              "name": "order_id",
+              "value": "={{\"OD\"+$node[\"Wait for COD orders\"].json[\"body\"][\"order_detail\"][\"order_id\"]}}"
+            },
+            {
+              "name": "dms_url",
+              "value": "=https://dmsqa.shakedeal.com"
+            },
+            {
+              "name": "trigger",
+              "value": "=normal"
+            },
+            {
+              "name": "hash",
+              "value": "=d2ZzJSNoYXNoQDEyMw=="
+            },
+            {
+              "name": "sdStore_url",
+              "value": "={{ $node[\"Wait for COD orders\"].json[\"headers\"][\"x-sd-env\"] === \"dev\" ? \"http://sddev.shakedeal.com/index.php?dispatch=wfs_update.cod_update\" : \"https://sdqa.shakedeal.com/index.php?dispatch=wfs_update.cod_update\" }}"
+            }
+          ],
+          "number": [
+            {
+              "name": "1st_attempt_delay",
+              "value": "=60"
+            },
+            {
+              "name": "2nd_attempt_delay",
+              "value": "=120"
+            },
+            {
+              "name": "3rd_attempt_delay",
+              "value": "=180"
+            },
+            {
+              "name": "4th_attempt_delay",
+              "value": "=240"
+            },
+            {
+              "name": "5th_attempt_delay",
+              "value": "=300"
+            },
+            {
+              "name": "attempts_made",
+              "value": "=0"
+            },
+            {
+              "name": "cod_status"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        470,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let dateString = $node[\"Wait for COD orders\"].json[\"body\"][\"order_detail\"][\"order_date\"]\nlet dateTimeParts = dateString.split(' ')\nlet timeParts = dateTimeParts[1].split(':')\nlet dateParts = dateTimeParts[0].split('-')\nlet open_business_time = $node[\"Globals\"].json[\"open_business_time\"].split(':');\nlet close_business_time = $node[\"Globals\"].json[\"close_business_time\"].split(':')\n\n\nlet open_business_time_secs = (+open_business_time [0]) * 60 * 60 + (+open_business_time [1]) * 60 + (open_business_time .length === 3?+open_business_time [2]:0);\nlet close_business_time_secs = (+close_business_time [0]) * 60 * 60 + (+close_business_time [1]) * 60 + (close_business_time.length === 3?+close_business_time[2]:0);\nlet secs = (+timeParts[0]) * 60 * 60 + (+timeParts[1]) * 60 + (timeParts.length === 3?+timeParts[2]:0); //convert HH:MM:SS to Seconds\n\nfunction incrementDate() {\n    let someDate = new Date(dateTimeParts[0]);\n    someDate.setDate(someDate.getDate() + 1);\n    let dd =parseInt(someDate.getDate());\n    let day = dd < 10 ? '0' + dd : dd;\n    let mm =parseInt(someDate.getMonth() + 1);\n    let month = mm < 10 ? '0' + mm : mm;\n    let y = someDate.getFullYear();\n    let someFormattedDate = y+'-'+month +'-'+day;\n    return someFormattedDate;\n}\n\nlet first_attempt_secs = secs+parseInt($node[\"Globals\"].json[\"1st_attempt_delay\"])  \nlet first_attempt = new Date(first_attempt_secs * 1000).toISOString().substr(11, 8)  //convert Seconds to HH:MM:SS\n\n\nlet second_attempt_secs = secs+parseInt($node[\"Globals\"].json[\"2nd_attempt_delay\"]);\nlet third_attempt_secs  = secs+parseInt($node[\"Globals\"].json[\"3rd_attempt_delay\"]);\nlet fourth_attempt_secs  = secs+parseInt($node[\"Globals\"].json[\"4th_attempt_delay\"]);\nlet fifth_attempt_secs  = secs+parseInt($node[\"Globals\"].json[\"5th_attempt_delay\"]);\nlet second_attempt =  new Date(second_attempt_secs * 1000).toISOString().substr(11, 8) ;\nlet third_attempt = new Date(third_attempt_secs * 1000).toISOString().substr(11, 8);\nlet fourth_attempt = new Date(fourth_attempt_secs * 1000).toISOString().substr(11, 8); \nlet fifth_attempt = new Date(fifth_attempt_secs * 1000).toISOString().substr(11, 8);\nlet first_attempt_date = dateTimeParts[0]\nlet second_attempt_date = dateTimeParts[0]\nlet third_attempt_date = dateTimeParts[0]\nlet fourth_attempt_date = dateTimeParts[0]\nlet fifth_attempt_date = dateTimeParts[0]\n\nif(secs>close_business_time_secs ){\n   second_attempt_secs= open_business_time_secs+parseInt($node[\"Globals\"].json[\"2nd_attempt_delay\"]);\n   third_attempt_secs = second_attempt_secs+(parseInt($node[\"Globals\"].json[\"3rd_attempt_delay\"])-parseInt($node[\"Globals\"].json[\"2nd_attempt_delay\"]));\n   fourth_attempt_secs = third_attempt_secs+(parseInt($node[\"Globals\"].json[\"4th_attempt_delay\"])-parseInt($node[\"Globals\"].json[\"3rd_attempt_delay\"]));\n   fifth_attempt_secs  = fourth_attempt_secs+(parseInt($node[\"Globals\"].json[\"5th_attempt_delay\"])-parseInt($node[\"Globals\"].json[\"4th_attempt_delay\"]))\n   second_attempt = new Date(second_attempt_secs * 1000).toISOString().substr(11, 8)\n   third_attempt = new Date(third_attempt_secs * 1000).toISOString().substr(11, 8)\n   fourth_attempt = new Date(fourth_attempt_secs * 1000).toISOString().substr(11, 8)\n   fifth_attempt  = new Date(fifth_attempt_secs * 1000).toISOString().substr(11, 8)\n   second_attempt_date = incrementDate();\n   third_attempt_date = incrementDate();\n   fourth_attempt_date = incrementDate();\n   fifth_attempt_date = incrementDate();\n}else {\n   if(parseInt($node[\"Globals\"].json[\"2nd_attempt_delay\"])+secs > close_business_time_secs){\n     second_attempt_secs= open_business_time_secs+parseInt($node[\"Globals\"].json[\"2nd_attempt_delay\"])-(close_business_time_secs-secs);\n     third_attempt_secs = second_attempt_secs+(parseInt($node[\"Globals\"].json[\"3rd_attempt_delay\"])-parseInt($node[\"Globals\"].json[\"2nd_attempt_delay\"]));\n     fourth_attempt_secs = third_attempt_secs+(parseInt($node[\"Globals\"].json[\"4th_attempt_delay\"])-parseInt($node[\"Globals\"].json[\"3rd_attempt_delay\"]));\n     fifth_attempt_secs  = fourth_attempt_secs+(parseInt($node[\"Globals\"].json[\"5th_attempt_delay\"])-parseInt($node[\"Globals\"].json[\"4th_attempt_delay\"]))\n     second_attempt = new Date(second_attempt_secs * 1000).toISOString().substr(11, 8)\n     third_attempt = new Date(third_attempt_secs * 1000).toISOString().substr(11, 8)\n     fourth_attempt = new Date(fourth_attempt_secs * 1000).toISOString().substr(11, 8)\n     fifth_attempt  = new Date(fifth_attempt_secs * 1000).toISOString().substr(11, 8)\n     second_attempt_date = incrementDate();\n     third_attempt_date = incrementDate();\n     fourth_attempt_date = incrementDate();\n     fifth_attempt_date = incrementDate();\n   }else if(parseInt($node[\"Globals\"].json[\"3rd_attempt_delay\"])+secs > close_business_time_secs){\n     third_attempt_secs = open_business_time_secs+parseInt($node[\"Globals\"].json[\"3rd_attempt_delay\"])-(close_business_time_secs-secs);\n     fourth_attempt_secs = third_attempt_secs+(parseInt($node[\"Globals\"].json[\"4th_attempt_delay\"])-parseInt($node[\"Globals\"].json[\"3rd_attempt_delay\"]))\n     fifth_attempt_secs  = fourth_attempt_secs+(parseInt($node[\"Globals\"].json[\"5th_attempt_delay\"])-parseInt($node[\"Globals\"].json[\"4th_attempt_delay\"]))\n     third_attempt = new Date(third_attempt_secs * 1000).toISOString().substr(11, 8)\n     fourth_attempt = new Date(fourth_attempt_secs * 1000).toISOString().substr(11, 8)\n     fifth_attempt  = new Date(fifth_attempt_secs * 1000).toISOString().substr(11, 8)\n     third_attempt_date = incrementDate();\n     fourth_attempt_date = incrementDate();\n     fifth_attempt_date  = incrementDate();\n   }else if(parseInt($node[\"Globals\"].json[\"4th_attempt_delay\"])+secs > close_business_time_secs){\n     fourth_attempt_secs = open_business_time_secs+parseInt($node[\"Globals\"].json[\"4th_attempt_delay\"])-(close_business_time_secs-secs)\n     fifth_attempt_secs  = fourth_attempt_secs+(parseInt($node[\"Globals\"].json[\"5th_attempt_delay\"])-parseInt($node[\"Globals\"].json[\"4th_attempt_delay\"]))\n     fourth_attempt = new Date(fourth_attempt_secs * 1000).toISOString().substr(11, 8)\n     fifth_attempt  = new Date(fifth_attempt_secs * 1000).toISOString().substr(11, 8)\n     fourth_attempt_date = incrementDate();\n     fifth_attempt_date  = incrementDate();\n   }else if(parseInt($node[\"Globals\"].json[\"5th_attempt_delay\"])+secs > close_business_time_secs){\n     fifth_attempt_secs = open_business_time_secs+parseInt($node[\"Globals\"].json[\"5th_attempt_delay\"])-(close_business_time_secs-secs)\n     fifth_attempt  = new Date(fifth_attempt_secs * 1000).toISOString().substr(11, 8)\n     fifth_attempt_date = incrementDate();\n   }\n}\n\n\n\nlet json = {\n   \"1\":`${first_attempt_date} ${first_attempt}`,\n   \"2\":`${second_attempt_date} ${second_attempt}`,\n   \"3\":`${third_attempt_date} ${third_attempt}`,\n   \"4\":`${fourth_attempt_date} ${fourth_attempt}`,\n   \"5\":`${fifth_attempt_date} ${fifth_attempt}`\n};\n\n\nitems[0].json.mobile_number = parseInt($node[\"Wait for COD orders\"].json[\"body\"][\"order_detail\"][\"customer\"][\"mobile_number\"])\nitems[0].json.first_attempt_date = first_attempt_date \nitems[0].json.second_attempt_date = second_attempt_date \nitems[0].json.third_attempt_date = third_attempt_date \nitems[0].json.fourth_attempt_date = fourth_attempt_date \nitems[0].json.fifth_attempt_date = fifth_attempt_date \nitems[0].json.open_business_time_secs = open_business_time_secs \nitems[0].json.close_business_time_secs =close_business_time_secs \nitems[0].json.first_attempt_secs=first_attempt_secs\nitems[0].json.first_attempt =first_attempt \nitems[0].json.second_attempt = second_attempt \nitems[0].json.third_attempt = third_attempt\nitems[0].json.fourth_attempt = fourth_attempt \nitems[0].json.fifth_attempt = fifth_attempt\nitems[0].json.timeparts = timeParts \nitems[0].json.secs= secs\nitems[0].json.json = json\n\n \nreturn items;"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        840,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_cod_orders",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "id",
+              "value": "={{$node[\"Globals\"].json[\"order_id\"]}}"
+            },
+            {
+              "name": "attempts_made",
+              "value": "={{$node[\"Globals\"].json[\"attempts_made\"]}}"
+            },
+            {
+              "name": "mobile_number",
+              "value": "={{$node[\"Function\"].json[\"mobile_number\"]}}"
+            },
+            {
+              "name": "json",
+              "value": "={{$node[\"Function\"].json[\"json\"]}}"
+            },
+            {
+              "name": "trigger",
+              "value": "={{$node[\"Globals\"].json[\"trigger\"]}}"
+            },
+            {
+              "name": "order_date",
+              "value": "={{$node[\"Wait for COD orders\"].json[\"body\"][\"order_detail\"][\"order_date\"]}}"
+            },
+            {
+              "name": "customer_name",
+              "value": "={{$node[\"Wait for COD orders\"].json[\"body\"][\"order_detail\"][\"customer\"][\"name\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Post to DMS",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        520
+      ],
+      "credentials": {
+        "httpHeaderAuth": "SD-Dms-Token"
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Wait for COD orders\"].json[\"body\"][\"trigger\"]}}",
+              "value2": "=manual"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        650,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_cod_orders/{{$node[\"Globals\"].json[\"order_id\"]}}",
+        "options": {}
+      },
+      "name": "Check for manual attempts",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        840,
+        350
+      ],
+      "credentials": {
+        "httpHeaderAuth": "SD-Dms-Token"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_cod_orders/{{$node[\"Globals\"].json[\"order_id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "manual_attempts",
+              "value": "={{$node[\"Check for manual attempts\"].json[\"data\"][\"manual_attempts\"]+1}}"
+            }
+          ]
+        }
+      },
+      "name": "Update the manual attempts",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        350
+      ],
+      "credentials": {
+        "httpHeaderAuth": "SD-Dms-Token"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"sdStore_url\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "hash",
+              "value": "={{$node[\"Globals\"].json[\"hash\"]}}"
+            },
+            {
+              "name": "order_id",
+              "value": "={{$node[\"Wait for COD orders\"].json[\"body\"][\"order_detail\"][\"order_id\"]}}"
+            },
+            {
+              "name": "cod_status",
+              "value": "={{$node[\"Globals\"].json[\"cod_status\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Post to SD store",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1540,
+        350
+      ],
+      "credentials": {
+        "httpBasicAuth": "basic creds"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"sdStore_url\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "hash",
+              "value": "={{$node[\"Globals\"].json[\"hash\"]}}"
+            },
+            {
+              "name": "order_id",
+              "value": "={{$node[\"Wait for COD orders\"].json[\"body\"][\"order_detail\"][\"order_id\"]}}"
+            },
+            {
+              "name": "json",
+              "value": "={{$node[\"Function\"].json[\"json\"]}}"
+            },
+            {
+              "name": "attempts",
+              "value": "={{$node[\"Globals\"].json[\"attempts_made\"]}}"
+            },
+            {
+              "name": "cod_status",
+              "value": "={{$node[\"Globals\"].json[\"cod_status\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Post json object to SD",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1400,
+        520
+      ],
+      "credentials": {
+        "httpBasicAuth": "basic creds"
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://api-voice.kaleyra.com/v1/?api_key={{$node[\"Globals\"].json[\"apikey\"]}}&method=dial.click2call&caller={{$node[\"Wait for COD orders\"].json[\"body\"][\"order_detail\"][\"customer\"][\"mobile_number\"]}}&receiver=ivr:{{$node[\"Globals\"].json[\"ivr\"]}}&meta={\"orderid\":\"{{$node[\"Wait for COD orders\"].json[\"body\"][\"order_detail\"][\"order_id\"]}}\",\"Name\":\"{{$node[\"Wait for COD orders\"].json[\"body\"][\"order_detail\"][\"customer\"][\"name\"]}}\"}&delay={{$node[\"Globals\"].json[\"1st_attempt_delay\"]}}&retry=0&callback=https%3A%2F%2Fqan8n.shakedeal.com%2Fwebhook%2Fcall_back%3Ffrom%3D%7Bcaller%7D%26to%3D%7Breceiver%7D%26duration%3D%7Bduration%7D%26status%3D%7Bstatus2%7D%26order%3D{{$node[\"Wait for COD orders\"].json[\"body\"][\"order_detail\"][\"order_id\"]}}",
+        "allowUnauthorizedCerts": true,
+        "options": {
+          "fullResponse": true
+        },
+        "headerParametersUi": {
+          "parameter": [
+            {
+              "name": "Authorization",
+              "value": "=Basic c2R3b3JrZmxvd3M6U0RXMHJrZmwwd3NAMTIz"
+            }
+          ]
+        },
+        "queryParametersUi": {
+          "parameter": [
+            {
+              "name": "format",
+              "value": "JSON"
+            }
+          ]
+        }
+      },
+      "name": "Call the kaleyra api",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1220,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "url": "=https://api-voice.kaleyra.com/v1/?api_key={{$node[\"Globals\"].json[\"apikey\"]}}&method=dial.click2call&caller={{$node[\"Wait for COD orders\"].json[\"body\"][\"order_detail\"][\"customer\"][\"mobile_number\"]}}&receiver=ivr:{{$node[\"Globals\"].json[\"ivr\"]}}&meta={\"orderid\":\"{{$node[\"Wait for COD orders\"].json[\"body\"][\"order_detail\"][\"order_id\"]}}\",\"Name\":\"{{$node[\"Wait for COD orders\"].json[\"body\"][\"order_detail\"][\"customer\"][\"name\"]}}\"}&retry=0",
+        "allowUnauthorizedCerts": true,
+        "options": {
+          "fullResponse": true
+        },
+        "headerParametersUi": {
+          "parameter": [
+            {
+              "name": "Authorization",
+              "value": "=Basic c2R3b3JrZmxvd3M6U0RXMHJrZmwwd3NAMTIz"
+            }
+          ]
+        },
+        "queryParametersUi": {
+          "parameter": [
+            {
+              "name": "format",
+              "value": "JSON"
+            }
+          ]
+        }
+      },
+      "name": "Manually call kaleyra api",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1230,
+        350
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "cod_order",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "X-SD-COD-Order-PLACED",
+                "value": "=6874269810365482"
+              }
+            ]
+          }
+        }
+      },
+      "name": "Wait for COD orders",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        300,
+        460
+      ],
+      "webhookId": "cb191b9c-ddaa-4fbe-9291-c056b947357c",
+      "credentials": {
+        "httpBasicAuth": "SD Basic Auth"
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let json_obj = $node[\"Check for manual attempts\"].json[\"data\"][\"json\"];\n\n\nitems[0].json.json = JSON.parse(json_obj)\nreturn items;"
+      },
+      "name": "JSON Parse",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1380,
+        350
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "updatedAt": "2022-04-07T12:32:26.056Z"
+}
