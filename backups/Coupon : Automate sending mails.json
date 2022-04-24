@@ -54,7 +54,10 @@
         300
       ],
       "credentials": {
-        "microsoftExcelOAuth2Api": "Microsoft excel creds"
+        "microsoftExcelOAuth2Api": {
+          "id": "34",
+          "name": "Microsoft excel creds"
+        }
       }
     },
     {
@@ -74,11 +77,15 @@
         300
       ],
       "credentials": {
-        "smtp": "smtp(sai)creds"
+        "smtp": {
+          "id": "17",
+          "name": "smtp(sai)creds"
+        }
       }
     }
   ],
   "settings": {},
   "staticData": null,
+  "tags": [],
   "updatedAt": "2021-10-29T07:50:42.881Z"
 }
