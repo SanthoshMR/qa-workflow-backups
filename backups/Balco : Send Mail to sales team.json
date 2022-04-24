@@ -1,0 +1,155 @@
+{
+  "active": false,
+  "connections": {
+    "Cron": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Get the POs ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the POs ": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-12-14T11:54:29.749Z",
+  "id": "100",
+  "name": "Balco : Send Mail to sales team",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        170,
+        120
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{$node[\"Globals\"].json[\"workflow_from_email\"]}}",
+        "toEmail": "={{$node[\"Globals\"].json[\"sales_agent_email\"]}}",
+        "subject": "=Balco PO's Due Status",
+        "html": "=<!DOCTYPE>\n    <html>\n<head>\n<style>\ntable {\n  font-family: arial, sans-serif;\n  border-collapse: collapse;\n  width: 70%;\n}\n\ntd, th {\n  border: 1px solid #dddddd;\n  text-align: left;\n  padding: 8px;\n}\n\ntr:nth-child(even) {\n  background-color: #dddddd;\n}\n</style>\n<title>Table</title>\n</head>\n<body>{{$node[\"Function\"].json[\"html\"]}}</body>\n</html>",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        930,
+        320
+      ],
+      "credentials": {
+        "smtp": "AWS SES Creds"
+      }
+    },
+    {
+      "parameters": {},
+      "name": "Cron",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        130,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "workflow_from_email",
+              "value": "=ShakeDeal Mozart <sdmozart@shakedeal.com>"
+            },
+            {
+              "name": "sales_agent_email",
+              "value": "=sairam.reddy@shakedeal.com,handyalasairam9177@gmail.com"
+            },
+            {
+              "name": "dms_url",
+              "value": "=https://balcoqa.mozart.shakedeal.com"
+            }
+          ],
+          "number": []
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        290,
+        330
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let data = $node[\"Get the POs \"].json[\"data\"]\nlet a='';\nfor(i=0;i<data.length;i++){\n  let diffDays = \"\";\n  let style = \"\";\n  let delayed_reason = \"\";\n     var dateFirst = new Date();\n     var dateSecond = new Date(data[i][\"po_deliver_date\"]);\n     var timeDiff = Math.abs(dateSecond.getTime() - dateFirst.getTime());\n     diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));\n     if(diffDays<=5){\n         style = \"background-color:#F7971C\"\n     }else{\n         style = \"background-color:#F2C94C\"\n     }\n     if(diffDays != 1){\n        if(data[i][\"delivery_status\"]!=\"1_delayed\"){\n          diffDays = diffDays+\" \"+\"days remaining\"\n        }\n         else{\n           diffDays = \"Delayed by\"+\" \"+diffDays+\" \"+\"days\"\n           style = \"background-color:#E35169\"\n         }\n     }else{\n        if(data[i][\"delivery_status\"]!=\"1_delayed\"){\n          diffDays = diffDays+\" \"+\"day remaining\"\n        }\n         else{\n           diffDays = \"Delayed by\"+\" \"+diffDays+\" \"+\"day\"\n           style = \"background-color:#E35169\"\n         }\n     }\n     if(data[i][\"delayed_reason\"]){\n       delayed_reason = data[i][\"delayed_reason\"]\n     }else{\n       delayed_reason = \"--\"\n     }\n  a=a+`<tr style=${style}><td>${i+1}</td><td>${data[i][\"po_num\"]}</td><td>${data[i][\"po_deliver_date\"]}</td><td>${diffDays}</td><td>${delayed_reason }</td></tr>`;\n}\nitems[0].json.html = `<table  style=\"color:#fff;width: auto;\"><tr style=\"background-color:#a7d\"><th>SL.No</th><th>PO Number</th><th>Delivery Date</th><th>Due in Days</th><th>Delayed Reason</th></tr>${a}</table>`;\nitems[0].json.po= data \n\nreturn items;\n"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        710,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_po_details?filter={\"_and\": [{\"delivery_status\": { \"_in\": [\"3_due_in_10_days\",\"2_due_in_5_days\",\"1_delayed\"] }},{\"po_status\":{\"_neq\":\"payment_pending\"}}]}&sort=delivery_status",
+        "options": {}
+      },
+      "name": "Get the POs ",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        480,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": "Balcoqa-Dms-Token"
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "updatedAt": "2022-03-03T06:37:08.393Z"
+}
