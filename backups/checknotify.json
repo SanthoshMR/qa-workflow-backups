@@ -1,0 +1,42 @@
+{
+  "active": false,
+  "connections": {},
+  "createdAt": "2022-02-16T09:43:04.683Z",
+  "id": "104",
+  "name": "checknotify",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "channel": "notification-shakepe",
+        "text": "test notify",
+        "attachments": [],
+        "otherOptions": {}
+      },
+      "name": "Slack",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 1,
+      "position": [
+        450,
+        450
+      ],
+      "credentials": {
+        "slackOAuth2Api": "SlackOAuth"
+      },
+      "notes": "test"
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "updatedAt": "2022-02-16T09:43:11.430Z"
+}
