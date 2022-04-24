@@ -113,7 +113,10 @@
       ],
       "webhookId": "af3a359a-9f4e-41ca-b12e-269af140ecf0",
       "credentials": {
-        "httpBasicAuth": "SD Basic Auth"
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
       }
     },
     {
@@ -205,7 +208,10 @@
         300
       ],
       "credentials": {
-        "httpHeaderAuth": "SD-Dms-Token"
+        "httpHeaderAuth": {
+          "id": "10",
+          "name": "SD-Dms-Token"
+        }
       }
     },
     {
@@ -237,7 +243,10 @@
         150
       ],
       "credentials": {
-        "smtp": "AWS SES Creds"
+        "smtp": {
+          "id": "7",
+          "name": "AWS SES Creds"
+        }
       }
     },
     {
@@ -264,7 +273,10 @@
         450
       ],
       "credentials": {
-        "httpHeaderAuth": "SD-Dms-Token"
+        "httpHeaderAuth": {
+          "id": "10",
+          "name": "SD-Dms-Token"
+        }
       }
     },
     {
@@ -309,5 +321,6 @@
     "errorWorkflow": "8"
   },
   "staticData": null,
+  "tags": [],
   "updatedAt": "2021-02-18T09:20:57.379Z"
 }
