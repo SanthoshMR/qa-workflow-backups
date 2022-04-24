@@ -1,0 +1,307 @@
+{
+  "active": true,
+  "connections": {
+    "Get shakedeal_payment_status": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SA, ACC & POI Informed of Payment Confirmation and  pending Vendor Payments by WFS.": {
+      "main": [
+        [
+          {
+            "node": "SA, ACC & POI Informed of Payment Confirmation and  pending Vendor Payments by WFS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get po_issuer_email": {
+      "main": [
+        [
+          {
+            "node": "Capture POI email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get po_number": {
+      "main": [
+        [
+          {
+            "node": "Get po_issuer_email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Capture POI email": {
+      "main": [
+        [
+          {
+            "node": "Construct for updating the payment_status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Get po_number",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Construct for updating the payment_status": {
+      "main": [
+        [
+          {
+            "node": "Update the sd_payment_status,payment_percentage",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update the sd_payment_status,payment_percentage": {
+      "main": [
+        [
+          {
+            "node": "SA, ACC & POI Informed of Payment Confirmation and  pending Vendor Payments by WFS.",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-03-18T08:56:33.062Z",
+  "id": "40",
+  "name": "Balco : SD Payment Status Workflow ",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        150,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "shakedeal_payment_status",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "name": "Get shakedeal_payment_status",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        370,
+        290
+      ],
+      "webhookId": "5ece4636-a8cb-46f2-b082-ceead3f001db",
+      "credentials": {
+        "httpBasicAuth": "Balco_basic_auth"
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "handyalasairam9177@gmail.com",
+        "toEmail": "={{$node[\"Globals\"].json[\"accounts_agent_email\"]}}",
+        "ccEmail": "={{$node[\"Globals\"].json[\"sales_agent_email\"]}}",
+        "subject": "=Balco: Pending vendor payments for PO: {{$node[\"Get po_number\"].json[\"data\"][0][\"order\"][\"po_num\"][\"po_num\"]}}",
+        "html": "=<!DoCtYPe html><html lang=\"en\"><head><style id=\"stndzstyle\"></style>\n <meta http-equiv=\"Content-Type\" content=\"text\n/html; charset=UTF-8\">\n <meta name=\"viewport\" content=\"width=device-width,\ninitial-scale=1, shrink-to-fit=no\">\n <meta name=\"description\" content=\"\">\n <meta name=\"author\" content=\"Mark Otto, Jacob\nThornton, and Bootstrap contributors\">\n <meta name=\"generator\" content=\"\nAcelleSystemLayouts\">\n\n <!-- Bootstrap core CSS -->\n <link href=\"https://marketing.shakedeal.com/assets\n/templates/60584da7bdf65/css/bootstrap.min.css\" rel=\"\nstylesheet\">\n <script id=\"spHTMLFormElementPrototypeScript\">\n(function()\n {\n try\n {\n var sp_old_HTMLFormElementPrototype_submit = \nHTMLFormElement.prototype.submit;\n HTMLFormElement.prototype.submit = function\n(AEvent)\n {\n try\n {\n var spEvent = document.createEvent('Event');\n spEvent.initEvent('sp_submit', true, true);\n this.dispatchEvent(spEvent);\n }\n catch(ErrorMessage)\n {\n console.error('spFormElementPrototype()\nError sending \"sp_submit\" event from HTMLFormElement.\nprototype.submit: ' + ErrorMessage);\n }\n sp_old_HTMLFormElementPrototype_submit.apply\n(this);\n };\n }\n catch(ErrorMessage)\n {\n console.error('spFormElementPrototype() Error\nattaching to HTMLFormElement.prototype.submit: ' +\nErrorMessage);\n }\n try\n {\n if (typeof __doPostBack == 'function')\n {\n var sp_old__doPostBack = __doPostBack;\n __doPostBack = function(eventTarget,\neventArgument)\n {\n try\n {\n var spEvent = document.createEvent\n('Event');\n spEvent.initEvent('sp_submit', true, true);\n window.dispatchEvent(spEvent);\n }\n catch(ErrorMessage)\n {\n console.error('spFormElementPrototype()\nError sending \"sp_submit\" event from __doPostBack(): '\n+ ErrorMessage);\n }\n sp_old__doPostBack(eventTarget,\neventArgument);\n };\n }\n }\n catch(ErrorMessage)\n {\n console.error('spFormElementPrototype() Error\nattaching to __doPostBack(): ' + ErrorMessage);\n }\n })();</script><link href=\"https://fonts.googleapis.\ncom/icon?family=Material+Icons\" rel=\"stylesheet\"><link\nhref=\"https://fonts.googleapis.com/icon?\nfamily=Material+Icons+Outlined\" rel=\"stylesheet\"></head>\n\n <body data-new-gr-c-s-check-loaded=\"14.990.0\" datagr-ext-installed=\"\">\n<main role=\"main\">\n<div class=\"py-5 bg-light\">\n<div class=\"container\">\n<h1 class=\"my-4 display-4 text-center\">Vendor Payments for PO :{{$node[\"Get po_number\"].json[\"data\"][0][\"order\"][\"po_num\"][\"po_num\"]}} are now outstanding</h1>\n<p class=\"lead text-center\"> Payment to vendors that serviced PO :{{$node[\"Get po_number\"].json[\"data\"][0][\"order\"][\"po_num\"][\"po_num\"]}}  with order : {{$node[\"Get po_number\"].json[\"data\"][0][\"order\"][\"order_id\"]}} are pending and must be disbursed according to vendor payment terms. Please update status of these payments once completed. </p>\n<div><img class=\"my-2\" src=\"\" width=\"100%\" /></div>\n</div>\n</div>\n</main><footer class=\"text-muted py-5\">\n<div class=\"container\">\n<div class=\"row\">\n<div class=\"col-md-8\">\n<p class=\"mb-1\">Copyright &copy; OpCommerce Online PVT\nLTD, All rights reserved.</p>\n<p class=\"mb-0\">Please email us on <a href=\"\nsupport@shakedeal.com\">support@shakedeal.com</a> in\ncase of any queries.\n</div>\n<div class=\"col-md-4\">\n<p class=\"float-right\"><a href=\"#\">Back to top</a></p>\n</div>\n</div>\n</div>\n</footer>\n</body></html>",
+        "options": {}
+      },
+      "name": "SA, ACC & POI Informed of Payment Confirmation and  pending Vendor Payments by WFS.",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        1660,
+        290
+      ],
+      "credentials": {
+        "smtp": "smtp(sai)creds"
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "handyalasairam9177@gmail.com",
+        "toEmail": "sairam.reddy@shakedeal.com",
+        "subject": "=Payment Received for PO : {{$node[\"Get po_number\"].json[\"data\"][\"order\"][\"po_num\"][\"po_num\"]}}",
+        "html": "=<!DoCtYPe html><html lang=\"en\"><head><style id=\"stndzstyle\"></style>\n <meta http-equiv=\"Content-Type\" content=\"text\n/html; charset=UTF-8\">\n <meta name=\"viewport\" content=\"width=device-width,\ninitial-scale=1, shrink-to-fit=no\">\n <meta name=\"description\" content=\"\">\n <meta name=\"author\" content=\"Mark Otto, Jacob\nThornton, and Bootstrap contributors\">\n <meta name=\"generator\" content=\"\nAcelleSystemLayouts\">\n\n <!-- Bootstrap core CSS -->\n <link href=\"https://marketing.shakedeal.com/assets\n/templates/60584da7bdf65/css/bootstrap.min.css\" rel=\"\nstylesheet\">\n <script id=\"spHTMLFormElementPrototypeScript\">\n(function()\n {\n try\n {\n var sp_old_HTMLFormElementPrototype_submit = \nHTMLFormElement.prototype.submit;\n HTMLFormElement.prototype.submit = function\n(AEvent)\n {\n try\n {\n var spEvent = document.createEvent('Event');\n spEvent.initEvent('sp_submit', true, true);\n this.dispatchEvent(spEvent);\n }\n catch(ErrorMessage)\n {\n console.error('spFormElementPrototype()\nError sending \"sp_submit\" event from HTMLFormElement.\nprototype.submit: ' + ErrorMessage);\n }\n sp_old_HTMLFormElementPrototype_submit.apply\n(this);\n };\n }\n catch(ErrorMessage)\n {\n console.error('spFormElementPrototype() Error\nattaching to HTMLFormElement.prototype.submit: ' +\nErrorMessage);\n }\n try\n {\n if (typeof __doPostBack == 'function')\n {\n var sp_old__doPostBack = __doPostBack;\n __doPostBack = function(eventTarget,\neventArgument)\n {\n try\n {\n var spEvent = document.createEvent\n('Event');\n spEvent.initEvent('sp_submit', true, true);\n window.dispatchEvent(spEvent);\n }\n catch(ErrorMessage)\n {\n console.error('spFormElementPrototype()\nError sending \"sp_submit\" event from __doPostBack(): '\n+ ErrorMessage);\n }\n sp_old__doPostBack(eventTarget,\neventArgument);\n };\n }\n }\n catch(ErrorMessage)\n {\n console.error('spFormElementPrototype() Error\nattaching to __doPostBack(): ' + ErrorMessage);\n }\n })();</script><link href=\"https://fonts.googleapis.\ncom/icon?family=Material+Icons\" rel=\"stylesheet\"><link\nhref=\"https://fonts.googleapis.com/icon?\nfamily=Material+Icons+Outlined\" rel=\"stylesheet\"></head>\n\n <body data-new-gr-c-s-check-loaded=\"14.990.0\" datagr-ext-installed=\"\">\n<main role=\"main\">\n<div class=\"py-5 bg-light\">\n<div class=\"container\">\n<h1 class=\"my-4 display-4 text-center\">Payment has been successfully received for PO : {{$node[\"Get po_number\"].json[\"data\"][\"order\"][\"po_num\"][\"po_num\"]}}</h1>\n<p class=\"lead text-center\">Payment made against PO :{{$node[\"Get po_number\"].json[\"data\"][\"order\"][\"po_num\"][\"po_num\"]}}  with order: {{$node[\"Get po_number\"].json[\"data\"][\"order\"][\"order_id\"]}} has been received by ShakeDeal. We will shortly disburse payments to Vendors that serviced this Order.</p>\n<div><img class=\"my-2\" src=\"\" width=\"100%\" /></div>\n</div>\n</div>\n</main><footer class=\"text-muted py-5\">\n<div class=\"container\">\n<div class=\"row\">\n<div class=\"col-md-8\">\n<p class=\"mb-1\">Copyright &copy; OpCommerce Online PVT\nLTD, All rights reserved.</p>\n<p class=\"mb-0\">Please email us on <a href=\"\nsupport@shakedeal.com\">support@shakedeal.com</a> in\ncase of any queries.\n</div>\n<div class=\"col-md-4\">\n<p class=\"float-right\"><a href=\"#\">Back to top</a></p>\n</div>\n</div>\n</div>\n</footer>\n</body></html>",
+        "options": {}
+      },
+      "name": "SA, ACC & POI Informed of Payment Confirmation and  pending Vendor Payments by WFS",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        1880,
+        290
+      ],
+      "credentials": {
+        "smtp": "smtp(sai)creds"
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_po_details?filter={ \"po_num\": { \"_eq\": \"{{$node[\"Get po_number\"].json[\"data\"][0][\"order\"][\"po_num\"][\"po_num\"]}}\" }}&fields=issuer_name.user.email",
+        "allowUnauthorizedCerts": true,
+        "options": {}
+      },
+      "name": "Get po_issuer_email",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        890,
+        290
+      ],
+      "credentials": {
+        "httpHeaderAuth": "Balcoqa-Dms-Token"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_payment_advise?filter={\"sd_mozart_shakedeal_payments\":{\"id\":{{$node[\"Get shakedeal_payment_status\"].json[\"body\"][\"keys\"][0]}}}}&fields=order_value,shakedeal_payment_status,shakedeal_payment_percentage,total_amount_received,total_outstanding,sd_mozart_shakedeal_payments.*,order.po_num.po_num,id,order.order_id",
+        "allowUnauthorizedCerts": true,
+        "options": {}
+      },
+      "name": "Get po_number",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        710,
+        290
+      ],
+      "credentials": {
+        "httpHeaderAuth": "Balcoqa-Dms-Token"
+      }
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "issuer_email",
+              "value": "={{$node[\"Get po_issuer_email\"].json[\"data\"][0][\"issuer_name\"][\"user\"][\"email\"]}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Capture POI email",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1050,
+        290
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "dms_url",
+              "value": "={{ $node[\"Get shakedeal_payment_status\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ? \"https://balco.mozart.shakedeal.com\" : \"https://balcoqa.mozart.shakedeal.com\" }}"
+            },
+            {
+              "name": "accounts_agent_email",
+              "value": "={{ $node[\"Get shakedeal_payment_status\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ? \"accounts@gmail.com\" : \"sairam.reddy@shakedeal.com\" }}"
+            },
+            {
+              "name": "sales_agent_email",
+              "value": "={{ $node[\"Get shakedeal_payment_status\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ? \"sales@gmail.com\" : \"handyalasairam9177@gmail.com\" }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        540,
+        290
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let shakedeal_payments = $node[\"Get po_number\"].json.data[0].sd_mozart_shakedeal_payments;\nlet order_value =$node[\"Get po_number\"].json.data[0][\"order_value\"]\n\nlet payment_paid=[];\nshakedeal_payments.forEach(function(obj,index){\n           if(obj[\"shakedeal_payment\"]){\n              payment_paid.push(obj[\"payment_paid\"])\n           \n           \n           }\n\n\n\n})\nsum = 0\npayment_paid.forEach(function(value,index){\n       sum = sum+value;\n       \n\n\n})\nlet total_outstanding = order_value-sum\nlet shakedeal_payment_percentage = (sum/order_value)*100\n\nif(shakedeal_payment_percentage>0&&shakedeal_payment_percentage<90){\n   items[0].json.shakedeal_payment_status =\"partiallypaid\";\n   \n}else if (shakedeal_payment_percentage>90){\n    items[0].json.shakedeal_payment_status =\"paymentreceived\"\n\n}else items[0].json.shakedeal_payment_status = \"paymentpending\"\n\nitems[0].json.total_outstanding = total_outstanding \nitems[0].json.shakedeal_payment_percentage = shakedeal_payment_percentage \nitems[0].json.order_value = order_value \nitems[0].json.total_amount_received= sum\nitems[0].json.payment_paid = payment_paid\nitems[0].json.shakedeal_payments = shakedeal_payments \nreturn items;"
+      },
+      "name": "Construct for updating the payment_status",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1230,
+        290
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_payment_advise/{{$node[\"Get po_number\"].json[\"data\"][0][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "total_amount_received",
+              "value": "={{$node[\"Construct for updating the payment_status\"].json[\"total_amount_received\"]}}"
+            },
+            {
+              "name": "total_outstanding",
+              "value": "={{$node[\"Construct for updating the payment_status\"].json[\"total_outstanding\"]}}"
+            },
+            {
+              "name": "shakedeal_payment_percentage",
+              "value": "={{$node[\"Construct for updating the payment_status\"].json[\"shakedeal_payment_percentage\"]}}"
+            },
+            {
+              "name": "shakedeal_payment_status",
+              "value": "={{$node[\"Construct for updating the payment_status\"].json[\"shakedeal_payment_status\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update the sd_payment_status,payment_percentage",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1440,
+        290
+      ],
+      "credentials": {
+        "httpHeaderAuth": "Balcoqa-Dms-Token"
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "updatedAt": "2022-04-08T06:26:04.581Z"
+}
