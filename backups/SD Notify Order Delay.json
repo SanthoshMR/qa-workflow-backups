@@ -30,7 +30,10 @@
       ],
       "webhookId": "b4839d3f-2ed7-4210-91b0-2ffabf5785e7",
       "credentials": {
-        "httpBasicAuth": "SD Basic Auth"
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
       }
     },
     {
@@ -46,11 +49,15 @@
         300
       ],
       "credentials": {
-        "postgres": "n8n - Postgres"
+        "postgres": {
+          "id": "1",
+          "name": "n8n - Postgres"
+        }
       }
     }
   ],
   "settings": {},
   "staticData": null,
+  "tags": [],
   "updatedAt": "2021-01-21T14:47:43.206Z"
 }
