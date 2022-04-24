@@ -1,0 +1,316 @@
+{
+  "active": true,
+  "connections": {
+    "Receive Order Cancelled Notification": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check if cancelled": {
+      "main": [
+        [
+          {
+            "node": "Mark order as Cancelled",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Retrieve PO Details",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Retrieve PO Details": {
+      "main": [
+        [
+          {
+            "node": "Mark POs as Cancelled",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mark POs as Cancelled": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Mark order as Cancelled": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Check if cancelled",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2020-12-23T13:07:22.602Z",
+  "id": "14",
+  "name": "SD Store: Order Cancelled Workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        250,
+        90
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        650,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "sd-order-cancelled",
+        "responseMode": "lastNode",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "X-SD-Order-Cancelled",
+                "value": "f6358ff3-8bda-46ec-a415-437010bac90f"
+              }
+            ]
+          }
+        }
+      },
+      "name": "Receive Order Cancelled Notification",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        100,
+        350
+      ],
+      "webhookId": "27870dc5-5838-45f0-8dda-8b1d7c7f5477",
+      "credentials": {
+        "httpBasicAuth": "SD Basic Auth"
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Receive Order Cancelled Notification\"].json[\"body\"][\"status\"]}}",
+              "value2": "cancelled"
+            }
+          ]
+        }
+      },
+      "name": "Check if cancelled",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        450,
+        350
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "const newItems = [];\nfor (const item of items[0].json.body.po_details) {  \n  item.dmsUrl = $item(0).$node[\"Globals\"].json[\"dmsUrl\"];\n  newItems.push({json: item});\n}\nreturn newItems;\n"
+      },
+      "name": "Retrieve PO Details",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        650,
+        310
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"dmsUrl\"]}}/items/orders/{{$node[\"Receive Order Cancelled Notification\"].json[\"body\"][\"order_id\"]}}",
+        "allowUnauthorizedCerts": true,
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "order_status",
+              "value": "cancelled"
+            },
+            {
+              "name": "cancelled_by_name",
+              "value": "={{$node[\"Receive Order Cancelled Notification\"].json[\"body\"][\"cancelled_by_name\"]}}"
+            },
+            {
+              "name": "cancelled_by_email",
+              "value": "={{$node[\"Receive Order Cancelled Notification\"].json[\"body\"][\"cancelled_by_email\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Mark order as Cancelled",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        650,
+        140
+      ],
+      "credentials": {
+        "httpHeaderAuth": "SD-Dms-Token"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Retrieve PO Details\"].json[\"dmsUrl\"]}}/items/order_pos/{{$node[\"Retrieve PO Details\"].json[\"id\"]}}",
+        "allowUnauthorizedCerts": true,
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "po_status",
+              "value": "cancelled"
+            }
+          ]
+        }
+      },
+      "name": "Mark POs as Cancelled",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        830,
+        310
+      ],
+      "credentials": {
+        "httpHeaderAuth": "SD-Dms-Token"
+      }
+    },
+    {
+      "parameters": {
+        "mode": "mergeByIndex",
+        "join": "outer"
+      },
+      "name": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 1,
+      "position": [
+        1020,
+        230
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{$node[\"Globals\"].json[\"workflowsFromEmail\"]}}",
+        "toEmail": "={{$node[\"Globals\"].json[\"accountsEmail\"]}}",
+        "ccEmail": "={{$node[\"Globals\"].json[\"voucherOpsEmail\"]}}",
+        "subject": "=SD Gift Voucher Order: {{$node[\"Mark order as Cancelled\"].json[\"data\"][\"id\"]}} has been Cancelled!",
+        "html": "=<style id=\"stndz-style\"></style>\n    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, shrink-to-fit=no\">\n    <meta name=\"description\" content=\"\">\n    <meta name=\"author\" content=\"Mark Otto, Jacob Thornton, and Bootstrap contributors\">\n    <meta name=\"generator\" content=\"AcelleSystemLayouts\">\n    \n\n    <!-- Bootstrap core CSS -->\n    <link href=\"https://marketing.shakedeal.com/assets/templates/5fbfa20a972d7/css/bootstrap.min.css\" rel=\"stylesheet\">\n  <link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons+Outlined\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons+Outlined\" rel=\"stylesheet\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u0\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/skin.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u1\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/content.inline.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u0\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/skin.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u1\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/content.inline.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u0\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/skin.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u1\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/content.inline.min.css\">\n  <style id=\"stndz-style\"></style>\n    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, shrink-to-fit=no\">\n    <meta name=\"description\" content=\"\">\n    <meta name=\"author\" content=\"Mark Otto, Jacob Thornton, and Bootstrap contributors\">\n    <meta name=\"generator\" content=\"AcelleSystemLayouts\">\n    \n\n    <!-- Bootstrap core CSS -->\n    <link href=\"https://marketing.shakedeal.com/assets/templates/5fbfa20a972d7/css/bootstrap.min.css\" rel=\"stylesheet\">\n  <link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons+Outlined\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons+Outlined\" rel=\"stylesheet\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u0\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/skin.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u1\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/content.inline.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u0\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/skin.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u1\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/content.inline.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u0\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/skin.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u1\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/content.inline.min.css\">\n  <style id=\"stndz-style\"></style>\n    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, shrink-to-fit=no\">\n    <meta name=\"description\" content=\"\">\n    <meta name=\"author\" content=\"Mark Otto, Jacob Thornton, and Bootstrap contributors\">\n    <meta name=\"generator\" content=\"AcelleSystemLayouts\">\n    \n\n    <!-- Bootstrap core CSS -->\n    <link href=\"https://marketing.shakedeal.com/assets/templates/5fbfa20a972d7/css/bootstrap.min.css\" rel=\"stylesheet\">\n  <link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons+Outlined\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons+Outlined\" rel=\"stylesheet\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u0\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/skin.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u1\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/content.inline.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u0\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/skin.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u1\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/content.inline.min.css\">\n  <style id=\"stndz-style\"></style>\n    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, shrink-to-fit=no\">\n    <meta name=\"description\" content=\"\">\n    <meta name=\"author\" content=\"Mark Otto, Jacob Thornton, and Bootstrap contributors\">\n    <meta name=\"generator\" content=\"AcelleSystemLayouts\">\n    \n\n    <!-- Bootstrap core CSS -->\n    <link href=\"https://marketing.shakedeal.com/assets/templates/5fbfa20a972d7/css/bootstrap.min.css\" rel=\"stylesheet\">\n  <link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons+Outlined\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons+Outlined\" rel=\"stylesheet\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u0\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/skin.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u1\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/content.inline.min.css\">\n      \n    <main role=\"main\">\n      <div class=\"py-5 bg-light\" id=\"mce_8\" style=\"position: relative;\" spellcheck=\"false\"><div class=\"container\" id=\"mce_12\" style=\"position: relative; text-align: center;\" spellcheck=\"false\"><!-- <div class=\"text-center mb-4\">\n            <div><img src=\"https://marketing.shakedeal.com/assets/templates/5fbfa20a972d7/image/logo.png\" width=\"350px\" /></div>\n          </div> --> <img id=\"zW2lO\" builder-element=\"\" builder-draggable=\"\" class=\"image-after-change\" src=\"https://marketing.shakedeal.com/files/5fbe3d99407d6/SDLogoColorSmall.png\" style=\"width: 200px; height: 40px; margin: auto;\">\n<h2 class=\"mt-4 mb-4\" id=\"mce_12\" style=\"position: relative;\" spellcheck=\"false\"><br>Gifting Order: {{$node[\"Mark order as Cancelled\"].json[\"data\"][\"id\"]}} is Cancelled!</h2>\n<p><span style=\"font-size: 1.25rem; position: relative;\" class=\"\" id=\"mce_0\" spellcheck=\"false\">Gifting order: {{$node[\"Mark order as Cancelled\"].json[\"data\"][\"id\"]}} has been cancelled by {{$node[\"Mark order as Cancelled\"].json[\"data\"][\"cancelled_by_name\"]}} ({{$node[\"Mark order as Cancelled\"].json[\"data\"][\"cancelled_by_email\"]}}). You can view the details of the order here: <a href=\"{{$node[\"Globals\"].json[\"dmsUrl\"]}}/admin/collections/orders/{{$node[\"Mark order as Cancelled\"].json[\"data\"][\"id\"]}}\">View Details</a>.</span></p>\n<div class=\"\" id=\"mce_8\" style=\"position: relative;\" spellcheck=\"false\"></div>\n<div class=\"row\"></div></div></div>\n    </main>",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        830,
+        140
+      ],
+      "credentials": {
+        "smtp": "AWS SES Creds"
+      }
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "dmsUrl",
+              "value": "={{ $node[\"Receive Order Cancelled Notification\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ? \"https://zeus.shakedeal.com\" : \"https://dmsqa.shakedeal.com\" }}"
+            },
+            {
+              "name": "workflowsFromEmail",
+              "value": "SD Workflows <workflows@shakedeal.com>"
+            },
+            {
+              "name": "voucherOpsEmail",
+              "value": "={{ $node[\"Receive Order Cancelled Notification\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ? \"voucher.ops@shakedeal.com\" : \"dev-notifications@shakedeal.com\" }}"
+            },
+            {
+              "name": "accountsEmail",
+              "value": "={{ $node[\"Receive Order Cancelled Notification\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ? \"accounts@shakedeal.com\" : \"dev-notifications@shakedeal.com\" }}"
+            },
+            {
+              "name": "dmsIP",
+              "value": "139.59.34.52"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        270,
+        350
+      ]
+    }
+  ],
+  "settings": {
+    "timezone": "Asia/Calcutta",
+    "errorWorkflow": "8"
+  },
+  "staticData": null,
+  "updatedAt": "2021-01-29T08:15:07.822Z"
+}
