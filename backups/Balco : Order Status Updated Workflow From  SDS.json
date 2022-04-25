@@ -16,7 +16,7 @@
       "main": [
         [
           {
-            "node": "POI Informed the Order_status by WFS.",
+            "node": "IF",
             "type": "main",
             "index": 0
           }
@@ -50,6 +50,57 @@
         [
           {
             "node": "Get the id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Get the products and orders",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the products and orders": {
+      "main": [
+        [
+          {
+            "node": "Function for po_status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function for po_status": {
+      "main": [
+        [
+          {
+            "node": "IF1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF1": {
+      "main": [
+        [
+          {
+            "node": "Update po status",
             "type": "main",
             "index": 0
           }
@@ -92,7 +143,7 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        250,
+        260,
         120
       ],
       "webhookId": "084f66e5-8038-4f44-b38e-867d26d8a5b6",
@@ -155,8 +206,8 @@
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 1,
       "position": [
-        1280,
-        120
+        700,
+        -160
       ],
       "credentials": {
         "smtp": {
@@ -235,10 +286,119 @@
         650,
         120
       ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Receive_order_status\"].json[\"body\"][\"order_status\"]}}",
+              "value2": "complete"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1260,
+        120
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1600,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_po_details?filter={\"po_num\":{{$node[\"Receive_order_status\"].json[\"body\"][\"purchase_order_no\"]}}}&fields=products.req_qty,orders.order_details.qty_placed,id",
+        "options": {}
+      },
+      "name": "Get the products and orders",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1540,
+        20
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "22",
+          "name": "Balcoqa-Dms-Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let products = $node[\"Get the products and orders\"].json.data[0].products;\nlet orders = $node[\"Get the products and orders\"].json.data[0].orders;\nlet req_qty = 0;\nlet placed_qty = 0;\nlet po_status = \"\";\nproducts.forEach(function(product,index){\n  req_qty=req_qty+parseInt(product[\"req_qty\"])\n})\norders.forEach(function(order,index){\n  order.order_details.forEach(function(obj,idx){\n    placed_qty = placed_qty+parseInt(obj.qty_placed)\n  })\n})\n\nif(req_qty == placed_qty ){\n  po_status= \"complete\"\n}\nitems[0].json.products = products;\nitems[0].json.orders = orders;\nitems[0].json.req_qty = req_qty;\nitems[0].json.placed_qty = placed_qty;\nitems[0].json.po_status = po_status;\nreturn items;"
+      },
+      "name": "Function for po_status",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1800,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Function for po_status\"].json[\"po_status\"]}}",
+              "value2": "complete"
+            }
+          ]
+        }
+      },
+      "name": "IF1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        2060,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_po_details/{{$node[\"Get the products and orders\"].json[\"data\"][0][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "po_status",
+              "value": "={{$node[\"Function for po_status\"].json[\"po_status\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update po status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2340,
+        -60
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "22",
+          "name": "Balcoqa-Dms-Token"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-03-22T04:33:45.612Z"
+  "updatedAt": "2022-04-25T14:25:24.584Z"
 }
