@@ -212,6 +212,50 @@
           }
         ]
       ]
+    },
+    "Post E-Invoice ID and E-Invoice status to DMS": {
+      "main": [
+        [
+          {
+            "node": "Get product codes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get product codes": {
+      "main": [
+        [
+          {
+            "node": "Check for items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for items": {
+      "main": [
+        [
+          {
+            "node": "Function to create products",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to create products": {
+      "main": [
+        [
+          {
+            "node": "IF1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2021-07-15T12:42:13.721Z",
@@ -449,8 +493,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2410,
-        190
+        2400,
+        140
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -469,7 +513,7 @@
       "typeVersion": 1,
       "position": [
         2220,
-        190
+        120
       ],
       "disabled": true
     },
@@ -491,7 +535,7 @@
       "typeVersion": 1,
       "position": [
         2040,
-        190
+        120
       ],
       "disabled": true
     },
@@ -530,7 +574,7 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "PATCH",
-        "url": "=https://dmsqa.shakedeal.com/items/orders",
+        "url": "=https://dmsqa.shakedeal.com/items/orders/{{$node[\"wait for order data\"].json[\"body\"][\"order_number\"]}}",
         "allowUnauthorizedCerts": true,
         "options": {},
         "bodyParametersUi": {
@@ -544,8 +588,8 @@
               "value": "={{$node[\"create invoice\"].json[\"invoice\"][\"status\"]}}"
             },
             {
-              "name": "order_id",
-              "value": "={{$node[\"wait for order data\"].json[\"body\"][\"order_id\"]}}"
+              "name": "invoice_number",
+              "value": "={{$node[\"create invoice\"].json[\"invoice\"][\"invoice_number\"]}}"
             }
           ]
         }
@@ -554,16 +598,15 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2430,
-        370
+        2380,
+        380
       ],
       "credentials": {
         "httpHeaderAuth": {
           "id": "31",
           "name": "header auth creds"
         }
-      },
-      "disabled": true
+      }
     },
     {
       "parameters": {
@@ -732,10 +775,72 @@
         1420,
         440
       ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Code here will run only once, no matter how many input items there are.\n// More info and help: https://docs.n8n.io/nodes/n8n-nodes-base.function\n// Tip: You can use luxon for dates and $jmespath for querying JSON structures\n\n// Loop over inputs and add a new field called 'myNewField' to the JSON of each one\n/*for (item of items) {\n  item.json.myNewField = 1;\n}\n\n You can write logs to the browser console\nconsole.log('Done!');*/\nlet products = $node[\"wait for order data\"].json[\"body\"][\"line_items\"];\nlet product_codes = [];\nproducts.forEach(function(product,index){\n    product_codes.push(product.sku);\n})\n\nitems[0].json.products=products;\nitems[0].json.product_codes = product_codes;\n\nreturn items;"
+      },
+      "name": "Get product codes",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        2580,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://dmsqa.shakedeal.com/items/sd_order_products?filter={\"product_code\":{\"_in\":\"{{$node[\"Get product codes\"].json[\"product_codes\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Check for items",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2820,
+        380
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let data = $node[\"Check for items\"].json.data;\nlet products = $node[\"wait for order data\"].json[\"body\"][\"line_items\"];\nlet action = \"\";\nlet products_to_post =[];\nlet filter_products = products.filter(product=>!data.some(item=>item.product_code == product.sku));\n\nif(filter_products.length){\n  action = \"post_products\" \n}else action = \"no_products_to_post\"\n\nif(filter_products.length){\n    filter_products.forEach(function(product,index){\n      products_to_post[index]={};\n      products_to_post[index].product_name = product.name;\n      products_to_post[index].product_code = product.sku;\n    })\n}\n\nitems[0].json.data= data\nitems[0].json.filter_products= filter_products;\nitems[0].json.products_to_post= products_to_post;\nitems[0].json.action = action;\nreturn items;"
+      },
+      "name": "Function to create products",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        3060,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "{{$['']}}"
+            }
+          ]
+        }
+      },
+      "name": "IF1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        3260,
+        380
+      ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-04-22T10:28:08.818Z"
+  "updatedAt": "2022-04-25T11:53:16.977Z"
 }
