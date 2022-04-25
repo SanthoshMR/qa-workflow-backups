@@ -1603,7 +1603,11 @@
     }
   ],
   "settings": {},
-  "staticData": null,
+  "staticData": {
+    "node:Wait for PO Email": {
+      "lastMessageUid": 735
+    }
+  },
   "tags": [],
-  "updatedAt": "2022-04-19T14:12:48.191Z"
+  "updatedAt": "2022-04-25T12:09:02.581Z"
 }
