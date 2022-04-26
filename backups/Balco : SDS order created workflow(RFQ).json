@@ -612,6 +612,10 @@
             {
               "name": "shipment_address",
               "value": "={{$node[\"Receive Order Details\"].json.body[\"shipping address\"]}}"
+            },
+            {
+              "name": "po_status",
+              "value": "processing"
             }
           ]
         }
@@ -634,5 +638,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-03-18T05:10:27.704Z"
+  "updatedAt": "2022-04-25T16:36:28.377Z"
 }
