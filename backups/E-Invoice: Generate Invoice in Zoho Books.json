@@ -256,6 +256,35 @@
           }
         ]
       ]
+    },
+    "IF1": {
+      "main": [
+        [
+          {
+            "node": "Create the products",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create the products": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2021-07-15T12:42:13.721Z",
@@ -825,7 +854,8 @@
         "conditions": {
           "string": [
             {
-              "value1": "{{$['']}}"
+              "value1": "={{$node[\"Function to create products\"].json[\"action\"]}}",
+              "value2": "=post_products"
             }
           ]
         }
@@ -837,10 +867,63 @@
         3260,
         380
       ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "=https://dmsqa.shakedeal.com/items/sd_order_products",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Function to create products\"].json[\"products_to_post\"]}}"
+      },
+      "name": "Create the products",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3620,
+        180
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        3560,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3980,
+        340
+      ],
+      "disabled": true
     }
   ],
   "settings": {},
   "staticData": null,
-  "tags": [],
-  "updatedAt": "2022-04-25T11:53:16.977Z"
+  "tags": [
+    {
+      "id": "1",
+      "name": "E-invoice",
+      "createdAt": "2022-04-25T07:09:37.693Z",
+      "updatedAt": "2022-04-25T07:09:37.693Z"
+    }
+  ],
+  "updatedAt": "2022-04-26T09:09:58.245Z"
 }
