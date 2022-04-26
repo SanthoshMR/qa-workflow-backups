@@ -104,6 +104,13 @@
             "type": "main",
             "index": 0
           }
+        ],
+        [
+          {
+            "node": "NoOp1",
+            "type": "main",
+            "index": 0
+          }
         ]
       ]
     }
@@ -338,7 +345,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let products = $node[\"Get the products and orders\"].json.data[0].products;\nlet orders = $node[\"Get the products and orders\"].json.data[0].orders;\nlet req_qty = 0;\nlet placed_qty = 0;\nlet po_status = \"\";\nproducts.forEach(function(product,index){\n  req_qty=req_qty+parseInt(product[\"req_qty\"])\n})\norders.forEach(function(order,index){\n  order.order_details.forEach(function(obj,idx){\n    placed_qty = placed_qty+parseInt(obj.qty_placed)\n  })\n})\n\nif(req_qty == placed_qty ){\n  po_status= \"complete\"\n}\nitems[0].json.products = products;\nitems[0].json.orders = orders;\nitems[0].json.req_qty = req_qty;\nitems[0].json.placed_qty = placed_qty;\nitems[0].json.po_status = po_status;\nreturn items;"
+        "functionCode": "let products = $node[\"Get the products and orders\"].json.data[0].products;\nlet orders = $node[\"Get the products and orders\"].json.data[0].orders;\nlet req_qty = 0;\nlet placed_qty = 0;\nlet po_status = \"\";\nproducts.forEach(function(product,index){\n  req_qty=req_qty+parseInt(product[\"req_qty\"])\n})\norders.forEach(function(order,index){\n  order.order_details.forEach(function(obj,idx){\n    placed_qty = placed_qty+parseInt(obj.qty_placed)\n  })\n})\n\nif(req_qty == placed_qty ){\n  po_status= \"payment_pending\"\n}\nitems[0].json.products = products;\nitems[0].json.orders = orders;\nitems[0].json.req_qty = req_qty;\nitems[0].json.placed_qty = placed_qty;\nitems[0].json.po_status = po_status;\nreturn items;"
       },
       "name": "Function for po_status",
       "type": "n8n-nodes-base.function",
@@ -354,7 +361,7 @@
           "string": [
             {
               "value1": "={{$node[\"Function for po_status\"].json[\"po_status\"]}}",
-              "value2": "complete"
+              "value2": "payment_pending"
             }
           ]
         }
@@ -386,8 +393,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2340,
-        -60
+        2380,
+        -80
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -395,10 +402,20 @@
           "name": "Balcoqa-Dms-Token"
         }
       }
+    },
+    {
+      "parameters": {},
+      "name": "NoOp1",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        2400,
+        140
+      ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-04-25T14:25:24.584Z"
+  "updatedAt": "2022-04-26T07:47:49.950Z"
 }
