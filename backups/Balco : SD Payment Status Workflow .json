@@ -82,6 +82,79 @@
       "main": [
         [
           {
+            "node": "Function for order_ids",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function for order_ids": {
+      "main": [
+        [
+          {
+            "node": "Get shakedeal payments",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get shakedeal payments": {
+      "main": [
+        [
+          {
+            "node": "Function for po_status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function for po_status": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Update PO status in po_details",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update PO status in po_details": {
+      "main": [
+        [
+          {
+            "node": "SA, ACC & POI Informed of Payment Confirmation and  pending Vendor Payments by WFS.",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NoOp": {
+      "main": [
+        [
+          {
             "node": "SA, ACC & POI Informed of Payment Confirmation and  pending Vendor Payments by WFS.",
             "type": "main",
             "index": 0
@@ -140,8 +213,8 @@
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 1,
       "position": [
-        1660,
-        290
+        2900,
+        300
       ],
       "credentials": {
         "smtp": {
@@ -162,8 +235,8 @@
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 1,
       "position": [
-        1880,
-        290
+        3120,
+        300
       ],
       "credentials": {
         "smtp": {
@@ -176,7 +249,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_po_details?filter={ \"po_num\": { \"_eq\": \"{{$node[\"Get po_number\"].json[\"data\"][0][\"order\"][\"po_num\"][\"po_num\"]}}\" }}&fields=issuer_name.user.email",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_po_details?filter={ \"po_num\": { \"_eq\": \"{{$node[\"Get po_number\"].json[\"data\"][0][\"order\"][\"po_num\"][\"po_num\"]}}\" }}&fields=issuer_name.user.email,orders.order_id,po_value,id",
         "allowUnauthorizedCerts": true,
         "options": {}
       },
@@ -184,8 +257,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        890,
-        290
+        880,
+        280
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -253,6 +326,12 @@
               "name": "sales_agent_email",
               "value": "={{ $node[\"Get shakedeal_payment_status\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ? \"sales@gmail.com\" : \"handyalasairam9177@gmail.com\" }}"
             }
+          ],
+          "number": [
+            {
+              "name": "percentage",
+              "value": 90
+            }
           ]
         },
         "options": {}
@@ -262,7 +341,7 @@
       "typeVersion": 1,
       "position": [
         540,
-        290
+        280
       ]
     },
     {
@@ -309,7 +388,7 @@
       "typeVersion": 1,
       "position": [
         1440,
-        290
+        300
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -317,10 +396,112 @@
           "name": "Balcoqa-Dms-Token"
         }
       }
+    },
+    {
+      "parameters": {
+        "functionCode": "let orders = $node[\"Get po_issuer_email\"].json.data[0].orders\nlet order_ids = [];\norders.forEach(function(order,index){\n  order_ids.push(order.order_id)\n})\n\nitems[0].json.orders = orders;\nitems[0].json.order_ids = order_ids;\nreturn items;"
+      },
+      "name": "Function for order_ids",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1620,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_payment_advise?filter={\"_and\": [{\"order\": {\"order_id\":{\"_in\":\"{{$node[\"Function for order_ids\"].json[\"order_ids\"]}}\"}}},{\"sd_mozart_shakedeal_payments\":{\"shakedeal_payment\":{\"_eq\":\"true\"}}}]}&fields=order.*,sd_mozart_shakedeal_payments.*",
+        "options": {}
+      },
+      "name": "Get shakedeal payments",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1820,
+        280
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "22",
+          "name": "Balcoqa-Dms-Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let data = $node[\"Get shakedeal payments\"].json.data;\nlet shakedeal_payments = [];\nlet received_payments = [];\nlet po_value = $node[\"Get po_issuer_email\"].json.data[0].po_value;\nlet percentage =  $node[\"Globals\"].json[\"percentage\"];\nlet payment_paid = 0\nlet po_status = \"\"\ndata.forEach(function(obj,idx){\n    shakedeal_payments.push(...obj.sd_mozart_shakedeal_payments)\n})\nreceived_payments = shakedeal_payments.filter(obj=>obj.shakedeal_payment == true)\nreceived_payments.forEach(function(payment,index){\n    payment_paid = payment_paid+ payment.payment_paid\n\n})\nlet shakedeal_payment_percentage = (payment_paid/po_value)*100\n\nif(shakedeal_payment_percentage>=percentage){\n    po_status = \"complete\";\n}\n\nitems[0].json.received_payments=  received_payments;\nitems[0].json.shakedeal_payments=  shakedeal_payments;\nitems[0].json.po_value=  po_value;\nitems[0].json.payment_paid=  payment_paid;\nitems[0].json.percentage=  percentage;\nitems[0].json.shakedeal_payment_percentage=  shakedeal_payment_percentage;\nitems[0].json.po_status=  po_status;\nreturn items;"
+      },
+      "name": "Function for po_status",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        2040,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Function for po_status\"].json[\"po_status\"]}}",
+              "value2": "complete"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        2220,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_po_details/{{$node[\"Get po_issuer_email\"].json[\"data\"][0][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "po_status",
+              "value": "={{$node[\"Function for po_status\"].json[\"po_status\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update PO status in po_details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2520,
+        120
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "22",
+          "name": "Balcoqa-Dms-Token"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        2520,
+        400
+      ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-04-08T06:26:04.581Z"
+  "updatedAt": "2022-04-26T07:19:24.160Z"
 }
