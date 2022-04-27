@@ -67,11 +67,11 @@
             },
             {
               "name": "client_id",
-              "value": "1000.WBSVSVM7UXFERT32STIOQLG3CFWOKP"
+              "value": "1000.QYWLRL3RGVH2ZLK7C41R8UBPT4BQZJ"
             },
             {
               "name": "client_secret",
-              "value": "71afde1862948a64f91e451cdfe7f8c78250d32f7e"
+              "value": "be901703a49ba9941327f2c339bfc07b3f7ee1ac29"
             },
             {
               "name": "redirect_uri",
@@ -118,5 +118,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-04-20T09:56:35.702Z"
+  "updatedAt": "2022-04-27T09:13:32.744Z"
 }
