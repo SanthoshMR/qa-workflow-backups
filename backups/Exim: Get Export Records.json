@@ -1,0 +1,566 @@
+{
+  "active": false,
+  "connections": {
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Login to Exim",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Capture Cookie": {
+      "main": [
+        [
+          {
+            "node": "Read Exim Query Params",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Login to Exim": {
+      "main": [
+        [
+          {
+            "node": "Capture Cookie",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Results": {
+      "main": [
+        [
+          {
+            "node": "Get Records",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SplitInBatches": {
+      "main": [
+        [
+          {
+            "node": "Define Query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Define Query": {
+      "main": [
+        [
+          {
+            "node": "Get Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Records": {
+      "main": [
+        [
+          {
+            "node": "Get Only Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Define Next Query": {
+      "main": [
+        [
+          {
+            "node": "Get Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Define Next Query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Exim Query Params": {
+      "main": [
+        [
+          {
+            "node": "SplitInBatches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get IDs": {
+      "main": [
+        [
+          {
+            "node": "Get IDs as String",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check If Present": {
+      "main": [
+        [
+          {
+            "node": "Remove Present Rows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NoMoreQueries?": {
+      "main": [
+        [],
+        [
+          {
+            "node": "SplitInBatches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Records": {
+      "main": [
+        [
+          {
+            "node": "HasMoreRecords?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get IDs as String": {
+      "main": [
+        [
+          {
+            "node": "Check If Present",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HasMoreRecords?": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoMoreQueries?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove Present Rows": {
+      "main": [
+        [
+          {
+            "node": "Create Records",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Only Data": {
+      "main": [
+        [
+          {
+            "node": "Get IDs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2022-04-26T20:00:17.144Z",
+  "id": "116",
+  "name": "Exim: Get Export Records",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        700,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://web.eximpedia.app:8000/trade/shipments/explore/records",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {
+          "bodyContentType": "json"
+        },
+        "bodyParametersJson": "={{ {\"allFields\":[\"FOUR_DIGIT\",\"EXP_DATE\",\"HS_CODE\",\"PRODUCT_DESCRIPTION\",\"QUANTITY\",\"UNIT\",\"ITEM_RATE_INV\",\"CURRENCY\",\"TOTAL_AMOUNT_INV_FC\",\"FOB_INR\",\"ITEM_RATE_INR\",\"FOB_USD\",\"USD_EXCHANGE_RATE\",\"FOREIGN_PORT\",\"COUNTRY\",\"INDIAN_PORT\",\"IEC\",\"EXPORTER_NAME\",\"ADDRESS\",\"CITY\",\"PIN\",\"BUYER_NAME\",\"BUYER_ADDRESS\",\"INVOICE_NO\",\"CUSH\",\"ITEM_NO\",\"DRAWBACK\",\"STD_QUANTITY\",\"STD_UNIT\",\"STD_ITEM_RATE_INR\",\"STD_ITEM_RATE_INV\",\"DECLARATION_NO\"],\"isEngine\":true,\"recordSetKey\":\"RECORD_SET\",\"sortTerm\":\"EXP_DATE\",\"searchExpressions\":[],\"matchExpressions\":$json.expressions,\"groupExpressions\":[{\"identifier\":\"SUMMARY_HS_CODE\",\"alias\":\"HS_CODE\",\"clause\":\"GROUP\",\"expressionType\":8,\"fieldTerm\":\"HS_CODE\",\"fieldTermTypeSuffix\":\".number\",\"isFilter\":0,\"isSummary\":1},{\"identifier\":\"SUMMARY_BUYERS\",\"alias\":\"BUYER\",\"clause\":\"GROUP\",\"expressionType\":8,\"fieldTerm\":\"BUYER_NAME\",\"fieldTermTypeSuffix\":\".keyword\",\"isFilter\":0,\"isSummary\":1},{\"identifier\":\"SUMMARY_SELLERS\",\"alias\":\"SELLER\",\"clause\":\"GROUP\",\"expressionType\":8,\"fieldTerm\":\"EXPORTER_NAME\",\"fieldTermTypeSuffix\":\".keyword\",\"isFilter\":0,\"isSummary\":1},{\"identifier\":\"SUMMARY_SHIPMENTS\",\"alias\":\"SHIPMENT\",\"clause\":\"GROUP\",\"expressionType\":8,\"fieldTerm\":\"DECLARATION_NO\",\"fieldTermTypeSuffix\":\".keyword\",\"isFilter\":0,\"isSummary\":1},{\"identifier\":\"FILTER_HS_CODE\",\"alias\":\"HS_CODE\",\"clause\":\"GROUP\",\"expressionType\":9,\"fieldTerm\":\"HS_CODE\",\"fieldTermTypeSuffix\":\".number\",\"isFilter\":1,\"isSummary\":0},{\"identifier\":\"FILTER_PORT\",\"alias\":\"PORT\",\"clause\":\"GROUP\",\"expressionType\":9,\"fieldTerm\":\"INDIAN_PORT\",\"fieldTermTypeSuffix\":\".keyword\",\"isFilter\":1,\"isSummary\":0},{\"identifier\":\"FILTER_COUNTRY\",\"alias\":\"COUNTRY\",\"clause\":\"GROUP\",\"expressionType\":9,\"fieldTerm\":\"COUNTRY\",\"fieldTermTypeSuffix\":\".keyword\",\"isFilter\":1,\"isSummary\":0},{\"identifier\":\"FILTER_UNIT_QUANTITY\",\"alias\":\"UNIT|QUANTITY\",\"clause\":\"GROUP\",\"expressionType\":12,\"fieldTermPrimary\":\"STD_UNIT\",\"fieldTermSecondary\":\"STD_QUANTITY\",\"fieldTermPrimaryTypeSuffix\":\".keyword\",\"fieldTermSecondaryTypeSuffix\":\".double\",\"isFilter\":1,\"isSummary\":0},{\"identifier\":\"FILTER_CURRENCY_PRICE_INR\",\"alias\":\"PRICE\",\"clause\":\"GROUP\",\"expressionType\":11,\"fieldTerm\":\"FOB_INR\",\"metaTag\":\"INR\",\"fieldTermTypeSuffix\":\".double\",\"isFilter\":1,\"isSummary\":0},{\"identifier\":\"FILTER_MONTH\",\"alias\":\"MONTH\",\"clause\":\"GROUP\",\"expressionType\":18,\"fieldTerm\":\"EXP_DATE\",\"fieldTermTypeSuffix\":\"\",\"isFilter\":1,\"isSummary\":0},{\"identifier\":\"FILTER_DUTY\",\"alias\":\"DUTY\",\"clause\":\"GROUP\",\"expressionType\":11,\"fieldTerm\":\"STD_ITEM_RATE_INV\",\"fieldTermTypeSuffix\":\".double\",\"isFilter\":1,\"isSummary\":0}],\"projectionExpressions\":[],\"tradeType\":\"EXPORT\",\"countryCode\":\"IND\",\"country\":\"INDIA\",\"purchasable\":[\"DECLARATION_NO\",\"IEC\",\"EXPORTER_NAME\",\"ADDRESS\",\"CITY\",\"PIN\",\"BUYER_NAME\",\"BUYER_ADDRESS\"],\"tradeTotalRecords\":0,\"getAddedRowUpdatedId\":{},\"draw\":$json.draw,\"start\":$json.start,\"length\":$json.length,\"resultType\":\"COMBINED\",\"accountId\":\"61dd2d9a1f24d0447beffe82\",\"userId\":\"61dd2d9a1f24d0447beffe83\"} }}",
+        "headerParametersJson": "={{ { 'Cookie': $node[\"Capture Cookie\"].json[\"cookie\"][0], 'Content-Type': 'application/json', 'Accept': 'application/json' } }}"
+      },
+      "name": "Get Results",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        900,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "EXIM_URL",
+              "value": "https://web.eximpedia.app:8000"
+            },
+            {
+              "name": "TABLE_NAME",
+              "value": "exim_data"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        880,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "items[0].json.cookie = items[0].json.headers[\"set-cookie\"];\nreturn items;"
+      },
+      "name": "Capture Cookie",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1180,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "PUT",
+        "url": "={{$node[\"Globals\"].json[\"EXIM_URL\"]}}/auths/login",
+        "allowUnauthorizedCerts": true,
+        "options": {
+          "fullResponse": true
+        },
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "email_id",
+              "value": "asafounders@gmail.com"
+            },
+            {
+              "name": "password",
+              "value": "shakedeal@123"
+            },
+            {
+              "name": "browser",
+              "value": "Chrome"
+            }
+          ]
+        }
+      },
+      "name": "Login to Exim",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Code here will run only once, no matter how many input items there are.\n// More info and help: https://docs.n8n.io/nodes/n8n-nodes-base.function\n// Tip: You can use luxon for dates and $jmespath for querying JSON structures\n\n// Loop over inputs and add a new field called 'myNewField' to the JSON of each one\nlet result = items[0].json;\nconsole.log(result);\nlet returnLength = $node[\"Define Query\"].json[\"length\"];\nlet currentResultLengthMax = returnLength * result.draw;\nresult.data.forEach(item => {\n  item.id = item._id;\n  delete item._id;\n});\nlet returnItems = { moreItems: false, data: result.data };\nif (result.recordsTotal > currentResultLengthMax) {\n  returnItems.moreItems = true;\n  returnItems.nextStart = currentResultLengthMax;\n  returnItems.nextDraw = result.draw + 1;\n}\n\nreturn [returnItems];"
+      },
+      "name": "Get Records",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "batchSize": 1,
+        "options": {}
+      },
+      "name": "SplitInBatches",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 1,
+      "position": [
+        1500,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Code here will run only once, no matter how many input items there are.\n// More info and help: https://docs.n8n.io/nodes/n8n-nodes-base.function\n// Tip: You can use luxon for dates and $jmespath for querying JSON structures\n\nlet matchExpressions = [];\nlet dateLeft = new Date(items[0].json[\"Month Start (DD-MM-YYYY)\"].replace( /(\\d{2})-(\\d{2})-(\\d{4})/, \"$2/$1/$3\"));\nlet dateRight = new Date(items[0].json[\"Month End (DD-MM-YYYY)\"].replace( /(\\d{2})-(\\d{2})-(\\d{4})/, \"$2/$1/$3\"));\nlet monthRangeIdentifier = {\"identifier\":\"SEARCH_MONTH_RANGE\",\"alias\":\"MONTH\",\"clause\":\"MATCH\",\"expressionType\":300,\"fieldTerm\":\"EXP_DATE\",\"fieldValue\":[],\"fieldTermTypeSuffix\":\"\",\"fieldValueLeft\": dateLeft.toISOString(),\"fieldValueRight\": dateRight.toISOString()};\nmatchExpressions.push(monthRangeIdentifier);\nlet searchExpression;\nswitch (items[0].json[\"Search On\"]) {\n  case \"HS_CODE\":\n    let padLeft = \"00000000\";\n    let padRight = \"99999999\";\n    let hsnCode = items[0].json[\"Search Term\"].toString();\n    let hsnCodeLeft = (hsnCode + padLeft).substring(0, padLeft.length);\n    let hsnCodeRight = (hsnCode + padRight).substring(0, padRight.length);\n    searchExpression = {\"identifier\":\"SEARCH_HS_CODE\",\"alias\":\"HS_CODE\",\"clause\":\"MATCH\",\"expressionType\":103,\"fieldTerm\":\"HS_CODE\",\"fieldValueLeft\":+hsnCodeLeft,\"fieldValueRight\":+hsnCodeRight,\"fieldTermTypeSuffix\":\".number\",\"fieldValue\":hsnCode,\"advanceSearchType\":false};\n    break;\n}\n\nmatchExpressions.push(searchExpression);\nconsole.log(matchExpressions);\n\n// You can write logs to the browser console\nconsole.log('Done!');\n\nreturn [{ length: 100, start: 3600, draw: 1, expressions: matchExpressions }];"
+      },
+      "name": "Define Query",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        720,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let initialQueryData = $node[\"Define Query\"].json;\r\nlet nextQueryData = $node[\"Get Records\"].json;\r\nreturn [{length: initialQueryData.length, start: nextQueryData.nextStart, draw: nextQueryData.nextDraw, expressions: initialQueryData.expressions}];"
+      },
+      "name": "Define Next Query",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1780,
+        740
+      ]
+    },
+    {
+      "parameters": {
+        "amount": "=20",
+        "unit": "seconds"
+      },
+      "name": "Wait",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [
+        1600,
+        740
+      ],
+      "webhookId": "4116dc68-698e-4409-b01b-039d3f692955"
+    },
+    {
+      "parameters": {
+        "sheetId": "1C1wXWv2iBSO1s4tbiu_Ifbrq2xfrs_e0z4Cy3mklR9Q",
+        "range": "=A:D",
+        "options": {}
+      },
+      "name": "Read Exim Query Params",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        320
+      ],
+      "credentials": {
+        "googleApi": {
+          "id": "44",
+          "name": "Google account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "aggregateItems",
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {
+              "fieldToAggregate": "id"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Get IDs",
+      "type": "n8n-nodes-base.itemLists",
+      "typeVersion": 1,
+      "position": [
+        1360,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://exim.shakedeal.com/items/{{$node[\"Globals\"].json[\"TABLE_NAME\"]}}?filter[id][_in]={{$node[\"Get IDs as String\"].json[\"id\"]}}",
+        "options": {}
+      },
+      "name": "Check If Present",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        960,
+        740
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "45",
+          "name": "Exim Header Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$node[\"SplitInBatches\"].context[\"noItemsLeft\"]}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "NoMoreQueries?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1620,
+        940
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "=https://exim.shakedeal.com/items/{{$node[\"Globals\"].json[\"TABLE_NAME\"]}}",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Remove Present Rows\"].json[\"data\"]}}"
+      },
+      "name": "Create Records",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1280,
+        740
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "45",
+          "name": "Exim Header Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "return [{id: items[0].json.id.join(\",\")}];"
+      },
+      "name": "Get IDs as String",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1520,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$node[\"Get Records\"].json[\"moreItems\"]}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "HasMoreRecords?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1440,
+        740
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let records = $node[\"Get Records\"].json.data;\nlet presentRecords = $node[\"Check If Present\"].json.data;\n\nconsole.log(\"Record Length: \" + records.length);\nrecords = records.filter(record => {\n  return !(presentRecords.some(presentRecord => presentRecord.id === record.id));\n});\n\nconsole.log(\"Record Length: \" + records.length);\nconsole.log(\"Present Records Length: \" + presentRecords.length);\n\nreturn [{data: records}];"
+      },
+      "name": "Remove Present Rows",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        740
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "return items[0].json.data;"
+      },
+      "name": "Get Only Data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        520
+      ]
+    }
+  ],
+  "settings": {
+    "timezone": "Asia/Calcutta",
+    "errorWorkflow": "8"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "id": "3",
+      "name": "Exim",
+      "createdAt": "2022-04-27T09:45:02.591Z",
+      "updatedAt": "2022-04-27T09:45:02.591Z"
+    },
+    {
+      "id": "4",
+      "name": "Export",
+      "createdAt": "2022-04-27T09:45:07.296Z",
+      "updatedAt": "2022-04-27T09:45:07.296Z"
+    }
+  ],
+  "updatedAt": "2022-04-27T14:19:03.654Z"
+}
