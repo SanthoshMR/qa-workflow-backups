@@ -1,0 +1,210 @@
+{
+  "active": false,
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Fields": {
+      "main": [
+        [
+          {
+            "node": "Run for each field",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Run for each field": {
+      "main": [
+        [
+          {
+            "node": "Format field record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format field record": {
+      "main": [
+        [
+          {
+            "node": "Insert field records",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Get Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert field records": {
+      "main": [
+        [
+          {
+            "node": "No more fields?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "No more fields?": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Run for each field",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2022-04-26T18:18:00.582Z",
+  "id": "114",
+  "name": "General: Replicate Directus Fields",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        -160,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "delete items[0].json.id\nitems[0].json.collection = $node[\"Globals\"].json.outputTable\nitems[0].json.translations = JSON.stringify(items[0].json.translations);\nreturn items;"
+      },
+      "name": "Format field record",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        480,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "batchSize": 1,
+        "options": {}
+      },
+      "name": "Run for each field",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 1,
+      "position": [
+        320,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=select * from directus_fields where collection='{{$json[\"inputTable\"]}}'",
+        "additionalFields": {}
+      },
+      "name": "Get Fields",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        160,
+        300
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "46",
+          "name": "SD Exim DB"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "table": "directus_fields",
+        "columns": "={{ Object.keys($json).join(',')}}",
+        "additionalFields": {}
+      },
+      "name": "Insert field records",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        640,
+        300
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "46",
+          "name": "SD Exim DB"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "inputTable",
+              "value": "export_data"
+            },
+            {
+              "name": "outputTable",
+              "value": "exim_data"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        0,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$node[\"Run for each field\"].context[\"noItemsLeft\"]}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "No more fields?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        800,
+        300
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2022-04-26T18:58:04.684Z"
+}
