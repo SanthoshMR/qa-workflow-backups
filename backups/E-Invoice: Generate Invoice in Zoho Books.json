@@ -329,7 +329,7 @@
             },
             {
               "name": "refresh_token",
-              "value": "1000.0c9981325d7cf95e16cec9fb64404d57.360b28e7e52996b4328d8165ac83dca1"
+              "value": "1000.ddf78a1b78700ae834aa72c9493cf300.728d6fc573f708e2819b7e4c58440c8b"
             }
           ]
         }
@@ -346,7 +346,7 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "POST",
-        "url": "https://invoice.zoho.com/api/v3/contacts?organization_id=776318483",
+        "url": "=https://invoice.zoho.com/api/v3/contacts?organization_id={{$node[\"Globals\"].json[\"organization_id\"]}}",
         "allowUnauthorizedCerts": true,
         "options": {
           "bodyContentType": "json"
@@ -402,7 +402,7 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "POST",
-        "url": "=https://invoice.zoho.com/api/v3/items?organization_id=776318483",
+        "url": "=https://invoice.zoho.com/api/v3/items?organization_id={{$node[\"Globals\"].json[\"organization_id\"]}}",
         "allowUnauthorizedCerts": true,
         "jsonParameters": true,
         "options": {
@@ -434,7 +434,7 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "POST",
-        "url": "https://invoice.zoho.com/api/v3/invoices?organization_id=776318483",
+        "url": "=https://invoice.zoho.com/api/v3/invoices?organization_id={{$node[\"Globals\"].json[\"organization_id\"]}}",
         "allowUnauthorizedCerts": true,
         "options": {
           "bodyContentType": "json"
@@ -473,7 +473,7 @@
       "typeVersion": 1,
       "position": [
         2160,
-        370
+        360
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -660,7 +660,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "=https://invoice.zoho.com/api/v3/contacts/?organization_id=776318483",
+        "url": "=https://invoice.zoho.com/api/v3/contacts/?organization_id={{$node[\"Globals\"].json[\"organization_id\"]}}",
         "allowUnauthorizedCerts": true,
         "options": {},
         "queryParametersUi": {
@@ -780,6 +780,12 @@
             {
               "name": "order_number_label",
               "value": "=Shakedeal Order No"
+            }
+          ],
+          "number": [
+            {
+              "name": "organization_id",
+              "value": "={{776318483}}"
             }
           ]
         },
@@ -925,5 +931,5 @@
       "updatedAt": "2022-04-25T07:09:37.693Z"
     }
   ],
-  "updatedAt": "2022-04-26T09:09:58.245Z"
+  "updatedAt": "2022-04-27T09:26:05.549Z"
 }
