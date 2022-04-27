@@ -18,7 +18,8 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "DROP TABLE Active_Shipments"
+        "query": "DROP TABLE Active_Shipments",
+        "additionalFields": {}
       },
       "name": "Drop Active Shipments Table",
       "type": "n8n-nodes-base.postgres",
@@ -37,7 +38,8 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "CREATE TABLE Active_Shipments(\n id TEXT PRIMARY KEY NOT NULL,\n order_status TEXT NOT NULL,\n customer_email TEXT NOT NULL,\n sales_contact_email TEXT,\n customer_name TEXT,\n is_active BOOL NOT NULL DEFAULT TRUE,\n created_date TIMESTAMP NOT NULL DEFAULT NOW(),\n processed_date TIMESTAMP,\n intransit_date TIMESTAMP,\n completed_date TIMESTAMP,\n cancelled_date TIMESTAMP,\n failed_date TIMESTAMP,\n rto_date TIMESTAMP\n);"
+        "query": "CREATE TABLE Active_Shipments(\n id TEXT PRIMARY KEY NOT NULL,\n order_status TEXT NOT NULL,\n customer_email TEXT NOT NULL,\n sales_contact_email TEXT,\n customer_name TEXT,\n is_active BOOL NOT NULL DEFAULT TRUE,\n created_date TIMESTAMP NOT NULL DEFAULT NOW(),\n processed_date TIMESTAMP,\n intransit_date TIMESTAMP,\n completed_date TIMESTAMP,\n cancelled_date TIMESTAMP,\n failed_date TIMESTAMP,\n rto_date TIMESTAMP\n);",
+        "additionalFields": {}
       },
       "name": "Create Active Shipments Table",
       "type": "n8n-nodes-base.postgres",
@@ -56,7 +58,8 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "SELECT table_name\nFROM information_schema.tables\nWHERE table_schema = 'public'\nORDER BY table_name;"
+        "query": "SELECT table_name\nFROM information_schema.tables\nWHERE table_schema = 'public'\nORDER BY table_name;",
+        "additionalFields": {}
       },
       "name": "Get All Tables",
       "type": "n8n-nodes-base.postgres",
@@ -75,7 +78,8 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "SELECT *\nFROM information_schema.columns where table_schema='public'"
+        "query": "SELECT *\nFROM information_schema.columns where table_schema='public'",
+        "additionalFields": {}
       },
       "name": "Get Schema",
       "type": "n8n-nodes-base.postgres",
@@ -94,7 +98,8 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "select * from directus_fields where collection='orders';"
+        "query": "select * from directus_fields where collection='export_data';",
+        "additionalFields": {}
       },
       "name": "Describe Table",
       "type": "n8n-nodes-base.postgres",
@@ -105,15 +110,16 @@
       ],
       "credentials": {
         "postgres": {
-          "id": "13",
-          "name": "Dms - QA"
+          "id": "46",
+          "name": "SD Exim DB"
         }
       }
     },
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "TRUNCATE TABLE public.active_shipments_qa;"
+        "query": "TRUNCATE TABLE public.active_shipments_qa;",
+        "additionalFields": {}
       },
       "name": "DELETE Active_Shipments Data",
       "type": "n8n-nodes-base.postgres",
@@ -132,7 +138,8 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "=UPDATE active_shipments_qa SET created_date= created_date - '7 days'::interval, processed_date=processed_date - '6 days'::interval, intransit_date=intransit_date - '5 days'::interval WHERE id IN ('OD214853');"
+        "query": "=UPDATE active_shipments_qa SET created_date= created_date - '7 days'::interval, processed_date=processed_date - '6 days'::interval, intransit_date=intransit_date - '5 days'::interval WHERE id IN ('OD214853');",
+        "additionalFields": {}
       },
       "name": "Update Created Date",
       "type": "n8n-nodes-base.postgres",
@@ -151,7 +158,8 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "=SELECT * from active_shipments order by id"
+        "query": "=SELECT * from active_shipments order by id",
+        "additionalFields": {}
       },
       "name": "Get Active Shipments",
       "type": "n8n-nodes-base.postgres",
@@ -170,7 +178,8 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "INSERT INTO public.active_shipments_qa (SELECT * FROM active_shipments WHERE id LIKE 'OD210%')"
+        "query": "INSERT INTO public.active_shipments_qa (SELECT * FROM active_shipments WHERE id LIKE 'OD210%')",
+        "additionalFields": {}
       },
       "name": "Insert into QA table",
       "type": "n8n-nodes-base.postgres",
@@ -190,5 +199,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2021-02-09T16:30:06.725Z"
+  "updatedAt": "2022-04-26T18:15:50.315Z"
 }
