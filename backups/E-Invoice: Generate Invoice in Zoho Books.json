@@ -279,7 +279,62 @@
       "main": [
         [
           {
-            "node": "HTTP Request",
+            "node": "Check for order in order_items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NoOp": {
+      "main": [
+        [
+          {
+            "node": "Check for order in order_items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for order in order_items": {
+      "main": [
+        [
+          {
+            "node": "Condition for order",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Condition for order": {
+      "main": [
+        [
+          {
+            "node": "Create the order in order_items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create the order in order_items": {
+      "main": [
+        [
+          {
+            "node": "Function for creating order product mapping",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function for creating order product mapping": {
+      "main": [
+        [
+          {
+            "node": "Create the order product mapping in order_items_sd_order_products",
             "type": "main",
             "index": 0
           }
@@ -780,6 +835,10 @@
             {
               "name": "order_number_label",
               "value": "=Shakedeal Order No"
+            },
+            {
+              "name": "dms_url",
+              "value": "=https://dmsqa.shakedeal.com"
             }
           ],
           "number": [
@@ -909,16 +968,99 @@
     },
     {
       "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://dmsqa.shakedeal.com/items/order_items?filter={\"order_id\":{\"_eq\":\"{{$node[\"wait for order data\"].json[\"body\"][\"order_number\"]}}\"}}",
         "options": {}
       },
-      "name": "HTTP Request",
+      "name": "Check for order in order_items",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
         3980,
         340
       ],
-      "disabled": true
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Check for order in order_items\"].json[\"data\"].length}}",
+              "operation": "equal"
+            }
+          ]
+        }
+      },
+      "name": "Condition for order",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        4240,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/order_items",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "order_id",
+              "value": "={{$node[\"wait for order data\"].json[\"body\"][\"order_number\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Create the order in order_items",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        4560,
+        80
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let existing_Products = $node[\"Check for items\"].json[\"data\"];\nlet created_products = $node[\"Create the products\"].json[\"data\"];\nlet all_products = [...existing_Products,...created_products];\nlet products = $node[\"wait for order data\"].json[\"body\"][\"line_items\"];\nlet orderId = $node[\"Create the order in order_items\"].json[\"data\"][\"id\"];\nlet order_product_obj = []\nall_products.forEach(function(product,index){\n  order_product_obj[index].order_items_id = orderId;\n  order_product_obj[index].sd_order_products_id = product.id;\n  let filter_product_obj = products.filter(obj=>obj.sku == product.product_code);\n  order_product_obj[index].req_quantity = filter_product_obj[0].quantity;\n  order_product_obj[index].product_total = filter_product_obj[0].rate;\n})\n\nitems[0].json.order_product_obj= order_product_obj\nitems[0].json.existing_Products= existing_Products;\nitems[0].json.created_products= created_products;\nitems[0].json.all_products= all_products;\nreturn items;"
+      },
+      "name": "Function for creating order product mapping",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        4780,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/order_items_sd_order_products",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "= {{$node[\"Function for creating order product mapping\"].json[\"order_product_obj\"]}}"
+      },
+      "name": "Create the order product mapping in order_items_sd_order_products",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        5020,
+        80
+      ]
     }
   ],
   "settings": {},
@@ -931,5 +1073,5 @@
       "updatedAt": "2022-04-25T07:09:37.693Z"
     }
   ],
-  "updatedAt": "2022-04-27T09:26:05.549Z"
+  "updatedAt": "2022-04-28T07:42:55.748Z"
 }
