@@ -25,28 +25,21 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        2026,
-        147
+        500,
+        300
       ],
       "webhookId": "7722aa14-9db9-4770-8d15-70f77a226579"
-    },
-    {
-      "parameters": {
-        "path": "get-status",
-        "options": {}
-      },
-      "name": "Webhook1",
-      "type": "n8n-nodes-base.webhook",
-      "typeVersion": 1,
-      "position": [
-        2226,
-        147
-      ],
-      "webhookId": "ee490547-fb75-4151-8a2e-2f0078374a0d"
     }
   ],
   "settings": {},
   "staticData": null,
-  "tags": [],
-  "updatedAt": "2022-04-18T12:07:56.613Z"
+  "tags": [
+    {
+      "id": "1",
+      "name": "E-invoice",
+      "createdAt": "2022-04-25T07:09:37.693Z",
+      "updatedAt": "2022-04-25T07:09:37.693Z"
+    }
+  ],
+  "updatedAt": "2022-04-29T08:55:16.313Z"
 }
