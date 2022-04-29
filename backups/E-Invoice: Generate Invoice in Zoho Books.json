@@ -49,7 +49,7 @@
       "main": [
         [
           {
-            "node": "create invoice",
+            "node": "Get the invoice id by invoice number",
             "type": "main",
             "index": 0
           }
@@ -184,7 +184,7 @@
       "main": [
         [
           {
-            "node": "Function to create invoice ",
+            "node": "HTTP Request",
             "type": "main",
             "index": 0
           }
@@ -279,7 +279,7 @@
       "main": [
         [
           {
-            "node": "Check for order in order_items",
+            "node": "Check for order in orders",
             "type": "main",
             "index": 0
           }
@@ -290,40 +290,7 @@
       "main": [
         [
           {
-            "node": "Check for order in order_items",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Check for order in order_items": {
-      "main": [
-        [
-          {
-            "node": "Condition for order",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Condition for order": {
-      "main": [
-        [
-          {
-            "node": "Create the order in order_items",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Create the order in order_items": {
-      "main": [
-        [
-          {
-            "node": "Function for creating order product mapping",
+            "node": "Check for order in orders",
             "type": "main",
             "index": 0
           }
@@ -335,6 +302,68 @@
         [
           {
             "node": "Create the order product mapping in order_items_sd_order_products",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for order in orders": {
+      "main": [
+        [
+          {
+            "node": "Function for creating order product mapping",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Function to create invoice ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the invoice id by invoice number": {
+      "main": [
+        [
+          {
+            "node": "IF2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF2": {
+      "main": [
+        [
+          {
+            "node": "create invoice",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update the invoice",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update the invoice": {
+      "main": [
+        [
+          {
+            "node": "Post E-Invoice ID and E-Invoice status to DMS",
             "type": "main",
             "index": 0
           }
@@ -527,8 +556,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2160,
-        360
+        2400,
+        240
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -558,7 +587,7 @@
       "typeVersion": 1,
       "position": [
         1920,
-        370
+        360
       ]
     },
     {
@@ -577,8 +606,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2400,
-        140
+        2500,
+        -40
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -596,8 +625,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        2220,
-        120
+        2200,
+        -20
       ],
       "disabled": true
     },
@@ -618,8 +647,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        2040,
-        120
+        1960,
+        -20
       ],
       "disabled": true
     },
@@ -665,15 +694,15 @@
           "parameter": [
             {
               "name": "e_invoice_id",
-              "value": "={{$node[\"create invoice\"].json[\"invoice\"][\"invoice_id\"]}}"
+              "value": "={{$node[\"Get the invoice id by invoice number\"].json[\"data\"].length== 0?$node[\"create invoice\"].json[\"invoice\"][\"invoice_id\"]:$node[\"Update the invoice\"].json[\"invoice\"][\"invoice_id\"]}}"
             },
             {
               "name": "e_invoice_status",
-              "value": "={{$node[\"create invoice\"].json[\"invoice\"][\"status\"]}}"
+              "value": "={{$node[\"Get the invoice id by invoice number\"].json[\"data\"].length== 0?$node[\"create invoice\"].json[\"invoice\"][\"status\"]:$node[\"Update the invoice\"].json[\"invoice\"][\"status\"]}}"
             },
             {
               "name": "invoice_number",
-              "value": "={{$node[\"create invoice\"].json[\"invoice\"][\"invoice_number\"]}}"
+              "value": "={{$node[\"Get the invoice id by invoice number\"].json[\"data\"].length== 0?$node[\"create invoice\"].json[\"invoice\"][\"invoice_number\"]:$node[\"Update the invoice\"].json[\"invoice\"][\"invoice_number\"]}}"
             }
           ]
         }
@@ -682,8 +711,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2380,
-        380
+        2600,
+        360
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -878,8 +907,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        2580,
-        380
+        2780,
+        360
       ]
     },
     {
@@ -892,8 +921,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2820,
-        380
+        2960,
+        360
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -910,8 +939,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        3060,
-        380
+        3140,
+        360
       ]
     },
     {
@@ -929,8 +958,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        3260,
-        380
+        3320,
+        360
       ]
     },
     {
@@ -968,11 +997,46 @@
     },
     {
       "parameters": {
+        "functionCode": "let existing_Products = $node[\"Check for items\"].json[\"data\"];\nlet created_products = $node[\"Function to create products\"].json[\"action\"]==\"post_products\"?$node[\"Create the products\"].json[\"data\"]:[];\nlet all_products = [...existing_Products,...created_products];\nlet products = $node[\"wait for order data\"].json[\"body\"][\"line_items\"];\nlet orderId = $node[\"Check for order in orders\"].json[\"data\"][0][\"id\"];\nlet order_product_obj = []\nall_products.forEach(function(product,index){\n  order_product_obj[index]={};\n  order_product_obj[index].orders_id = orderId;\n  order_product_obj[index].sd_order_products_id = product.id;\n  let filter_product_obj = products.filter(obj=>obj.sku == product.product_code);\n  order_product_obj[index].req_quantity = parseInt(filter_product_obj[0].quantity);\n  order_product_obj[index].product_total =parseInt(filter_product_obj[0].rate);\n})\n\nitems[0].json.order_product_obj= order_product_obj\nitems[0].json.existing_Products= existing_Products;\nitems[0].json.created_products= created_products;\nitems[0].json.all_products= all_products;\nreturn items;"
+      },
+      "name": "Function for creating order product mapping",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        4360,
+        340
+      ]
+    },
+    {
+      "parameters": {
         "authentication": "headerAuth",
-        "url": "=https://dmsqa.shakedeal.com/items/order_items?filter={\"order_id\":{\"_eq\":\"{{$node[\"wait for order data\"].json[\"body\"][\"order_number\"]}}\"}}",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/orders_sd_order_products",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Function for creating order product mapping\"].json[\"order_product_obj\"]}}"
+      },
+      "name": "Create the order product mapping in order_items_sd_order_products",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        4580,
+        340
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://dmsqa.shakedeal.com/items/orders?filter={\"id\":{\"_eq\":\"{{$node[\"wait for order data\"].json[\"body\"][\"order_number\"]}}\"}}",
         "options": {}
       },
-      "name": "Check for order in order_items",
+      "name": "Check for order in orders",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
@@ -988,44 +1052,37 @@
     },
     {
       "parameters": {
-        "conditions": {
-          "number": [
-            {
-              "value1": "={{$node[\"Check for order in order_items\"].json[\"data\"].length}}",
-              "operation": "equal"
-            }
-          ]
-        }
+        "authentication": "headerAuth",
+        "url": "=https://invoice.zoho.com/api/v3/invoices?organization_id=776318483&invoice_number={{$node[\"wait for order data\"].json[\"body\"][\"invoice_number\"]}}",
+        "options": {}
       },
-      "name": "Condition for order",
-      "type": "n8n-nodes-base.if",
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        4240,
-        340
-      ]
+        1800,
+        360
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "29",
+          "name": "zoho books creds"
+        }
+      },
+      "disabled": true
     },
     {
       "parameters": {
         "authentication": "headerAuth",
-        "requestMethod": "POST",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/order_items",
-        "options": {},
-        "bodyParametersUi": {
-          "parameter": [
-            {
-              "name": "order_id",
-              "value": "={{$node[\"wait for order data\"].json[\"body\"][\"order_number\"]}}"
-            }
-          ]
-        }
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/orders?filter={\"invoice_number\":{\"_eq\":\"{{$node[\"wait for order data\"].json[\"body\"][\"invoice_number\"]}}\"}}",
+        "options": {}
       },
-      "name": "Create the order in order_items",
+      "name": "Get the invoice id by invoice number",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        4560,
-        80
+        2080,
+        360
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -1036,31 +1093,74 @@
     },
     {
       "parameters": {
-        "functionCode": "let existing_Products = $node[\"Check for items\"].json[\"data\"];\nlet created_products = $node[\"Create the products\"].json[\"data\"];\nlet all_products = [...existing_Products,...created_products];\nlet products = $node[\"wait for order data\"].json[\"body\"][\"line_items\"];\nlet orderId = $node[\"Create the order in order_items\"].json[\"data\"][\"id\"];\nlet order_product_obj = []\nall_products.forEach(function(product,index){\n  order_product_obj[index].order_items_id = orderId;\n  order_product_obj[index].sd_order_products_id = product.id;\n  let filter_product_obj = products.filter(obj=>obj.sku == product.product_code);\n  order_product_obj[index].req_quantity = filter_product_obj[0].quantity;\n  order_product_obj[index].product_total = filter_product_obj[0].rate;\n})\n\nitems[0].json.order_product_obj= order_product_obj\nitems[0].json.existing_Products= existing_Products;\nitems[0].json.created_products= created_products;\nitems[0].json.all_products= all_products;\nreturn items;"
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Get the invoice id by invoice number\"].json[\"data\"].length}}",
+              "operation": "equal"
+            }
+          ]
+        }
       },
-      "name": "Function for creating order product mapping",
-      "type": "n8n-nodes-base.function",
+      "name": "IF2",
+      "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        4780,
-        80
+        2220,
+        360
       ]
     },
     {
       "parameters": {
-        "requestMethod": "POST",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/order_items_sd_order_products",
-        "jsonParameters": true,
-        "options": {},
-        "bodyParametersJson": "= {{$node[\"Function for creating order product mapping\"].json[\"order_product_obj\"]}}"
+        "authentication": "headerAuth",
+        "requestMethod": "PUT",
+        "url": "=https://invoice.zoho.com/api/v3/invoices/{{$node[\"Get the invoice id by invoice number\"].json[\"data\"][0][\"e_invoice_id\"]}}?organization_id={{$node[\"Globals\"].json[\"organization_id\"]}}",
+        "allowUnauthorizedCerts": true,
+        "options": {
+          "bodyContentType": "json"
+        },
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "customer_id",
+              "value": "={{$node[\"Function to create invoice \"].json[\"customer_id\"]}}"
+            },
+            {
+              "name": "line_items",
+              "value": "={{$node[\"Function to create invoice \"].json[\"line_items\"]}}"
+            },
+            {
+              "name": "invoice_number",
+              "value": "={{$node[\"Function to create invoice \"].json[\"invoice_number\"]}}"
+            },
+            {
+              "name": "reference_number",
+              "value": "={{$node[\"wait for order data\"].json[\"body\"][\"po_number\"]}}"
+            },
+            {
+              "name": "custom_fields",
+              "value": "={{$node[\"Function to create invoice \"].json[\"custom_fields\"]}}"
+            },
+            {
+              "name": "date",
+              "value": "={{$node[\"Function to create invoice \"].json[\"invoice_date\"]}}"
+            }
+          ]
+        }
       },
-      "name": "Create the order product mapping in order_items_sd_order_products",
+      "name": "Update the invoice",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        5020,
-        80
-      ]
+        2400,
+        500
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "29",
+          "name": "zoho books creds"
+        }
+      }
     }
   ],
   "settings": {},
@@ -1073,5 +1173,5 @@
       "updatedAt": "2022-04-25T07:09:37.693Z"
     }
   ],
-  "updatedAt": "2022-04-28T07:42:55.748Z"
+  "updatedAt": "2022-04-29T11:54:38.590Z"
 }
