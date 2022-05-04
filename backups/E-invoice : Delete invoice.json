@@ -16,7 +16,18 @@
       "main": [
         [
           {
-            "node": "HTTP Request",
+            "node": "Get the invoice_id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the invoice_id": {
+      "main": [
+        [
+          {
+            "node": "Delete the invoice",
             "type": "main",
             "index": 0
           }
@@ -40,6 +51,8 @@
     },
     {
       "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
         "path": "delete-invoice",
         "options": {}
       },
@@ -50,27 +63,13 @@
         480,
         320
       ],
-      "webhookId": "eb7efdb3-8754-4657-8120-33a28ee4fb22"
-    },
-    {
-      "parameters": {
-        "authentication": "headerAuth",
-        "options": {}
-      },
-      "name": "HTTP Request",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        940,
-        320
-      ],
+      "webhookId": "eb7efdb3-8754-4657-8120-33a28ee4fb22",
       "credentials": {
-        "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+        "httpBasicAuth": {
+          "id": "28",
+          "name": "SD_Invoice_Bill creds"
         }
-      },
-      "disabled": true
+      }
     },
     {
       "parameters": {
@@ -91,6 +90,46 @@
         700,
         320
       ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/orders?filter={\"invoice_number\":{\"_eq\":\"{{$node[\"Wait for invoice to delete\"].json[\"body\"][\"invoice_number\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Get the invoice_id",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        940,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get the invoice_id\"].json[\"data\"][0][\"e_invoice_id\"]}}",
+        "options": {}
+      },
+      "name": "Delete the invoice",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1160,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "29",
+          "name": "zoho books creds"
+        }
+      }
     }
   ],
   "settings": {},
@@ -103,5 +142,5 @@
       "updatedAt": "2022-04-25T07:09:37.693Z"
     }
   ],
-  "updatedAt": "2022-05-02T11:48:07.085Z"
+  "updatedAt": "2022-05-04T06:04:00.473Z"
 }
