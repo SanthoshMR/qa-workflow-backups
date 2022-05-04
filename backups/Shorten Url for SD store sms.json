@@ -1,6 +1,18 @@
 {
-  "active": false,
-  "connections": {},
+  "active": true,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
   "createdAt": "2022-04-29T10:15:31.852Z",
   "id": "118",
   "name": "Shorten Url for SD store sms",
@@ -17,9 +29,21 @@
     },
     {
       "parameters": {
+        "authentication": "basicAuth",
         "httpMethod": "POST",
         "path": "shorten_url",
-        "options": {}
+        "responseMode": "lastNode",
+        "responseData": "allEntries",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "sd_url",
+                "value": "6985632147895236"
+              }
+            ]
+          }
+        }
       },
       "name": "Webhook",
       "type": "n8n-nodes-base.webhook",
@@ -28,11 +52,30 @@
         460,
         300
       ],
-      "webhookId": "1225f895-ff99-4af9-be0d-50bf49031ca1"
+      "webhookId": "1225f895-ff99-4af9-be0d-50bf49031ca1",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=http://68.183.93.59/yourls-api.php?username=sdurls&password=V!Md9*e!2SwfM&action=shorturl&format=json&url={{$node[\"Webhook\"].json[\"body\"][\"long_url\"]}}",
+        "options": {}
+      },
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        660,
+        300
+      ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-04-29T10:16:03.715Z"
+  "updatedAt": "2022-05-04T13:20:23.968Z"
 }
