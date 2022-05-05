@@ -38,23 +38,40 @@
       "main": [
         [
           {
-            "node": "SplitInBatches",
+            "node": "Split the items",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "FunctionItem": {
-      "main": [
-        []
-      ]
-    },
-    "SplitInBatches": {
+    "Split the items": {
       "main": [
         [
           {
-            "node": "HTTP Request",
+            "node": "Get the invoice",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function for pushing irn": {
+      "main": [
+        [
+          {
+            "node": "Update the e_invoice_details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the invoice": {
+      "main": [
+        [
+          {
+            "node": "Function for pushing irn",
             "type": "main",
             "index": 0
           }
@@ -147,7 +164,7 @@
           "parameter": [
             {
               "name": "client_id",
-              "value": "1000.QYWLRL3RGVH2ZLK7C41R8UBPT4BQZJ"
+              "value": "1000.WBSVSVM7UXFERT32STIOQLG3CFWOKP"
             },
             {
               "name": "grant_type",
@@ -159,7 +176,7 @@
             },
             {
               "name": "client_secret",
-              "value": "be901703a49ba9941327f2c339bfc07b3f7ee1ac29"
+              "value": "71afde1862948a64f91e451cdfe7f8c78250d32f7e"
             },
             {
               "name": "refresh_token",
@@ -178,24 +195,76 @@
     },
     {
       "parameters": {
-        "functionCode": "let data=$node[\"Get the draft status invoices\"].json[\"data\"]\nlet returnItems =[]\n\ndata.forEach(function(obj,index){  \n    returnItems.push({\n    json: {\n       id:obj[\"id\"],\n       invoice_id:obj[\"e_invoice_id\"], \n    }\n  });\n  \n})\n\nreturn returnItems;"
+        "functionCode": " const data = []\n    for (const order of items[0].json.data) {\n        data.push({\n        \tjson: {\n    \t\t\te_invoice_id: order.e_invoice_id,\n                id:order.id\n      \t\t}\n    \t})\n    }\n    return data;"
       },
-      "name": "FunctionItem",
-      "type": "n8n-nodes-base.functionItem",
+      "name": "Split the items",
+      "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1120,
-        100
+        1180,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let data = $node[\"HTTP Request\"].json[\"invoice\"][\"einvoice_details\"];\n\n\n\nitems[0].json.data = data;\nreturn items;"
+      },
+      "name": "Function for pushing irn",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1640,
+        300
       ],
       "disabled": true
     },
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "=https://invoice.zoho.com/api/v3/invoices/{{$node[\"SplitInBatches\"].json[\"data\"][0][\"e_invoice_id\"]}}organization_id=776318483",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/orders/{{$node[\"Split the items\"].json[\"id\"]}}",
+        "allowUnauthorizedCerts": true,
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "irn_number",
+              "value": "={{$node[\"Get the invoice\"].json[\"invoice\"][\"einvoice_details\"][\"inv_ref_num\"]?$node[\"Get the invoice\"].json[\"invoice\"][\"einvoice_details\"][\"inv_ref_num\"]:null}}"
+            },
+            {
+              "name": "qr_link",
+              "value": "={{$node[\"Get the invoice\"].json[\"invoice\"][\"einvoice_details\"][\"inv_ref_num\"]?$node[\"Get the invoice\"].json[\"invoice\"][\"einvoice_details\"][\"qr_link\"]:null}}"
+            },
+            {
+              "name": "ack_number",
+              "value": "={{$node[\"Get the invoice\"].json[\"invoice\"][\"einvoice_details\"][\"inv_ref_num\"]?$node[\"Get the invoice\"].json[\"invoice\"][\"einvoice_details\"][\"ack_number\"]:null}}"
+            }
+          ]
+        }
+      },
+      "name": "Update the e_invoice_details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1880,
+        300
+      ],
+      "retryOnFail": true,
+      "waitBetweenTries": 3000,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://invoice.zoho.com/api/v3/invoices/{{$node[\"Split the items\"].json[\"e_invoice_id\"]}}?organization_id=685685414",
         "options": {}
       },
-      "name": "HTTP Request",
+      "name": "Get the invoice",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
@@ -209,19 +278,6 @@
         }
       },
       "continueOnFail": true
-    },
-    {
-      "parameters": {
-        "batchSize": "= {{$node[\"Get the draft status invoices\"].json[\"data\"].length}}",
-        "options": {}
-      },
-      "name": "SplitInBatches",
-      "type": "n8n-nodes-base.splitInBatches",
-      "typeVersion": 1,
-      "position": [
-        1180,
-        300
-      ]
     }
   ],
   "settings": {},
@@ -234,5 +290,5 @@
       "updatedAt": "2022-04-25T07:09:37.693Z"
     }
   ],
-  "updatedAt": "2022-05-04T12:50:27.089Z"
+  "updatedAt": "2022-05-05T10:31:23.924Z"
 }
