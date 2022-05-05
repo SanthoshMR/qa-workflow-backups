@@ -1,0 +1,124 @@
+{
+  "active": true,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "Get the short_url",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2022-05-05T09:06:37.911Z",
+  "id": "120",
+  "name": "Test url",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "test-url",
+        "responseMode": "lastNode",
+        "responseData": "allEntries",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        440,
+        280
+      ],
+      "webhookId": "1225f895-ff99-4af9-be0d-50bf49031ca1"
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "dms_url",
+              "value": "=https://dmsqa.shakedeal.com"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        600,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let long_url = $node[\"Webhook\"].json[\"body\"][\"long_url\"];\nlet encoded_url = long_url.replace(/&/g, '%26');\n\nitems[0].json.encoded_url = encoded_url\nreturn items;"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        740,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "url": "=http://68.183.93.59/yourls-api.php?username=sdurls&password=V!Md9*e!2SwfM&action=shorturl&format=json&url={{$node[\"Function\"].json[\"encoded_url\"]}}",
+        "allowUnauthorizedCerts": true,
+        "options": {
+          "ignoreResponseCode": true
+        }
+      },
+      "name": "Get the short_url",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        280
+      ],
+      "alwaysOutputData": true,
+      "continueOnFail": true
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2022-05-05T09:09:28.388Z"
+}
