@@ -1,5 +1,5 @@
 {
-  "active": true,
+  "active": false,
   "connections": {
     "Webhook": {
       "main": [
@@ -137,7 +137,8 @@
     {
       "parameters": {
         "table": "={{$node[\"Capture Values\"].json[\"tableName\"]}}",
-        "columns": "id, order_status, customer_email, sales_contact_email"
+        "columns": "id, order_status, customer_email, sales_contact_email",
+        "additionalFields": {}
       },
       "name": "Set Shipment to Active",
       "type": "n8n-nodes-base.postgres",
@@ -201,7 +202,8 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "=UPDATE public.{{$node[\"Capture Values\"].json[\"tableName\"]}} SET order_status = 'processed', processed_date=NOW() WHERE id='{{$node[\"Webhook\"].json[\"body\"][\"orderId\"]}}'"
+        "query": "=UPDATE public.{{$node[\"Capture Values\"].json[\"tableName\"]}} SET order_status = 'processed', processed_date=NOW() WHERE id='{{$node[\"Webhook\"].json[\"body\"][\"orderId\"]}}'",
+        "additionalFields": {}
       },
       "name": "Update order status to Processed",
       "type": "n8n-nodes-base.postgres",
@@ -281,7 +283,8 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "=UPDATE public.{{$node[\"Capture Values\"].json[\"tableName\"]}} SET order_status = 'intransit', intransit_date=NOW() WHERE id='{{$node[\"Webhook\"].json[\"body\"][\"orderId\"]}}'"
+        "query": "=UPDATE public.{{$node[\"Capture Values\"].json[\"tableName\"]}} SET order_status = 'intransit', intransit_date=NOW() WHERE id='{{$node[\"Webhook\"].json[\"body\"][\"orderId\"]}}'",
+        "additionalFields": {}
       },
       "name": "Update order status to InTransit",
       "type": "n8n-nodes-base.postgres",
@@ -300,7 +303,8 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "=UPDATE public.{{$node[\"Capture Values\"].json[\"tableName\"]}} SET order_status='completed',is_active=false, completed_date=NOW() WHERE id='{{$node[\"Webhook\"].json[\"body\"][\"orderId\"]}}'"
+        "query": "=UPDATE public.{{$node[\"Capture Values\"].json[\"tableName\"]}} SET order_status='completed',is_active=false, completed_date=NOW() WHERE id='{{$node[\"Webhook\"].json[\"body\"][\"orderId\"]}}'",
+        "additionalFields": {}
       },
       "name": "Update order status to completed",
       "type": "n8n-nodes-base.postgres",
@@ -319,7 +323,8 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "=UPDATE public.{{$node[\"Capture Values\"].json[\"tableName\"]}} SET order_status='cancelled',is_active=false,cancelled_date=NOW() WHERE id='{{$node[\"Webhook\"].json[\"body\"][\"orderId\"]}}'"
+        "query": "=UPDATE public.{{$node[\"Capture Values\"].json[\"tableName\"]}} SET order_status='cancelled',is_active=false,cancelled_date=NOW() WHERE id='{{$node[\"Webhook\"].json[\"body\"][\"orderId\"]}}'",
+        "additionalFields": {}
       },
       "name": "Update order status to cancelled",
       "type": "n8n-nodes-base.postgres",
@@ -338,7 +343,8 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "=UPDATE public.{{$node[\"Capture Values\"].json[\"tableName\"]}} SET order_status='failed',is_active=false,failed_date=NOW() WHERE id='{{$node[\"Webhook\"].json[\"body\"][\"orderId\"]}}'"
+        "query": "=UPDATE public.{{$node[\"Capture Values\"].json[\"tableName\"]}} SET order_status='failed',is_active=false,failed_date=NOW() WHERE id='{{$node[\"Webhook\"].json[\"body\"][\"orderId\"]}}'",
+        "additionalFields": {}
       },
       "name": "Update order status to failed",
       "type": "n8n-nodes-base.postgres",
@@ -357,7 +363,8 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "=UPDATE public.{{$node[\"Capture Values\"].json[\"tableName\"]}} SET order_status='rto', is_active=false, rto_date=NOW() WHERE id='{{$node[\"Webhook\"].json[\"body\"][\"orderId\"]}}'"
+        "query": "=UPDATE public.{{$node[\"Capture Values\"].json[\"tableName\"]}} SET order_status='rto', is_active=false, rto_date=NOW() WHERE id='{{$node[\"Webhook\"].json[\"body\"][\"orderId\"]}}'",
+        "additionalFields": {}
       },
       "name": "Update order status to RTO",
       "type": "n8n-nodes-base.postgres",
@@ -380,5 +387,5 @@
   },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2021-02-05T17:45:04.454Z"
+  "updatedAt": "2022-05-06T09:04:35.124Z"
 }
