@@ -195,7 +195,7 @@
     },
     {
       "parameters": {
-        "functionCode": " const data = []\n    for (const order of items[0].json.data) {\n        data.push({\n        \tjson: {\n    \t\t\te_invoice_id: order.e_invoice_id,\n                id:order.id\n      \t\t}\n    \t})\n    }\n    return data;"
+        "functionCode": " const data = []\n    for (const order of items[0].json.data) {\n        data.push({\n        \tjson: {\n    \t\t\te_invoice_id: order.e_invoice_id,\n                id:order.id,\n                dms_url : $node[\"Globals\"].json[\"dms_url\"]\n      \t\t}\n    \t})\n    }\n    return data;"
       },
       "name": "Split the items",
       "type": "n8n-nodes-base.function",
@@ -222,22 +222,26 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "PATCH",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/orders/{{$node[\"Split the items\"].json[\"id\"]}}",
+        "url": "={{$node[\"Split the items\"].json[\"dms_url\"]}}/items/orders/{{$node[\"Split the items\"].json[\"id\"]}}",
         "allowUnauthorizedCerts": true,
         "options": {},
         "bodyParametersUi": {
           "parameter": [
             {
               "name": "irn_number",
-              "value": "={{$node[\"Get the invoice\"].json[\"invoice\"][\"einvoice_details\"][\"inv_ref_num\"]?$node[\"Get the invoice\"].json[\"invoice\"][\"einvoice_details\"][\"inv_ref_num\"]:null}}"
+              "value": "={{$node[\"Get the invoice\"].json[\"invoice\"][\"einvoice_details\"][\"inv_ref_num\"]?$node[\"Get the invoice\"].json[\"invoice\"][\"einvoice_details\"][\"inv_ref_num\"]:\"\"}}"
             },
             {
               "name": "qr_link",
-              "value": "={{$node[\"Get the invoice\"].json[\"invoice\"][\"einvoice_details\"][\"inv_ref_num\"]?$node[\"Get the invoice\"].json[\"invoice\"][\"einvoice_details\"][\"qr_link\"]:null}}"
+              "value": "={{$node[\"Get the invoice\"].json[\"invoice\"][\"einvoice_details\"][\"inv_ref_num\"]?$node[\"Get the invoice\"].json[\"invoice\"][\"einvoice_details\"][\"qr_link\"]:\"\"}}"
             },
             {
               "name": "ack_number",
-              "value": "={{$node[\"Get the invoice\"].json[\"invoice\"][\"einvoice_details\"][\"inv_ref_num\"]?$node[\"Get the invoice\"].json[\"invoice\"][\"einvoice_details\"][\"ack_number\"]:null}}"
+              "value": "={{$node[\"Get the invoice\"].json[\"invoice\"][\"einvoice_details\"][\"inv_ref_num\"]?$node[\"Get the invoice\"].json[\"invoice\"][\"einvoice_details\"][\"ack_number\"]:\"\"}}"
+            },
+            {
+              "name": "e_invoice_status",
+              "value": "={{$node[\"Get the invoice\"].json[\"invoice\"][\"einvoice_details\"][\"inv_ref_num\"]?\"generated\":\"draft\"}}"
             }
           ]
         }
@@ -290,5 +294,5 @@
       "updatedAt": "2022-04-25T07:09:37.693Z"
     }
   ],
-  "updatedAt": "2022-05-05T10:31:23.924Z"
+  "updatedAt": "2022-05-06T06:30:38.953Z"
 }
