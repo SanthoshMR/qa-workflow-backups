@@ -156,17 +156,6 @@
         ]
       ]
     },
-    "Create Records": {
-      "main": [
-        [
-          {
-            "node": "Update Metadata",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Get IDs as String": {
       "main": [
         [
@@ -200,7 +189,7 @@
       "main": [
         [
           {
-            "node": "Create Records",
+            "node": "100AtATime",
             "type": "main",
             "index": 0
           }
@@ -278,6 +267,57 @@
         [
           {
             "node": "HasMoreRecords?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "100AtATime": {
+      "main": [
+        [
+          {
+            "node": "Create Records",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NoMoreRecords?": {
+      "main": [
+        [
+          {
+            "node": "Update Metadata",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "100AtATime",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Records": {
+      "main": [
+        [
+          {
+            "node": "Update Inserted Records",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Inserted Records": {
+      "main": [
+        [
+          {
+            "node": "NoMoreRecords?",
             "type": "main",
             "index": 0
           }
@@ -433,7 +473,7 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1860,
+        2360,
         720
       ]
     },
@@ -446,7 +486,7 @@
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1,
       "position": [
-        1700,
+        2200,
         720
       ],
       "webhookId": "4116dc68-698e-4409-b01b-039d3f692955"
@@ -537,13 +577,13 @@
         "url": "=https://exim.shakedeal.com/items/{{$node[\"Globals\"].json[\"TABLE_NAME\"]}}",
         "jsonParameters": true,
         "options": {},
-        "bodyParametersJson": "={{$node[\"Remove Present Rows\"].json[\"data\"]}}"
+        "bodyParametersJson": "={{$json.data}}"
       },
       "name": "Create Records",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1060,
+        1220,
         720
       ],
       "credentials": {
@@ -580,13 +620,13 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        1540,
+        2040,
         720
       ]
     },
     {
       "parameters": {
-        "functionCode": "let records = $node[\"Get Records\"].json.data;\nlet presentRecords = $node[\"Check If Present\"].json.data;\n\nrecords = records.filter(record => {\n  return !(presentRecords.some(presentRecord => presentRecord.id === record.id));\n});\n\nconsole.log(\"Record Length: \" + records.length);\nconsole.log(\"Present Records Length: \" + presentRecords.length);\n\nreturn [{data: records}];"
+        "functionCode": "let records = $node[\"Get Records\"].json.data;\nlet presentRecords = $node[\"Check If Present\"].json.data;\n\nrecords = records.filter(record => {\n  return !(presentRecords.some(presentRecord => presentRecord.id === record.id));\n});\n\nvar perChunk = 100; // items per chunk\n\nvar results = [];\nwhile (records.length) {\n  results.push({ data: records.splice(0, perChunk) });\n}\n\nreturn results;"
       },
       "name": "Remove Present Rows",
       "type": "n8n-nodes-base.function",
@@ -670,13 +710,13 @@
     },
     {
       "parameters": {
-        "functionCode": "$node[\"Define Query\"].json[\"insertedRecords\"] += $node[\"Remove Present Rows\"].json.data.length;\r\nlet queryData = $node[\"Define Query\"].json;\r\nlet nextQueryData = $node[\"Get Records\"].json;\r\nlet metadata = { \"ID\": $node[\"SplitInBatches\"].json[\"ID\"], \"Total Records\": $node[\"Capture Metadata\"].json[\"TotalRecords\"], \"Inserted Records\": queryData.insertedRecords, \"Last Draw\": $node[\"Get Results\"].json.draw, \"Next Start\": nextQueryData.nextStart, \"Length\": queryData.length };\r\nreturn [metadata];"
+        "functionCode": "let queryData = $node[\"Define Query\"].json;\r\nlet nextQueryData = $node[\"Get Records\"].json;\r\nlet metadata = { \"ID\": $node[\"SplitInBatches\"].json[\"ID\"], \"Total Records\": $node[\"Capture Metadata\"].json[\"TotalRecords\"], \"Inserted Records\": queryData.insertedRecords, \"Last Draw\": $node[\"Get Results\"].json.draw, \"Next Start\": nextQueryData.nextStart, \"Length\": queryData.length };\r\nreturn [metadata];"
       },
       "name": "Update Metadata",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1220,
+        1720,
         720
       ]
     },
@@ -706,7 +746,7 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 1,
       "position": [
-        1380,
+        1880,
         720
       ],
       "credentials": {
@@ -715,6 +755,52 @@
           "name": "Google account"
         }
       }
+    },
+    {
+      "parameters": {
+        "batchSize": 1,
+        "options": {
+          "reset": "={{$node[\"100AtATime\"].context[\"noItemsLeft\"]}}"
+        }
+      },
+      "name": "100AtATime",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 1,
+      "position": [
+        1060,
+        720
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$node[\"100AtATime\"].context[\"noItemsLeft\"]}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "NoMoreRecords?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1540,
+        720
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "$node[\"Define Query\"].json[\"insertedRecords\"] += $node[\"Remove Present Rows\"].json.data.length;\r\nreturn items;"
+      },
+      "name": "Update Inserted Records",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1380,
+        720
+      ]
     }
   ],
   "settings": {
@@ -738,5 +824,5 @@
       "updatedAt": "2022-04-27T09:45:07.296Z"
     }
   ],
-  "updatedAt": "2022-05-07T14:25:26.054Z"
+  "updatedAt": "2022-05-08T13:15:15.623Z"
 }
