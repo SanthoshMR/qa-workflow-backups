@@ -482,7 +482,7 @@
             },
             {
               "name": "refresh_token",
-              "value": "={{$node[\"wait for order data\"].json[\"body\"][\"env\"] == \"prod\"?\"1000.a3fc30e5dceb8924c8a6b27b2804dae2.95d0d5bee13b6c991f1bdaa4122c6534\":\"1000.76ffb458aefda318fdd0e629be1a46f3.ce89c77623bb445aef8ab669012e2169\"}}"
+              "value": "={{$node[\"wait for order data\"].json[\"body\"][\"env\"] == \"prod\"?\"1000.5ff4be7b6c923c0d40d2b96565226359.bd12d19eea668016c7e40b698bb6a0a0\":\"1000.76ffb458aefda318fdd0e629be1a46f3.ce89c77623bb445aef8ab669012e2169\"}}"
             }
           ]
         }
@@ -499,7 +499,7 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "POST",
-        "url": "=https://invoice.zoho.com/api/v3/contacts?organization_id={{$node[\"Globals\"].json[\"organization_id\"]}}",
+        "url": "=https://books.zoho.com/api/v3/contacts?organization_id={{$node[\"Globals\"].json[\"organization_id\"]}}",
         "allowUnauthorizedCerts": true,
         "options": {
           "bodyContentType": "json"
@@ -555,11 +555,11 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "POST",
-        "url": "=https://invoice.zoho.com/api/v3/items?organization_id=776318483",
+        "url": "=https://books.zoho.com/api/v3/items?organization_id=685685414",
         "allowUnauthorizedCerts": true,
         "jsonParameters": true,
         "options": {
-          "batchInterval": 0,
+          "batchInterval": 2000,
           "batchSize": 1,
           "bodyContentType": "json"
         },
@@ -572,9 +572,9 @@
         1520,
         200
       ],
-      "retryOnFail": false,
-      "maxTries": 3,
-      "waitBetweenTries": 2000,
+      "retryOnFail": true,
+      "maxTries": 5,
+      "waitBetweenTries": 1000,
       "credentials": {
         "httpHeaderAuth": {
           "id": "29",
@@ -587,7 +587,7 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "POST",
-        "url": "=https://invoice.zoho.com/api/v3/invoices?organization_id={{$node[\"Globals\"].json[\"organization_id\"]}}",
+        "url": "=https://books.zoho.com/api/v3/invoices?organization_id={{$node[\"Globals\"].json[\"organization_id\"]}}",
         "allowUnauthorizedCerts": true,
         "options": {
           "bodyContentType": "json"
@@ -813,7 +813,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "=https://invoice.zoho.com/api/v3/contacts/?organization_id={{$node[\"Globals\"].json[\"organization_id\"]}}",
+        "url": "=https://books.zoho.com/api/v3/contacts/?organization_id={{$node[\"Globals\"].json[\"organization_id\"]}}",
         "allowUnauthorizedCerts": true,
         "options": {},
         "queryParametersUi": {
@@ -842,7 +842,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "=https://invoice.zoho.com/api/v3/items?organization_id=776318483",
+        "url": "=https://books.zoho.com/api/v3/items?organization_id=685685414",
         "allowUnauthorizedCerts": true,
         "options": {},
         "headerParametersUi": {
@@ -893,7 +893,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let list_items = $node[\"wait for order data\"].json[\"body\"][\"line_items\"]\n\nlet returnItems = []\nlet resultFilter = \n   list_items.filter(list=>\n      items.some(\n      data=> data.json[\"page_context\"][\"search_criteria\"][0][\"search_text\"] === list.name\n    )\n  );\nresultFilter .forEach(function(obj,index){  \n    returnItems.push({\n    json: [{\n       name:obj[\"name\"],\n       item_type :obj[\"item_type\"],\n       sku:obj[\"sku\"],\n       //hsn_or_sac:obj[\"hsn_or_sac\"]\n    }]\n  }); \n})\n\nreturn returnItems ;\n\n"
+        "functionCode": "let list_items = $node[\"wait for order data\"].json[\"body\"][\"line_items\"]\n\nlet returnItems = []\nlet resultFilter = \n   list_items.filter(list=>\n      items.some(\n      data=> data.json[\"page_context\"][\"search_criteria\"][0][\"search_text\"] === list.name\n    )\n  );\n\n\nresultFilter .forEach(function(obj,index){ \n    let taxes = obj.item_tax_preferences;\n    let igst_tax =  taxes.filter(tax=>tax.tax_name == \"IGST\");\n    let gst_tax = taxes.filter(tax=>tax.tax_name == \"GST\");\n    returnItems.push({\n    json: [{\n       name:obj[\"name\"],\n       item_type :obj[\"item_type\"],\n       sku:obj[\"sku\"],\n       hsn_or_sac:obj[\"hsn_or_sac\"],\n       available_stock:obj.stock,\n       \"item_tax_preferences\": [\n          {\n              \"tax_specification\": \"inter\",\n              \"tax_type\": 0,\n              \"tax_name\": igst_tax[0].tax_name+parseInt(igst_tax[0].tax_percentage),\n              \"tax_percentage\": parseInt(igst_tax[0].tax_percentage),\n              \"tax_id\": \"1763031000000067204\"\n          },\n          {\n              \"tax_specification\": \"intra\",\n              \"tax_type\": 2,\n              \"tax_name\": gst_tax[0].tax_name+parseInt(gst_tax[0].tax_percentage),\n              \"tax_percentage\": parseInt(gst_tax[0].tax_percentage),\n              \"tax_id\": \"1763031000000067210\"\n          }\n        ],\n    }]\n  }); \n})\n\nreturn returnItems ;\n\n"
       },
       "name": "Function for create item",
       "type": "n8n-nodes-base.function",
@@ -1162,7 +1162,7 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "PUT",
-        "url": "=https://invoice.zoho.com/api/v3/invoices/{{$node[\"Get the invoice id by invoice number\"].json[\"data\"][0][\"e_invoice_id\"]}}?organization_id={{$node[\"Globals\"].json[\"organization_id\"]}}",
+        "url": "=https://books.zoho.com/api/v3/invoices/{{$node[\"Get the invoice id by invoice number\"].json[\"data\"][0][\"e_invoice_id\"]}}?organization_id={{$node[\"Globals\"].json[\"organization_id\"]}}",
         "allowUnauthorizedCerts": true,
         "options": {
           "bodyContentType": "json"
@@ -1345,5 +1345,5 @@
       "updatedAt": "2022-04-25T07:09:37.693Z"
     }
   ],
-  "updatedAt": "2022-05-06T12:29:41.085Z"
+  "updatedAt": "2022-05-09T12:54:58.417Z"
 }
