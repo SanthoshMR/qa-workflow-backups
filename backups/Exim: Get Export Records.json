@@ -45,17 +45,6 @@
         ]
       ]
     },
-    "SplitInBatches": {
-      "main": [
-        [
-          {
-            "node": "Define Query",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Define Query": {
       "main": [
         [
@@ -149,7 +138,7 @@
         [],
         [
           {
-            "node": "SplitInBatches",
+            "node": "1SearchQueryAtATime",
             "type": "main",
             "index": 0
           }
@@ -211,7 +200,7 @@
       "main": [
         [
           {
-            "node": "SplitInBatches",
+            "node": "1SearchQueryAtATime",
             "type": "main",
             "index": 0
           }
@@ -323,6 +312,17 @@
           }
         ]
       ]
+    },
+    "1SearchQueryAtATime": {
+      "main": [
+        [
+          {
+            "node": "Define Query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2022-04-26T20:00:17.144Z",
@@ -335,7 +335,7 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        720,
+        740,
         320
       ]
     },
@@ -355,8 +355,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        900,
-        520
+        2020,
+        320
       ]
     },
     {
@@ -430,27 +430,14 @@
     },
     {
       "parameters": {
-        "functionCode": "let result = items[0].json;\nlet returnLength = $node[\"Define Query\"].json[\"length\"];\nlet start = $node[\"Define Query\"].json[\"start\"];\nlet currentResultLengthMax = start + returnLength;\nresult.data.forEach(item => {\n  item.id = item._id;\n  delete item._id;\n});\nlet returnItems = { moreItems: false, data: result.data };\nif (result.recordsTotal > currentResultLengthMax) {\n  returnItems.moreItems = true;\n  returnItems.nextStart = currentResultLengthMax;\n  returnItems.nextDraw = result.draw + 1;\n}\n\nreturn [returnItems];"
+        "functionCode": "let result = items[0].json;\nlet returnLength = $node[\"Define Query\"].json[\"length\"];\nlet start = $node[\"Define Query\"].json[\"start\"];\nlet currentResultLengthMax = start + returnLength;\nresult.data.forEach(item => {\n  item.id = item._id;\n  delete item._id;\n});\nlet returnItems = {\n  moreItems: result.recordsTotal > currentResultLengthMax,\n  data: result.data,\n  nextStart: currentResultLengthMax,\n  nextDraw: result.draw + 1\n};\n\nreturn [returnItems];"
       },
       "name": "Get Records",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1220,
+        900,
         520
-      ]
-    },
-    {
-      "parameters": {
-        "batchSize": 1,
-        "options": {}
-      },
-      "name": "SplitInBatches",
-      "type": "n8n-nodes-base.splitInBatches",
-      "typeVersion": 1,
-      "position": [
-        1700,
-        320
       ]
     },
     {
@@ -461,8 +448,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        720,
-        520
+        1860,
+        320
       ]
     },
     {
@@ -473,21 +460,21 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        2360,
-        720
+        1700,
+        740
       ]
     },
     {
       "parameters": {
-        "amount": "=20",
+        "amount": "=5",
         "unit": "seconds"
       },
       "name": "Wait",
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1,
       "position": [
-        2200,
-        720
+        1540,
+        740
       ],
       "webhookId": "4116dc68-698e-4409-b01b-039d3f692955"
     },
@@ -527,7 +514,7 @@
       "type": "n8n-nodes-base.itemLists",
       "typeVersion": 1,
       "position": [
-        1540,
+        1220,
         520
       ]
     },
@@ -541,8 +528,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        720,
-        720
+        1540,
+        520
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -556,7 +543,7 @@
         "conditions": {
           "boolean": [
             {
-              "value1": "={{$node[\"SplitInBatches\"].context[\"noItemsLeft\"]}}",
+              "value1": "={{$node[\"1SearchQueryAtATime\"].context[\"noItemsLeft\"]}}",
               "value2": true
             }
           ]
@@ -566,8 +553,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        1480,
-        940
+        1860,
+        900
       ]
     },
     {
@@ -583,8 +570,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1220,
-        720
+        2020,
+        520
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -601,7 +588,7 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1700,
+        1380,
         520
       ]
     },
@@ -620,8 +607,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        2040,
-        720
+        1380,
+        740
       ]
     },
     {
@@ -632,8 +619,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        900,
-        720
+        1700,
+        520
       ]
     },
     {
@@ -644,7 +631,7 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1380,
+        1060,
         520
       ]
     },
@@ -674,8 +661,8 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 1,
       "position": [
-        1320,
-        940
+        1700,
+        900
       ],
       "credentials": {
         "googleApi": {
@@ -704,32 +691,32 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        1060,
+        740,
         520
       ]
     },
     {
       "parameters": {
-        "functionCode": "let queryData = $node[\"Define Query\"].json;\r\nlet nextQueryData = $node[\"Get Records\"].json;\r\nlet metadata = { \"ID\": $node[\"SplitInBatches\"].json[\"ID\"], \"Total Records\": $node[\"Capture Metadata\"].json[\"TotalRecords\"], \"Inserted Records\": queryData.insertedRecords, \"Last Draw\": $node[\"Get Results\"].json.draw, \"Next Start\": nextQueryData.nextStart, \"Length\": queryData.length };\r\nreturn [metadata];"
+        "functionCode": "let queryData = $node[\"Define Query\"].json;\r\nlet nextQueryData = $node[\"Get Records\"].json;\r\nlet metadata = { \"ID\": $node[\"1SearchQueryAtATime\"].json[\"ID\"], \"Total Records\": $node[\"Capture Metadata\"].json[\"TotalRecords\"], \"Inserted Records\": queryData.insertedRecords, \"Last Draw\": $node[\"Get Results\"].json.draw, \"Next Start\": nextQueryData.nextStart, \"Length\": queryData.length };\r\nreturn [metadata];"
       },
       "name": "Update Metadata",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1720,
-        720
+        1060,
+        740
       ]
     },
     {
       "parameters": {
-        "functionCode": "let processedMetadata = { \"ID\": $node[\"SplitInBatches\"].json[\"ID\"], \"Processed\": \"Yes\", \r\n\"Total Records\": $node[\"Capture Metadata\"].json[\"TotalRecords\"], \"Inserted Records\": $node[\"Define Query\"].json[\"insertedRecords\"] };\r\n$node[\"Capture Metadata\"].json[\"TotalRecords\"] = 0;\r\n$node[\"Capture Metadata\"].json[\"InsertedRecords\"] = 0;\r\nreturn [processedMetadata];"
+        "functionCode": "let processedMetadata = { \"ID\": $node[\"1SearchQueryAtATime\"].json[\"ID\"], \"Processed\": \"Yes\", \r\n\"Total Records\": $node[\"Capture Metadata\"].json[\"TotalRecords\"], \"Inserted Records\": $node[\"Define Query\"].json[\"insertedRecords\"] };\r\n$node[\"Capture Metadata\"].json[\"TotalRecords\"] = 0;\r\n$node[\"Capture Metadata\"].json[\"InsertedRecords\"] = 0;\r\nreturn [processedMetadata];"
       },
       "name": "Update Processed Metadata",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1160,
-        940
+        1540,
+        900
       ]
     },
     {
@@ -746,8 +733,8 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 1,
       "position": [
-        1880,
-        720
+        1220,
+        740
       ],
       "credentials": {
         "googleApi": {
@@ -767,8 +754,8 @@
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 1,
       "position": [
-        1060,
-        720
+        1860,
+        520
       ]
     },
     {
@@ -786,8 +773,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        1540,
-        720
+        900,
+        740
       ]
     },
     {
@@ -798,8 +785,21 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1380,
-        720
+        740,
+        740
+      ]
+    },
+    {
+      "parameters": {
+        "batchSize": 1,
+        "options": {}
+      },
+      "name": "1SearchQueryAtATime",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 1,
+      "position": [
+        1700,
+        320
       ]
     }
   ],
@@ -824,5 +824,5 @@
       "updatedAt": "2022-04-27T09:45:07.296Z"
     }
   ],
-  "updatedAt": "2022-05-08T13:15:15.623Z"
+  "updatedAt": "2022-05-09T07:12:07.749Z"
 }
