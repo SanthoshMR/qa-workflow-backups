@@ -533,6 +533,10 @@
             {
               "name": "mobile",
               "value": "={{$node[\"wait for order data\"].json[\"body\"][\"contact_details\"][\"mobile\"]}}"
+            },
+            {
+              "name": "place_of_contact",
+              "value": "={{$node[\"wait for order data\"].json[\"body\"][\"contact_details\"][\"place_of_contact\"]}}"
             }
           ]
         }
@@ -617,6 +621,18 @@
             {
               "name": "date",
               "value": "={{$node[\"Function to create invoice \"].json[\"invoice_date\"]}}"
+            },
+            {
+              "name": "payment_terms",
+              "value": "={{$node[\"Function to create invoice \"].json[\"payment_terms\"]}}"
+            },
+            {
+              "name": "discount",
+              "value": "={{$node[\"Function to create invoice \"].json[\"discount\"]}}"
+            },
+            {
+              "name": "shipping_charge",
+              "value": "={{$node[\"Function to create invoice \"].json[\"shipping_charge\"]}}"
             }
           ]
         }
@@ -649,7 +665,7 @@
     },
     {
       "parameters": {
-        "functionCode": "\nlet inv_num=$node[\"wait for order data\"].json[\"body\"][\"invoice_number\"]\nlet pro_items=$node[\"wait for order data\"].json[\"body\"][\"line_items\"]\nconst id= [];\nconst custom_fields=[];\nlet contact_id=\"\"\ncustom_fields.push({\n    label:$node[\"Globals\"].json[\"order_number_label\"],\n    value:$node[\"wait for order data\"].json[\"body\"][\"order_number\"]\n})\nfor (const [index,item] of items.entries()) {\n  if(item.json.hasOwnProperty(\"code\")){\n     let list = pro_items.find(data=>data.name === (item.json.hasOwnProperty(\"item\")?item.json[\"item\"][\"name\"]:item.json[\"items\"][0][\"item_name\"]))\n     id.push(\n     {\n         item_id: item.json.hasOwnProperty(\"item\")?item.json[\"item\"][\"item_id\"]:item.json[\"items\"][0][\"item_id\"],\n         quantity:list[\"quantity\"],\n         rate:list[\"rate\"],\n         //tax_id: \"1763031000000067204\",\n         //tax_name: \"IGST18\",\n         //tax_type: \"tax\",\n        // tax_percentage: 18,\n     }); \n  }   \n}\nif($node[\"Check for Customer\"].json[\"contacts\"].length!==0){\n    contact_id=$node[\"Check for Customer\"].json[\"contacts\"][0][\"contact_id\"]\n}else{\n    contact_id=$node[\"create contact\"].json[\"contact\"][\"contact_id\"]\n}\nlet invoice_obj={\n \"customer_id\":contact_id,\n  \"line_items\":id,\n \"invoice_number\":inv_num,\n \"invoice_date\":$node[\"wait for order data\"].json[\"body\"][\"invoice_date\"],\n \"custom_fields\":custom_fields\n}  \nlet returnItems = []\nreturnItems.push({\njson:invoice_obj\n})\nreturn returnItems ;\n"
+        "functionCode": "\nlet inv_num=$node[\"wait for order data\"].json[\"body\"][\"invoice_number\"]\nlet pro_items=$node[\"wait for order data\"].json[\"body\"][\"line_items\"];\nlet payment_terms = $node[\"wait for order data\"].json[\"body\"][\"payment_terms\"]?$node[\"wait for order data\"].json[\"body\"][\"payment_terms\"]:\"Advance\";\nconst id= [];\nconst custom_fields=[];\nlet contact_id=\"\"\ncustom_fields.push({\n    label:$node[\"Globals\"].json[\"order_number_label\"],\n    value:$node[\"wait for order data\"].json[\"body\"][\"order_number\"]\n})\nfor (const [index,item] of items.entries()) {\n  if(item.json.hasOwnProperty(\"code\")){\n     let list = pro_items.find(data=>data.name === (item.json.hasOwnProperty(\"item\")?item.json[\"item\"][\"name\"]:item.json[\"items\"][0][\"item_name\"]))\n     id.push(\n     {\n         item_id: item.json.hasOwnProperty(\"item\")?item.json[\"item\"][\"item_id\"]:item.json[\"items\"][0][\"item_id\"],\n         quantity:list[\"quantity\"],\n         rate:list[\"rate\"],\n         //tax_id: \"1763031000000067204\",\n         //tax_name: \"IGST18\",\n         //tax_type: \"tax\",\n        // tax_percentage: 18,\n     }); \n  }   \n}\nif($node[\"Check for Customer\"].json[\"contacts\"].length!==0){\n    contact_id=$node[\"Check for Customer\"].json[\"contacts\"][0][\"contact_id\"]\n}else{\n    contact_id=$node[\"create contact\"].json[\"contact\"][\"contact_id\"]\n}\nlet invoice_obj={\n \"customer_id\":contact_id,\n  \"line_items\":id,\n \"invoice_number\":inv_num,\n \"invoice_date\":$node[\"wait for order data\"].json[\"body\"][\"invoice_date\"],\n \"custom_fields\":custom_fields,\n \"payment_terms\":$node[\"Globals\"].json[payment_terms],\n \"discount\": $node[\"wait for order data\"].json[\"body\"][\"discount\"],\n \"shipping_charge\":$node[\"wait for order data\"].json[\"body\"][\"shipping_charge\"]\n}  \nlet returnItems = []\nreturnItems.push({\njson:invoice_obj\n})\nreturn returnItems ;\n"
       },
       "name": "Function to create invoice ",
       "type": "n8n-nodes-base.function",
@@ -893,7 +909,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let list_items = $node[\"wait for order data\"].json[\"body\"][\"line_items\"]\n\nlet returnItems = []\nlet resultFilter = \n   list_items.filter(list=>\n      items.some(\n      data=> data.json[\"page_context\"][\"search_criteria\"][0][\"search_text\"] === list.name\n    )\n  );\n\n\nresultFilter .forEach(function(obj,index){ \n    let taxes = obj.item_tax_preferences;\n    let igst_tax =  taxes.filter(tax=>tax.tax_name == \"IGST\");\n    let gst_tax = taxes.filter(tax=>tax.tax_name == \"GST\");\n    returnItems.push({\n    json: [{\n       name:obj[\"name\"],\n       item_type :obj[\"item_type\"],\n       sku:obj[\"sku\"],\n       hsn_or_sac:obj[\"hsn_or_sac\"],\n       available_stock:obj.stock,\n       \"item_tax_preferences\": [\n          {\n              \"tax_specification\": \"inter\",\n              \"tax_type\": 0,\n              \"tax_name\": igst_tax[0].tax_name+parseInt(igst_tax[0].tax_percentage),\n              \"tax_percentage\": parseInt(igst_tax[0].tax_percentage),\n              \"tax_id\": \"1763031000000067204\"\n          },\n          {\n              \"tax_specification\": \"intra\",\n              \"tax_type\": 2,\n              \"tax_name\": gst_tax[0].tax_name+parseInt(gst_tax[0].tax_percentage),\n              \"tax_percentage\": parseInt(gst_tax[0].tax_percentage),\n              \"tax_id\": \"1763031000000067210\"\n          }\n        ],\n    }]\n  }); \n})\n\nreturn returnItems ;\n\n"
+        "functionCode": "let list_items = $node[\"wait for order data\"].json[\"body\"][\"line_items\"]\n\nlet returnItems = []\nlet resultFilter = \n   list_items.filter(list=>\n      items.some(\n      data=> data.json[\"page_context\"][\"search_criteria\"][0][\"search_text\"] === list.name\n    )\n  );\n\n\nresultFilter .forEach(function(obj,index){ \n    let taxes = obj.item_tax_preferences;\n    let igst_tax =  taxes.filter(tax=>tax.tax_name == \"IGST\");\n    let gst_tax = taxes.filter(tax=>tax.tax_name == \"GST\");\n    returnItems.push({\n    json: [{\n       name:obj[\"name\"],\n       item_type :obj[\"item_type\"],\n       sku:obj[\"sku\"],\n       hsn_or_sac:obj[\"hsn_or_sac\"],\n       available_stock:obj.stock,\n       purchase_account_id:\"1763031000000293201\",\n       purchase_account_name: \"Purchase Domestic\",\n       item_type: \"inventory\",\n       \"item_tax_preferences\": [\n          {\n              \"tax_specification\": \"inter\",\n              \"tax_type\": 0,\n              \"tax_name\": igst_tax[0].tax_name+parseInt(igst_tax[0].tax_percentage),\n              \"tax_percentage\": parseInt(igst_tax[0].tax_percentage),\n              \"tax_id\": \"1763031000000067204\"\n          },\n          {\n              \"tax_specification\": \"intra\",\n              \"tax_type\": 2,\n              \"tax_name\": gst_tax[0].tax_name+parseInt(gst_tax[0].tax_percentage),\n              \"tax_percentage\": parseInt(gst_tax[0].tax_percentage),\n              \"tax_id\": \"1763031000000067210\"\n          }\n        ],\n    }]\n  }); \n})\n\nreturn returnItems ;\n\n"
       },
       "name": "Function for create item",
       "type": "n8n-nodes-base.function",
@@ -937,12 +953,68 @@
             {
               "name": "dms_url",
               "value": "=https://dmsqa.shakedeal.com"
+            },
+            {
+              "name": "=bond_number",
+              "value": "LUT or Bond No"
             }
           ],
           "number": [
             {
               "name": "organization_id",
               "value": "={{$node[\"wait for order data\"].json[\"body\"][\"env\"] == \"prod\"?\"685685414\":\"776318483\"}}"
+            },
+            {
+              "name": "Advance",
+              "value": "=0"
+            },
+            {
+              "name": "On Delivery",
+              "value": "={{2}}"
+            },
+            {
+              "name": "15 days",
+              "value": "={{15}}"
+            },
+            {
+              "name": "15 Days Credit",
+              "value": "={{15}}"
+            },
+            {
+              "name": "30 Days Credit",
+              "value": "={{30}}"
+            },
+            {
+              "name": "0 days",
+              "value": "={{0}}"
+            },
+            {
+              "name": "30 days",
+              "value": "={{30}}"
+            },
+            {
+              "name": "45 days",
+              "value": "={{45}}"
+            },
+            {
+              "name": "7 Days Credit",
+              "value": "={{7}}"
+            },
+            {
+              "name": "100% Advance",
+              "value": "={{0}}"
+            },
+            {
+              "name": "90 Days Credit",
+              "value": "={{90}}"
+            },
+            {
+              "name": "45 Days Credit",
+              "value": "={{45}}"
+            },
+            {
+              "name": "3 Days Credit",
+              "value": "={{3}}"
             }
           ]
         },
@@ -1192,6 +1264,22 @@
             {
               "name": "date",
               "value": "={{$node[\"Function to create invoice \"].json[\"invoice_date\"]}}"
+            },
+            {
+              "name": "payment_terms",
+              "value": "={{$node[\"Function to create invoice \"].json[\"payment_terms\"]}}"
+            },
+            {
+              "name": "discount",
+              "value": "={{$node[\"Function to create invoice \"].json[\"discount\"]}}"
+            },
+            {
+              "name": "shipping_charge",
+              "value": "={{$node[\"Function to create invoice \"].json[\"shipping_charge\"]}}"
+            },
+            {
+              "name": "discount_type",
+              "value": "=entity_level"
             }
           ]
         }
@@ -1345,5 +1433,5 @@
       "updatedAt": "2022-04-25T07:09:37.693Z"
     }
   ],
-  "updatedAt": "2022-05-09T12:54:58.417Z"
+  "updatedAt": "2022-05-10T13:11:33.396Z"
 }
