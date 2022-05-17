@@ -221,7 +221,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        710,
+        720,
         260
       ],
       "credentials": {
@@ -290,11 +290,15 @@
             },
             {
               "name": "dms_url",
-              "value": "={{ $node[\"Receive the order_status\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ? \"https://balco.mozart.shakedeal.com\" : \"https://balcoqa.mozart.shakedeal.com\" }}"
+              "value": "={{ $node[\"Receive the order_status\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" && $node[\"Receive the order_status\"].json[\"headers\"][\"client\"] === \"balco\" ? \"https://balco.mozart.shakedeal.com\" : $node[\"Receive the order_status\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" && $node[\"Receive the order_status\"].json[\"headers\"][\"client\"] === \"vedanta\"?\"https://vedanta.mozart.shakedeal.com\":$node[\"Receive the order_status\"].json[\"headers\"][\"x-sd-env\"] === \"qa\" && $node[\"Receive the order_status\"].json[\"headers\"][\"client\"] === \"vedanta\"?\"https://vedantaqa.mozart.shakedeal.com\":\"https://balcoqa.mozart.shakedeal.com\"}}"
             },
             {
               "name": "order_prefix",
               "value": "=OD"
+            },
+            {
+              "name": "token",
+              "value": "={{ $node[\"Receive the order_status\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" && $node[\"Receive the order_status\"].json[\"headers\"][\"client\"] === \"balco\" ? \"d1b1178f-637a-4927-8c41-29f4a8219a95\" : $node[\"Receive the order_status\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" && $node[\"Receive the order_status\"].json[\"headers\"][\"client\"] === \"vedanta\"?\"d1b1178f-637a-4927-8c41-29f4a8219a96\":$node[\"Receive the order_status\"].json[\"headers\"][\"x-sd-env\"] === \"qa\" && $node[\"Receive the order_status\"].json[\"headers\"][\"client\"] === \"vedanta\"?\"def15ddc-f52f-4b2f-a749-b545fbc372e3\":\"def15ddc-f52f-4b2f-a749-b545fbc372e2\"}}"
             }
           ]
         },
@@ -443,5 +447,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-04-26T07:49:49.709Z"
+  "updatedAt": "2022-05-17T13:03:38.487Z"
 }
