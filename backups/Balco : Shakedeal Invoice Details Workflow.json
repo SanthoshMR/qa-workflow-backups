@@ -153,11 +153,15 @@
           "string": [
             {
               "name": "dms_url",
-              "value": "={{ $node[\"Get Invoice Details\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ? \"https://balco.mozart.shakedeal.com\" : \"https://balcoqa.mozart.shakedeal.com\" }}"
+              "value": "={{ $node[\"Get Invoice Details\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" && $node[\"Get Invoice Details\"].json[\"headers\"][\"client\"] === \"balco\" ? \"https://balco.mozart.shakedeal.com\" : $node[\"Get Invoice Details\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" && $node[\"Get Invoice Details\"].json[\"headers\"][\"client\"] === \"vedanta\"?\"https://vedanta.mozart.shakedeal.com\":$node[\"Get Invoice Details\"].json[\"headers\"][\"x-sd-env\"] === \"qa\" && $node[\"Get Invoice Details\"].json[\"headers\"][\"client\"] === \"vedanta\"?\"https://vedantaqa.mozart.shakedeal.com\":\"https://balcoqa.mozart.shakedeal.com\"}}"
             },
             {
               "name": "order_prefix",
               "value": "=OD"
+            },
+            {
+              "name": "token",
+              "value": "={{ $node[\"Get Invoice Details\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" && $node[\"Get Invoice Details\"].json[\"headers\"][\"client\"] === \"balco\" ? \"d1b1178f-637a-4927-8c41-29f4a8219a95\" : $node[\"Get Invoice Details\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" && $node[\"Get Invoice Details\"].json[\"headers\"][\"client\"] === \"vedanta\"?\"d1b1178f-637a-4927-8c41-29f4a8219a96\":$node[\"Get Invoice Details\"].json[\"headers\"][\"x-sd-env\"] === \"qa\" && $node[\"Get Invoice Details\"].json[\"headers\"][\"client\"] === \"vedanta\"?\"def15ddc-f52f-4b2f-a749-b545fbc372e3\":\"def15ddc-f52f-4b2f-a749-b545fbc372e2\"}}"
             }
           ]
         },
@@ -348,5 +352,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-03-17T12:46:48.932Z"
+  "updatedAt": "2022-05-17T12:51:43.451Z"
 }
