@@ -78,11 +78,15 @@
           "string": [
             {
               "name": "dms_url",
-              "value": "={{ $node[\"Receive_vendor_invoice\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ? \"https://balco.mozart.shakedeal.com\" : \"https://balcoqa.mozart.shakedeal.com\" }}"
+              "value": "={{ $node[\"Receive_vendor_invoice\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" && $node[\"Receive_vendor_invoice\"].json[\"headers\"][\"client\"] === \"balco\" ? \"https://balco.mozart.shakedeal.com\" : $node[\"Receive_vendor_invoice\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" && $node[\"Receive_vendor_invoice\"].json[\"headers\"][\"client\"] === \"vedanta\"?\"https://vedanta.mozart.shakedeal.com\":$node[\"Receive_vendor_invoice\"].json[\"headers\"][\"x-sd-env\"] === \"qa\" && $node[\"Receive_vendor_invoice\"].json[\"headers\"][\"client\"] === \"vedanta\"?\"https://vedantaqa.mozart.shakedeal.com\":\"https://balcoqa.mozart.shakedeal.com\"}}"
             },
             {
               "name": "sales_agent_email",
               "value": "={{ $node[\"Receive_vendor_invoice\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ? \"sales@gmail.com\" : \"handyalasairam9177@gmail.com\" }}"
+            },
+            {
+              "name": "token",
+              "value": "={{ $node[\"Receive_vendor_invoice\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" && $node[\"Receive_vendor_invoice\"].json[\"headers\"][\"client\"] === \"balco\" ? \"d1b1178f-637a-4927-8c41-29f4a8219a95\" : $node[\"Receive_vendor_invoice\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" && $node[\"Receive_vendor_invoice\"].json[\"headers\"][\"client\"] === \"vedanta\"?\"d1b1178f-637a-4927-8c41-29f4a8219a96\":$node[\"Receive_vendor_invoice\"].json[\"headers\"][\"x-sd-env\"] === \"qa\" && $node[\"Receive_vendor_invoice\"].json[\"headers\"][\"client\"] === \"vedanta\"?\"def15ddc-f52f-4b2f-a749-b545fbc372e3\":\"def15ddc-f52f-4b2f-a749-b545fbc372e2\"}}"
             }
           ]
         },
@@ -144,5 +148,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2021-04-12T11:44:06.103Z"
+  "updatedAt": "2022-05-17T12:54:58.007Z"
 }
