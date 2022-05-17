@@ -78,7 +78,7 @@
           "string": [
             {
               "name": "dms_url",
-              "value": "={{ $node[\"Payment advice added in vendor payments\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ? \"https://balco.mozart.shakedeal.com\" : \"https://balcoqa.mozart.shakedeal.com\" }}"
+              "value": "={{ $node[\"Payment advice added in vendor payments\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" && $node[\"Payment advice added in vendor payments\"].json[\"headers\"][\"client\"] === \"balco\" ? \"https://balco.mozart.shakedeal.com\" : $node[\"Payment advice added in vendor payments\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" && $node[\"Payment advice added in vendor payments\"].json[\"headers\"][\"client\"] === \"vedanta\"?\"https://vedanta.mozart.shakedeal.com\":$node[\"Payment advice added in vendor payments\"].json[\"headers\"][\"x-sd-env\"] === \"qa\" && $node[\"Payment advice added in vendor payments\"].json[\"headers\"][\"client\"] === \"vedanta\"?\"https://vedantaqa.mozart.shakedeal.com\":\"https://balcoqa.mozart.shakedeal.com\"}}"
             },
             {
               "name": "accounts_email",
@@ -91,6 +91,10 @@
             {
               "name": "accounts_email",
               "value": "=sairam.reddy@shakedeal.com"
+            },
+            {
+              "name": "token",
+              "value": "={{ $node[\"Payment advice added in vendor payments\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" && $node[\"Payment advice added in vendor payments\"].json[\"headers\"][\"client\"] === \"balco\" ? \"d1b1178f-637a-4927-8c41-29f4a8219a95\" : $node[\"Payment advice added in vendor payments\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" && $node[\"Payment advice added in vendor payments\"].json[\"headers\"][\"client\"] === \"vedanta\"?\"d1b1178f-637a-4927-8c41-29f4a8219a96\":$node[\"Payment advice added in vendor payments\"].json[\"headers\"][\"x-sd-env\"] === \"qa\" && $node[\"Payment advice added in vendor payments\"].json[\"headers\"][\"client\"] === \"vedanta\"?\"def15ddc-f52f-4b2f-a749-b545fbc372e3\":\"def15ddc-f52f-4b2f-a749-b545fbc372e2\"}}"
             }
           ]
         },
@@ -100,8 +104,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        710,
-        330
+        700,
+        340
       ]
     },
     {
@@ -151,5 +155,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2021-04-16T12:47:28.752Z"
+  "updatedAt": "2022-05-17T12:53:21.695Z"
 }
