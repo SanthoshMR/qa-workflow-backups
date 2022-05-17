@@ -176,7 +176,7 @@
           "string": [
             {
               "name": "dms_url",
-              "value": "={{ $node[\"Get Payment Advice\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ? \"https://balco.mozart.shakedeal.com\" : \"https://balcoqa.mozart.shakedeal.com\" }}"
+              "value": "={{ $node[\"Get Payment Advice\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" && $node[\"Get Payment Advice\"].json[\"headers\"][\"client\"] === \"balco\" ? \"https://balco.mozart.shakedeal.com\" : $node[\"Get Payment Advice\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" && $node[\"Get Payment Advice\"].json[\"headers\"][\"client\"] === \"vedanta\"?\"https://vedanta.mozart.shakedeal.com\":$node[\"Get Payment Advice\"].json[\"headers\"][\"x-sd-env\"] === \"qa\" && $node[\"Get Payment Advice\"].json[\"headers\"][\"client\"] === \"vedanta\"?\"https://vedantaqa.mozart.shakedeal.com\":\"https://balcoqa.mozart.shakedeal.com\"}}"
             },
             {
               "name": "sales_agent_email",
@@ -185,6 +185,10 @@
             {
               "name": "accounts_agent_email",
               "value": "={{ $node[\"Get Payment Advice\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ? \"accounts@gmail.com\" : \"sairam.reddy@shakedeal.com\" }}"
+            },
+            {
+              "name": "token",
+              "value": "={{ $node[\"Get Payment Advice\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" && $node[\"Get Payment Advice\"].json[\"headers\"][\"client\"] === \"balco\" ? \"d1b1178f-637a-4927-8c41-29f4a8219a95\" : $node[\"Get Payment Advice\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" && $node[\"Get Payment Advice\"].json[\"headers\"][\"client\"] === \"vedanta\"?\"d1b1178f-637a-4927-8c41-29f4a8219a96\":$node[\"Get Payment Advice\"].json[\"headers\"][\"x-sd-env\"] === \"qa\" && $node[\"Get Payment Advice\"].json[\"headers\"][\"client\"] === \"vedanta\"?\"def15ddc-f52f-4b2f-a749-b545fbc372e3\":\"def15ddc-f52f-4b2f-a749-b545fbc372e2\"}}"
             }
           ]
         },
@@ -321,5 +325,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-04-11T12:52:57.995Z"
+  "updatedAt": "2022-05-17T12:37:24.610Z"
 }
