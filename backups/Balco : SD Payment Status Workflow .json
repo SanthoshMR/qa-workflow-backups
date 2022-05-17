@@ -316,7 +316,7 @@
           "string": [
             {
               "name": "dms_url",
-              "value": "={{ $node[\"Get shakedeal_payment_status\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ? \"https://balco.mozart.shakedeal.com\" : \"https://balcoqa.mozart.shakedeal.com\" }}"
+              "value": "={{ $node[\"Get shakedeal_payment_status\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" && $node[\"Get shakedeal_payment_status\"].json[\"headers\"][\"client\"] === \"balco\" ? \"https://balco.mozart.shakedeal.com\" : $node[\"Get shakedeal_payment_status\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" && $node[\"Get shakedeal_payment_status\"].json[\"headers\"][\"client\"] === \"vedanta\"?\"https://vedanta.mozart.shakedeal.com\":$node[\"Get shakedeal_payment_status\"].json[\"headers\"][\"x-sd-env\"] === \"qa\" && $node[\"Get shakedeal_payment_status\"].json[\"headers\"][\"client\"] === \"vedanta\"?\"https://vedantaqa.mozart.shakedeal.com\":\"https://balcoqa.mozart.shakedeal.com\"}}"
             },
             {
               "name": "accounts_agent_email",
@@ -325,6 +325,10 @@
             {
               "name": "sales_agent_email",
               "value": "={{ $node[\"Get shakedeal_payment_status\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ? \"sales@gmail.com\" : \"handyalasairam9177@gmail.com\" }}"
+            },
+            {
+              "name": "token",
+              "value": "={{ $node[\"Get shakedeal_payment_status\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" && $node[\"Get shakedeal_payment_status\"].json[\"headers\"][\"client\"] === \"balco\" ? \"d1b1178f-637a-4927-8c41-29f4a8219a95\" : $node[\"Get shakedeal_payment_status\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" && $node[\"Get shakedeal_payment_status\"].json[\"headers\"][\"client\"] === \"vedanta\"?\"d1b1178f-637a-4927-8c41-29f4a8219a96\":$node[\"Get shakedeal_payment_status\"].json[\"headers\"][\"x-sd-env\"] === \"qa\" && $node[\"Get shakedeal_payment_status\"].json[\"headers\"][\"client\"] === \"vedanta\"?\"def15ddc-f52f-4b2f-a749-b545fbc372e3\":\"def15ddc-f52f-4b2f-a749-b545fbc372e2\"}}"
             }
           ],
           "number": [
@@ -503,5 +507,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-04-26T07:19:24.160Z"
+  "updatedAt": "2022-05-17T12:34:06.356Z"
 }
