@@ -928,7 +928,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let id = $node[\"post buyer details\"].json.data[\"id\"];\nlet user_phone = $node[\"Extracting PO details\"].json[\"buyer_contact\"];\nlet user_details = [];\nuser_details[0] = {};\nuser_details[0].user = id ;\nuser_details[0].phone_number = user_phone ;\nitems[0].json.user_details = user_details;\nreturn items"
+        "functionCode": "let id = Array.isArray($node[\"post buyer details\"].json.data)?$node[\"post buyer details\"].json.data[0][\"id\"]:$node[\"post buyer details\"].json.data[\"id\"];\nlet user_phone = $node[\"Extracting PO details\"].json[\"buyer_contact\"];\nlet user_details = [];\nuser_details[0] = {};\nuser_details[0].user = id ;\nuser_details[0].phone_number = user_phone ;\nitems[0].json.user_details = user_details;\nreturn items"
       },
       "name": "construct for user_details",
       "type": "n8n-nodes-base.function",
@@ -1610,9 +1610,9 @@
   "settings": {},
   "staticData": {
     "node:Wait for PO Email": {
-      "lastMessageUid": 753
+      "lastMessageUid": 761
     }
   },
   "tags": [],
-  "updatedAt": "2022-05-17T14:08:12.379Z"
+  "updatedAt": "2022-05-18T09:45:55.584Z"
 }
