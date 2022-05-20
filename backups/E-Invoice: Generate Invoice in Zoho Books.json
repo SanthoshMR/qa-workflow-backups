@@ -766,6 +766,8 @@
         "authentication": "basicAuth",
         "httpMethod": "POST",
         "path": "invoice_bill",
+        "responseMode": "lastNode",
+        "responseData": "allEntries",
         "options": {
           "responseHeaders": {
             "entries": [
@@ -1469,5 +1471,5 @@
       "updatedAt": "2022-04-25T07:09:37.693Z"
     }
   ],
-  "updatedAt": "2022-05-19T09:35:41.239Z"
+  "updatedAt": "2022-05-20T12:16:16.383Z"
 }
