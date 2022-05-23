@@ -27,7 +27,7 @@
       "main": [
         [
           {
-            "node": "Function for item objects",
+            "node": "Get taxes",
             "type": "main",
             "index": 0
           }
@@ -111,7 +111,7 @@
         ],
         [
           {
-            "node": "Function for item objects",
+            "node": "Get taxes",
             "type": "main",
             "index": 0
           }
@@ -438,6 +438,17 @@
           }
         ]
       ]
+    },
+    "Get taxes": {
+      "main": [
+        [
+          {
+            "node": "Function for item objects",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2021-07-15T12:42:13.721Z",
@@ -565,8 +576,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        620,
-        180
+        600,
+        120
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -593,8 +604,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1520,
-        200
+        1580,
+        80
       ],
       "retryOnFail": true,
       "maxTries": 5,
@@ -683,8 +694,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        410,
-        180
+        360,
+        120
       ]
     },
     {
@@ -907,7 +918,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        980,
+        1060,
         360
       ],
       "credentials": {
@@ -932,21 +943,21 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        1180,
-        370
+        1220,
+        360
       ],
       "alwaysOutputData": false
     },
     {
       "parameters": {
-        "functionCode": "let list_items = $node[\"wait for order data\"].json[\"body\"][\"line_items\"]\n\nlet returnItems = []\nlet resultFilter = \n   list_items.filter(list=>\n      items.some(\n      data=> data.json[\"page_context\"][\"search_criteria\"][0][\"search_text\"] === list.name\n    )\n  );\n\n\nresultFilter .forEach(function(obj,index){ \n    let taxes = obj.item_tax_preferences;\n    let igst_tax =  taxes.filter(tax=>tax.tax_name == \"IGST\");\n    let gst_tax = taxes.filter(tax=>tax.tax_name == \"GST\");\n    returnItems.push({\n    json: [{\n       name:obj[\"name\"],\n       item_type :obj[\"item_type\"],\n       sku:obj[\"sku\"],\n       hsn_or_sac:obj[\"hsn_or_sac\"],\n       available_stock:obj.stock,\n       purchase_account_id:\"1763031000000293201\",\n       purchase_account_name: \"Purchase Domestic\",\n       item_type: \"inventory\",\n       \"item_tax_preferences\": [\n          {\n              \"tax_specification\": \"inter\",\n              \"tax_type\": 0,\n              \"tax_name\": igst_tax[0].tax_name+parseInt(igst_tax[0].tax_percentage),\n              \"tax_percentage\": parseInt(igst_tax[0].tax_percentage),\n              \"tax_id\": \"1763031000000067204\"\n          },\n          {\n              \"tax_specification\": \"intra\",\n              \"tax_type\": 2,\n              \"tax_name\": gst_tax[0].tax_name+parseInt(gst_tax[0].tax_percentage),\n              \"tax_percentage\": parseInt(gst_tax[0].tax_percentage),\n              \"tax_id\": \"1763031000000067210\"\n          }\n        ],\n    }]\n  }); \n})\n\nreturn returnItems ;\n\n"
+        "functionCode": "let list_items = $node[\"wait for order data\"].json[\"body\"][\"line_items\"]\nlet zoho_taxes = $node[\"Get taxes\"].json[\"taxes\"];\n\nlet returnItems = []\nlet resultFilter = \n   list_items.filter(list=>\n      items.some(\n      data=> data.json[\"page_context\"][\"search_criteria\"][0][\"search_text\"] === list.name\n    )\n  );\n\n\nresultFilter .forEach(function(obj,index){ \n    let taxes = obj.item_tax_preferences;\n    let igst_tax =  taxes.filter(tax=>tax.tax_name == \"IGST\");\n    let gst_tax = taxes.filter(tax=>tax.tax_name == \"GST\");\n    let igst_tax_name = igst_tax[0].tax_name+parseInt(igst_tax[0].tax_percentage);\n    let gst_tax_name = gst_tax[0].tax_name+parseInt(gst_tax[0].tax_percentage);\n    let igst_taxid_obj = zoho_taxes.filter(tax=>tax.tax_name == igst_tax_name);\n    let gst_taxid_obj = zoho_taxes.filter(tax=>tax.tax_name == gst_tax_name);\n    returnItems.push({\n    json: [{\n       name:obj[\"name\"],\n       item_type :obj[\"item_type\"],\n       sku:obj[\"sku\"],\n       hsn_or_sac:obj[\"hsn_or_sac\"],\n       available_stock:obj.stock,\n       purchase_account_id:\"1763031000000293201\",\n       purchase_account_name: \"Purchase Domestic\",\n       item_type: \"inventory\",\n       \"item_tax_preferences\": [\n          {\n              \"tax_specification\": \"inter\",\n              \"tax_type\": 2,\n              \"tax_name\": igst_tax[0].tax_name+parseInt(igst_tax[0].tax_percentage),\n              \"tax_percentage\": parseInt(igst_tax[0].tax_percentage),\n              \"tax_id\": igst_taxid_obj[0].tax_id\n          },\n          {\n              \"tax_specification\": \"intra\",\n              \"tax_type\": 2,\n              \"tax_name\": gst_tax[0].tax_name+parseInt(gst_tax[0].tax_percentage),\n              \"tax_percentage\": parseInt(gst_tax[0].tax_percentage),\n              \"tax_id\": gst_taxid_obj[0].tax_id\n          }\n        ],\n    }]\n  }); \n})\n\nreturn returnItems ;\n\n"
       },
       "name": "Function for create item",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1300,
-        200
+        1280,
+        80
       ],
       "continueOnFail": true
     },
@@ -958,8 +969,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        780,
-        370
+        900,
+        360
       ]
     },
     {
@@ -1080,7 +1091,7 @@
     },
     {
       "parameters": {
-        "functionCode": "// Code here will run only once, no matter how many input items there are.\n// More info and help: https://docs.n8n.io/nodes/n8n-nodes-base.function\n// Tip: You can use luxon for dates and $jmespath for querying JSON structures\n\n// Loop over inputs and add a new field called 'myNewField' to the JSON of each one\n/*for (item of items) {\n  item.json.myNewField = 1;\n}\n\n You can write logs to the browser console\nconsole.log('Done!');*/\nlet products = $node[\"wait for order data\"].json[\"body\"][\"line_items\"];\nlet product_codes = [];\nproducts.forEach(function(product,index){\n    product_codes.push(product.sku);\n})\n\nitems[0].json.products=products;\nitems[0].json.product_codes = product_codes;\n\nreturn items;"
+        "functionCode": "// Code here will run only once, no matter how many input items there are.\n// More info and help: https://docs.n8n.io/nodes/n8n-nodes-base.function\n// Tip: You can use luxon for dates and $jmespath for querying JSON structures\n\n// Loop over inputs and add a new field called 'myNewField' to the JSON of each one\n/*for (item of items) {\n  item.json.myNewField = 1;\n}\n\n You can write logs to the browser console\nconsole.log('Done!');*/\nlet products = $node[\"wait for order data\"].json[\"body\"][\"line_items\"];\nlet product_codes = [];\nproducts.forEach(function(product,index){\n    product_codes.push(product.sku);\n})\n\nitems[0].json.line_items=products;\nitems[0].json.product_codes = product_codes;\n\nreturn items;"
       },
       "name": "Get product codes",
       "type": "n8n-nodes-base.function",
@@ -1459,6 +1470,26 @@
           "name": "zoho books creds"
         }
       }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://books.zoho.com/api/v3/settings/taxes?organization_id=685685414",
+        "options": {}
+      },
+      "name": "Get taxes",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        700,
+        380
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "29",
+          "name": "zoho books creds"
+        }
+      }
     }
   ],
   "settings": {},
@@ -1471,5 +1502,5 @@
       "updatedAt": "2022-04-25T07:09:37.693Z"
     }
   ],
-  "updatedAt": "2022-05-20T12:16:16.383Z"
+  "updatedAt": "2022-05-23T12:35:07.715Z"
 }
