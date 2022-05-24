@@ -93,7 +93,7 @@
       "main": [
         [
           {
-            "node": "Globals",
+            "node": "Condition for checking order_type",
             "type": "main",
             "index": 0
           }
@@ -449,6 +449,24 @@
           }
         ]
       ]
+    },
+    "Condition for checking order_type": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2021-07-15T12:42:13.721Z",
@@ -503,7 +521,7 @@
       "typeVersion": 1,
       "position": [
         -420,
-        360
+        340
       ]
     },
     {
@@ -594,7 +612,7 @@
         "allowUnauthorizedCerts": true,
         "jsonParameters": true,
         "options": {
-          "batchInterval": 2000,
+          "batchInterval": 10,
           "batchSize": 1,
           "bodyContentType": "json"
         },
@@ -794,7 +812,7 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        -820,
+        -1140,
         360
       ],
       "webhookId": "b30792e0-2878-4a2d-947b-3a200313ce70",
@@ -863,7 +881,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        260,
+        300,
         360
       ]
     },
@@ -886,7 +904,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        120,
+        140,
         360
       ],
       "credentials": {
@@ -908,8 +926,8 @@
         "queryParametersUi": {
           "parameter": [
             {
-              "name": "name",
-              "value": "={{$node[\"Function for item objects\"].json[\"0\"][\"name\"]}}"
+              "name": "sku",
+              "value": "={{$node[\"Function for item objects\"].json[\"0\"][\"sku\"]}}"
             }
           ]
         }
@@ -950,7 +968,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let list_items = $node[\"wait for order data\"].json[\"body\"][\"line_items\"]\nlet zoho_taxes = $node[\"Get taxes\"].json[\"taxes\"];\n\nlet returnItems = []\nlet resultFilter = \n   list_items.filter(list=>\n      items.some(\n      data=> data.json[\"page_context\"][\"search_criteria\"][0][\"search_text\"] === list.name\n    )\n  );\n\n\nresultFilter .forEach(function(obj,index){ \n    let taxes = obj.item_tax_preferences;\n    let igst_tax =  taxes.filter(tax=>tax.tax_name == \"IGST\");\n    let gst_tax = taxes.filter(tax=>tax.tax_name == \"GST\");\n    let igst_tax_name = igst_tax[0].tax_name+parseInt(igst_tax[0].tax_percentage);\n    let gst_tax_name = gst_tax[0].tax_name+parseInt(gst_tax[0].tax_percentage);\n    let igst_taxid_obj = zoho_taxes.filter(tax=>tax.tax_name == igst_tax_name);\n    let gst_taxid_obj = zoho_taxes.filter(tax=>tax.tax_name == gst_tax_name);\n    returnItems.push({\n    json: [{\n       name:obj[\"name\"],\n       item_type :obj[\"item_type\"],\n       sku:obj[\"sku\"],\n       hsn_or_sac:obj[\"hsn_or_sac\"],\n       available_stock:obj.stock,\n       purchase_account_id:\"1763031000000293201\",\n       purchase_account_name: \"Purchase Domestic\",\n       item_type: \"inventory\",\n       \"item_tax_preferences\": [\n          {\n              \"tax_specification\": \"inter\",\n              \"tax_type\": 2,\n              \"tax_name\": igst_tax[0].tax_name+parseInt(igst_tax[0].tax_percentage),\n              \"tax_percentage\": parseInt(igst_tax[0].tax_percentage),\n              \"tax_id\": igst_taxid_obj[0].tax_id\n          },\n          {\n              \"tax_specification\": \"intra\",\n              \"tax_type\": 2,\n              \"tax_name\": gst_tax[0].tax_name+parseInt(gst_tax[0].tax_percentage),\n              \"tax_percentage\": parseInt(gst_tax[0].tax_percentage),\n              \"tax_id\": gst_taxid_obj[0].tax_id\n          }\n        ],\n    }]\n  }); \n})\n\nreturn returnItems ;\n\n"
+        "functionCode": "let list_items = $node[\"wait for order data\"].json[\"body\"][\"line_items\"]\nlet zoho_taxes = $node[\"Get taxes\"].json[\"taxes\"];\n\nlet returnItems = []\nlet resultFilter = \n   list_items.filter(list=>\n      items.some(\n      data=> data.json[\"page_context\"][\"search_criteria\"][0][\"search_text\"] === list.sku\n    )\n  );\n\n\nresultFilter .forEach(function(obj,index){ \n    let taxes = obj.item_tax_preferences;\n    let igst_tax =  taxes.filter(tax=>tax.tax_name == \"IGST\");\n    let gst_tax = taxes.filter(tax=>tax.tax_name == \"GST\");\n    let igst_tax_name = igst_tax[0].tax_name+parseInt(igst_tax[0].tax_percentage);\n    let gst_tax_name = gst_tax[0].tax_name+parseInt(gst_tax[0].tax_percentage);\n    let igst_taxid_obj = zoho_taxes.filter(tax=>tax.tax_name == igst_tax_name);\n    let gst_taxid_obj = zoho_taxes.filter(tax=>tax.tax_name == gst_tax_name);\n    returnItems.push({\n    json: [{\n       name:obj[\"name\"],\n       item_type :obj[\"item_type\"],\n       sku:obj[\"sku\"],\n       hsn_or_sac:obj[\"hsn_or_sac\"],\n       available_stock:obj.stock,\n       purchase_account_id:\"1763031000000293201\",\n       purchase_account_name: \"Purchase Domestic\",\n       item_type: \"inventory\",\n       \"item_tax_preferences\": [\n          {\n              \"tax_specification\": \"inter\",\n              \"tax_type\": 2,\n              \"tax_name\": igst_tax[0].tax_name+parseInt(igst_tax[0].tax_percentage),\n              \"tax_percentage\": parseInt(igst_tax[0].tax_percentage),\n              \"tax_id\": igst_taxid_obj[0].tax_id\n          },\n          {\n              \"tax_specification\": \"intra\",\n              \"tax_type\": 2,\n              \"tax_name\": gst_tax[0].tax_name+parseInt(gst_tax[0].tax_percentage),\n              \"tax_percentage\": parseInt(gst_tax[0].tax_percentage),\n              \"tax_id\": gst_taxid_obj[0].tax_id\n          }\n        ],\n    }]\n  }); \n})\n\nreturn returnItems ;\n\n"
       },
       "name": "Function for create item",
       "type": "n8n-nodes-base.function",
@@ -1074,7 +1092,7 @@
       "typeVersion": 1,
       "position": [
         -620,
-        360
+        340
       ]
     },
     {
@@ -1415,8 +1433,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        -200,
-        360
+        -220,
+        340
       ]
     },
     {
@@ -1425,7 +1443,7 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        -40,
+        -20,
         580
       ]
     },
@@ -1490,6 +1508,35 @@
           "name": "zoho books creds"
         }
       }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"wait for order data\"].json[\"body\"][\"order_type\"]}}",
+              "value2": "=physical"
+            }
+          ]
+        }
+      },
+      "name": "Condition for checking order_type",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -920,
+        360
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "NoOp3",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -660,
+        540
+      ]
     }
   ],
   "settings": {},
@@ -1502,5 +1549,5 @@
       "updatedAt": "2022-04-25T07:09:37.693Z"
     }
   ],
-  "updatedAt": "2022-05-23T12:35:07.715Z"
+  "updatedAt": "2022-05-24T08:49:21.768Z"
 }
