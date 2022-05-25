@@ -1,55 +1,128 @@
 {
   "active": false,
   "connections": {
-    "Start": {
+    "Cron": {
       "main": [
         [
           {
-            "node": "HTTP Request",
+            "node": "Read teams from excel",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "HTTP Request": {
+    "Get tommorow date": {
       "main": [
         [
           {
-            "node": "HTTP Request1",
+            "node": "Check for action matched",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "HTTP Request1": {
+    "Get teams and channel ids": {
       "main": [
         [
           {
-            "node": "Edit Image",
+            "node": "Get background image",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "HTTP Request2": {
+    "Get background image": {
       "main": [
         [
           {
-            "node": "Edit Image1",
+            "node": "Get team-a image",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Edit Image": {
+    "Get team-a image": {
       "main": [
         [
           {
-            "node": "HTTP Request2",
+            "node": "Set team-a over background",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get team-b image": {
+      "main": [
+        [
+          {
+            "node": "Set team-b over backround",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set team-a over background": {
+      "main": [
+        [
+          {
+            "node": "Get team-b image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set team-b over backround": {
+      "main": [
+        [
+          {
+            "node": "Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get formatted date": {
+      "main": [
+        [
+          {
+            "node": "Get tommorow date",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for action matched": {
+      "main": [
+        [
+          {
+            "node": "Get teams and channel ids",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read teams from excel": {
+      "main": [
+        [
+          {
+            "node": "Get formatted date",
             "type": "main",
             "index": 0
           }
@@ -67,21 +140,132 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        240,
-        300
+        -640,
+        20
       ]
     },
     {
       "parameters": {
-        "url": "https://cdn.shakedeal.com/images/promo/858/54.jpg",
+        "authentication": "oAuth2",
+        "resource": "file",
+        "binaryData": true,
+        "binaryPropertyName": "=data",
+        "options": {
+          "channelIds": "={{$node[\"Get teams and channel ids\"].json[\"channels\"]}}",
+          "initialComment": "=@channel {{$node[\"Get teams and channel ids\"].json[\"slack_text\"]}}Match",
+          "title": "SPL"
+        }
+      },
+      "name": "Slack",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 1,
+      "position": [
+        1560,
+        100
+      ],
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "40",
+          "name": "SlackOAuth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "hour": 21
+            },
+            {
+              "hour": 9
+            }
+          ]
+        }
+      },
+      "name": "Cron",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        -660,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "const tomorrow = new Date();\nconst today = new Date().toISOString().slice(0, 10);\nlet dynamic_date = \"\";\nlet action = \"\"\nlet time = new Date()\nlet slack_text = \"\";\n\ntime.setHours(time.getHours() + 5);\ntime.setMinutes(time.getMinutes() + 30);\nlet time_string = time.getHours() + \":\" + time.getMinutes() + \":\" + time.getSeconds()\nlet secs = time_string.split(':').reduce((acc,time) => (60 * acc) + +time);\n\n\n// add 1 day to today\ntomorrow.setDate(new Date().getDate() + 1)\nif(secs>=46800  && secs<=68400 ){\n    dynamic_date = tomorrow.toJSON().slice(0,10);\n    slack_text = \"Tomorrow's\"\n}else {\n  dynamic_date=today\n  slack_text = \"Today's\"\n} \n\nfor (item of items) {\n  if(item.json.formatted_date == dynamic_date ){\n    action = \"matched\"\n  }else action = \"not_matched\"\n  item.json.slack_text = slack_text\n  item.json.dynamic_date = dynamic_date\n  item.json.action = action\n  item.json.tomorrowDate = tomorrow;\n}\n\nreturn items;"
+      },
+      "name": "Get tommorow date",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -60,
+        320
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        340,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Code here will run only once, no matter how many input items there are.\n// More info and help: https://docs.n8n.io/nodes/n8n-nodes-base.function\n// Tip: You can use luxon for dates and $jmespath for querying JSON structures\n\n// Loop over inputs and add a new field called 'myNewField' to the JSON of each one\nlet ids = [\"C011QG86K1T\"]\n\nitems[0].json.channels = ids;\nreturn items;"
+      },
+      "name": "Get teams and channel ids",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        340,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "url": "=https://sdqa.shakedeal.com/images/shake_deal/spl/back.jpg",
         "responseFormat": "file",
         "options": {}
       },
-      "name": "HTTP Request",
+      "name": "Get background image",
       "type": "n8n-nodes-base.httpRequest",
       "position": [
-        460,
-        300
+        540,
+        100
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "url": "=https://sdqa.shakedeal.com/images/shake_deal/spl/{{$node[\"Get teams and channel ids\"].json[\"Team-A\"].toLowerCase()}}.png",
+        "responseFormat": "file",
+        "dataPropertyName": "data2",
+        "options": {}
+      },
+      "name": "Get team-a image",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        740,
+        100
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "url": "=https://sdqa.shakedeal.com/images/shake_deal/spl/{{$node[\"Get teams and channel ids\"].json[\"Team-B\"].toLowerCase()}}.png",
+        "responseFormat": "file",
+        "dataPropertyName": "data2",
+        "options": {}
+      },
+      "name": "Get team-b image",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1160,
+        100
       ],
       "typeVersion": 1
     },
@@ -89,67 +273,107 @@
       "parameters": {
         "operation": "composite",
         "dataPropertyNameComposite": "data2",
-        "positionX": 500,
-        "positionY": 50,
+        "positionY": 1250,
         "options": {}
       },
-      "name": "Edit Image1",
-      "type": "n8n-nodes-base.editImage",
-      "position": [
-        1100,
-        300
-      ],
-      "typeVersion": 1
-    },
-    {
-      "parameters": {
-        "url": "https://cdn.shakedeal.com/images/thumbnails/330/330/detailed/437/SDDBK0001700_x9ve-tn.png",
-        "responseFormat": "file",
-        "dataPropertyName": "data2",
-        "options": {}
-      },
-      "name": "HTTP Request1",
-      "type": "n8n-nodes-base.httpRequest",
-      "position": [
-        660,
-        300
-      ],
-      "typeVersion": 1
-    },
-    {
-      "parameters": {
-        "url": "https://cdn.shakedeal.com/images/thumbnails/330/330/detailed/659/SDVCE0000100_hjir-ns.png",
-        "responseFormat": "file",
-        "dataPropertyName": "data2",
-        "options": {}
-      },
-      "name": "HTTP Request2",
-      "type": "n8n-nodes-base.httpRequest",
-      "position": [
-        880,
-        300
-      ],
-      "typeVersion": 1
-    },
-    {
-      "parameters": {
-        "operation": "composite",
-        "dataPropertyNameComposite": "data2",
-        "positionX": 50,
-        "positionY": 50,
-        "options": {}
-      },
-      "name": "Edit Image",
+      "name": "Set team-a over background",
       "type": "n8n-nodes-base.editImage",
       "typeVersion": 1,
       "position": [
-        740,
-        80
+        960,
+        100
       ]
+    },
+    {
+      "parameters": {
+        "operation": "composite",
+        "dataPropertyNameComposite": "data2",
+        "positionX": 1350,
+        "positionY": 1250,
+        "options": {}
+      },
+      "name": "Set team-b over backround",
+      "type": "n8n-nodes-base.editImage",
+      "position": [
+        1360,
+        100
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "formatted_date",
+              "value": "={{new Date(Math.round($node[\"Read teams from excel\"].json[\"Date\"] - 25569) * 86400 * 1000).toISOString().slice(0, 10)}}"
+            },
+            {
+              "name": "time",
+              "value": "={{new Date().toLocaleTimeString('en-US')}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Get formatted date",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        -260,
+        320
+      ],
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Get tommorow date\"].json[\"action\"]}}",
+              "value2": "=matched"
+            }
+          ]
+        }
+      },
+      "name": "Check for action matched",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        140,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "worksheet",
+        "operation": "getContent",
+        "workbook": "A6E890F58473778D!1961",
+        "worksheet": "{2882936D-4CE3-4B67-9312-9BD3872DD6A9}",
+        "range": "A1:C4"
+      },
+      "name": "Read teams from excel",
+      "type": "n8n-nodes-base.microsoftExcel",
+      "typeVersion": 1,
+      "position": [
+        -460,
+        320
+      ],
+      "executeOnce": true,
+      "alwaysOutputData": true,
+      "credentials": {
+        "microsoftExcelOAuth2Api": {
+          "id": "34",
+          "name": "Microsoft excel creds"
+        }
+      }
     }
   ],
-  "settings": {},
+  "settings": {
+    "timezone": "Asia/Calcutta",
+    "saveManualExecutions": true
+  },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-05-23T11:59:09.440Z"
+  "updatedAt": "2022-05-25T10:20:26.322Z"
 }
