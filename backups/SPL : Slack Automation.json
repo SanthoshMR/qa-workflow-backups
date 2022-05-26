@@ -1,5 +1,5 @@
 {
-  "active": false,
+  "active": true,
   "connections": {
     "Cron": {
       "main": [
@@ -175,10 +175,10 @@
         "triggerTimes": {
           "item": [
             {
-              "hour": 21
+              "hour": 18
             },
             {
-              "hour": 9
+              "hour": 10
             }
           ]
         }
@@ -193,7 +193,7 @@
     },
     {
       "parameters": {
-        "functionCode": "const tomorrow = new Date();\nconst today = new Date().toISOString().slice(0, 10);\nlet dynamic_date = \"\";\nlet action = \"\"\nlet time = new Date()\nlet slack_text = \"\";\n\ntime.setHours(time.getHours() + 5);\ntime.setMinutes(time.getMinutes() + 30);\nlet time_string = time.getHours() + \":\" + time.getMinutes() + \":\" + time.getSeconds()\nlet secs = time_string.split(':').reduce((acc,time) => (60 * acc) + +time);\n\n\n// add 1 day to today\ntomorrow.setDate(new Date().getDate() + 1)\nif(secs>=46800  && secs<=68400 ){\n    dynamic_date = tomorrow.toJSON().slice(0,10);\n    slack_text = \"Tomorrow's\"\n}else {\n  dynamic_date=today\n  slack_text = \"Today's\"\n} \n\nfor (item of items) {\n  if(item.json.formatted_date == dynamic_date ){\n    action = \"matched\"\n  }else action = \"not_matched\"\n  item.json.slack_text = slack_text\n  item.json.dynamic_date = dynamic_date\n  item.json.action = action\n  item.json.tomorrowDate = tomorrow;\n}\n\nreturn items;"
+        "functionCode": "const tomorrow = new Date();\nconst today = new Date().toISOString().slice(0, 10);\nlet dynamic_date = \"\";\nlet action = \"\"\nlet time = new Date()\nlet slack_text = \"\";\n\ntime.setHours(time.getHours() + 5);\ntime.setMinutes(time.getMinutes() + 30);\nlet time_string = time.getHours() + \":\" + time.getMinutes() + \":\" + time.getSeconds()\nlet secs = time_string.split(':').reduce((acc,time) => (60 * acc) + +time);\n\n\n// add 1 day to today\ntomorrow.setDate(new Date().getDate() + 1)\nif(secs>=61200  && secs<=68400 ){\n    dynamic_date = tomorrow.toJSON().slice(0,10);\n    slack_text = \"Tomorrow's\"\n}else {\n  dynamic_date=today\n  slack_text = \"Today's\"\n} \n\nfor (item of items) {\n  if(item.json.formatted_date == dynamic_date ){\n    action = \"matched\"\n  }else action = \"not_matched\"\n  item.json.slack_text = slack_text\n  item.json.dynamic_date = dynamic_date\n  item.json.action = action\n  item.json.tomorrowDate = tomorrow;\n}\n\nreturn items;"
       },
       "name": "Get tommorow date",
       "type": "n8n-nodes-base.function",
@@ -215,7 +215,7 @@
     },
     {
       "parameters": {
-        "functionCode": "// Code here will run only once, no matter how many input items there are.\n// More info and help: https://docs.n8n.io/nodes/n8n-nodes-base.function\n// Tip: You can use luxon for dates and $jmespath for querying JSON structures\n\n// Loop over inputs and add a new field called 'myNewField' to the JSON of each one\nlet ids = [\"C011QG86K1T\"]\n\nitems[0].json.channels = ids;\nreturn items;"
+        "functionCode": "// Code here will run only once, no matter how many input items there are.\n// More info and help: https://docs.n8n.io/nodes/n8n-nodes-base.function\n// Tip: You can use luxon for dates and $jmespath for querying JSON structures\n\n// Loop over inputs and add a new field called 'myNewField' to the JSON of each one\nlet ids = [\"GCDQW3UM6\"]\n\nitems[0].json.channels = ids;\nreturn items;"
       },
       "name": "Get teams and channel ids",
       "type": "n8n-nodes-base.function",
@@ -350,7 +350,7 @@
         "operation": "getContent",
         "workbook": "A6E890F58473778D!1961",
         "worksheet": "{2882936D-4CE3-4B67-9312-9BD3872DD6A9}",
-        "range": "A1:C4"
+        "range": "A1:C29"
       },
       "name": "Read teams from excel",
       "type": "n8n-nodes-base.microsoftExcel",
@@ -375,5 +375,5 @@
   },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-05-25T10:20:26.322Z"
+  "updatedAt": "2022-05-26T07:23:17.283Z"
 }
