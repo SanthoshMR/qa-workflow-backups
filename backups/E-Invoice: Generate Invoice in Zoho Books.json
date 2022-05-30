@@ -720,6 +720,10 @@
             {
               "name": "place_of_supply",
               "value": "={{$node[\"Function to create invoice \"].json[\"place_of_supply\"]}}"
+            },
+            {
+              "name": "is_discount_before_tax",
+              "value": "={{$node[\"Function to create invoice \"].json[\"is_discount_before_tax\"]}}"
             }
           ]
         }
@@ -752,7 +756,7 @@
     },
     {
       "parameters": {
-        "functionCode": "\nlet inv_num=$node[\"wait for order data\"].json[\"body\"][\"invoice_number\"]\nlet pro_items=$node[\"wait for order data\"].json[\"body\"][\"line_items\"];\nlet payment_terms = $node[\"wait for order data\"].json[\"body\"][\"payment_terms\"]?$node[\"wait for order data\"].json[\"body\"][\"payment_terms\"]:\"Advance\";\nconst id= [];\nconst custom_fields=[];\nlet contact_id=\"\"\ncustom_fields.push(\n    {\n        label:$node[\"Globals\"].json[\"order_number_label\"],\n        value:$node[\"wait for order data\"].json[\"body\"][\"order_number\"]\n    },\n    {\n        label:\"PO Date\",\n        value:$node[\"wait for order data\"].json[\"body\"][\"po_date\"]\n    }\n    \n)\nif($node[\"wait for order data\"].json[\"body\"][\"contact_details\"][\"is_sez\"] == \"1\"){\n    custom_fields.push(\n        {\n            label:\"LUT or Bond No\",\n            value:$node[\"Globals\"].json[\"LUT or Bond No\"]\n        },\n        {\n            label:\"From    To\",\n            value:$node[\"Globals\"].json[\"From To\"]\n        }\n    )\n}\nfor (const [index,item] of items.entries()) {\n  if(item.json.hasOwnProperty(\"code\")){\n     let list = pro_items.find(data=>data.name === (item.json.hasOwnProperty(\"item\")?item.json[\"item\"][\"name\"]:item.json[\"items\"][0][\"item_name\"]))\n     id.push(\n     {\n         item_id: item.json.hasOwnProperty(\"item\")?item.json[\"item\"][\"item_id\"]:item.json[\"items\"][0][\"item_id\"],\n         quantity:list[\"quantity\"],\n         rate:list[\"rate\"],\n         //tax_id: \"1763031000000067204\",\n         //tax_name: \"IGST18\",\n         //tax_type: \"tax\",\n        // tax_percentage: 18,\n     }); \n  }   \n}\nif($node[\"Check for Customer\"].json[\"contacts\"].length!==0){\n    contact_id=$node[\"Check for Customer\"].json[\"contacts\"][0][\"contact_id\"]\n}else{\n    contact_id=$node[\"create contact\"].json[\"contact\"][\"contact_id\"]\n}\nlet invoice_obj={\n \"customer_id\":contact_id,\n  \"line_items\":id,\n \"invoice_number\":\"1test-\"+inv_num,\n \"invoice_date\":$node[\"wait for order data\"].json[\"body\"][\"invoice_date\"],\n \"salesperson_name\":$node[\"wait for order data\"].json[\"body\"][\"salesperson_name\"],\n \"custom_fields\":custom_fields,\n \"payment_terms\":$node[\"Globals\"].json[payment_terms],\n \"discount\": $node[\"wait for order data\"].json[\"body\"][\"discount\"],\n \"shipping_charge\":$node[\"wait for order data\"].json[\"body\"][\"shipping_charge\"],\n \"billing_address\":$node[\"wait for order data\"].json[\"body\"][\"billing_address\"],\n \"shipping_address\":$node[\"wait for order data\"].json[\"body\"][\"shipping_address\"],\n \"place_of_supply\":$node[\"wait for order data\"].json[\"body\"][\"place_of_supply\"]\n}  \nlet returnItems = []\nreturnItems.push({\njson:invoice_obj\n})\nreturn returnItems ;\n"
+        "functionCode": "\nlet inv_num=$node[\"wait for order data\"].json[\"body\"][\"invoice_number\"]\nlet pro_items=$node[\"wait for order data\"].json[\"body\"][\"line_items\"];\nlet payment_terms = $node[\"wait for order data\"].json[\"body\"][\"payment_terms\"]?$node[\"wait for order data\"].json[\"body\"][\"payment_terms\"]:\"Advance\";\nconst id= [];\nconst custom_fields=[];\nlet contact_id=\"\"\ncustom_fields.push(\n    {\n        label:$node[\"Globals\"].json[\"order_number_label\"],\n        value:$node[\"wait for order data\"].json[\"body\"][\"order_number\"]\n    },\n    {\n        label:\"PO Date\",\n        value:$node[\"wait for order data\"].json[\"body\"][\"po_date\"]\n    }\n    \n)\nif($node[\"wait for order data\"].json[\"body\"][\"contact_details\"][\"is_sez\"] == \"1\"){\n    custom_fields.push(\n        {\n            label:\"LUT or Bond No\",\n            value:$node[\"Globals\"].json[\"LUT or Bond No\"]\n        },\n        {\n            label:\"From    To\",\n            value:$node[\"Globals\"].json[\"From To\"]\n        }\n    )\n}\nfor (const [index,item] of items.entries()) {\n  if(item.json.hasOwnProperty(\"code\")){\n     let list = pro_items.find(data=>data.name === (item.json.hasOwnProperty(\"item\")?item.json[\"item\"][\"name\"]:item.json[\"items\"][0][\"item_name\"]))\n     id.push(\n     {\n         item_id: item.json.hasOwnProperty(\"item\")?item.json[\"item\"][\"item_id\"]:item.json[\"items\"][0][\"item_id\"],\n         quantity:list[\"quantity\"],\n         rate:list[\"rate\"],\n         //tax_id: \"1763031000000067204\",\n         //tax_name: \"IGST18\",\n         //tax_type: \"tax\",\n        // tax_percentage: 18,\n     }); \n  }   \n}\nif($node[\"Check for Customer\"].json[\"contacts\"].length!==0){\n    contact_id=$node[\"Check for Customer\"].json[\"contacts\"][0][\"contact_id\"]\n}else{\n    contact_id=$node[\"create contact\"].json[\"contact\"][\"contact_id\"]\n}\nlet invoice_obj={\n \"customer_id\":contact_id,\n  \"line_items\":id,\n \"invoice_number\":\"1test-\"+inv_num,\n \"invoice_date\":$node[\"wait for order data\"].json[\"body\"][\"invoice_date\"],\n \"salesperson_name\":$node[\"wait for order data\"].json[\"body\"][\"salesperson_name\"],\n \"custom_fields\":custom_fields,\n \"payment_terms\":$node[\"Globals\"].json[payment_terms],\n \"discount\": $node[\"wait for order data\"].json[\"body\"][\"discount\"],\n \"shipping_charge\":$node[\"wait for order data\"].json[\"body\"][\"shipping_charge\"],\n \"billing_address\":$node[\"wait for order data\"].json[\"body\"][\"billing_address\"],\n \"shipping_address\":$node[\"wait for order data\"].json[\"body\"][\"shipping_address\"],\n \"place_of_supply\":$node[\"wait for order data\"].json[\"body\"][\"place_of_supply\"],\n \"is_discount_before_tax\":false\n}  \nlet returnItems = []\nreturnItems.push({\njson:invoice_obj\n})\nreturn returnItems ;\n"
       },
       "name": "Function to create invoice ",
       "type": "n8n-nodes-base.function",
@@ -1071,7 +1075,7 @@
             },
             {
               "name": "Advance",
-              "value": "=0"
+              "value": "={{0}}"
             },
             {
               "name": "On Delivery",
@@ -1389,6 +1393,10 @@
             {
               "name": "salesperson_name",
               "value": "={{$node[\"Function to create invoice \"].json[\"salesperson_name\"]}}"
+            },
+            {
+              "name": "is_discount_before_tax",
+              "value": "={{$node[\"Function to create invoice \"].json[\"is_discount_before_tax\"]}}"
             }
           ]
         }
@@ -1641,5 +1649,5 @@
       "updatedAt": "2022-04-25T07:09:37.693Z"
     }
   ],
-  "updatedAt": "2022-05-27T11:12:10.899Z"
+  "updatedAt": "2022-05-30T11:24:15.344Z"
 }
