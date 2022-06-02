@@ -16,40 +16,7 @@
       "main": [
         [
           {
-            "node": "HTTP Request",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Check for Customer": {
-      "main": [
-        [
-          {
-            "node": "IF",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "HTTP Request": {
-      "main": [
-        [
-          {
-            "node": "Check for Customer",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Function to create contact": {
-      "main": [
-        [
-          {
-            "node": "create contact",
+            "node": "Get po_details",
             "type": "main",
             "index": 0
           }
@@ -60,7 +27,7 @@
       "main": [
         [
           {
-            "node": "Function to create contact",
+            "node": "Function to create vendor",
             "type": "main",
             "index": 0
           }
@@ -96,7 +63,7 @@
         ]
       ]
     },
-    "create contact": {
+    "NoOp": {
       "main": [
         [
           {
@@ -107,11 +74,190 @@
         ]
       ]
     },
-    "NoOp": {
+    "create item": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to create invoice ": {
+      "main": [
+        [
+          {
+            "node": "create invoice",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Condition for creating item": {
+      "main": [
+        [
+          {
+            "node": "Function for create item",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Existing Products",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function for create item": {
+      "main": [
+        [
+          {
+            "node": "create item",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Function to create invoice ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Existing Products": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Check for item": {
+      "main": [
+        [
+          {
+            "node": "Condition for creating item",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for vendor": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to create vendor": {
+      "main": [
+        [
+          {
+            "node": "create vendor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create vendor": {
       "main": [
         [
           {
             "node": "Get taxes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for Customer": {
+      "main": [
+        [
+          {
+            "node": "IF1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to create contact": {
+      "main": [
+        [
+          {
+            "node": "create contact",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF1": {
+      "main": [
+        [
+          {
+            "node": "Function to create contact",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create contact": {
+      "main": [
+        [
+          {
+            "node": "Check for vendor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NoOp1": {
+      "main": [
+        [
+          {
+            "node": "Check for vendor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get po_details": {
+      "main": [
+        [
+          {
+            "node": "Check for Customer",
             "type": "main",
             "index": 0
           }
@@ -129,8 +275,8 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        -60,
-        300
+        -380,
+        -20
       ]
     },
     {
@@ -143,32 +289,10 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        160,
+        -580,
         300
       ],
       "webhookId": "e527030c-1bfc-4f07-8b57-24aa8cae6d0d"
-    },
-    {
-      "parameters": {
-        "authentication": "headerAuth",
-        "url": "=https://sdqa.mozart.shakedeal.com/items/sd_mozart_vendor_po_details/{{$node[\"Webhook\"].json[\"body\"][\"keys\"][0]}}?fields=vendor_po_number,id,po_date,po_value,vendor.*,product_details.*,product_details.sd_mozart_vendor_product_mapping_id.*,product_details.sd_mozart_vendor_product_mapping_id.product.*",
-        "options": {
-          "ignoreResponseCode": true
-        }
-      },
-      "name": "HTTP Request",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        620,
-        300
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
-        }
-      }
     },
     {
       "parameters": {
@@ -207,7 +331,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        400,
+        -400,
         300
       ]
     },
@@ -217,7 +341,7 @@
           "string": [],
           "number": [
             {
-              "value1": "={{$node[\"Check for Customer\"].json[\"contacts\"].length}}",
+              "value1": "={{$node[\"Check for vendor\"].json[\"contacts\"].length}}",
               "operation": "equal"
             }
           ]
@@ -227,112 +351,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        1000,
+        900,
         300
-      ]
-    },
-    {
-      "parameters": {
-        "authentication": "headerAuth",
-        "url": "=https://books.zoho.com/api/v3/vendors/?organization_id=685685414&contact_name={{$node[\"HTTP Request\"].json[\"data\"][\"vendor\"][\"vendor_company\"]}}&gst_no={{$node[\"HTTP Request\"].json[\"data\"][\"vendor\"][\"gstin\"]}}",
-        "allowUnauthorizedCerts": true,
-        "options": {}
-      },
-      "name": "Check for Customer",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        840,
-        300
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "29",
-          "name": "zoho books creds"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "authentication": "headerAuth",
-        "requestMethod": "POST",
-        "url": "=https://books.zoho.com/api/v3/vendors/?organization_id=685685414",
-        "options": {
-          "bodyContentType": "json"
-        },
-        "bodyParametersUi": {
-          "parameter": [
-            {
-              "name": "billing_address",
-              "value": "={{$node[\"Function to create contact\"].json[\"billing_address\"]}}"
-            },
-            {
-              "name": "shipping_address",
-              "value": "={{$node[\"Function to create contact\"].json[\"billing_address\"]}}"
-            },
-            {
-              "name": "contact_name",
-              "value": "={{$node[\"HTTP Request\"].json[\"data\"][\"vendor\"][\"vendor_company\"]}}"
-            },
-            {
-              "name": "first_name",
-              "value": "={{$node[\"HTTP Request\"].json[\"data\"][\"vendor\"][\"vendor_name\"]}}"
-            },
-            {
-              "name": "email",
-              "value": "={{$node[\"HTTP Request\"].json[\"data\"][\"vendor\"][\"vendor_email\"]}}"
-            },
-            {
-              "name": "mobile",
-              "value": "={{$node[\"HTTP Request\"].json[\"data\"][\"vendor\"][\"vendor_phone\"]}}"
-            },
-            {
-              "name": "place_of_contact",
-              "value": "=KA"
-            },
-            {
-              "name": "contact_type",
-              "value": "={{$node[\"Function to create contact\"].json.contact_type}}"
-            },
-            {
-              "name": "gst_no",
-              "value": "={{$node[\"HTTP Request\"].json[\"data\"][\"vendor\"][\"gstin\"]}}"
-            },
-            {
-              "name": "gst_treatment",
-              "value": "={{$node[\"Function to create contact\"].json.gst_treatment}}"
-            },
-            {
-              "name": "company_name",
-              "value": "={{$node[\"HTTP Request\"].json[\"data\"][\"vendor\"][\"vendor_company\"]}}"
-            }
-          ]
-        }
-      },
-      "name": "create contact",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        1340,
-        40
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "29",
-          "name": "zoho books creds"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "functionCode": "let contact_name=$node[\"HTTP Request\"].json[\"data\"][\"vendor\"][\"vendor_company\"]\nlet tax_treatment = \"\";\nlet gst_treatment = \"\";\nlet contact_type = \"vendor\"; \nlet JSONString={\n  \"contact_name\":contact_name\n }\n if($node[\"HTTP Request\"].json[\"data\"][\"vendor\"][\"is_sez\"] == \"1\"){\n   tax_treatment = \"business_sez\";\n   gst_treatment = \"business_sez\";\n }else if($node[\"HTTP Request\"].json[\"data\"][\"vendor\"][\"gstin\"] && $node[\"HTTP Request\"].json[\"data\"][\"vendor\"][\"is_sez\"] == \"0\"){\n   tax_treatment = \"business_gst\";\n   gst_treatment = \"business_gst\";\n }else {\n   tax_treatment = \"consumer\";\n   gst_treatment = \"consumer\";\n }\n let billing_address= {\n    \"address\": $node[\"HTTP Request\"].json[\"data\"][\"vendor\"][\"vendor_address\"]\n}\n items[0].json.contact_type = contact_type;\n items[0].json.tax_treatment = tax_treatment;\n items[0].json.gst_treatment = gst_treatment;\n items[0].json.billing_address = billing_address;\n items[0].json.JSONString=JSONString;\nreturn items;"
-      },
-      "name": "Function to create contact",
-      "type": "n8n-nodes-base.function",
-      "typeVersion": 1,
-      "position": [
-        1060,
-        40
       ]
     },
     {
@@ -341,8 +361,8 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        1220,
-        440
+        1160,
+        480
       ]
     },
     {
@@ -367,8 +387,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1980,
-        240
+        2000,
+        260
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -379,14 +399,14 @@
     },
     {
       "parameters": {
-        "functionCode": "\nlet pro_items=$node[\"HTTP Request\"].json[\"data\"][\"product_details\"]\nlet returnItems =[]\npro_items.forEach(function(obj,index){  \n    returnItems.push({\n    json: [{\n       name:obj[\"sd_mozart_vendor_product_mapping_id\"][\"product\"][\"product_name\"],\n       rate:obj[\"rate\"],\n       sku:obj[\"sd_mozart_vendor_product_mapping_id\"][\"product\"][\"product_code\"],\n       item_type :obj[\"item_type\"] \n    }]\n  });\n  \n})\n\nreturn returnItems;"
+        "functionCode": "\nlet pro_items=$node[\"Get po_details\"].json[\"data\"][\"product_details\"]\nlet returnItems =[]\npro_items.forEach(function(obj,index){  \n    returnItems.push({\n    json: [{\n       name:obj[\"sd_mozart_vendor_product_mapping_id\"][\"product\"][\"product_name\"],\n       rate:obj[\"rate\"],\n       sku:obj[\"sd_mozart_vendor_product_mapping_id\"][\"product\"][\"product_code\"],\n       item_type :obj[\"item_type\"] \n    }]\n  });\n  \n})\n\nreturn returnItems;"
       },
       "name": "Function for item objects",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1820,
-        240
+        1800,
+        260
       ]
     },
     {
@@ -399,9 +419,463 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1620,
+        1380,
         260
       ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "29",
+          "name": "zoho books creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "=https://books.zoho.com/api/v3/items?organization_id=685685414",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {
+          "batchInterval": 10,
+          "batchSize": 1,
+          "bodyContentType": "json"
+        },
+        "bodyParametersJson": "={{$node[\"Function for create item\"].json[\"0\"]}}"
+      },
+      "name": "create item",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2560,
+        20
+      ],
+      "retryOnFail": true,
+      "maxTries": 5,
+      "waitBetweenTries": 1000,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "29",
+          "name": "zoho books creds"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "functionCode": "\nlet pro_items=$node[\"Get po_details\"].json[\"data\"][\"product_details\"]\n//let payment_terms = $node[\"wait for order data\"].json[\"body\"][\"payment_terms\"]?$node[\"wait for order data\"].json[\"body\"][\"payment_terms\"]:\"Advance\";\nconst id= [];\nconst custom_fields=[];\nlet contact_id=\"\"\n// custom_fields.push(\n//     {\n//         label:\"PO Date\",\n//         value:$node[\"wait for order data\"].json[\"body\"][\"po_date\"]\n//     }\n    \n// )\n\nfor (const [index,item] of items.entries()) {\n  if(item.json.hasOwnProperty(\"code\")){\n     let list = pro_items.find(data=>data[\"sd_mozart_vendor_product_mapping_id\"][\"product\"][\"product_name\"] === (item.json.hasOwnProperty(\"item\")?item.json[\"item\"][\"name\"]:item.json[\"items\"][0][\"item_name\"]))\n     id.push(\n     {\n         item_id: item.json.hasOwnProperty(\"item\")?item.json[\"item\"][\"item_id\"]:item.json[\"items\"][0][\"item_id\"],\n         quantity:list[\"qty_placed\"],\n         rate:list[\"rate\"],\n         reverse_charge_tax_id:\"\",\n         product_type: \"service\"\n         //tax_id: \"1763031000000067204\",\n         //tax_name: \"IGST18\",\n         //tax_type: \"tax\",\n        // tax_percentage: 18,\n     }); \n  }   \n}\nif($node[\"Check for Customer\"].json[\"contacts\"].length!==0){\n    contact_id=$node[\"Check for Customer\"].json[\"contacts\"][0][\"contact_id\"]\n}else{\n    contact_id=$node[\"create contact\"].json[\"contact\"][\"contact_id\"]\n}\nlet delivery_address= {\n    \"address\": $node[\"Get po_details\"].json[\"data\"][\"delivery_address\"]\n}\nlet invoice_obj={\n \"delivery_customer_id\":contact_id,\n  \"line_items\":id,\n \"date\":$node[\"Get po_details\"].json[\"data\"][\"po_date\"],\n \"reference_number\":\"1test\"+$node[\"Get po_details\"].json[\"data\"][\"po_num\"][\"po_num\"],\n //\"salesperson_name\":$node[\"wait for order data\"].json[\"body\"][\"salesperson_name\"],\n //\"custom_fields\":custom_fields,\n \"payment_terms\":30,\n //\"discount\": $node[\"wait for order data\"].json[\"body\"][\"discount\"],\n //\"shipping_charge\":$node[\"wait for order data\"].json[\"body\"][\"shipping_charge\"],\n //\"billing_address\":$node[\"wait for order data\"].json[\"body\"][\"billing_address\"],\n //\"shipping_address\":$node[\"wait for order data\"].json[\"body\"][\"shipping_address\"],\n \"source_of_supply\":$node[\"Get po_details\"].json[\"data\"][\"po_num\"][\"source_of_supply\"][\"code\"],\n \"destination_of_supply\":$node[\"Get po_details\"].json[\"data\"][\"po_num\"][\"destination_of_supply\"][\"code\"],\n \"is_discount_before_tax\":false,\n \"vendor_id\":$node[\"Check for vendor\"].json[\"contacts\"][0][\"contact_id\"],\n \"delivery_address\":delivery_address\n}  \nlet returnItems = []\nreturnItems.push({\njson:invoice_obj\n})\nreturn returnItems ;\n"
+      },
+      "name": "Function to create invoice ",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        2920,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Check for item\"].json[\"items\"].length}}",
+              "operation": "equal"
+            }
+          ]
+        }
+      },
+      "name": "Condition for creating item",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        2180,
+        260
+      ],
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "functionCode": "let list_items = $node[\"Get po_details\"].json[\"data\"][\"product_details\"]\nlet zoho_taxes = $node[\"Get taxes\"].json[\"taxes\"];\n\nlet returnItems = []\nlet resultFilter = \n   list_items.filter(list=>\n      items.some(\n      data=> data.json[\"page_context\"][\"search_criteria\"][0][\"search_text\"] === list[\"sd_mozart_vendor_product_mapping_id\"][\"product\"][\"product_code\"]\n    )\n  );\n\n\nresultFilter .forEach(function(obj,index){ \n    //let taxes = obj.item_tax_preferences;\n    //let igst_tax_name =  \"IGST\";\n    //let gst_tax_name =  \"GST\";\n    let igst_tax_name = \"IGST\"+obj.tax_percentage;\n    let gst_tax_name = \"GST\"+obj.tax_percentage;\n    let igst_taxid_obj = zoho_taxes.filter(tax=>tax.tax_name == igst_tax_name);\n    let gst_taxid_obj = zoho_taxes.filter(tax=>tax.tax_name == gst_tax_name);\n    returnItems.push({\n    json: [{\n       name:obj[\"sd_mozart_vendor_product_mapping_id\"][\"product\"][\"product_name\"],\n       item_type :obj.sd_mozart_vendor_product_mapping_id.product.type,\n       sku:obj[\"sd_mozart_vendor_product_mapping_id\"][\"product\"][\"product_code\"],\n       hsn_or_sac:obj[\"sd_mozart_vendor_product_mapping_id\"][\"product\"][\"hsn\"],\n       available_stock:0,\n       purchase_account_id:\"1763031000000293201\",\n       purchase_account_name: \"Purchase Domestic\",\n       item_type: \"inventory\",\n       \"item_tax_preferences\": [\n          {\n              \"tax_specification\": \"inter\",\n              \"tax_type\": 2,\n              \"tax_name\": igst_tax_name,\n              \"tax_percentage\": obj.tax_percentage,\n              \"tax_id\": igst_taxid_obj[0].tax_id\n          },\n          {\n              \"tax_specification\": \"intra\",\n              \"tax_type\": 2,\n              \"tax_name\": gst_tax_name,\n              \"tax_percentage\": obj.tax_percentage,\n              \"tax_id\": gst_taxid_obj[0].tax_id\n          }\n        ],\n    }]\n  }); \n})\n\nreturn returnItems ;\n\n"
+      },
+      "name": "Function for create item",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        2260,
+        20
+      ],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {},
+      "name": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 1,
+      "position": [
+        2560,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "name": "Existing Products",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        2380,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://books.zoho.com/api/v3/vendors/?organization_id=685685414&contact_name={{$node[\"Get po_details\"].json[\"data\"][\"vendor\"][\"vendor_company\"]}}&gst_no={{$node[\"Get po_details\"].json[\"data\"][\"vendor\"][\"gstin\"]}}",
+        "allowUnauthorizedCerts": true,
+        "options": {}
+      },
+      "name": "Check for vendor",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        620,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "29",
+          "name": "zoho books creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let contact_name=$node[\"Get po_details\"].json[\"data\"][\"vendor\"][\"vendor_company\"]\nlet tax_treatment = \"\";\nlet gst_treatment = \"\";\nlet contact_type = \"vendor\"; \nlet JSONString={\n  \"contact_name\":contact_name\n }\n if($node[\"Get po_details\"].json[\"data\"][\"vendor\"][\"is_sez\"] == \"1\"){\n   tax_treatment = \"business_sez\";\n   gst_treatment = \"business_sez\";\n }else if($node[\"Get po_details\"].json[\"data\"][\"vendor\"][\"gstin\"] && $node[\"Get po_details\"].json[\"data\"][\"vendor\"][\"is_sez\"] == \"0\"){\n   tax_treatment = \"business_gst\";\n   gst_treatment = \"business_gst\";\n }else {\n   tax_treatment = \"consumer\";\n   gst_treatment = \"consumer\";\n }\n let billing_address= {\n    \"address\": $node[\"Get po_details\"].json[\"data\"][\"vendor\"][\"vendor_address\"]\n}\n items[0].json.contact_type = contact_type;\n items[0].json.tax_treatment = tax_treatment;\n items[0].json.gst_treatment = gst_treatment;\n items[0].json.billing_address = billing_address;\n items[0].json.JSONString=JSONString;\nreturn items;"
+      },
+      "name": "Function to create vendor",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        960,
+        40
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "=https://books.zoho.com/api/v3/vendors/?organization_id=685685414",
+        "options": {
+          "bodyContentType": "json"
+        },
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "billing_address",
+              "value": "={{$node[\"Function to create vendor\"].json[\"billing_address\"]}}"
+            },
+            {
+              "name": "shipping_address",
+              "value": "={{$node[\"Function to create vendor\"].json[\"billing_address\"]}}"
+            },
+            {
+              "name": "contact_name",
+              "value": "={{$node[\"Get po_details\"].json[\"data\"][\"vendor\"][\"vendor_company\"]}}"
+            },
+            {
+              "name": "first_name",
+              "value": "={{$node[\"Get po_details\"].json[\"data\"][\"vendor\"][\"vendor_name\"]}}"
+            },
+            {
+              "name": "email",
+              "value": "={{$node[\"Get po_details\"].json[\"data\"][\"vendor\"][\"vendor_email\"]}}"
+            },
+            {
+              "name": "mobile",
+              "value": "={{$node[\"Get po_details\"].json[\"data\"][\"vendor\"][\"vendor_phone\"]}}"
+            },
+            {
+              "name": "place_of_contact",
+              "value": "=KA"
+            },
+            {
+              "name": "contact_type",
+              "value": "={{$node[\"Function to create vendor\"].json.contact_type}}"
+            },
+            {
+              "name": "gst_no",
+              "value": "={{$node[\"Get po_details\"].json[\"data\"][\"vendor\"][\"gstin\"]}}"
+            },
+            {
+              "name": "gst_treatment",
+              "value": "={{$node[\"Function to create vendor\"].json.gst_treatment}}"
+            },
+            {
+              "name": "company_name",
+              "value": "={{$node[\"Get po_details\"].json[\"data\"][\"vendor\"][\"vendor_company\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "create vendor",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        40
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "29",
+          "name": "zoho books creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://books.zoho.com/api/v3/contacts/?organization_id=685685414",
+        "allowUnauthorizedCerts": true,
+        "options": {},
+        "queryParametersUi": {
+          "parameter": [
+            {
+              "name": "contact_name",
+              "value": "={{$node[\"Get po_details\"].json[\"data\"][\"po_num\"][\"issuer_name\"][\"company_name\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Check for Customer",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        20,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "29",
+          "name": "zoho books creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let contact_name=$node[\"wait for order data\"].json[\"body\"][\"contact_name\"]\nlet tax_treatment = \"\";\nlet gst_treatment = \"\";\nlet contact_type = \"customer\"; \nlet JSONString={\n  \"contact_name\":contact_name\n }\n if($node[\"wait for order data\"].json[\"body\"][\"contact_details\"][\"is_sez\"] == \"1\"){\n   tax_treatment = \"business_sez\";\n   gst_treatment = \"business_sez\";\n }else if($node[\"wait for order data\"].json[\"body\"][\"contact_details\"][\"gst_no\"] && $node[\"wait for order data\"].json[\"body\"][\"contact_details\"][\"is_sez\"] == \"0\"){\n   tax_treatment = \"business_gst\";\n   gst_treatment = \"business_gst\";\n }else {\n   tax_treatment = \"consumer\";\n   gst_treatment = \"consumer\";\n }\n items[0].json.contact_type = contact_type;\n items[0].json.tax_treatment = tax_treatment;\n items[0].json.gst_treatment = gst_treatment;\n items[0].json.JSONString=JSONString;\nreturn items;"
+      },
+      "name": "Function to create contact",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        300,
+        40
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "=https://books.zoho.com/api/v3/contacts?organization_id={{$node[\"Globals\"].json[\"organization_id\"]}}",
+        "allowUnauthorizedCerts": true,
+        "options": {
+          "bodyContentType": "json"
+        },
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "billing_address",
+              "value": "={{$node[\"wait for order data\"].json[\"body\"][\"billing_address\"]}}"
+            },
+            {
+              "name": "shipping_address",
+              "value": "={{$node[\"wait for order data\"].json[\"body\"][\"shipping_address\"]}}"
+            },
+            {
+              "name": "contact_name",
+              "value": "={{$node[\"wait for order data\"].json[\"body\"][\"contact_details\"][\"company_name\"]}}"
+            },
+            {
+              "name": "first_name",
+              "value": "={{$node[\"wait for order data\"].json[\"body\"][\"contact_details\"][\"first_name\"]}}"
+            },
+            {
+              "name": "last_name",
+              "value": "={{$node[\"wait for order data\"].json[\"body\"][\"contact_details\"][\"last_name\"]}}"
+            },
+            {
+              "name": "email",
+              "value": "={{$node[\"wait for order data\"].json[\"body\"][\"contact_details\"][\"email\"]}}"
+            },
+            {
+              "name": "mobile",
+              "value": "={{$node[\"wait for order data\"].json[\"body\"][\"contact_details\"][\"mobile\"]}}"
+            },
+            {
+              "name": "place_of_contact",
+              "value": "={{$node[\"wait for order data\"].json[\"body\"][\"contact_details\"][\"place_of_contact\"]}}"
+            },
+            {
+              "name": "contact_type",
+              "value": "={{$node[\"Function to create contact\"].json.contact_type}}"
+            },
+            {
+              "name": "gst_no",
+              "value": "={{$node[\"wait for order data\"].json[\"body\"][\"contact_details\"][\"gst_no\"]}}"
+            },
+            {
+              "name": "gst_treatment",
+              "value": "={{$node[\"Function to create contact\"].json.gst_treatment}}"
+            },
+            {
+              "name": "pan_no",
+              "value": "={{$node[\"wait for order data\"].json[\"body\"][\"contact_details\"][\"pan_no\"]}}"
+            },
+            {
+              "name": "company_name",
+              "value": "={{$node[\"wait for order data\"].json[\"body\"][\"contact_details\"][\"company_name\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "create contact",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        580,
+        40
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "29",
+          "name": "zoho books creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [],
+          "number": [
+            {
+              "value1": "={{$node[\"Check for Customer\"].json[\"contacts\"].length}}",
+              "operation": "equal"
+            }
+          ]
+        }
+      },
+      "name": "IF1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        220,
+        300
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "NoOp1",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        440,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://sdqa.mozart.shakedeal.com/items/sd_mozart_vendor_po_details/{{$node[\"Webhook\"].json[\"body\"][\"keys\"][0]}}?fields=vendor_po_number,id,po_date,po_value,vendor.*,product_details.*,product_details.sd_mozart_vendor_product_mapping_id.*,product_details.sd_mozart_vendor_product_mapping_id.product.*,po_num.*,po_num.issuer_name.*,po_num.issuer_name.user.*,delivery_address,po_num.source_of_supply.*,po_num.destination_of_supply.*",
+        "options": {
+          "ignoreResponseCode": true
+        }
+      },
+      "name": "Get po_details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        -200,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "=https://books.zoho.com/api/v3/purchaseorders?organization_id=685685414",
+        "allowUnauthorizedCerts": true,
+        "options": {
+          "bodyContentType": "json",
+          "ignoreResponseCode": true
+        },
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "delivery_customer_id",
+              "value": "={{$node[\"Function to create invoice \"].json[\"delivery_customer_id\"]}}"
+            },
+            {
+              "name": "line_items",
+              "value": "={{$node[\"Function to create invoice \"].json[\"line_items\"]}}"
+            },
+            {
+              "name": "reference_number",
+              "value": "={{$node[\"Function to create invoice \"].json[\"reference_number\"]}}"
+            },
+            {
+              "name": "date",
+              "value": "={{$node[\"Function to create invoice \"].json[\"date\"]}}"
+            },
+            {
+              "name": "payment_terms",
+              "value": "={{$node[\"Function to create invoice \"].json[\"payment_terms\"]}}"
+            },
+            {
+              "name": "discount_type",
+              "value": "=entity_level"
+            },
+            {
+              "name": "is_discount_before_tax",
+              "value": "={{$node[\"Function to create invoice \"].json[\"is_discount_before_tax\"]}}"
+            },
+            {
+              "name": "source_of_supply",
+              "value": "={{$node[\"Function to create invoice \"].json[\"source_of_supply\"]}}"
+            },
+            {
+              "name": "destination_of_supply",
+              "value": "={{$node[\"Function to create invoice \"].json[\"destination_of_supply\"]}}"
+            },
+            {
+              "name": "vendor_id",
+              "value": "={{$node[\"Function to create invoice \"].json[\"vendor_id\"]}}"
+            },
+            {
+              "name": "tax_exemption_code",
+              "value": "={{\"GST TAXABLE\"}}"
+            },
+            {
+              "name": "reverse_charge_tax_id",
+              "value": "={{\"\"}}"
+            }
+          ]
+        }
+      },
+      "name": "create invoice",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3160,
+        260
+      ],
+      "alwaysOutputData": true,
       "credentials": {
         "httpHeaderAuth": {
           "id": "29",
@@ -420,5 +894,5 @@
       "updatedAt": "2022-05-30T07:16:52.136Z"
     }
   ],
-  "updatedAt": "2022-06-01T14:25:47.783Z"
+  "updatedAt": "2022-06-02T12:39:03.437Z"
 }
