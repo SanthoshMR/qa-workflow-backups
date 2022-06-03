@@ -85,17 +85,6 @@
         ]
       ]
     },
-    "Function to create invoice ": {
-      "main": [
-        [
-          {
-            "node": "create invoice",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Condition for creating item": {
       "main": [
         [
@@ -129,7 +118,7 @@
       "main": [
         [
           {
-            "node": "Function to create invoice ",
+            "node": "Function to create po",
             "type": "main",
             "index": 0
           }
@@ -258,6 +247,229 @@
         [
           {
             "node": "Check for Customer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to create po": {
+      "main": [
+        [
+          {
+            "node": "create po",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create po": {
+      "main": [
+        [
+          {
+            "node": "Update the vendor po_num",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update the vendor po_num": {
+      "main": [
+        [
+          {
+            "node": "Get PO attachment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get PO attachment": {
+      "main": [
+        [
+          {
+            "node": "Move Binary Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Move Binary Data": {
+      "main": [
+        [
+          {
+            "node": "Upload PO in vpanel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload PO in vpanel": {
+      "main": [
+        [
+          {
+            "node": "Check for vendor in vpanel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for vendor in vpanel": {
+      "main": [
+        [
+          {
+            "node": "Condition for checking vendor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Condition for checking vendor": {
+      "main": [
+        [
+          {
+            "node": "Create vendor",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create vendor": {
+      "main": [
+        [
+          {
+            "node": "Create vendor details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create vendor details": {
+      "main": [
+        [
+          {
+            "node": "Function for getting sku",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NoOp2": {
+      "main": [
+        [
+          {
+            "node": "Function for getting sku",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function for getting sku": {
+      "main": [
+        [
+          {
+            "node": "Get the products",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the products": {
+      "main": [
+        [
+          {
+            "node": "Function to create products",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to create products": {
+      "main": [
+        [
+          {
+            "node": "Checking condition whether to post the products ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Checking condition whether to post the products ": {
+      "main": [
+        [
+          {
+            "node": "post product details",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "post product details": {
+      "main": [
+        [
+          {
+            "node": "Create po in vpanel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NoOp3": {
+      "main": [
+        [
+          {
+            "node": "Create po in vpanel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create po in vpanel": {
+      "main": [
+        [
+          {
+            "node": "Function to map po and product",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to map po and product": {
+      "main": [
+        [
+          {
+            "node": "Map po and products",
             "type": "main",
             "index": 0
           }
@@ -460,18 +672,6 @@
         }
       },
       "continueOnFail": true
-    },
-    {
-      "parameters": {
-        "functionCode": "\nlet pro_items=$node[\"Get po_details\"].json[\"data\"][\"product_details\"]\n//let payment_terms = $node[\"wait for order data\"].json[\"body\"][\"payment_terms\"]?$node[\"wait for order data\"].json[\"body\"][\"payment_terms\"]:\"Advance\";\nconst id= [];\nconst custom_fields=[];\nlet contact_id=\"\"\n// custom_fields.push(\n//     {\n//         label:\"PO Date\",\n//         value:$node[\"wait for order data\"].json[\"body\"][\"po_date\"]\n//     }\n    \n// )\n\nfor (const [index,item] of items.entries()) {\n  if(item.json.hasOwnProperty(\"code\")){\n     let list = pro_items.find(data=>data[\"sd_mozart_vendor_product_mapping_id\"][\"product\"][\"product_name\"] === (item.json.hasOwnProperty(\"item\")?item.json[\"item\"][\"name\"]:item.json[\"items\"][0][\"item_name\"]))\n     id.push(\n     {\n         item_id: item.json.hasOwnProperty(\"item\")?item.json[\"item\"][\"item_id\"]:item.json[\"items\"][0][\"item_id\"],\n         quantity:list[\"qty_placed\"],\n         rate:list[\"rate\"],\n         reverse_charge_tax_id:\"\",\n         product_type: \"service\"\n         //tax_id: \"1763031000000067204\",\n         //tax_name: \"IGST18\",\n         //tax_type: \"tax\",\n        // tax_percentage: 18,\n     }); \n  }   \n}\nif($node[\"Check for Customer\"].json[\"contacts\"].length!==0){\n    contact_id=$node[\"Check for Customer\"].json[\"contacts\"][0][\"contact_id\"]\n}else{\n    contact_id=$node[\"create contact\"].json[\"contact\"][\"contact_id\"]\n}\nlet delivery_address= {\n    \"address\": $node[\"Get po_details\"].json[\"data\"][\"delivery_address\"]\n}\nlet invoice_obj={\n \"delivery_customer_id\":contact_id,\n  \"line_items\":id,\n \"date\":$node[\"Get po_details\"].json[\"data\"][\"po_date\"],\n \"reference_number\":\"1test\"+$node[\"Get po_details\"].json[\"data\"][\"po_num\"][\"po_num\"],\n //\"salesperson_name\":$node[\"wait for order data\"].json[\"body\"][\"salesperson_name\"],\n //\"custom_fields\":custom_fields,\n \"payment_terms\":30,\n //\"discount\": $node[\"wait for order data\"].json[\"body\"][\"discount\"],\n //\"shipping_charge\":$node[\"wait for order data\"].json[\"body\"][\"shipping_charge\"],\n //\"billing_address\":$node[\"wait for order data\"].json[\"body\"][\"billing_address\"],\n //\"shipping_address\":$node[\"wait for order data\"].json[\"body\"][\"shipping_address\"],\n \"source_of_supply\":$node[\"Get po_details\"].json[\"data\"][\"po_num\"][\"source_of_supply\"][\"code\"],\n \"destination_of_supply\":$node[\"Get po_details\"].json[\"data\"][\"po_num\"][\"destination_of_supply\"][\"code\"],\n \"is_discount_before_tax\":false,\n \"vendor_id\":$node[\"Check for vendor\"].json[\"contacts\"][0][\"contact_id\"],\n \"delivery_address\":delivery_address\n}  \nlet returnItems = []\nreturnItems.push({\njson:invoice_obj\n})\nreturn returnItems ;\n"
-      },
-      "name": "Function to create invoice ",
-      "type": "n8n-nodes-base.function",
-      "typeVersion": 1,
-      "position": [
-        2920,
-        260
-      ]
     },
     {
       "parameters": {
@@ -808,34 +1008,75 @@
     {
       "parameters": {
         "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "=https://sdqa.mozart.shakedeal.com/items/sd_mozart_vendor_po_details/{{$node[\"Webhook\"].json[\"body\"][\"keys\"][0]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "vendor_po_number",
+              "value": "={{$node[\"create po\"].json[\"purchaseorder\"][\"purchaseorder_number\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update the vendor po_num",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3440,
+        260
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "\nlet pro_items=$node[\"Get po_details\"].json[\"data\"][\"product_details\"]\n//let payment_terms = $node[\"wait for order data\"].json[\"body\"][\"payment_terms\"]?$node[\"wait for order data\"].json[\"body\"][\"payment_terms\"]:\"Advance\";\nconst id= [];\nconst custom_fields=[];\nlet contact_id=\"\"\n// custom_fields.push(\n//     {\n//         label:\"PO Date\",\n//         value:$node[\"wait for order data\"].json[\"body\"][\"po_date\"]\n//     }\n    \n// )\n\nfor (const [index,item] of items.entries()) {\n  if(item.json.hasOwnProperty(\"code\")){\n     let list = pro_items.find(data=>data[\"sd_mozart_vendor_product_mapping_id\"][\"product\"][\"product_name\"] === (item.json.hasOwnProperty(\"item\")?item.json[\"item\"][\"name\"]:item.json[\"items\"][0][\"item_name\"]))\n     id.push(\n     {\n         item_id: item.json.hasOwnProperty(\"item\")?item.json[\"item\"][\"item_id\"]:item.json[\"items\"][0][\"item_id\"],\n         quantity:list[\"qty_placed\"],\n         rate:list[\"rate\"],\n         reverse_charge_tax_id:\"\",\n         product_type: \"service\",\n         tax_id: item.json.hasOwnProperty(\"item\")?item.json[\"item\"][\"item_tax_preferences\"][0][\"tax_id\"]:item.json[\"items\"][0][\"item_tax_preferences\"][0][\"tax_id\"],\n         //tax_name: \"IGST18\",\n         //tax_type: \"tax\",\n        // tax_percentage: 18,\n     }); \n  }   \n}\nif($node[\"Check for Customer\"].json[\"contacts\"].length!==0){\n    contact_id=$node[\"Check for Customer\"].json[\"contacts\"][0][\"contact_id\"]\n}else{\n    contact_id=$node[\"create contact\"].json[\"contact\"][\"contact_id\"]\n}\nlet delivery_address= {\n    \"address\": $node[\"Get po_details\"].json[\"data\"][\"delivery_address\"]\n}\nlet invoice_obj={\n \"delivery_customer_id\":contact_id,\n  \"line_items\":id,\n \"date\":$node[\"Get po_details\"].json[\"data\"][\"po_date\"],\n \"reference_number\":\"1test\"+$node[\"Get po_details\"].json[\"data\"][\"po_num\"][\"po_num\"],\n //\"salesperson_name\":$node[\"wait for order data\"].json[\"body\"][\"salesperson_name\"],\n //\"custom_fields\":custom_fields,\n \"payment_terms\":30,\n //\"discount\": $node[\"wait for order data\"].json[\"body\"][\"discount\"],\n //\"shipping_charge\":$node[\"wait for order data\"].json[\"body\"][\"shipping_charge\"],\n //\"billing_address\":$node[\"wait for order data\"].json[\"body\"][\"billing_address\"],\n //\"shipping_address\":$node[\"wait for order data\"].json[\"body\"][\"shipping_address\"],\n \"source_of_supply\":$node[\"Get po_details\"].json[\"data\"][\"po_num\"][\"source_of_supply\"][\"code\"],\n \"destination_of_supply\":$node[\"Get po_details\"].json[\"data\"][\"po_num\"][\"destination_of_supply\"][\"code\"],\n \"is_discount_before_tax\":false,\n \"vendor_id\":$node[\"Check for vendor\"].json[\"contacts\"][0][\"contact_id\"],\n \"delivery_address\":delivery_address\n}  \nlet returnItems = []\nreturnItems.push({\njson:invoice_obj\n})\nreturn returnItems ;\n"
+      },
+      "name": "Function to create po",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        2920,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
         "requestMethod": "POST",
         "url": "=https://books.zoho.com/api/v3/purchaseorders?organization_id=685685414",
         "allowUnauthorizedCerts": true,
         "options": {
           "bodyContentType": "json",
-          "ignoreResponseCode": true
+          "ignoreResponseCode": false
         },
         "bodyParametersUi": {
           "parameter": [
             {
               "name": "delivery_customer_id",
-              "value": "={{$node[\"Function to create invoice \"].json[\"delivery_customer_id\"]}}"
+              "value": "={{$node[\"Function to create po\"].json[\"delivery_customer_id\"]}}"
             },
             {
               "name": "line_items",
-              "value": "={{$node[\"Function to create invoice \"].json[\"line_items\"]}}"
+              "value": "={{$node[\"Function to create po\"].json[\"line_items\"]}}"
             },
             {
               "name": "reference_number",
-              "value": "={{$node[\"Function to create invoice \"].json[\"reference_number\"]}}"
+              "value": "={{$node[\"Function to create po\"].json[\"reference_number\"]}}"
             },
             {
               "name": "date",
-              "value": "={{$node[\"Function to create invoice \"].json[\"date\"]}}"
+              "value": "={{$node[\"Function to create po\"].json[\"date\"]}}"
             },
             {
               "name": "payment_terms",
-              "value": "={{$node[\"Function to create invoice \"].json[\"payment_terms\"]}}"
+              "value": "={{$node[\"Function to create po\"].json[\"payment_terms\"]}}"
             },
             {
               "name": "discount_type",
@@ -843,19 +1084,19 @@
             },
             {
               "name": "is_discount_before_tax",
-              "value": "={{$node[\"Function to create invoice \"].json[\"is_discount_before_tax\"]}}"
+              "value": "={{$node[\"Function to create po\"].json[\"is_discount_before_tax\"]}}"
             },
             {
               "name": "source_of_supply",
-              "value": "={{$node[\"Function to create invoice \"].json[\"source_of_supply\"]}}"
+              "value": "={{$node[\"Function to create po\"].json[\"source_of_supply\"]}}"
             },
             {
               "name": "destination_of_supply",
-              "value": "={{$node[\"Function to create invoice \"].json[\"destination_of_supply\"]}}"
+              "value": "={{$node[\"Function to create po\"].json[\"destination_of_supply\"]}}"
             },
             {
               "name": "vendor_id",
-              "value": "={{$node[\"Function to create invoice \"].json[\"vendor_id\"]}}"
+              "value": "={{$node[\"Function to create po\"].json[\"vendor_id\"]}}"
             },
             {
               "name": "tax_exemption_code",
@@ -868,7 +1109,7 @@
           ]
         }
       },
-      "name": "create invoice",
+      "name": "create po",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
@@ -882,6 +1123,382 @@
           "name": "zoho books creds"
         }
       }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://books.zoho.com/api/v3/purchaseorders/{{$node[\"create po\"].json[\"purchaseorder\"][\"purchaseorder_id\"]}}?organization_id=685685414&accept=pdf",
+        "responseFormat": "file",
+        "dataPropertyName": "po_file",
+        "options": {}
+      },
+      "name": "Get PO attachment",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3680,
+        260
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "29",
+          "name": "zoho books creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "=https://sdqa.vpanel.shakedeal.com/files",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {
+          "bodyContentType": "multipart-form-data"
+        },
+        "sendBinaryData": true,
+        "binaryPropertyName": "=input_file:po_file"
+      },
+      "name": "Upload PO in vpanel",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        4040,
+        260
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "setAllData": false,
+        "sourceKey": "po_file",
+        "options": {
+          "keepSource": true,
+          "keepAsBase64": true
+        }
+      },
+      "name": "Move Binary Data",
+      "type": "n8n-nodes-base.moveBinaryData",
+      "typeVersion": 1,
+      "position": [
+        3860,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://sdqa.vpanel.shakedeal.com/items/sdv_vendors?filter={\"vendor\":{ \"email\": { \"_eq\": \"{{$node[\"Get po_details\"].json[\"data\"][\"vendor\"][\"vendor_email\"]}}\" }}}",
+        "options": {}
+      },
+      "name": "Check for vendor in vpanel",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        4300,
+        260
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Check for vendor in vpanel\"].json.data.length}}",
+              "operation": "equal"
+            }
+          ]
+        }
+      },
+      "name": "Condition for checking vendor",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        4520,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "=https://sdqa.vpanel.shakedeal.com/users",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "first_name",
+              "value": "={{$node[\"Get po_details\"].json[\"data\"][\"vendor\"][\"vendor_name\"]}}"
+            },
+            {
+              "name": "email",
+              "value": "={{$node[\"Get po_details\"].json[\"data\"][\"vendor\"][\"vendor_email\"]}}"
+            },
+            {
+              "name": "password",
+              "value": "=vendor@123"
+            }
+          ]
+        }
+      },
+      "name": "Create vendor",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        4580,
+        -20
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "=https://sdqa.vpanel.shakedeal.com/items/sdv_vendors",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "vendor",
+              "value": "={{Array.isArray($node[\"Create vendor\"].json.data)?$node[\"Create vendor\"].json.data[0].id:$node[\"Create vendor\"].json.data.id}}"
+            },
+            {
+              "name": "vendor_phone",
+              "value": "={{$node[\"Get po_details\"].json[\"data\"][\"vendor\"][\"vendor_phone\"]}}"
+            },
+            {
+              "name": "vendor_company",
+              "value": "={{$node[\"Get po_details\"].json[\"data\"][\"vendor\"][\"vendor_company\"]}}"
+            },
+            {
+              "name": "vendor_address",
+              "value": "={{$node[\"Get po_details\"].json[\"data\"][\"vendor\"][\"vendor_address\"]}}"
+            },
+            {
+              "name": "gstin",
+              "value": "={{$node[\"Get po_details\"].json[\"data\"][\"vendor\"][\"gstin\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Create vendor details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        5020,
+        -20
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "name": "NoOp2",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        4780,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let products = $node[\"Get po_details\"].json[\"data\"][\"product_details\"];\n\nlet product_codes = [];\nproducts.forEach(function(obj,index){\n    product_codes.push(obj[\"sd_mozart_vendor_product_mapping_id\"][\"product\"][\"product_code\"])\n})\n\nitems[0].json.product_codes = product_codes;\nreturn items;"
+      },
+      "name": "Function for getting sku",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        5040,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://sdqa.vpanel.shakedeal.com/items/sdv_products?filter={ \"product_code\": { \"_in\": \"{{$node[\"Function for getting sku\"].json.product_codes}}\"}}",
+        "options": {}
+      },
+      "name": "Get the products",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        5340,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "\nlet action = \"\";\nlet products = $node[\"Get po_details\"].json[\"data\"][\"product_details\"];\n\nlet existing_products = items[0].json.data\nlet resultFilter = \n   products.filter(products=>\n     !existing_products.some(\n      data=> data.product_code === products[\"sd_mozart_vendor_product_mapping_id\"][\"product\"][\"product_code\"] \n    )\n  );\n\n\nlet products_to_create = []\nitems[0].json.length= resultFilter .length;\nif(resultFilter.length>0){\n   action=\"post the products\";\n   resultFilter.forEach(function(obj,index){\n     products_to_create[index]={};\n     products_to_create[index].product_name = obj[\"sd_mozart_vendor_product_mapping_id\"][\"product\"][\"product_name\"]\n     products_to_create[index].product_code = obj[\"sd_mozart_vendor_product_mapping_id\"][\"product\"][\"product_code\"]\n     products_to_create[index].hsn = obj[\"sd_mozart_vendor_product_mapping_id\"][\"product\"][\"hsn\"]\n     products_to_create[index].description = obj[\"sd_mozart_vendor_product_mapping_id\"][\"product\"][\"description\"]\n   })\n\n}else action = \"no products to post\";\n\nitems[0].json.postProducts=products_to_create ;\nitems[0].json.products=products;\n\n\n\nitems[0].json.action = action;\n\n\n\nreturn items;"
+      },
+      "name": "Function to create products",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        5600,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json[\"action\"]}}",
+              "value2": "post the products"
+            }
+          ]
+        }
+      },
+      "name": "Checking condition whether to post the products ",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        5840,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "=https://sdqa.vpanel.shakedeal.com/items/sdv_products",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {
+          "bodyContentType": "json"
+        },
+        "bodyParametersJson": "={{$node[\"Function to create products\"].json[\"postProducts\"]}}"
+      },
+      "name": "post product details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        6100,
+        120
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "name": "NoOp3",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        6100,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "=https://sdqa.vpanel.shakedeal.com/items/sdv_vendor_pos",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "po_file",
+              "value": "={{$node[\"Upload PO in vpanel\"].json[\"data\"][\"id\"]}}"
+            },
+            {
+              "name": "po_number",
+              "value": "={{$node[\"create po\"].json[\"purchaseorder\"][\"purchaseorder_number\"]}}"
+            },
+            {
+              "name": "po_value",
+              "value": "={{$node[\"Get po_details\"].json[\"data\"][\"po_value\"]}}"
+            },
+            {
+              "name": "po_date",
+              "value": "={{$node[\"Get po_details\"].json[\"data\"][\"po_date\"]}}"
+            },
+            {
+              "name": "vendor",
+              "value": "={{$node[\"Check for vendor in vpanel\"].json.data.length>0 &&Array.isArray($node[\"Check for vendor in vpanel\"].json.data)?$node[\"Check for vendor in vpanel\"].json.data[0].id:$node[\"Check for vendor in vpanel\"].json.data.length>0 && !Array.isArray($node[\"Check for vendor in vpanel\"].json.data )?$node[\"Check for vendor in vpanel\"].json.data.id:Array.isArray($node[\"Create vendor details\"].json.data)?$node[\"Create vendor details\"].json.data[0].id:$node[\"Create vendor details\"].json.data.id}}"
+            }
+          ]
+        }
+      },
+      "name": "Create po in vpanel",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        6540,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "=https://sdqa.vpanel.shakedeal.com/items/sdv_orders_sdv_products",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Function to map po and product\"].json.po_to_products}}"
+      },
+      "name": "Map po and products",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        7040,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let po_to_products = [];\nlet concat_products = $node[\"Function to create products\"].json.action == \"post the products\"?[...$node[\"Function to create products\"].json[\"postProducts\"],...$node[\"Get the products\"].json.data]:$node[\"Get the products\"].json.data;\nlet product_details = $node[\"Get po_details\"].json[\"data\"][\"product_details\"]\nproduct_details.forEach(function(obj,index){\n  let product = concat_products.filter(prod=>prod.product_code == obj[\"sd_mozart_vendor_product_mapping_id\"][\"product\"][\"product_code\"]);\n  po_to_products[index]={};\n  po_to_products[index].sdv_products_id = product[0].id;\n  po_to_products[index].sdv_vendor_pos_id = Array.isArray($node[\"Create po in vpanel\"].json.data)?$node[\"Create po in vpanel\"].json.data[0].id:$node[\"Create po in vpanel\"].json.data.id;\n  po_to_products[index].req_qty = obj.qty_placed\n  po_to_products[index].rate = obj.rate\n  po_to_products[index].sub_total = obj.sub_total\n  po_to_products[index].tax_value = obj.tax_value\n  po_to_products[index].product_total = obj.product_total\n})\n\n\nitems[0].json.po_to_products= po_to_products;\nitems[0].json.concat_products= concat_products;\nitems[0].json.product_details= product_details;\nreturn items;"
+      },
+      "name": "Function to map po and product",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        6780,
+        320
+      ]
     }
   ],
   "settings": {},
@@ -894,5 +1511,5 @@
       "updatedAt": "2022-05-30T07:16:52.136Z"
     }
   ],
-  "updatedAt": "2022-06-02T12:39:03.437Z"
+  "updatedAt": "2022-06-03T14:41:26.916Z"
 }
