@@ -1,5 +1,5 @@
 {
-  "active": true,
+  "active": false,
   "connections": {
     "Move Binary Data": {
       "main": [
@@ -126,7 +126,7 @@
       "main": [
         [
           {
-            "node": "SA is informed that PO is generated",
+            "node": "Constructing vendor po details",
             "type": "main",
             "index": 0
           }
@@ -579,6 +579,17 @@
           }
         ]
       ]
+    },
+    "Constructing vendor po details": {
+      "main": [
+        [
+          {
+            "node": "post the vendor po_details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2021-03-24T06:19:09.339Z",
@@ -608,8 +619,8 @@
       "type": "n8n-nodes-base.moveBinaryData",
       "typeVersion": 1,
       "position": [
-        860,
-        630
+        660,
+        700
       ]
     },
     {
@@ -629,8 +640,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1100,
-        630
+        980,
+        700
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -669,8 +680,8 @@
       "type": "n8n-nodes-base.htmlExtract",
       "typeVersion": 1,
       "position": [
-        840,
-        270
+        620,
+        160
       ]
     },
     {
@@ -681,7 +692,7 @@
       "type": "n8n-nodes-base.readPDF",
       "typeVersion": 1,
       "position": [
-        860,
+        620,
         460
       ],
       "disabled": true
@@ -836,8 +847,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        6470,
-        510
+        6460,
+        500
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -854,20 +865,20 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1040,
-        270
+        880,
+        160
       ]
     },
     {
       "parameters": {
-        "functionCode": "let data = items[0].json.data;\nlet po_file = $node[\"Merging the globals and file Id\"].json[\"data\"][\"id\"];\nlet po_num = $node[\"Merging the globals and file Id\"].json[\"po_num\"];\nlet po_value= $node[\"Merging the globals and file Id\"].json[\"po_value\"];\nlet po_status =$node[\"Merging the globals and file Id\"].json[\"po_status\"];\nlet po_date =$node[\"Merging the globals and file Id\"].json[\"po_date\"];\nlet po_type= $node[\"Merging the globals and file Id\"].json[\"po_type\"];\nlet issuer_id= $node[\"Creating user\"].json[\"action\"]===\"user exists\"?$node[\"Get user_id\"].json.data[0][\"id\"]:$node[\"Post to the user_details\"].json.data[\"id\"];\nlet po_deliver_date = $node[\"Extracting PO details\"].json[\"max_date\"];\nlet req_quantity = $node[\"constructing_product_vendor_mapping\"].json[\"req_quantity\"];\nlet product_deliverDate = $node[\"constructing_product_vendor_mapping\"].json[\"product_deliverDate\"];\nlet product_price = $node[\"constructing_product_vendor_mapping\"].json[\"product_price\"];\n\nlet concated_products = $node[\"constructing_product_vendor_mapping\"].json[\"concatedProducts\"];\nlet po_products = $node[\"Extracting PO details\"].json[\"products\"];\n\nlet shakedeal_poc_id = $node[\"Get shakedeal POC\"].json.data[0].id;\n\n\n\nlet existing_product_vendor = $node[\"Get product_vendor\"].json.data;\nlet product_vendor_action = $node[\"construct to post product_vendor\"].json.action;\n\nif(product_vendor_action === \"post the product_vendor\"){\n     let posted_product_vendor = $node[\"post the product_vendor_mapping\"].json.data;\n     items[0].json.posted_product_vendor = posted_product_vendor; \n\n}\n\nif(product_vendor_action === \"post the product_vendor\"){\n   if(existing_product_vendor.length>0){\n      let concated_product_vendor = existing_product_vendor.concat(items[0].json.posted_product_vendor);\n      items[0].json.concated_product_vendor = concated_product_vendor;\n   \n   }else items[0].json.concated_product_vendor = items[0].json.posted_product_vendor;\n\n}else items[0].json.concated_product_vendor = existing_product_vendor;\n\nlet concated_product_vendor  = items[0].json.concated_product_vendor;\n\nlet product_vendor = [];\n\nif(concated_product_vendor.length>1){\n    concated_product_vendor.forEach(function(obj,index){\n         product_vendor[index] ={};\n         product_vendor[index].sd_mozart_vendor_product_mapping_id=obj[\"id\"];\n      \n         let result_Product = concated_products.find(product=>product[\"id\"]===obj[\"product\"]);\n         let result_poProduct = po_products.find(po=>po[\"product_code\"]===result_Product[\"product_code\"]);\n         product_vendor[index].req_qty =  result_poProduct[\"product_quantity\"];\n         product_vendor[index].delivery_date = new Date(result_poProduct[\"po_deliver_date\"]).toISOString();\n         product_vendor[index].product_total = result_poProduct[\"productvalueWithTax\"]\n\n     })\n\n}else {\n         if(Array.isArray(concated_product_vendor)){\n            items[0].json.prod_ven_id = concated_product_vendor[0][\"id\"];\n         \n         }else items[0].json.prod_ven_id  = concated_product_vendor[\"id\"];\n         \n         product_vendor[0] ={};\n         product_vendor[0].sd_mozart_vendor_product_mapping_id=items[0].json.prod_ven_id;\n         product_vendor[0].req_qty= req_quantity[0];\n         product_vendor[0].delivery_date = new Date(product_deliverDate[0]).toISOString();\n         product_vendor[0].product_total = product_price[0];\n        \n}\n\nlet po_details=[];\npo_details[0]={};\npo_details[0].po_file=po_file;\npo_details[0].po_num=po_num;\npo_details[0].po_value=po_value;\npo_details[0].po_status=po_status;\npo_details[0].po_date=new Date(po_date).toISOString();\npo_details[0].po_type=po_type;\npo_details[0].issuer_name=issuer_id;\npo_details[0].shakedeal_poc_details = shakedeal_poc_id; \n//po_details[0].product_ids=product_ids;\npo_details[0].po_deliver_date =new Date(po_deliver_date).toISOString(); \npo_details[0].products= product_vendor; \n\n\nitems[0].json.po_products = po_products; \nitems[0].json.concated_products = concated_products; \nitems[0].json.po_details = po_details;\nreturn items\n"
+        "functionCode": "let data = items[0].json.data;\nlet po_file = $node[\"Merging the globals and file Id\"].json[\"data\"][\"id\"];\nlet po_num = $node[\"Merging the globals and file Id\"].json[\"po_num\"];\nlet po_value= $node[\"Merging the globals and file Id\"].json[\"po_value\"];\nlet po_status =$node[\"Merging the globals and file Id\"].json[\"po_status\"];\nlet po_date =$node[\"Merging the globals and file Id\"].json[\"po_date\"];\nlet po_type= $node[\"Merging the globals and file Id\"].json[\"po_type\"];\nlet issuer_id= $node[\"Creating user\"].json[\"action\"]===\"user exists\"?$node[\"Get user_id\"].json.data[0][\"id\"]:$node[\"Post to the user_details\"].json.data[\"id\"];\nlet po_deliver_date = $node[\"Extracting PO details\"].json[\"max_date\"];\nlet req_quantity = $node[\"constructing_product_vendor_mapping\"].json[\"req_quantity\"];\nlet product_deliverDate = $node[\"constructing_product_vendor_mapping\"].json[\"product_deliverDate\"];\nlet product_price = $node[\"constructing_product_vendor_mapping\"].json[\"product_price\"];\n\nlet concated_products = $node[\"constructing_product_vendor_mapping\"].json[\"concatedProducts\"];\nlet po_products = $node[\"Extracting PO details\"].json[\"products\"];\n\nlet shakedeal_poc_id = $node[\"Get shakedeal POC\"].json.data[0].id;\n\n\n\nlet existing_product_vendor = $node[\"Get product_vendor\"].json.data;\nlet product_vendor_action = $node[\"construct to post product_vendor\"].json.action;\n\nif(product_vendor_action === \"post the product_vendor\"){\n     let posted_product_vendor = $node[\"post the product_vendor_mapping\"].json.data;\n     items[0].json.posted_product_vendor = posted_product_vendor; \n\n}\n\nif(product_vendor_action === \"post the product_vendor\"){\n   if(existing_product_vendor.length>0){\n      let concated_product_vendor = existing_product_vendor.concat(items[0].json.posted_product_vendor);\n      items[0].json.concated_product_vendor = concated_product_vendor;\n   \n   }else items[0].json.concated_product_vendor = items[0].json.posted_product_vendor;\n\n}else items[0].json.concated_product_vendor = existing_product_vendor;\n\nlet concated_product_vendor  = items[0].json.concated_product_vendor;\n\nlet product_vendor = [];\n\nif(concated_product_vendor.length>1){\n    concated_product_vendor.forEach(function(obj,index){\n         product_vendor[index] ={};\n         product_vendor[index].sd_mozart_vendor_product_mapping_id=obj[\"id\"];\n      \n         let result_Product = concated_products.find(product=>product[\"id\"]===obj[\"product\"]);\n         let result_poProduct = po_products.find(po=>po[\"product_code\"]===result_Product[\"product_code\"]);\n         product_vendor[index].req_qty =  result_poProduct[\"product_quantity\"];\n         product_vendor[index].delivery_date = new Date(result_poProduct[\"po_deliver_date\"]).toISOString();\n         product_vendor[index].product_total = result_poProduct[\"productvalueWithTax\"]\n         product_vendor[index].tax_percentage = parseInt(result_poProduct[\"tax_percentage\"])\n         product_vendor[index].rate = result_poProduct[\"rate\"]\n\n     })\n\n}else {\n         if(Array.isArray(concated_product_vendor)){\n            items[0].json.prod_ven_id = concated_product_vendor[0][\"id\"];\n         \n         }else items[0].json.prod_ven_id  = concated_product_vendor[\"id\"];\n         \n         product_vendor[0] ={};\n         product_vendor[0].sd_mozart_vendor_product_mapping_id=items[0].json.prod_ven_id;\n         product_vendor[0].req_qty= req_quantity[0];\n         product_vendor[0].delivery_date = new Date(product_deliverDate[0]).toISOString();\n         product_vendor[0].product_total = product_price[0];\n         product_vendor[0].tax_percentage = parseInt(po_products[0].tax_percentage)\n         product_vendor[0].rate = po_products[0][\"rate\"]\n        \n}\n\nlet po_details=[];\npo_details[0]={};\npo_details[0].po_file=po_file;\npo_details[0].po_num=po_num;\npo_details[0].po_value=po_value;\npo_details[0].po_status=po_status;\npo_details[0].po_date=new Date(po_date).toISOString();\npo_details[0].po_type=po_type;\npo_details[0].issuer_name=issuer_id;\npo_details[0].shakedeal_poc_details = shakedeal_poc_id; \n//po_details[0].product_ids=product_ids;\npo_details[0].po_deliver_date =new Date(po_deliver_date).toISOString(); \npo_details[0].products= product_vendor; \npo_details[0].source_of_supply = 7;\npo_details[0].destination_of_supply = 16;\n\n\nitems[0].json.po_products = po_products; \nitems[0].json.concated_products = concated_products; \nitems[0].json.po_details = po_details;\nitems[0].json.product_vendor = product_vendor; \nreturn items\n"
       },
       "name": "constructing po_details",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        6250,
-        510
+        6240,
+        500
       ]
     },
     {
@@ -910,31 +921,31 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        580,
+        420,
         480
       ]
     },
     {
       "parameters": {
-        "functionCode": "items[0].json.attachmentIndex = items[0].binary ? Object.values(items[0].binary).findIndex(key => key.mimeType === \"application/pdf\") : -1;\nif(items[0].json.attachmentIndex !== -1){\n  items[0].json.data = items[0].binary[items[0].json.attachmentIndex];\n}\n\n\nlet fromEmails = [\"sairam.reddy@shakedeal.com\",\"ordersender-prod@ansmtp.ariba.com\",\"chidanand@shakedeal.com\"];\nlet toEmails = [\"shakedeal.mozart+balco@shakedeal.com\",\"shakedeal.mozart+vedanta@shakedeal.com\",\"sairam.shakedeal+vedantaqa@gmail.com\",\"sairam.shakedeal+balcoqa@gmail.com\"]\n\nitems[0].json.toEmails = toEmails;\nitems[0].json.fromEmails = fromEmails;\n\nreturn items\n"
+        "functionCode": "items[0].json.attachmentIndex = items[0].binary ? Object.values(items[0].binary).findIndex(key => key.mimeType === \"application/pdf\") : -1;\nif(items[0].json.attachmentIndex !== -1){\n  items[0].json.data = items[0].binary[items[0].json.attachmentIndex];\n}\n\n\nlet fromEmails = [\"sairam.reddy@shakedeal.com\",\"ordersender-prod@ansmtp.ariba.com\",\"chidanand@shakedeal.com\"];\nlet toEmails = [\"shakedeal.mozart+balco@shakedeal.com\",\"shakedeal.mozart+vedanta@shakedeal.com\",\"sairam.shakedeal+vedantaqa@gmail.com\",\"sairam.shakedeal+balcoqa@gmail.com\",\"sairam.shakedeal+mozartqa@gmail.com\"]\n\nitems[0].json.toEmails = toEmails;\nitems[0].json.fromEmails = fromEmails;\n\nreturn items\n"
       },
       "name": "Get the index of attachment",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        380,
-        490
+        240,
+        480
       ]
     },
     {
       "parameters": {
-        "functionCode": "let id = Array.isArray($node[\"post buyer details\"].json.data)?$node[\"post buyer details\"].json.data[0][\"id\"]:$node[\"post buyer details\"].json.data[\"id\"];\nlet user_phone = $node[\"Extracting PO details\"].json[\"buyer_contact\"];\nlet user_details = [];\nuser_details[0] = {};\nuser_details[0].user = id ;\nuser_details[0].phone_number = user_phone ;\nitems[0].json.user_details = user_details;\nreturn items"
+        "functionCode": "let id = Array.isArray($node[\"post buyer details\"].json.data)?$node[\"post buyer details\"].json.data[0][\"id\"]:$node[\"post buyer details\"].json.data[\"id\"];\nlet user_phone = $node[\"Extracting PO details\"].json[\"buyer_contact\"];\nlet buyer_name = $node[\"Extracting PO details\"].json[\"buyer_name\"]\nlet user_details = [];\nuser_details[0] = {};\nuser_details[0].user = id ;\nuser_details[0].phone_number = user_phone ;\nuser_details[0].company_name = buyer_name ;\nitems[0].json.user_details = user_details;\nreturn items"
       },
       "name": "construct for user_details",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        2770,
+        2760,
         320
       ]
     },
@@ -1049,8 +1060,8 @@
       "type": "n8n-nodes-base.emailReadImap",
       "typeVersion": 1,
       "position": [
-        20,
-        490
+        -180,
+        480
       ],
       "credentials": {
         "imap": {
@@ -1065,8 +1076,8 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        860,
-        810
+        500,
+        840
       ]
     },
     {
@@ -1167,13 +1178,13 @@
     },
     {
       "parameters": {
-        "functionCode": "\n\nlet product_name = [];\nlet product_code=[];\nlet product_quantity=[];\nlet material_description=[];\nlet vendor_name=[];\nlet vendor_phone=[];\nlet vendor_companyName=[];\nlet vendor_email=[];\nlet vendor_adress=[];\nlet po_deliverDate=[];\nlet productvalueWithTax=[];\nlet hsn_code = [];\nlet uom = [];\n\n\n\nconst pdf = require('pdf-parse');\n\nfunction render_page(pageData) {\n  //check documents https://mozilla.github.io/pdf.js/\n  let render_options = {\n    //replaces all occurrences of whitespace with standard spaces (0x20). The default value is `false`.\n    normalizeWhitespace: false,\n    //do not attempt to combine same line TextItem's. The default value is `false`.\n    disableCombineTextItems: false,\n  };\n\n  return pageData.getTextContent(render_options).then(function (textContent) {\n    let lastY,\n      text = \"\";\n    for (let item of textContent.items) {\n      text += `\\n${item.str}`;\n    }\n    return text;\n  });\n}\n\nlet options = {\n  pagerender: render_page,\n  max: 15,\n};\n\nconst binaryData = Buffer.from(items[0].binary[\"attachment_\" + $node[\"Get the index of attachment\"].json[\"attachmentIndex\"]].data, \"base64\");\nitems[0].json.content = await pdf(binaryData, options);\nlet lines=  items[0].json.content.text.split(\"\\n\");\nitems[0].json.all_lines = lines;\nlet lenLines = items[0].json.all_lines.length;\n\nfor(i=0;i<lenLines;i++){\n   if(lines[i].includes(\"PO Number :\")){\n      let po_line = lines[i].split(\":\");\n      items[0].json.po_number = po_line[1].trim();\n   \n   }else if(lines[i].startsWith(\"Date :\")){\n      items[0].json.po_date = lines[i-4].includes(\"Purchase Order Details\")?lines[i-1]:lines[i+1];\n   \n   \n   }else if(lines[i].includes(\"Buyer :\")){\n      items[0].json.buyer_name =lines[i-2].includes(\"Buyer Details\")?lines[i-1]:lines[i+1];\n   \n   }else if(lines[i].includes(\"Contact :\")){\n      items[0].json.buyer_contact =lines[i-4].includes(\"Buyer Details\")?parseInt(lines[i-1]):parseInt(lines[i+1]);\n   \n   }else if(lines[i].startsWith(\"Mail ID :\")){\n      items[0].json.buyer_email = lines[i-6].includes(\"Buyer Details\")?lines[i-1]:lines[i+1];\n   \n   }else if(lines[i].includes(\"Contact Details -\")||lines[i].includes(\"Details of Original Vendor\")){\n      vendor_name.push(lines[i+2].trim());\n      //vendor_adress.push(lines[i+3]);\n      //let line_phone = lines[i+6].split(\"/\");\n      //vendor_phone.push(line_phone[1]);\n    //  let email_line = lines[i+7].split(\":\");\n     // vendor_email.push(email_line[1]);\n    \n   }else if(lines[i].includes(\"Item No\")){\n      if(lines[i+12].includes(\"THIS IS SYSTEM GENERATED DOCUMENT AND HENCE DOES NOT REQUIRE ANY SIGNATURE. PLEASE TREAT THIS AS ORIGINAL AND SUBMIT YOUR ORDER ACKNOWLEDGEMENT.\")){\n         if(lines[i+21].match(/^[0-9]+$/)!==null){\n            product_code.push(lines[i+20]);\n            product_name.push(lines[i+22]);\n            product_quantity.push(lines[i+23]);\n            po_deliverDate.push(lines[i+25]);\n            hsn_code.push(lines[i+21]);\n            uom.push(lines[i+24]);\n         }else{\n            product_code.push(lines[i+20]);\n            product_name.push(lines[i+21]);\n            product_quantity.push(lines[i+22]);\n            po_deliverDate.push(lines[i+24]);\n            uom.push(lines[i+23]);\n        \n         }\n      \n      }else{\n         if(lines[i+11].match(/^[0-9]+$/)!==null){\n            product_code.push(lines[i+10]);\n            product_name.push(lines[i+12]);\n            product_quantity.push(lines[i+13]);\n            po_deliverDate.push(lines[i+15]);\n            hsn_code.push(lines[i+11]);\n            uom.push(lines[i+14]);\n         }else{\n             product_code.push(lines[i+10]);\n             product_name.push(lines[i+11]);\n             product_quantity.push(lines[i+12]);\n             po_deliverDate.push(lines[i+14]);\n             uom.push(lines[i+13]);\n            \n         \n         }\n      \n      }\n      \n   }else if(lines[i].includes(\"Material Long Text:\")){\n       \n         material_description.push(lines[i+1]);\n    \n   \n   }else if(lines[i].includes(\"Total With Tax :\")){\n         let product_price = lines[i+1].match(/\\d+/g) != null?lines[i+1].split(\",\").join(''):lines[i-1].split(\",\").join('');\n         productvalueWithTax.push(parseFloat(product_price));\n   \n   \n   }else if(lines[i].includes(\"Grand Total :\")){\n         let po_value_line = lines[i+1].match(/\\d+/g) != null?lines[i+1].split(\",\").join(''):lines[i-1].split(\",\").join('');\n         items[0].json.po_value = parseFloat(po_value_line);\n   \n   \n   }else if(lines[i].startsWith(\"ACTUAL VENDOR:\")){\n        \n           \n              let vendor_name_line = lines[i].split(\":\")\n              vendor_name.push(vendor_name_line[1].trim());\n              let vendor_mobile_line = lines[i+4].match(/\\d+/g);\n             \n              //let vendor_email_line = lines[i+1].includes(\"Email :\")?lines[i+1].split(\":\"):lines[i+5].split(\":\");\n             // vendor_email.push(vendor_email_line[1].trim());\n              \n            \n        \n   \n   }else if(lines[i].includes(\"Original Supplier\")||lines[i].includes(\"ORGINAL SUPPLIER\")||lines[i].includes(\"ORIGINAL SUPPLIER\")||lines[i].includes(\"CONTACT DETAILS:-\")||lines[i].includes(\"VENDOR NAME & DETAILS :\")||lines[i].includes(\"ORIGINAL VENDOR CONTACT DETAILS:\")||lines[i].includes(\"Vendor Details -\")||lines[i].includes(\"VENDOR CONTRACT DETAIL\")||lines[i].includes(\"Original supplier details are as follows\")||lines[i].includes(\"THE PO ITEM IS PROCURED FROM BELOW VENDOR\")||lines[i].includes(\"Actual Vendor\")||lines[i].includes(\"Principle vendor\")){\n          vendor_name.push(lines[i+1].trim());\n          //let vendor_email_line = lines[i+2].split(\":\");\n         // let email = vendor_email_line[1].replace(\"Web\",\"\")\n         // vendor_email.push(email.trim())\n   \n   }else if(lines[i].includes(\" Vendor Name & Details for Material Code\")){\n          vendor_companyName.push(lines[i+1].trim());\n          vendor_name.push(lines[i+2].trim());\n          let contact = lines[i+3].includes(\"Mob no -\")?lines[i+3].replace(\"Mob no -\",\" \"):lines[i+3].replace(\"Mob no\",\" \");\n          vendor_phone.push(contact.trim());\n          let email=lines[i+4].includes(\"Address\")?lines[i+5].split(\"-\"):lines[i+4].split(\"-\");\n          vendor_email.push(email[1].trim());\n    \n   \n   }else if(lines[i].includes(\"OEM Vendor\")||lines[i].includes(\"OEM VENDOR\")){\n          let vendor_name_line = lines[i].split(\"-\");\n          vendor_name.push(vendor_name_line[1].trim());\n         // let vendor_addresss_line = lines[i+1].split(\"-\");\n         // vendor_adress.push(vendor_addresss_line[1].trim());\n          //let vendor_email_line = lines[i+2].split(\"-\");\n        //  vendor_email.push(vendor_email_line[1].trim());\n        //  let vendor_phone_line = lines[i+3].split(\"-\");\n        //  vendor_phone.push(vendor_phone_line[1].trim());\n   \n   }else if(lines[i].startsWith(\"ORIGINAL VENDOR\")||lines[i].startsWith(\"Original Vendor\")||lines[i].startsWith(\"VENDOR:\")){\n          let vendor_name_line = lines[i].split(\":\");\n          vendor_name.push(vendor_name_line[1].trim());\n   \n   }else if(lines[i].startsWith(\"SUPPLIER DETAILS\")){\n          vendor_name.push(lines[i+2].trim());\n   \n   }\n\n}\n\n\nlet length = vendor_name.length;\n\nlet p=[];\nproduct_name .forEach(function(item,index){\n      \n       p[index] = {};\n      \n       p[index].product_name =product_name[index] ;\n       p[index].product_quantity=product_quantity[index];\n       p[index].product_code=product_code[index];\n       p[index].productvalueWithTax=productvalueWithTax[index];\n       p[index].description=material_description[index];\n      \n       p[index].po_deliver_date = po_deliverDate[index];\n       p[index].hsn_code = hsn_code[index]\n       p[index].uom = uom[index]\n           \n       \n    })\n    \nitems[0].json.products=p;\n\nlet v=[];\nvendor_name.forEach(function(item,index){\n      v[index] = {};\n      v[index].vendor_name=vendor_name[index];\n      v[index].vendor_phone=vendor_phone[index];\n      v[index].vendor_company=vendor_companyName[index];\n      v[index].vendor_email=vendor_email[index];\n      v[index].vendor_address=vendor_adress[index];\n\n\n})\nitems[0].json.vendors=v;\n\n//for mapping the vendor and products\n\nlet prodven=[];\nif(vendor_name.length>1){\n   for(i=0;i<lenLines;i++){\n       product_code.forEach(function(value,index){\n             if(lines[i].includes(value+\" \"+\"Qtys\")){\n                prodven[index]={};\n                prodven[index].productCode = value;\n                let replaceEmail =lines[i+4].includes(\"Email ID\") ?lines[i+4].split(\"-\"):lines[i+5].split(\"-\");\n                prodven[index].email = replaceEmail[1].trim();\n               \n                let result = p.find(obj=>obj[\"product_code\"]===value);\n                prodven[index].quantity= result[\"product_quantity\"];\n                prodven[index].product_deliverDate = result[\"po_deliver_date\"];\n                prodven[index].product_price = result[\"productvalueWithTax\"];\n                \n                \n       \n            }\n  \n      })\n   }\n}\n\n\nlet max =po_deliverDate[0];\n\npo_deliverDate.forEach(function(value,index){\n       max = new Date(value) > new Date(max)? value: max;\n      \n\n\n})\n//items[0].json.dates =dates \nif(vendor_name.length>0){\n   items[0].json.order_type = \"routing\";\n\n}else items[0].json.order_type = \"rfq\";\n\n\nitems[0].json.max_date = max; \n\n\n\nitems[0].json.prodven = prodven;\n\n\nitems[0].json.product_name=product_name;\nitems[0].json.product_code=product_code;\nitems[0].json.product_quantity=product_quantity;\nitems[0].json.material_description=material_description;\nitems[0].json.vendor_name=vendor_name;\nitems[0].json.vendor_phone=vendor_phone;\nitems[0].json.vendor_email=vendor_email;\nitems[0].json.vendor_companyName=vendor_companyName;\nitems[0].json.po_deliverDate = po_deliverDate;\nitems[0].json.productvalueWithTax = productvalueWithTax;\nitems[0].json.vendor_adress=vendor_adress;\n\n\n\nreturn items\n"
+        "functionCode": "\n\nlet product_name = [];\nlet product_code=[];\nlet product_quantity=[];\nlet material_description=[];\nlet vendor_name=[];\nlet vendor_phone=[];\nlet vendor_companyName=[];\nlet vendor_email=[];\nlet vendor_adress=[];\nlet po_deliverDate=[];\nlet productvalueWithTax=[];\nlet hsn_code = [];\nlet uom = [];\nlet vendor_gst = [];\nlet vendor_pan = [];\nlet taxes = [];\nlet rates = [];\n\n\n\nconst pdf = require('pdf-parse');\n\nfunction render_page(pageData) {\n  //check documents https://mozilla.github.io/pdf.js/\n  let render_options = {\n    //replaces all occurrences of whitespace with standard spaces (0x20). The default value is `false`.\n    normalizeWhitespace: false,\n    //do not attempt to combine same line TextItem's. The default value is `false`.\n    disableCombineTextItems: false,\n  };\n\n  return pageData.getTextContent(render_options).then(function (textContent) {\n    let lastY,\n      text = \"\";\n    for (let item of textContent.items) {\n      text += `\\n${item.str}`;\n    }\n    return text;\n  });\n}\n\nlet options = {\n  pagerender: render_page,\n  max: 15,\n};\n\nconst binaryData = Buffer.from(items[0].binary[\"attachment_\" + $node[\"Get the index of attachment\"].json[\"attachmentIndex\"]].data, \"base64\");\nitems[0].json.content = await pdf(binaryData, options);\nlet lines=  items[0].json.content.text.split(\"\\n\");\nitems[0].json.all_lines = lines;\nlet lenLines = items[0].json.all_lines.length;\n\nfor(i=0;i<lenLines;i++){\n   if(lines[i].includes(\"PO Number :\")){\n      let po_line = lines[i].split(\":\");\n      items[0].json.po_number = po_line[1].trim();\n   \n   }else if(lines[i].startsWith(\"Date :\")){\n      items[0].json.po_date = lines[i-4].includes(\"Purchase Order Details\")?lines[i-1]:lines[i+1];\n   \n   \n   }else if(lines[i].includes(\"Buyer :\")){\n      items[0].json.buyer_name =lines[i-2].includes(\"Buyer Details\")?lines[i-1]:lines[i+1];\n   \n   }else if(lines[i].includes(\"Contact :\")){\n      items[0].json.buyer_contact =lines[i-4].includes(\"Buyer Details\")?parseInt(lines[i-1]):parseInt(lines[i+1]);\n   \n   }else if(lines[i].startsWith(\"Mail ID :\")){\n      items[0].json.buyer_email = lines[i-6].includes(\"Buyer Details\")?lines[i-1]:lines[i+1];\n   \n   }else if(lines[i].includes(\"Contact Details -\")||lines[i].includes(\"Details of Original Vendor\")){\n      vendor_name.push(lines[i+2].trim());\n      //vendor_adress.push(lines[i+3]);\n      //let line_phone = lines[i+6].split(\"/\");\n      //vendor_phone.push(line_phone[1]);\n    //  let email_line = lines[i+7].split(\":\");\n     // vendor_email.push(email_line[1]);\n    \n   }else if(lines[i].includes(\"Item No\")){\n      if(lines[i+12].includes(\"THIS IS SYSTEM GENERATED DOCUMENT AND HENCE DOES NOT REQUIRE ANY SIGNATURE. PLEASE TREAT THIS AS ORIGINAL AND SUBMIT YOUR ORDER ACKNOWLEDGEMENT.\")){\n         if(lines[i+21].match(/^[0-9]+$/)!==null){\n            product_code.push(lines[i+20]);\n            product_name.push(lines[i+22]);\n            product_quantity.push(lines[i+23]);\n            po_deliverDate.push(lines[i+25]);\n            hsn_code.push(lines[i+21]);\n            uom.push(lines[i+24]);\n            taxes.push(lines[i+30])\n            rates.push(parseFloat(lines[i+16].split(\",\").join('')))\n         }else{\n            product_code.push(lines[i+20]);\n            product_name.push(lines[i+21]);\n            product_quantity.push(lines[i+22]);\n            po_deliverDate.push(lines[i+24]);\n            uom.push(lines[i+23]);\n            taxes.push(lines[i+30])\n            rates.push(parseFloat(lines[i+16].split(\",\").join('')))\n         }\n      \n      }else{\n         if(lines[i+11].match(/^[0-9]+$/)!==null){\n            product_code.push(lines[i+10]);\n            product_name.push(lines[i+12]);\n            product_quantity.push(lines[i+13]);\n            po_deliverDate.push(lines[i+15]);\n            hsn_code.push(lines[i+11]);\n            uom.push(lines[i+14]);\n            taxes.push(lines[i+30])\n            rates.push(parseFloat(lines[i+16].split(\",\").join('')))\n         }else{\n             product_code.push(lines[i+10]);\n             product_name.push(lines[i+11]);\n             product_quantity.push(lines[i+12]);\n             po_deliverDate.push(lines[i+14]);\n             uom.push(lines[i+13]);\n             taxes.push(lines[i+30])\n            rates.push(parseFloat(lines[i+16].split(\",\").join('')))\n         \n         }\n      \n      }\n      \n   }else if(lines[i].includes(\"Material Long Text:\")){\n       \n         material_description.push(lines[i+1]);\n    \n   \n   }else if(lines[i].includes(\"Total With Tax :\")){\n         let product_price = lines[i+1].match(/\\d+/g) != null?lines[i+1].split(\",\").join(''):lines[i-1].split(\",\").join('');\n         productvalueWithTax.push(parseFloat(product_price));\n   \n   \n   }else if(lines[i].includes(\"Grand Total :\")){\n         let po_value_line = lines[i+1].match(/\\d+/g) != null?lines[i+1].split(\",\").join(''):lines[i-1].split(\",\").join('');\n         items[0].json.po_value = parseFloat(po_value_line);\n   \n   \n   }else if(lines[i].startsWith(\"ACTUAL VENDOR:\")){\n        \n           \n              let vendor_name_line = lines[i].split(\":\")\n              vendor_name.push(vendor_name_line[1].trim());\n              let vendor_mobile_line = lines[i+4].match(/\\d+/g);\n             \n              //let vendor_email_line = lines[i+1].includes(\"Email :\")?lines[i+1].split(\":\"):lines[i+5].split(\":\");\n             // vendor_email.push(vendor_email_line[1].trim());\n              \n            \n        \n   \n   }else if(lines[i].includes(\"Original Supplier\")||lines[i].includes(\"ORGINAL SUPPLIER\")||lines[i].includes(\"ORIGINAL SUPPLIER\")||lines[i].includes(\"CONTACT DETAILS:-\")||lines[i].includes(\"VENDOR NAME & DETAILS :\")||lines[i].includes(\"ORIGINAL VENDOR CONTACT DETAILS:\")||lines[i].includes(\"Vendor Details -\")||lines[i].includes(\"VENDOR CONTRACT DETAIL\")||lines[i].includes(\"Original supplier details are as follows\")||lines[i].includes(\"THE PO ITEM IS PROCURED FROM BELOW VENDOR\")||lines[i].includes(\"Actual Vendor\")||lines[i].includes(\"Principle vendor\")){\n          vendor_name.push(lines[i+1].trim());\n          vendor_companyName.push(lines[i+1].trim())\n          vendor_adress.push(lines[i+2].trim())\n          let vendor_email_line = lines[i+7].split(\":\");\n          let email = vendor_email_line[1]\n          vendor_email.push(email.trim())\n          let vendor_gst_line = lines[i+8].split(\":\")\n          let vendor_pan_line = lines[i+9].split(\":\")\n          let gst = vendor_gst_line[1]\n          vendor_gst.push(gst.trim())\n          let pan = vendor_pan_line[1]\n          vendor_pan.push(pan.trim())\n          let vendor_mobile_line = lines[i+4].split(\":\")\n          let phone = vendor_mobile_line[1]\n          vendor_phone.push(phone.trim())\n   \n   }else if(lines[i].includes(\" Vendor Name & Details for Material Code\")){\n          vendor_companyName.push(lines[i+1].trim());\n          vendor_name.push(lines[i+2].trim());\n          let contact = lines[i+3].includes(\"Mob no -\")?lines[i+3].replace(\"Mob no -\",\" \"):lines[i+3].replace(\"Mob no\",\" \");\n          vendor_phone.push(contact.trim());\n          let email=lines[i+4].includes(\"Address\")?lines[i+5].split(\"-\"):lines[i+4].split(\"-\");\n          vendor_email.push(email[1].trim());\n    \n   \n   }else if(lines[i].includes(\"OEM Vendor\")||lines[i].includes(\"OEM VENDOR\")){\n          let vendor_name_line = lines[i].split(\"-\");\n          vendor_name.push(vendor_name_line[1].trim());\n         // let vendor_addresss_line = lines[i+1].split(\"-\");\n         // vendor_adress.push(vendor_addresss_line[1].trim());\n          //let vendor_email_line = lines[i+2].split(\"-\");\n        //  vendor_email.push(vendor_email_line[1].trim());\n        //  let vendor_phone_line = lines[i+3].split(\"-\");\n        //  vendor_phone.push(vendor_phone_line[1].trim());\n   \n   }else if(lines[i].startsWith(\"ORIGINAL VENDOR\")||lines[i].startsWith(\"Original Vendor\")||lines[i].startsWith(\"VENDOR:\")){\n          let vendor_name_line = lines[i].split(\":\");\n          vendor_name.push(vendor_name_line[1].trim());\n   \n   }else if(lines[i].startsWith(\"SUPPLIER DETAILS\")){\n          vendor_name.push(lines[i+2].trim());\n   \n   }\n\n}\n\n\nlet length = vendor_name.length;\n\nlet p=[];\nproduct_name .forEach(function(item,index){\n      \n       p[index] = {};\n      \n       p[index].product_name =product_name[index] ;\n       p[index].product_quantity=product_quantity[index];\n       p[index].product_code=product_code[index];\n       p[index].productvalueWithTax=productvalueWithTax[index];\n       p[index].description=material_description[index];\n      \n       p[index].po_deliver_date = po_deliverDate[index];\n       p[index].hsn_code = hsn_code[index]\n       p[index].uom = uom[index]\n       p[index].tax_percentage = taxes[index]\n       p[index].rate = rates[index]    \n       \n    })\n    \nitems[0].json.products=p;\n\nlet v=[];\nvendor_name.forEach(function(item,index){\n      v[index] = {};\n      v[index].vendor_name=vendor_name[index];\n      v[index].vendor_phone=vendor_phone[index];\n      v[index].vendor_company=vendor_companyName[index];\n      v[index].vendor_email=vendor_email[index];\n      v[index].vendor_address=vendor_adress[index];\n      v[index].gstin=vendor_gst[index];\n      v[index].pan=vendor_pan[index];\n})\nitems[0].json.vendors=v;\n\n//for mapping the vendor and products\n\nlet prodven=[];\nif(vendor_name.length>1){\n   for(i=0;i<lenLines;i++){\n       product_code.forEach(function(value,index){\n             if(lines[i].includes(value+\" \"+\"Qtys\")){\n                prodven[index]={};\n                prodven[index].productCode = value;\n                let replaceEmail =lines[i+4].includes(\"Email ID\") ?lines[i+4].split(\"-\"):lines[i+5].split(\"-\");\n                prodven[index].email = replaceEmail[1].trim();\n               \n                let result = p.find(obj=>obj[\"product_code\"]===value);\n                prodven[index].quantity= result[\"product_quantity\"];\n                prodven[index].product_deliverDate = result[\"po_deliver_date\"];\n                prodven[index].product_price = result[\"productvalueWithTax\"];\n                \n                \n       \n            }\n  \n      })\n   }\n}\n\n\nlet max =po_deliverDate[0];\n\npo_deliverDate.forEach(function(value,index){\n       max = new Date(value) > new Date(max)? value: max;\n      \n\n\n})\n//items[0].json.dates =dates \nif(vendor_name.length>0){\n   items[0].json.order_type = \"routing\";\n\n}else items[0].json.order_type = \"rfq\";\n\n\nitems[0].json.max_date = max; \n\n\n\nitems[0].json.prodven = prodven;\n\n\nitems[0].json.product_name=product_name;\nitems[0].json.product_code=product_code;\nitems[0].json.product_quantity=product_quantity;\nitems[0].json.material_description=material_description;\nitems[0].json.vendor_name=vendor_name;\nitems[0].json.vendor_phone=vendor_phone;\nitems[0].json.vendor_email=vendor_email;\nitems[0].json.vendor_companyName=vendor_companyName;\nitems[0].json.po_deliverDate = po_deliverDate;\nitems[0].json.productvalueWithTax = productvalueWithTax;\nitems[0].json.vendor_adress=vendor_adress;\nitems[0].json.vendor_gst=vendor_gst;\nitems[0].json.taxes=taxes;\n\n\nreturn items\n"
       },
       "name": "Extracting PO details",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1110,
+        920,
         460
       ]
     },
@@ -1185,8 +1196,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        2190,
-        510
+        2200,
+        500
       ]
     },
     {
@@ -1297,8 +1308,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        1260,
-        270
+        1300,
+        160
       ]
     },
     {
@@ -1307,7 +1318,7 @@
           "string": [
             {
               "name": "dms_url",
-              "value": "={{$node[\"Wait for PO Email\"].json[\"to\"][\"value\"][0][\"address\"]==\"shakedeal.mozart+balco@shakedeal.com\"?\"https://balco.mozart.shakedeal.com\":$node[\"Wait for PO Email\"].json[\"to\"][\"value\"][0][\"address\"]==\"shakedeal.mozart+vedanta@shakedeal.com\"?\"https://vedanta.mozart.shakedeal.com\":$node[\"Wait for PO Email\"].json[\"to\"][\"value\"][0][\"address\"]==\"sairam.shakedeal+vedantaqa@gmail.com\"?\"https://vedantaqa.mozart.shakedeal.com\":\"https://balcoqa.mozart.shakedeal.com\"}}"
+              "value": "={{$node[\"Wait for PO Email\"].json[\"to\"][\"value\"][0][\"address\"]==\"shakedeal.mozart+balco@shakedeal.com\"?\"https://balco.mozart.shakedeal.com\":$node[\"Wait for PO Email\"].json[\"to\"][\"value\"][0][\"address\"]==\"shakedeal.mozart+vedanta@shakedeal.com\"?\"https://vedanta.mozart.shakedeal.com\":$node[\"Wait for PO Email\"].json[\"to\"][\"value\"][0][\"address\"]==\"sairam.shakedeal+vedantaqa@gmail.com\"?\"https://vedantaqa.mozart.shakedeal.com\":$node[\"Wait for PO Email\"].json[\"to\"][\"value\"][0][\"address\"]==\"sairam.shakedeal+mozartqa@gmail.com\"?\"https://sdqa.mozart.shakedeal.com\":\"https://balcoqa.mozart.shakedeal.com\"}}"
             },
             {
               "name": "sales_agent_email",
@@ -1315,7 +1326,7 @@
             },
             {
               "name": "po_issuer_role",
-              "value": "={{$node[\"Wait for PO Email\"].json[\"to\"][\"value\"][0][\"address\"]==\"shakedeal.mozart+balco@shakedeal.com\"?\"445e4cf8-1023-4538-a60e-706c2a72fb94\":$node[\"Wait for PO Email\"].json[\"to\"][\"value\"][0][\"address\"]==\"shakedeal.mozart+vedanta@shakedeal.com\"?\"445e4cf8-1023-4538-a60e-706c2a72fb95\":$node[\"Wait for PO Email\"].json[\"to\"][\"value\"][0][\"address\"]==\"sairam.shakedeal+vedantaqa@gmail.com\"?\"d51b1fa5-596f-4aa9-9073-e5be8d6bcce0\":\"f68840a4-b03f-4ecb-84b7-a17576f1a385\"}}"
+              "value": "={{$node[\"Wait for PO Email\"].json[\"to\"][\"value\"][0][\"address\"]==\"shakedeal.mozart+balco@shakedeal.com\"?\"445e4cf8-1023-4538-a60e-706c2a72fb94\":$node[\"Wait for PO Email\"].json[\"to\"][\"value\"][0][\"address\"]==\"shakedeal.mozart+vedanta@shakedeal.com\"?\"445e4cf8-1023-4538-a60e-706c2a72fb95\":$node[\"Wait for PO Email\"].json[\"to\"][\"value\"][0][\"address\"]==\"sairam.shakedeal+vedantaqa@gmail.com\"?\"d51b1fa5-596f-4aa9-9073-e5be8d6bcce0\":$node[\"Wait for PO Email\"].json[\"to\"][\"value\"][0][\"address\"]==\"sairam.shakedeal+mozartqa@gmail.com\"?\"2563cee6-50d5-4917-aab4-1110ae4ea6b8\":\"f68840a4-b03f-4ecb-84b7-a17576f1a385\"}}"
             },
             {
               "name": "poc_email",
@@ -1323,7 +1334,7 @@
             },
             {
               "name": "token",
-              "value": "={{$node[\"Wait for PO Email\"].json[\"to\"][\"value\"][0][\"address\"]==\"shakedeal.mozart+balco@shakedeal.com\"?\"d1b1178f-637a-4927-8c41-29f4a8219a95\":$node[\"Wait for PO Email\"].json[\"to\"][\"value\"][0][\"address\"]==\"shakedeal.mozart+vedanta@shakedeal.com\"?\"d1b1178f-637a-4927-8c41-29f4a8219a96\":$node[\"Wait for PO Email\"].json[\"to\"][\"value\"][0][\"address\"]==\"sairam.shakedeal+vedantaqa@gmail.com\"?\"def15ddc-f52f-4b2f-a749-b545fbc372e3\":\"def15ddc-f52f-4b2f-a749-b545fbc372e2\"}}"
+              "value": "={{$node[\"Wait for PO Email\"].json[\"to\"][\"value\"][0][\"address\"]==\"shakedeal.mozart+balco@shakedeal.com\"?\"d1b1178f-637a-4927-8c41-29f4a8219a95\":$node[\"Wait for PO Email\"].json[\"to\"][\"value\"][0][\"address\"]==\"shakedeal.mozart+vedanta@shakedeal.com\"?\"d1b1178f-637a-4927-8c41-29f4a8219a96\":$node[\"Wait for PO Email\"].json[\"to\"][\"value\"][0][\"address\"]==\"sairam.shakedeal+vedantaqa@gmail.com\"?\"def15ddc-f52f-4b2f-a749-b545fbc372e3\":$node[\"Wait for PO Email\"].json[\"to\"][\"value\"][0][\"address\"]==\"sairam.shakedeal+mozartqa@gmail.com\"?\"oes-token-to-check-spec\":\"def15ddc-f52f-4b2f-a749-b545fbc372e2\"}}"
             }
           ]
         },
@@ -1333,7 +1344,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        200,
+        20,
         480
       ]
     },
@@ -1355,28 +1366,6 @@
         "httpHeaderAuth": {
           "id": "22",
           "name": "Balcoqa-Dms-Token"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "fromEmail": "handyalasairam9177@gmail.com",
-        "toEmail": "={{$node[\"Globals\"].json[\"sales_agent_email\"]}}",
-        "subject": "=Balco: A new PO is received with PO number: {{$node[\"Extracting PO details\"].json[\"po_number\"]}}",
-        "html": "=<!DoCtYPe html><html lang=\"en\"><head><style id=\"stndz-\nstyle\"></style>\n<meta http-equiv=\"Content-Type\" content=\"text\n/html; charset=UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width,\ninitial-scale=1, shrink-to-fit=no\">\n<meta name=\"description\" content=\"\">\n<meta name=\"author\" content=\"Mark Otto, Jacob\nThornton, and Bootstrap contributors\">\n<meta name=\"generator\" content=\"\nAcelleSystemLayouts\">\n<!-- Bootstrap core CSS -->\n<link href=\"https://marketing.shakedeal.com/assets\n/templates/60584da7bdf65/css/bootstrap.min.css\" rel=\"\nstylesheet\">\n<script id=\"spHTMLFormElementPrototypeScript\">\n(function()\n{\ntry\n{\nvar sp_old_HTMLFormElementPrototype_submit =\nHTMLFormElement.prototype.submit;\nHTMLFormElement.prototype.submit = function\n(AEvent)\n{\ntry\n{\nvar spEvent = document.createEvent('Event');\nspEvent.initEvent('sp_submit', true, true);\nthis.dispatchEvent(spEvent);\n}\ncatch(ErrorMessage)\n{\nconsole.error('spFormElementPrototype()\nError sending \"sp_submit\" event from HTMLFormElement.\nprototype.submit: ' + ErrorMessage);\n}\nsp_old_HTMLFormElementPrototype_submit.apply\n(this);\n};\n}\ncatch(ErrorMessage)\n{\nconsole.error('spFormElementPrototype() Error\nattaching to HTMLFormElement.prototype.submit: ' +\nErrorMessage);\n}\ntry\n{\nif (typeof __doPostBack == 'function')\n{\nvar sp_old__doPostBack = __doPostBack;\n__doPostBack = function(eventTarget,\neventArgument)\n{\ntry\n{\nvar spEvent = document.createEvent\n('Event');\nspEvent.initEvent('sp_submit', true, true);\nwindow.dispatchEvent(spEvent);\n}\ncatch(ErrorMessage)\n{\nconsole.error('spFormElementPrototype()\nError sending \"sp_submit\" event from __doPostBack(): '\n+ ErrorMessage);\n}\nsp_old__doPostBack(eventTarget,\neventArgument);\n};\n}\n}\ncatch(ErrorMessage)\n{\nconsole.error('spFormElementPrototype() Error\nattaching to __doPostBack(): ' + ErrorMessage);\n}\n})();</script><link href=\"https://fonts.googleapis.\ncom/icon?family=Material+Icons\" rel=\"stylesheet\"><link\nhref=\"https://fonts.googleapis.com/icon?\nfamily=Material+Icons+Outlined\" rel=\"stylesheet\"></head>\n\n<body data-new-gr-c-s-check-loaded=\"14.990.0\" data-\ngr-ext-installed=\"\">\n<main role=\"main\">\n<div class=\"py-5 bg-light\">\n<div class=\"container\">\n<h1 class=\"my-4 display-4 text-center\">A new PO is received with PO number:{{$node[\"Extracting PO details\"].json[\"po_number\"]}} and PO type : Routing</h1>\n<p class=\"lead text-center\">Please create a SDStore order against this PO: {{$node[\"Extracting PO details\"].json[\"po_number\"]}}.</p>\n<div><img class=\"my-2\" src=\"\" width=\"100%\" /></div>\n</div>\n</div>\n</main><footer class=\"text-muted py-5\">\n<div class=\"container\">\n<div class=\"row\">\n<div class=\"col-md-8\">\n<p class=\"mb-1\">Copyright &copy; OpCommerce Online PVT\nLTD, All rights reserved.</p>\n<p class=\"mb-0\">Please email us on <a href=\"\nsupport@shakedeal.com\">support@shakedeal.com</a> in\ncase of any queries.\n</div>\n<div class=\"col-md-4\">\n<p class=\"float-right\"><a href=\"#\">Back to top</a></p>\n</div>\n</div>\n</div>\n</footer>\n</body></html>",
-        "options": {}
-      },
-      "name": "SA is informed that PO is generated",
-      "type": "n8n-nodes-base.emailSend",
-      "typeVersion": 1,
-      "position": [
-        6700,
-        510
-      ],
-      "credentials": {
-        "smtp": {
-          "id": "17",
-          "name": "smtp(sai)creds"
         }
       }
     },
@@ -1605,14 +1594,50 @@
           "name": "smtp(sai)creds"
         }
       }
+    },
+    {
+      "parameters": {
+        "functionCode": "let concated_product_vendor = $node[\"constructing po_details\"].json.concated_product_vendor;\nlet product_vendor = $node[\"constructing po_details\"].json.product_vendor;\nlet po_date =$node[\"Merging the globals and file Id\"].json[\"po_date\"]; \nlet po_value= $node[\"Merging the globals and file Id\"].json[\"po_value\"];\nlet po_deliver_date = $node[\"Extracting PO details\"].json[\"max_date\"];\n\nlet po_details=[];\npo_details[0]={};\npo_details[0].vendor=Array.isArray(concated_product_vendor)?concated_product_vendor[0][\"vendor\"]:concated_product_vendor[\"vendor\"];\npo_details[0].po_num=$node[\"post the po_details\"].json.data[0].id;\npo_details[0].po_value= po_value;\npo_details[0].po_status=\"draft\";\npo_details[0].po_date=new Date(po_date).toISOString();\npo_details[0].po_type=\"routing\";\n//po_details[0].issuer_name=issuer_id;\n//po_details[0].shakedeal_poc_details = shakedeal_poc_id; \n//po_details[0].product_ids=product_ids;\npo_details[0].po_deliver_date =new Date(po_deliver_date).toISOString(); \npo_details[0].product_details= product_vendor; \n//po_details[0].source_of_supply = \"CT\";\n//po_details[0].destination_of_supply = \"KA\"\n\n\nitems[0].json.po_details= po_details;\nreturn items;"
+      },
+      "name": "Constructing vendor po details",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        6660,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_vendor_po_details",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$json[\"po_details\"]}}"
+      },
+      "name": "post the vendor po_details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        6860,
+        500
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "22",
+          "name": "Balcoqa-Dms-Token"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": {
     "node:Wait for PO Email": {
-      "lastMessageUid": 761
+      "lastMessageUid": 762
     }
   },
   "tags": [],
-  "updatedAt": "2022-05-18T09:45:55.584Z"
+  "updatedAt": "2022-06-05T11:04:52.039Z"
 }
