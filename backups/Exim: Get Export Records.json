@@ -466,7 +466,7 @@
     },
     {
       "parameters": {
-        "amount": "=5",
+        "amount": "={{($thisRunIndex % 4 === 3) ? 600 : 5}}",
         "unit": "seconds"
       },
       "name": "Wait",
@@ -697,7 +697,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let queryData = $node[\"Define Query\"].json;\r\nlet nextQueryData = $node[\"Get Records\"].json;\r\nlet metadata = { \"ID\": $node[\"1SearchQueryAtATime\"].json[\"ID\"], \"Total Records\": $node[\"Capture Metadata\"].json[\"TotalRecords\"], \"Inserted Records\": queryData.insertedRecords, \"Last Draw\": $node[\"Get Results\"].json.draw, \"Next Start\": nextQueryData.nextStart, \"Length\": queryData.length };\r\nreturn [metadata];"
+        "functionCode": "let queryData = $node[\"Define Query\"].json;\r\nlet nextQueryData = $node[\"Get Records\"].json;\r\nlet metadata = { \"ID\": $node[\"1SearchQueryAtATime\"].json[\"ID\"], \"Total Records\": $node[\"Capture Metadata\"].json[\"TotalRecords\"], \"Inserted Records\": queryData.insertedRecords, \"Last Draw\": $node[\"Get Results\"].json.draw, \"Next Start\": nextQueryData.nextStart, \"Length\": queryData.length };\r\nconsole.log(\"Run Index: \" + $thisRunIndex);\r\nreturn [metadata];"
       },
       "name": "Update Metadata",
       "type": "n8n-nodes-base.function",
@@ -824,5 +824,5 @@
       "updatedAt": "2022-04-27T09:45:07.296Z"
     }
   ],
-  "updatedAt": "2022-05-10T10:32:43.550Z"
+  "updatedAt": "2022-06-04T16:52:35.101Z"
 }
