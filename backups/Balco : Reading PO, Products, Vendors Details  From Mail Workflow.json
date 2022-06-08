@@ -1597,7 +1597,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let concated_product_vendor = $node[\"constructing po_details\"].json.concated_product_vendor;\nlet product_vendor = $node[\"constructing po_details\"].json.product_vendor;\nlet po_date =$node[\"Merging the globals and file Id\"].json[\"po_date\"]; \nlet po_value= $node[\"Merging the globals and file Id\"].json[\"po_value\"];\nlet po_deliver_date = $node[\"Extracting PO details\"].json[\"max_date\"];\n\nlet po_details=[];\npo_details[0]={};\npo_details[0].vendor=Array.isArray(concated_product_vendor)?concated_product_vendor[0][\"vendor\"]:concated_product_vendor[\"vendor\"];\npo_details[0].po_num=$node[\"post the po_details\"].json.data[0].id;\npo_details[0].po_value= po_value;\npo_details[0].po_status=\"draft\";\npo_details[0].po_date=new Date(po_date).toISOString();\npo_details[0].po_type=\"routing\";\n//po_details[0].issuer_name=issuer_id;\n//po_details[0].shakedeal_poc_details = shakedeal_poc_id; \n//po_details[0].product_ids=product_ids;\npo_details[0].po_deliver_date =new Date(po_deliver_date).toISOString(); \npo_details[0].product_details= product_vendor; \n//po_details[0].source_of_supply = \"CT\";\n//po_details[0].destination_of_supply = \"KA\"\n\n\nitems[0].json.po_details= po_details;\nreturn items;"
+        "functionCode": "let concated_product_vendor = $node[\"constructing po_details\"].json.concated_product_vendor;\nlet product_vendor = $node[\"constructing po_details\"].json.product_vendor;\nlet po_date =$node[\"Merging the globals and file Id\"].json[\"po_date\"]; \nlet po_value= $node[\"Merging the globals and file Id\"].json[\"po_value\"];\nlet po_deliver_date = $node[\"Extracting PO details\"].json[\"max_date\"];\n\nlet po_details=[];\npo_details[0]={};\npo_details[0].vendor=Array.isArray(concated_product_vendor)?concated_product_vendor[0][\"vendor\"]:concated_product_vendor[\"vendor\"];\npo_details[0].po_num=$node[\"post the po_details\"].json.data[0].id;\npo_details[0].po_value= po_value;\npo_details[0].po_status=\"draft\";\npo_details[0].po_date=new Date(po_date).toISOString();\npo_details[0].po_type=\"routing\";\n//po_details[0].issuer_name=issuer_id;\n//po_details[0].shakedeal_poc_details = shakedeal_poc_id; \n//po_details[0].product_ids=product_ids;\npo_details[0].po_deliver_date =new Date(po_deliver_date).toISOString(); \npo_details[0].product_details= product_vendor; \n//po_details[0].source_of_supply = \"CT\";\n//po_details[0].destination_of_supply = \"KA\"\npo_details[0].delivery_address = 1\n\n\nitems[0].json.po_details= po_details;\nreturn items;"
       },
       "name": "Constructing vendor po details",
       "type": "n8n-nodes-base.function",
@@ -1639,5 +1639,5 @@
     }
   },
   "tags": [],
-  "updatedAt": "2022-06-05T11:04:52.039Z"
+  "updatedAt": "2022-06-07T07:19:52.236Z"
 }
