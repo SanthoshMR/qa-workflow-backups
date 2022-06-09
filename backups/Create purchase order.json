@@ -1,5 +1,5 @@
 {
-  "active": false,
+  "active": true,
   "connections": {
     "Webhook": {
       "main": [
@@ -279,7 +279,7 @@
       "main": [
         [
           {
-            "node": "Get PO attachment",
+            "node": "Create vendor invoice details",
             "type": "main",
             "index": 0
           }
@@ -470,6 +470,17 @@
         [
           {
             "node": "Map po and products",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create vendor invoice details": {
+      "main": [
+        [
+          {
+            "node": "Get PO attachment",
             "type": "main",
             "index": 0
           }
@@ -1024,7 +1035,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        3440,
+        3360,
         260
       ],
       "credentials": {
@@ -1036,7 +1047,7 @@
     },
     {
       "parameters": {
-        "functionCode": "\nlet pro_items=$node[\"Get po_details\"].json[\"data\"][\"product_details\"]\n//let payment_terms = $node[\"wait for order data\"].json[\"body\"][\"payment_terms\"]?$node[\"wait for order data\"].json[\"body\"][\"payment_terms\"]:\"Advance\";\nconst id= [];\nconst custom_fields=[];\nlet contact_id=\"\"\n// custom_fields.push(\n//     {\n//         label:\"PO Date\",\n//         value:$node[\"wait for order data\"].json[\"body\"][\"po_date\"]\n//     }\n    \n// )\n\nfor (const [index,item] of items.entries()) {\n  if(item.json.hasOwnProperty(\"code\")){\n     let list = pro_items.find(data=>data[\"sd_mozart_vendor_product_mapping_id\"][\"product\"][\"product_name\"] === (item.json.hasOwnProperty(\"item\")?item.json[\"item\"][\"name\"]:item.json[\"items\"][0][\"item_name\"]))\n     id.push(\n     {\n         item_id: item.json.hasOwnProperty(\"item\")?item.json[\"item\"][\"item_id\"]:item.json[\"items\"][0][\"item_id\"],\n         quantity:list[\"qty_placed\"],\n         rate:list[\"rate\"],\n         reverse_charge_tax_id:\"\",\n         product_type: \"service\",\n         tax_id: item.json.hasOwnProperty(\"item\")?item.json[\"item\"][\"item_tax_preferences\"][0][\"tax_id\"]:item.json[\"items\"][0][\"item_tax_preferences\"][0][\"tax_id\"],\n         //tax_name: \"IGST18\",\n         //tax_type: \"tax\",\n        // tax_percentage: 18,\n     }); \n  }   \n}\nif($node[\"Check for Customer\"].json[\"contacts\"].length!==0){\n    contact_id=$node[\"Check for Customer\"].json[\"contacts\"][0][\"contact_id\"]\n}else{\n    contact_id=$node[\"create contact\"].json[\"contact\"][\"contact_id\"]\n}\nlet delivery_address= {\n    \"address\": $node[\"Get po_details\"].json[\"data\"][\"delivery_address\"]\n}\nlet invoice_obj={\n \"delivery_customer_id\":contact_id,\n  \"line_items\":id,\n \"date\":$node[\"Get po_details\"].json[\"data\"][\"po_date\"],\n \"reference_number\":\"1test\"+$node[\"Get po_details\"].json[\"data\"][\"po_num\"][\"po_num\"],\n //\"salesperson_name\":$node[\"wait for order data\"].json[\"body\"][\"salesperson_name\"],\n //\"custom_fields\":custom_fields,\n \"payment_terms\":30,\n //\"discount\": $node[\"wait for order data\"].json[\"body\"][\"discount\"],\n //\"shipping_charge\":$node[\"wait for order data\"].json[\"body\"][\"shipping_charge\"],\n //\"billing_address\":$node[\"wait for order data\"].json[\"body\"][\"billing_address\"],\n //\"shipping_address\":$node[\"wait for order data\"].json[\"body\"][\"shipping_address\"],\n \"source_of_supply\":$node[\"Get po_details\"].json[\"data\"][\"po_num\"][\"source_of_supply\"][\"code\"],\n \"destination_of_supply\":$node[\"Get po_details\"].json[\"data\"][\"po_num\"][\"destination_of_supply\"][\"code\"],\n \"is_discount_before_tax\":false,\n \"vendor_id\":$node[\"Check for vendor\"].json[\"contacts\"][0][\"contact_id\"],\n \"delivery_address\":delivery_address\n}  \nlet returnItems = []\nreturnItems.push({\njson:invoice_obj\n})\nreturn returnItems ;\n"
+        "functionCode": "\nlet pro_items=$node[\"Get po_details\"].json[\"data\"][\"product_details\"]\n//let payment_terms = $node[\"wait for order data\"].json[\"body\"][\"payment_terms\"]?$node[\"wait for order data\"].json[\"body\"][\"payment_terms\"]:\"Advance\";\nconst id= [];\nconst custom_fields=[];\nlet contact_id=\"\"\n// custom_fields.push(\n//     {\n//         label:\"PO Date\",\n//         value:$node[\"wait for order data\"].json[\"body\"][\"po_date\"]\n//     }\n    \n// )\n\nfor (const [index,item] of items.entries()) {\n  if(item.json.hasOwnProperty(\"code\")){\n     let list = pro_items.find(data=>data[\"sd_mozart_vendor_product_mapping_id\"][\"product\"][\"product_name\"] === (item.json.hasOwnProperty(\"item\")?item.json[\"item\"][\"name\"]:item.json[\"items\"][0][\"item_name\"]))\n     id.push(\n     {\n         item_id: item.json.hasOwnProperty(\"item\")?item.json[\"item\"][\"item_id\"]:item.json[\"items\"][0][\"item_id\"],\n         quantity:list[\"req_qty\"],\n         rate:list[\"rate\"],\n         reverse_charge_tax_id:\"\",\n         product_type: \"service\",\n         tax_id: item.json.hasOwnProperty(\"item\")?item.json[\"item\"][\"item_tax_preferences\"][0][\"tax_id\"]:item.json[\"items\"][0][\"item_tax_preferences\"][0][\"tax_id\"],\n         //tax_name: \"IGST18\",\n         //tax_type: \"tax\",\n        // tax_percentage: 18,\n     }); \n  }   \n}\nif($node[\"Check for Customer\"].json[\"contacts\"].length!==0){\n    contact_id=$node[\"Check for Customer\"].json[\"contacts\"][0][\"contact_id\"]\n}else{\n    contact_id=$node[\"create contact\"].json[\"contact\"][\"contact_id\"]\n}\nlet delivery_address= {\n    \"address\": $node[\"Get po_details\"].json[\"data\"][\"delivery_address\"]\n}\nlet invoice_obj={\n \"delivery_customer_id\":contact_id,\n  \"line_items\":id,\n \"date\":$node[\"Get po_details\"].json[\"data\"][\"po_date\"],\n \"reference_number\":\"1test\"+$node[\"Get po_details\"].json[\"data\"][\"po_num\"][\"po_num\"],\n //\"salesperson_name\":$node[\"wait for order data\"].json[\"body\"][\"salesperson_name\"],\n //\"custom_fields\":custom_fields,\n \"payment_terms\":30,\n //\"discount\": $node[\"wait for order data\"].json[\"body\"][\"discount\"],\n //\"shipping_charge\":$node[\"wait for order data\"].json[\"body\"][\"shipping_charge\"],\n //\"billing_address\":$node[\"wait for order data\"].json[\"body\"][\"billing_address\"],\n //\"shipping_address\":$node[\"wait for order data\"].json[\"body\"][\"shipping_address\"],\n \"source_of_supply\":$node[\"Get po_details\"].json[\"data\"][\"po_num\"][\"source_of_supply\"][\"code\"],\n \"destination_of_supply\":$node[\"Get po_details\"].json[\"data\"][\"po_num\"][\"destination_of_supply\"][\"code\"],\n \"is_discount_before_tax\":false,\n \"vendor_id\":$node[\"Check for vendor\"].json[\"contacts\"][0][\"contact_id\"],\n \"delivery_address\":delivery_address\n}  \nlet returnItems = []\nreturnItems.push({\njson:invoice_obj\n})\nreturn returnItems ;\n"
       },
       "name": "Function to create po",
       "type": "n8n-nodes-base.function",
@@ -1136,7 +1147,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        3680,
+        3700,
         260
       ],
       "credentials": {
@@ -1469,7 +1480,7 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "POST",
-        "url": "=https://sdqa.vpanel.shakedeal.com/items/sdv_orders_sdv_products",
+        "url": "=https://sdqa.vpanel.shakedeal.com/items/sdv_vendor_pos_sdv_products",
         "jsonParameters": true,
         "options": {},
         "bodyParametersJson": "={{$node[\"Function to map po and product\"].json.po_to_products}}"
@@ -1490,7 +1501,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let po_to_products = [];\nlet concat_products = $node[\"Function to create products\"].json.action == \"post the products\"?[...$node[\"Function to create products\"].json[\"postProducts\"],...$node[\"Get the products\"].json.data]:$node[\"Get the products\"].json.data;\nlet product_details = $node[\"Get po_details\"].json[\"data\"][\"product_details\"]\nproduct_details.forEach(function(obj,index){\n  let product = concat_products.filter(prod=>prod.product_code == obj[\"sd_mozart_vendor_product_mapping_id\"][\"product\"][\"product_code\"]);\n  po_to_products[index]={};\n  po_to_products[index].sdv_products_id = product[0].id;\n  po_to_products[index].sdv_vendor_pos_id = Array.isArray($node[\"Create po in vpanel\"].json.data)?$node[\"Create po in vpanel\"].json.data[0].id:$node[\"Create po in vpanel\"].json.data.id;\n  po_to_products[index].req_qty = obj.qty_placed\n  po_to_products[index].rate = obj.rate\n  po_to_products[index].sub_total = obj.sub_total\n  po_to_products[index].tax_value = obj.tax_value\n  po_to_products[index].product_total = obj.product_total\n})\n\n\nitems[0].json.po_to_products= po_to_products;\nitems[0].json.concat_products= concat_products;\nitems[0].json.product_details= product_details;\nreturn items;"
+        "functionCode": "let po_to_products = [];\nlet concat_products = $node[\"Function to create products\"].json.action == \"post the products\"?[...$node[\"post product details\"].json.data,...$node[\"Get the products\"].json.data]:$node[\"Get the products\"].json.data;\nlet product_details = $node[\"Get po_details\"].json[\"data\"][\"product_details\"]\nproduct_details.forEach(function(obj,index){\n  let product = concat_products.filter(prod=>prod.product_code == obj[\"sd_mozart_vendor_product_mapping_id\"][\"product\"][\"product_code\"]);\n  po_to_products[index]={};\n  po_to_products[index].sdv_products_id = product[0].id;\n  po_to_products[index].sdv_vendor_pos_id = Array.isArray($node[\"Create po in vpanel\"].json.data)?$node[\"Create po in vpanel\"].json.data[0].id:$node[\"Create po in vpanel\"].json.data.id;\n  po_to_products[index].req_qty = obj.req_qty\n  po_to_products[index].rate = obj.rate\n  po_to_products[index].sub_total = obj.sub_total\n  po_to_products[index].tax_value = obj.tax_value\n  po_to_products[index].product_total = obj.product_total\n})\n\n\nitems[0].json.po_to_products= po_to_products;\nitems[0].json.concat_products= concat_products;\nitems[0].json.product_details= product_details;\nreturn items;"
       },
       "name": "Function to map po and product",
       "type": "n8n-nodes-base.function",
@@ -1499,6 +1510,35 @@
         6780,
         320
       ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "=https://sdqa.mozart.shakedeal.com/items/sd_mozart_vendor_invoice_details",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "vendor_po_number",
+              "value": "={{$node[\"Update the vendor po_num\"].json[\"data\"][\"id\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Create vendor invoice details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3540,
+        260
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
     }
   ],
   "settings": {},
@@ -1511,5 +1551,5 @@
       "updatedAt": "2022-05-30T07:16:52.136Z"
     }
   ],
-  "updatedAt": "2022-06-03T14:41:26.916Z"
+  "updatedAt": "2022-06-07T06:04:14.782Z"
 }
