@@ -1,0 +1,228 @@
+{
+  "active": false,
+  "connections": {
+    "Wait for delivery info": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Get the vendor po_number",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the vendor po_number": {
+      "main": [
+        [
+          {
+            "node": "Update shipment status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update shipment status": {
+      "main": [
+        [
+          {
+            "node": "Get the vendor po id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the vendor po id": {
+      "main": [
+        [
+          {
+            "node": "Update delivery info in mozart",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2022-06-06T08:33:49.062Z",
+  "id": "126",
+  "name": "Update tracking number and delivery partner in mozart",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "update_delivery_info",
+        "options": {}
+      },
+      "name": "Wait for delivery info",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        480,
+        320
+      ],
+      "webhookId": "c516d643-d6ec-43dc-af7a-b4e70d758894"
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "mozart_url",
+              "value": "={{$node[\"Wait for delivery info\"].json[\"headers\"][\"x-sd-env\"] === \"prod\"?\"https://mozart.shakedeal.com\":\"https://sdqa.mozart.shakedeal.com\"}}"
+            },
+            {
+              "name": "vpanel_url",
+              "value": "={{$node[\"Wait for delivery info\"].json[\"headers\"][\"x-sd-env\"] === \"prod\"?\"https://vpanel.shakedeal.com\":\"https://sdqa.vpanel.shakedeal.com\"}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        680,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"vpanel_url\"]}}/items/sdv_shipments/{{$node[\"Wait for delivery info\"].json[\"body\"][\"keys\"][0]}}?fields=vendor_po_number.*,asn_number,delivery_partner",
+        "options": {}
+      },
+      "name": "Get the vendor po_number",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        860,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"vpanel_url\"]}}/items/sdv_shipments/{{$node[\"Wait for delivery info\"].json[\"body\"][\"keys\"][0]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "shipment_Status",
+              "value": "=awaiting_pod"
+            }
+          ]
+        }
+      },
+      "name": "Update shipment status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"mozart_url\"]}}/items/sdm_shipments/{{$node[\"Get the vendor po id\"].json[\"data\"][0][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "tracking_number",
+              "value": "={{$node[\"Wait for delivery info\"].json[\"body\"][\"payload\"][\"asn_number\"]}}"
+            },
+            {
+              "name": "delivery_partners",
+              "value": "={{$node[\"Wait for delivery info\"].json[\"body\"][\"payload\"][\"delivery_partner\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update delivery info in mozart",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1460,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"mozart_url\"]}}/items/sdm_shipments?filter={\"vendor_po_num\":{\"vendor_po_number\":{\"_eq\":\"{{$node[\"Get the vendor po_number\"].json[\"data\"][\"vendor_po_number\"][\"po_number\"]}}\"}}}",
+        "options": {}
+      },
+      "name": "Get the vendor po id",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [
+    {
+      "id": "5",
+      "name": "Mozart",
+      "createdAt": "2022-05-30T07:16:52.136Z",
+      "updatedAt": "2022-05-30T07:16:52.136Z"
+    }
+  ],
+  "updatedAt": "2022-06-06T08:56:12.932Z"
+}
