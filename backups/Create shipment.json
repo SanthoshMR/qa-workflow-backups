@@ -1,11 +1,77 @@
 {
-  "active": false,
+  "active": true,
   "connections": {
     "Wait for shipment": {
       "main": [
         [
           {
             "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Get the shipment file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the shipment file": {
+      "main": [
+        [
+          {
+            "node": "Move Binary Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Move Binary Data": {
+      "main": [
+        [
+          {
+            "node": "Upload shipment in mozart",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload shipment in mozart": {
+      "main": [
+        [
+          {
+            "node": "Get the po number",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the po number": {
+      "main": [
+        [
+          {
+            "node": "Get po_id from mozart",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get po_id from mozart": {
+      "main": [
+        [
+          {
+            "node": "Create shipment in mozart",
             "type": "main",
             "index": 0
           }
@@ -47,8 +113,12 @@
         "values": {
           "string": [
             {
-              "name": "dms_url",
-              "value": "={{$node[\"Receive Order Details\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ?\"https://sdqa.mozart.shakedeal.com\":\"https://mozart.shakedeal.com\"}}"
+              "name": "vpanel_dms_url",
+              "value": "={{$node[\"Wait for shipment\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ?\"https://vpanel.shakedeal.com/\":\"https://sdqa.vpanel.shakedeal.com/\"}}"
+            },
+            {
+              "name": "mozart_dms_url",
+              "value": "={{$node[\"Wait for shipment\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ?\"https://mozart.shakedeal.com\":\"https://sdqa.mozart.shakedeal.com\"}}"
             }
           ]
         },
@@ -61,6 +131,160 @@
         680,
         300
       ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://sdqa.vpanel.shakedeal.com/assets/{{$node[\"Wait for shipment\"].json[\"body\"][\"payload\"][\"shipment_file\"]}}",
+        "responseFormat": "file",
+        "options": {}
+      },
+      "name": "Get the shipment file",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        880,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "setAllData": false,
+        "destinationKey": "shipment_file",
+        "options": {
+          "keepSource": true,
+          "keepAsBase64": true
+        }
+      },
+      "name": "Move Binary Data",
+      "type": "n8n-nodes-base.moveBinaryData",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "= {{$node[\"Globals\"].json[\"mozart_dms_url\"]}}/files",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {
+          "bodyContentType": "multipart-form-data"
+        },
+        "sendBinaryData": true,
+        "binaryPropertyName": "=input_file:data"
+      },
+      "name": "Upload shipment in mozart",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1360,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"vpanel_dms_url\"]}}items/sdv_vendor_pos/{{$node[\"Wait for shipment\"].json[\"body\"][\"payload\"][\"vendor_po_number\"]}}",
+        "options": {}
+      },
+      "name": "Get the po number",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1620,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"mozart_dms_url\"]}}/items/sd_mozart_vendor_po_details?filter={\"vendor_po_number\":{\"_eq\":\"{{$node[\"Get the po number\"].json[\"data\"][\"po_number\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Get po_id from mozart",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1860,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"mozart_dms_url\"]}}/items/sdm_shipments",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "vendor_invoice",
+              "value": "={{$node[\"Upload shipment in mozart\"].json[\"data\"][\"id\"]}}"
+            },
+            {
+              "name": "invoice_number",
+              "value": "={{$node[\"Wait for shipment\"].json[\"body\"][\"payload\"][\"invoice_number\"]}}"
+            },
+            {
+              "name": "invoice_date",
+              "value": "={{$node[\"Wait for shipment\"].json[\"body\"][\"payload\"][\"invoice_date\"]}}"
+            },
+            {
+              "name": "invoice_value",
+              "value": "={{$node[\"Wait for shipment\"].json[\"body\"][\"payload\"][\"invoice_value\"]}}"
+            },
+            {
+              "name": "shipment_status",
+              "value": "=open"
+            },
+            {
+              "name": "vendor_po_num",
+              "value": "={{$node[\"Get po_id from mozart\"].json[\"data\"][0][\"id\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Create shipment in mozart",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2120,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
     }
   ],
   "settings": {},
@@ -73,5 +297,5 @@
       "updatedAt": "2022-05-30T07:16:52.136Z"
     }
   ],
-  "updatedAt": "2022-05-30T09:06:46.506Z"
+  "updatedAt": "2022-06-07T05:50:02.709Z"
 }
