@@ -1,0 +1,198 @@
+{
+  "active": true,
+  "connections": {
+    "Wait for order": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Get the po_details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the po_details": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2022-06-14T05:22:31.448Z",
+  "id": "135",
+  "name": "Create order in SD store",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        -100,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "create_order",
+        "options": {}
+      },
+      "name": "Wait for order",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        140,
+        320
+      ],
+      "webhookId": "1551211b-b856-41c1-ab75-dcebbf03ce9d",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "21",
+          "name": "Balco_basic_auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_orders/{{$node[\"Wait for order\"].json[\"body\"][\"key\"]}}?fields=order_details.*,order_type,vendor_invoice_number.*,vendor_invoice_number.vendor_po_num.*,vendor_invoice_number.vendor_po_num.product_details.*,vendor_invoice_number.vendor_po_num.po_num.*,vendor_invoice_number.vendor_po_num.po_num.issuer_name.*,vendor_invoice_number.vendor_po_num.delivery_address.*,vendor_invoice_number.vendor_po_num.po_num.issuer_name.user.*,vendor_invoice_number.vendor_po_num.po_num.shakedeal_poc_details.*,vendor_invoice_number.vendor_po_num.delivery_address.state.*,order_details.sd_mozart_vendor_product_mapping_id.*,vendor_invoice_number.vendor_po_num.product_details.sd_mozart_vendor_product_mapping_id.*",
+        "options": {}
+      },
+      "name": "Get the po_details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        500,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "dms_url",
+              "value": "={{$node[\"Wait for order\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ?\"https://mozart.shakedeal.com\":\"https://sdqa.mozart.shakedeal.com\"}}"
+            },
+            {
+              "name": "hash",
+              "value": "=wfs%#hash"
+            },
+            {
+              "name": "custom_order",
+              "value": "=1"
+            },
+            {
+              "name": "password",
+              "value": "=L12345"
+            },
+            {
+              "name": "security_hash",
+              "value": "=e7a60dcf2b87f370b1934f7b53c4e8e9"
+            },
+            {
+              "name": "dispatch",
+              "value": "=wfs_update.qoc_update"
+            }
+          ],
+          "number": [
+            {
+              "name": "company_id",
+              "value": "={{98}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        300,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let order_obj = {};\nlet user_details = {};\nlet order_details = $node[\"Get the po_details\"].json[\"data\"][\"order_details\"];\nlet product_details = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"].product_details\nlet order_total = 0;\nlet products = [];\nlet firstname = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"po_num\"][\"issuer_name\"][\"user\"][\"first_name\"];\nlet lastname = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"po_num\"][\"issuer_name\"][\"user\"][\"last_name\"];\norder_details.forEach(function(product,index){\n    let matched_product = product_details.filter(obj=>product.sd_mozart_vendor_product_mapping_id.product == obj.sd_mozart_vendor_product_mapping_id.product);\n    order_total = order_total + matched_product[0].product_total;\n});\nuser_details.b_firstname = firstname;\nuser_details.b_lastname = lastname;\nuser_details.b_phone = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"po_num\"][\"issuer_name\"][\"phone_number\"];\nuser_details.b_state = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"delivery_address\"][\"state\"][\"code\"];\nuser_details.b_zipcode = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"delivery_address\"][\"zip_code\"];\nuser_details.b_address = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"delivery_address\"][\"address\"]\nuser_details.b_address_2 = \"\";\nuser_details.b_city = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"delivery_address\"][\"city\"];\nuser_details.b_country = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"delivery_address\"][\"country\"];\nuser_details.email = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"po_num\"][\"issuer_name\"][\"user\"][\"email\"];\nuser_details.cname = firstname+\" \"+\"lastname\";\nuser_details.company_name = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"delivery_address\"][\"company_name\"];\nuser_details.passwrod = $node[\"Globals\"].json[\"password\"];\nuser_details.s_firstname = firstname;\nuser_details.s_lastname = lastname;\nuser_details.s_phone = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"po_num\"][\"issuer_name\"][\"phone_number\"];\nuser_details.s_state = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"delivery_address\"][\"state\"][\"code\"];\nuser_details.s_zipcode = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"delivery_address\"][\"zip_code\"];\nuser_details.s_address = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"delivery_address\"][\"address\"]\nuser_details.s_address_2 = \"\";\nuser_details.s_city = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"delivery_address\"][\"city\"];\nuser_details.s_country = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"delivery_address\"][\"country\"];\n\n\norder_obj.hash = $node[\"Globals\"].json[\"hash\"];\norder_obj.company_id = $node[\"Globals\"].json[\"company_id\"];\norder_obj.custom_order = $node[\"Globals\"].json[\"custom_order\"];\norder_obj.invoice_no = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"invoice_number\"];\norder_obj.purchase_order_no = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"vendor_po_number\"];\norder_obj.invoice_date = '';\norder_obj.start_date = '';\norder_obj.buyer_gsttin =  $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"delivery_address\"][\"gstin\"]\norder_obj.po_date =  $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"po_num\"][\"po_date\"]\norder_obj.sales_person = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"po_num\"][\"shakedeal_poc_details\"][\"email\"]\norder_obj.reference_number = $node[\"Wait for order\"].json[\"body\"][\"key\"];\norder_obj.user_data = user_details;\norder_obj.ship_to_another = \"1\";\norder_obj.payment_id = \"12\";\norder_obj.payment_terms= $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"po_num\"][\"payment_terms\"];\norder_obj.shipping_cost = \"\";\n//order_obj.advance_amount = \n\n\n\nitems[0].json.order_obj = order_obj\n\nreturn items;"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        680,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "value": "={{$node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"invoice_number\"]}} {{$node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"po_num\"][\"issuer_name\"][\"user\"][\"first_name\"]}}{{$node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"po_num\"][\"issuer_name\"][\"phone_number\"]}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        920,
+        180
+      ],
+      "disabled": true
+    }
+  ],
+  "settings": {
+    "timezone": "Asia/Calcutta",
+    "saveManualExecutions": true
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "id": "5",
+      "name": "Mozart",
+      "createdAt": "2022-05-30T07:16:52.136Z",
+      "updatedAt": "2022-05-30T07:16:52.136Z"
+    }
+  ],
+  "updatedAt": "2022-06-14T13:08:22.752Z"
+}
