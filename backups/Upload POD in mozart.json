@@ -1,5 +1,5 @@
 {
-  "active": false,
+  "active": true,
   "connections": {
     "Globals": {
       "main": [
@@ -215,5 +215,5 @@
       "updatedAt": "2022-05-30T07:16:52.136Z"
     }
   ],
-  "updatedAt": "2022-06-06T11:43:28.782Z"
+  "updatedAt": "2022-06-15T08:59:22.814Z"
 }
