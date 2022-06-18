@@ -1,0 +1,514 @@
+{
+  "active": false,
+  "connections": {
+    "Read po number from excel": {
+      "main": [
+        [
+          {
+            "node": "Get the po details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get orders": {
+      "main": [
+        [
+          {
+            "node": "Check for order",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for order": {
+      "main": [
+        [
+          {
+            "node": "Get vendor po_num",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get vendor po_num": {
+      "main": [
+        [
+          {
+            "node": "Get order id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get order id": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "Create shipments",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the po details": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Get the shipment file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the shipment file": {
+      "main": [
+        [
+          {
+            "node": "Move Binary Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Move Binary Data": {
+      "main": [
+        [
+          {
+            "node": "Upload shipment in mozart",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload shipment in mozart": {
+      "main": [
+        [
+          {
+            "node": "Create shipment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the po from shipment": {
+      "main": [
+        []
+      ]
+    },
+    "Check for shipment": {
+      "main": [
+        [],
+        []
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Read po number from excel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2022-06-16T05:16:42.234Z",
+  "id": "138",
+  "name": "Automate shipments",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "worksheet",
+        "operation": "getContent",
+        "workbook": "A6E890F58473778D!1961",
+        "worksheet": "{720BE313-3BC8-485E-9048-EA3A0BEC65AC}",
+        "range": "A1:F41"
+      },
+      "name": "Read po number from excel",
+      "type": "n8n-nodes-base.microsoftExcel",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ],
+      "executeOnce": true,
+      "alwaysOutputData": true,
+      "credentials": {
+        "microsoftExcelOAuth2Api": {
+          "id": "34",
+          "name": "Microsoft excel creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let obj = [];\nobj.push(items[0].json.data);\n\nitems[0].json.obj = obj\nreturn items;"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1620,
+        100
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://sdqa.mozart.shakedeal.com/items/sd_mozart_vendor_po_details?filter={\"po_num\":{\"po_num\":{\"_eq\":\"{{$json[\"data\"][0][\"po_num\"]}}\"}}}",
+        "allowUnauthorizedCerts": true,
+        "options": {}
+      },
+      "name": "Get vendor po_num",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1420,
+        -140
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "23",
+          "name": "Balco-mozart-bearer-token"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://balcoqa.mozart.shakedeal.com/items/sd_mozart_po_details?filter={\"po_num\":{\"_eq\":\"{{$node[\"Get po_details\"].json[\"data\"][\"po_num\"]}}\"}}&fields=orders.*,orders.vendor_payment_status.*,po_num",
+        "options": {}
+      },
+      "name": "Get orders",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        940,
+        -60
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "23",
+          "name": "Balco-mozart-bearer-token"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Get orders\"].json[\"data\"][0][\"orders\"].length}}",
+              "operation": "larger"
+            }
+          ]
+        }
+      },
+      "name": "Check for order",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        -60
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://sdqa.mozart.shakedeal.com/items/sd_mozart_orders?filter={\"order_id\":{\"_eq\":\"{{$node[\"Check for order\"].json[\"data\"][0][\"orders\"][0][\"order_id\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Get order id",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1380,
+        100
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "23",
+          "name": "Balco-mozart-bearer-token"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://sdqa.mozart.shakedeal.com/",
+        "options": {}
+      },
+      "name": "Create shipments",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1840,
+        100
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "23",
+          "name": "Balco-mozart-bearer-token"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://balco.mozart.shakedeal.com/items/sd_mozart_po_details/{{$node[\"Read po number from excel\"].json[\"po_num\"]}}?fields=orders.*,orders.vendor_payment_status.*,po_num",
+        "options": {}
+      },
+      "name": "Get the po details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        660,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "23",
+          "name": "Balco-mozart-bearer-token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Get the po details\"].json[\"data\"][\"orders\"].length}}",
+              "operation": "equal"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        900,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://balco.mozart.shakedeal.com/assets/{{$json[\"data\"][\"orders\"][0][\"vendor_payment_status\"][0][\"vendor_invoice\"]}}",
+        "responseFormat": "file",
+        "options": {}
+      },
+      "name": "Get the shipment file",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        620,
+        660
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "23",
+          "name": "Balco-mozart-bearer-token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "setAllData": false,
+        "destinationKey": "shipment_file",
+        "options": {
+          "keepSource": true,
+          "keepAsBase64": true
+        }
+      },
+      "name": "Move Binary Data",
+      "type": "n8n-nodes-base.moveBinaryData",
+      "typeVersion": 1,
+      "position": [
+        840,
+        660
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "=https://sdqa.mozart.shakedeal.com/files",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {
+          "bodyContentType": "multipart-form-data"
+        },
+        "sendBinaryData": true,
+        "binaryPropertyName": "=input_file:data"
+      },
+      "name": "Upload shipment in mozart",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1080,
+        640
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "23",
+          "name": "Balco-mozart-bearer-token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "=https://sdqa.mozart.shakedeal.com/items/sdm_shipments",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "vendor_invoice",
+              "value": "={{$node[\"Upload shipment in mozart\"].json[\"data\"][\"id\"]}}"
+            },
+            {
+              "name": "invoice_number",
+              "value": "={{$node[\"Get the po details\"].json[\"data\"][\"orders\"][0][\"vendor_payment_status\"][0][\"invoice_number\"]}}"
+            },
+            {
+              "name": "invoice_date",
+              "value": "={{$node[\"Get the po details\"].json[\"data\"][\"orders\"][0][\"vendor_payment_status\"][0][\"invoice_date\"]}}"
+            },
+            {
+              "name": "invoice_value",
+              "value": "={{$node[\"Get the po details\"].json[\"data\"][\"orders\"][0][\"vendor_payment_status\"][0][\"invoice_value\"]}}"
+            },
+            {
+              "name": "shipment_status",
+              "value": "=grn_completed"
+            },
+            {
+              "name": "vendor_po_num",
+              "value": "={{$node[\"Read po number from excel\"].json[\"id\"]}}"
+            },
+            {
+              "name": "delivery_partners",
+              "value": "=bluedart"
+            },
+            {
+              "name": "tracking_number",
+              "value": "={{Math.floor(1000000000000 + Math.random() * 9000)}}"
+            }
+          ]
+        }
+      },
+      "name": "Create shipment",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1380,
+        660
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "23",
+          "name": "Balco-mozart-bearer-token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://sdqa.mozart.shakedeal.com/items/sdm_shipments?filter={\"vendor_po_num\":{\"_eq\":\"{{$node[\"Read po number from excel\"].json[\"id\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Get the po from shipment",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        380
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "23",
+          "name": "Balco-mozart-bearer-token"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Get the po from shipment\"].json[\"data\"].length}}",
+              "operation": "notEqual"
+            }
+          ]
+        }
+      },
+      "name": "Check for shipment",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1560,
+        380
+      ],
+      "disabled": true
+    }
+  ],
+  "settings": {
+    "saveManualExecutions": true
+  },
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2022-06-16T14:47:53.555Z"
+}
