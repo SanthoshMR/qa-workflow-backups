@@ -95,6 +95,7 @@
     },
     {
       "parameters": {
+        "authentication": "basicAuth",
         "httpMethod": "POST",
         "path": "=create_shipment",
         "options": {}
@@ -106,7 +107,13 @@
         480,
         300
       ],
-      "webhookId": "6068e010-29ce-48cd-bfa2-ed6de444d572"
+      "webhookId": "6068e010-29ce-48cd-bfa2-ed6de444d572",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
     },
     {
       "parameters": {
@@ -297,5 +304,5 @@
       "updatedAt": "2022-05-30T07:16:52.136Z"
     }
   ],
-  "updatedAt": "2022-06-07T05:50:02.709Z"
+  "updatedAt": "2022-06-15T08:47:36.421Z"
 }
