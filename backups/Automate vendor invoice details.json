@@ -1,0 +1,174 @@
+{
+  "active": false,
+  "connections": {
+    "Read invoice details from excel": {
+      "main": [
+        [
+          {
+            "node": "Get po details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Read invoice details from excel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get po details": {
+      "main": [
+        [
+          {
+            "node": "Update invoice details and po num",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update invoice details and po num": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2022-06-21T19:38:34.819Z",
+  "id": "143",
+  "name": "Automate vendor invoice details",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "worksheet",
+        "operation": "getContent",
+        "workbook": "A6E890F58473778D!1961",
+        "worksheet": "{05C0D52D-CFF6-4489-A0E5-08681C6FA377}",
+        "range": "A1:C300"
+      },
+      "name": "Read invoice details from excel",
+      "type": "n8n-nodes-base.microsoftExcel",
+      "typeVersion": 1,
+      "position": [
+        480,
+        300
+      ],
+      "executeOnce": true,
+      "alwaysOutputData": true,
+      "credentials": {
+        "microsoftExcelOAuth2Api": {
+          "id": "34",
+          "name": "Microsoft excel creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://sdqa.mozart.shakedeal.com/items/sd_mozart_orders/{{$node[\"Read invoice details from excel\"].json[\"order.id\"]}}?fields=vendor_invoice_number.*,vendor_invoice_number.vendor_po_num.*",
+        "allowUnauthorizedCerts": true,
+        "options": {}
+      },
+      "name": "Get po details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        740,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "23",
+          "name": "Balco-mozart-bearer-token"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "=https://sdqa.mozart.shakedeal.com/items/sd_mozart_vendor_invoice_details/{{$node[\"Read invoice details from excel\"].json[\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "invoice_details",
+              "value": "={{$node[\"Get po details\"].json[\"data\"][\"vendor_invoice_number\"][\"id\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update invoice details and po num",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        960,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "=https://sdqa.mozart.shakedeal.com/items/sd_mozart_vendor_invoice_details/{{$node[\"Read invoice details from excel\"].json[\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "vendor_po_number",
+              "value": "={{$node[\"Get po details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"id\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1180,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      },
+      "continueOnFail": true
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2022-06-21T20:37:12.560Z"
+}
