@@ -1,0 +1,202 @@
+{
+  "active": false,
+  "connections": {
+    "Read invoice details from excel": {
+      "main": [
+        [
+          {
+            "node": "Get po details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Read invoice details from excel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get po details": {
+      "main": [
+        [
+          {
+            "node": "Create shipment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create shipment": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2022-06-21T18:24:02.203Z",
+  "id": "142",
+  "name": "Automate shipments from balco",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "worksheet",
+        "operation": "getContent",
+        "workbook": "A6E890F58473778D!1961",
+        "worksheet": "{23141B3B-715E-4716-B7D0-F0F6FB5B947C}",
+        "range": "A1:F218"
+      },
+      "name": "Read invoice details from excel",
+      "type": "n8n-nodes-base.microsoftExcel",
+      "typeVersion": 1,
+      "position": [
+        480,
+        300
+      ],
+      "executeOnce": true,
+      "alwaysOutputData": true,
+      "credentials": {
+        "microsoftExcelOAuth2Api": {
+          "id": "34",
+          "name": "Microsoft excel creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://sdqa.mozart.shakedeal.com/items/sd_mozart_po_details/{{$node[\"Read invoice details from excel\"].json[\"order.po_num.id\"]}}?fields=vendor_Pos.*",
+        "allowUnauthorizedCerts": true,
+        "options": {}
+      },
+      "name": "Get po details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        740,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "23",
+          "name": "Balco-mozart-bearer-token"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "=https://sdqa.mozart.shakedeal.com/items/sdm_shipments",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "vendor_po_num",
+              "value": "={{$node[\"Get po details\"].json[\"data\"][\"vendor_Pos\"][0][\"id\"]}}"
+            },
+            {
+              "name": "vendor_invoice",
+              "value": "={{$node[\"Read invoice details from excel\"].json[\"vendor_invoice\"]}}"
+            },
+            {
+              "name": "invoice_number",
+              "value": "={{$node[\"Read invoice details from excel\"].json[\"invoice_number\"]}}"
+            },
+            {
+              "name": "invoice_date",
+              "value": "={{new Date(Math.round($node[\"Read invoice details from excel\"].json[\"invoice_date\"] - 25569) * 86400 * 1000).toISOString().slice(0, 10)}}"
+            },
+            {
+              "name": "invoice_value",
+              "value": "={{$node[\"Read invoice details from excel\"].json[\"invoice_value\"]}}"
+            },
+            {
+              "name": "shipment_status",
+              "value": "=grn_completed"
+            },
+            {
+              "name": "delivery_partners",
+              "value": "=bluedart"
+            },
+            {
+              "name": "tracking_number",
+              "value": "={{Math.floor(1000000000000 + Math.random() * 9000)}}"
+            }
+          ]
+        }
+      },
+      "name": "Create shipment",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1060,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "=https://sdqa.mozart.shakedeal.com/items/sd_mozart_orders/{{$node[\"Read invoice details from excel\"].json[\"order.id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "vendor_invoice_number",
+              "value": "={{$node[\"Create shipment\"].json[\"data\"][\"id\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1260,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      },
+      "continueOnFail": true
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2022-06-21T19:19:59.699Z"
+}
