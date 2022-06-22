@@ -1,0 +1,287 @@
+{
+  "active": false,
+  "connections": {
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Get the shipment file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Read po number from excel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read po number from excel": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the shipment file": {
+      "main": [
+        [
+          {
+            "node": "Move Binary Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Move Binary Data": {
+      "main": [
+        [
+          {
+            "node": "Upload shipment in vpanel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload shipment in vpanel": {
+      "main": [
+        [
+          {
+            "node": "Get the po id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the po id": {
+      "main": [
+        [
+          {
+            "node": "Create shipment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2022-06-16T16:58:52.708Z",
+  "id": "139",
+  "name": "Create shipments in vpanel",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://sdqa.mozart.shakedeal.com/items/sdm_shipments/{{$node[\"Read po number from excel\"].json[\"id\"]}}?fields=vendor_invoice,invoice_number,invoice_date,invoice_value,shipment_status,tracking_number,delivery_partners,vendor_po_num.*,orders.*,orders.order_details.*,orders.order_details.sd_mozart_vendor_product_mapping_id.*",
+        "options": {}
+      },
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        700,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "23",
+          "name": "Balco-mozart-bearer-token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "worksheet",
+        "operation": "getContent",
+        "workbook": "A6E890F58473778D!1961",
+        "worksheet": "{CA241AC7-D919-4812-A9F2-83A3B74F5E32}",
+        "range": "A1:H21"
+      },
+      "name": "Read po number from excel",
+      "type": "n8n-nodes-base.microsoftExcel",
+      "typeVersion": 1,
+      "position": [
+        440,
+        300
+      ],
+      "executeOnce": true,
+      "alwaysOutputData": true,
+      "credentials": {
+        "microsoftExcelOAuth2Api": {
+          "id": "34",
+          "name": "Microsoft excel creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://sdqa.mozart.shakedeal.com/assets/{{$node[\"HTTP Request\"].json[\"data\"][\"vendor_invoice\"]}}",
+        "responseFormat": "file",
+        "options": {}
+      },
+      "name": "Get the shipment file",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        960,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "23",
+          "name": "Balco-mozart-bearer-token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "setAllData": false,
+        "destinationKey": "shipment_file",
+        "options": {
+          "keepSource": true,
+          "keepAsBase64": true
+        }
+      },
+      "name": "Move Binary Data",
+      "type": "n8n-nodes-base.moveBinaryData",
+      "typeVersion": 1,
+      "position": [
+        1260,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "=https://sdqa.vpanel.shakedeal.com/files",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {
+          "bodyContentType": "multipart-form-data"
+        },
+        "sendBinaryData": true,
+        "binaryPropertyName": "=input_file:data"
+      },
+      "name": "Upload shipment in vpanel",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1520,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://sdqa.vpanel.shakedeal.com/items/sdv_vendor_pos?filter={\"po_number\":{\"_eq\":\"{{$node[\"Read po number from excel\"].json[\"vendor_po_num.vendor_po_number\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Get the po id",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1760,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "=https://sdqa.vpanel.shakedeal.com/items/sdv_shipments",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "vendor_po_number",
+              "value": "={{$node[\"Get the po id\"].json[\"data\"][0][\"id\"]}}"
+            },
+            {
+              "name": "shipment_file",
+              "value": "={{$node[\"Upload shipment in vpanel\"].json[\"data\"][\"id\"]}}"
+            },
+            {
+              "name": "invoice_number",
+              "value": "={{$node[\"HTTP Request\"].json[\"data\"][\"invoice_number\"]}}"
+            },
+            {
+              "name": "invoice_date",
+              "value": "={{$node[\"HTTP Request\"].json[\"data\"][\"invoice_date\"]}}"
+            },
+            {
+              "name": "invoice_value",
+              "value": "={{$node[\"HTTP Request\"].json[\"data\"][\"invoice_value\"]}}"
+            },
+            {
+              "name": "shipment_Status",
+              "value": "=grn_passed"
+            },
+            {
+              "name": "delivery_partner",
+              "value": "=bluedart"
+            },
+            {
+              "name": "asn_number",
+              "value": "={{$node[\"HTTP Request\"].json[\"data\"][\"tracking_number\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Create shipment",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1940,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2022-06-16T17:54:17.114Z"
+}
