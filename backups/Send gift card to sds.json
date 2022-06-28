@@ -358,6 +358,13 @@
   ],
   "settings": {},
   "staticData": null,
-  "tags": [],
-  "updatedAt": "2022-06-09T07:07:48.609Z"
+  "tags": [
+    {
+      "id": "6",
+      "name": "Inventory",
+      "createdAt": "2022-06-27T13:07:10.771Z",
+      "updatedAt": "2022-06-27T13:07:10.771Z"
+    }
+  ],
+  "updatedAt": "2022-06-27T13:07:16.571Z"
 }
