@@ -116,7 +116,7 @@
     },
     {
       "parameters": {
-        "url": "=http://68.183.93.59/yourls-api.php?username=sdurls&password=V!Md9*e!2SwfM&action=shorturl&format=json&url={{$node[\"Function\"].json[\"encoded_url\"]}}",
+        "url": "=https://shdl.me/yourls-api.php?username=sdurls&password=V!Md9*e!2SwfM&action=shorturl&format=json&url={{$node[\"Function\"].json[\"encoded_url\"]}}",
         "allowUnauthorizedCerts": true,
         "options": {
           "ignoreResponseCode": true
@@ -136,5 +136,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-05-20T10:41:06.358Z"
+  "updatedAt": "2022-06-29T12:15:00.682Z"
 }
