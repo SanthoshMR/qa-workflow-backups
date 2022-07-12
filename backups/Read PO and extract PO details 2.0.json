@@ -785,7 +785,7 @@
           "string": [
             {
               "name": "dms_url",
-              "value": "=https://sdqa.mozart.shakedeal.com"
+              "value": "={{$node[\"Wait for PO Email\"].json[\"to\"][\"value\"][0][\"address\"]==\"shakedeal.mozart+balco@shakedeal.com\"?\"https://balco.mozart.shakedeal.com\":$node[\"Wait for PO Email\"].json[\"to\"][\"value\"][0][\"address\"]==\"shakedeal.mozart+vedanta@shakedeal.com\"?\"https://vedanta.mozart.shakedeal.com\":$node[\"Wait for PO Email\"].json[\"to\"][\"value\"][0][\"address\"]==\"sairam.shakedeal+vedantaqa@gmail.com\"?\"https://sdqa.mozart.shakedeal.com\":$node[\"Wait for PO Email\"].json[\"to\"][\"value\"][0][\"address\"]==\"sairam.shakedeal+mozartqa@gmail.com\"?\"https://sdqa.mozart.shakedeal.com\":\"https://sdqa.mozart.shakedeal.com\"}}"
             },
             {
               "name": "sales_agent_email",
@@ -797,7 +797,7 @@
             },
             {
               "name": "po_issuer_role",
-              "value": "=445e4cf8-1023-4538-a60e-706c2a72fb94"
+              "value": "={{$node[\"Wait for PO Email\"].json[\"to\"][\"value\"][0][\"address\"]==\"shakedeal.mozart+balco@shakedeal.com\"?\"445e4cf8-1023-4538-a60e-706c2a72fb94\":$node[\"Wait for PO Email\"].json[\"to\"][\"value\"][0][\"address\"]==\"shakedeal.mozart+vedanta@shakedeal.com\"?\"445e4cf8-1023-4538-a60e-706c2a72fb95\":$node[\"Wait for PO Email\"].json[\"to\"][\"value\"][0][\"address\"]==\"sairam.shakedeal+vedantaqa@gmail.com\"?\"445e4cf8-1023-4538-a60e-706c2a72fb94\":$node[\"Wait for PO Email\"].json[\"to\"][\"value\"][0][\"address\"]==\"sairam.shakedeal+mozartqa@gmail.com\"?\"2563cee6-50d5-4917-aab4-1110ae4ea6b8\":\"445e4cf8-1023-4538-a60e-706c2a72fb94\"}}"
             },
             {
               "name": "po_poc_email",
@@ -805,7 +805,7 @@
             },
             {
               "name": "token",
-              "value": "=oes-token-to-check-spec"
+              "value": "={{$node[\"Wait for PO Email\"].json[\"to\"][\"value\"][0][\"address\"]==\"shakedeal.mozart+balco@shakedeal.com\"?\"d1b1178f-637a-4927-8c41-29f4a8219a95\":$node[\"Wait for PO Email\"].json[\"to\"][\"value\"][0][\"address\"]==\"shakedeal.mozart+vedanta@shakedeal.com\"?\"d1b1178f-637a-4927-8c41-29f4a8219a96\":$node[\"Wait for PO Email\"].json[\"to\"][\"value\"][0][\"address\"]==\"sairam.shakedeal+vedantaqa@gmail.com\"?\"oes-token-to-check-spec\":$node[\"Wait for PO Email\"].json[\"to\"][\"value\"][0][\"address\"]==\"sairam.shakedeal+mozartqa@gmail.com\"?\"oes-token-to-check-spec\":\"oes-token-to-check-spec\"}}"
             },
             {
               "name": "client",
@@ -819,7 +819,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        -50,
+        -40,
         640
       ]
     },
@@ -1683,5 +1683,5 @@
       "updatedAt": "2022-05-30T07:16:52.136Z"
     }
   ],
-  "updatedAt": "2022-07-11T06:32:06.440Z"
+  "updatedAt": "2022-07-12T05:45:56.307Z"
 }
