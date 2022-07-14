@@ -5,17 +5,6 @@
       "main": [
         [
           {
-            "node": "HTTP Request",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "HTTP Request": {
-      "main": [
-        [
-          {
             "node": "Function",
             "type": "main",
             "index": 0
@@ -24,8 +13,8 @@
       ]
     }
   },
-  "createdAt": "2022-06-30T12:33:20.349Z",
-  "id": "147",
+  "createdAt": "2022-07-14T05:50:03.993Z",
+  "id": "152",
   "name": "My workflow 3",
   "nodes": [
     {
@@ -40,43 +29,19 @@
     },
     {
       "parameters": {
-        "functionCode": "//const text = $node[\"Set\"].json[\"text\"];\n//const subString =  text.substring(0,text.indexOf(\"CONTACT DETAILS\"));\nconst pdf = require('pdf-parse');\n\nfunction render_page(pageData) {\n  //check documents https://mozilla.github.io/pdf.js/\n  let render_options = {\n    //replaces all occurrences of whitespace with standard spaces (0x20). The default value is `false`.\n    normalizeWhitespace: false,\n    //do not attempt to combine same line TextItem's. The default value is `false`.\n    disableCombineTextItems: false,\n  };\n\n  return pageData.getTextContent(render_options).then(function (textContent) {\n    let lastY,\n      text = \"\";\n    for (let item of textContent.items) {\n      text += `\\n${item.str}`;\n    }\n    return text;\n  });\n}\n\nlet options = {\n  pagerender: render_page,\n  max: 200,\n};\n\nconst binaryData = Buffer.from(items[0].binary.data.data, \"base64\");\nlet content = await pdf(binaryData, options);\nconst subString =  content.text.substring(0,content.text.indexOf(\"Special Instructions:\"));\n\n\nitems[0].json.subString = subString;\n\nreturn items;"
+        "functionCode": "let r1 = [\"a\",\"a\",\"a\",\"b\",\"b\",\"c\"];\nlet r2 = [\"a\",\"a\",\"b\"];\nlet rf = [\"c\"];\nlet product_codes = [\"3804020043\",\"3804020043\",\"3804020043\"];\nlet existing_product_codes = [];\nlet products = [\n{\n\"id\": 41,\n\"sd_mozart_vendor_po_details_id\": 549,\n\"uom\": null,\n\"rate\": \"17263.50000\",\n\"sub_total\": null,\n\"tax_value\": null,\n\"product_total\": \"20370.93000\",\n\"req_qty\": \"1\",\n\"plant\": \"GEES\",\n\"tax_percentage\": null,\n\"sd_mozart_vendor_product_mapping_id\": {\n\"id\": 1054,\n\"vendor\": 416,\n\"user_created\": \"3679fa4b-98bb-46f6-86ce-e2dbe7e9188a\",\n\"date_created\": \"2022-07-08T10:28:27.272Z\",\n\"user_updated\": \"df785208-d87a-4948-a736-8304660cb694\",\n\"date_updated\": \"2022-07-13T09:36:47.795Z\",\n\"product\": {\n\"id\": 972,\n\"product_name\": \"TRANSFORMER PROTECTION RELAY, MODEL: TR-7570,MAKE: PECON ELECTRONICS.USED FOR WINDINGTEMPERATURE PROTECTION, AUX SUPPLY: 240V/110V\",\n\"description\": null,\n\"product_code\": \"3804020043\",\n\"user_created\": \"3679fa4b-98bb-46f6-86ce-e2dbe7e9188a\",\n\"date_created\": \"2022-07-08T10:28:26.792Z\",\n\"user_updated\": \"df785208-d87a-4948-a736-8304660cb694\",\n\"date_updated\": \"2022-07-13T09:36:47.723Z\",\n\"hsn\": null,\n\"category\": null\n}\n},\n\"isMapped\": true\n},\n{\n\"id\": 43,\n\"sd_mozart_vendor_po_details_id\": 549,\n\"uom\": null,\n\"rate\": \"17263.50000\",\n\"sub_total\": null,\n\"tax_value\": null,\n\"product_total\": \"20370.93000\",\n\"req_qty\": \"1\",\n\"plant\": \"GEES\",\n\"tax_percentage\": null,\n\"sd_mozart_vendor_product_mapping_id\": {\n\"id\": 1054,\n\"vendor\": 416,\n\"user_created\": \"3679fa4b-98bb-46f6-86ce-e2dbe7e9188a\",\n\"date_created\": \"2022-07-08T10:28:27.272Z\",\n\"user_updated\": \"df785208-d87a-4948-a736-8304660cb694\",\n\"date_updated\": \"2022-07-13T09:36:47.795Z\",\n\"product\": {\n\"id\": 972,\n\"product_name\": \"TRANSFORMER PROTECTION RELAY, MODEL: TR-7570,MAKE: PECON ELECTRONICS.USED FOR WINDINGTEMPERATURE PROTECTION, AUX SUPPLY: 240V/110V\",\n\"description\": null,\n\"product_code\": \"3804020043\",\n\"user_created\": \"3679fa4b-98bb-46f6-86ce-e2dbe7e9188a\",\n\"date_created\": \"2022-07-08T10:28:26.792Z\",\n\"user_updated\": \"df785208-d87a-4948-a736-8304660cb694\",\n\"date_updated\": \"2022-07-13T09:36:47.723Z\",\n\"hsn\": null,\n\"category\": null\n}\n},\n\"isMapped\": true\n},\n{\n\"id\": 42,\n\"sd_mozart_vendor_po_details_id\": 549,\n\"uom\": null,\n\"rate\": \"17263.50000\",\n\"sub_total\": null,\n\"tax_value\": null,\n\"product_total\": \"40741.86000\",\n\"req_qty\": \"2\",\n\"plant\": \"GEES\",\n\"tax_percentage\": null,\n\"sd_mozart_vendor_product_mapping_id\": {\n\"id\": 1055,\n\"vendor\": 416,\n\"user_created\": \"3679fa4b-98bb-46f6-86ce-e2dbe7e9188a\",\n\"date_created\": \"2022-07-08T10:28:27.337Z\",\n\"user_updated\": \"df785208-d87a-4948-a736-8304660cb694\",\n\"date_updated\": \"2022-07-13T09:35:20.051Z\",\n\"product\": {\n\"id\": 973,\n\"product_name\": \"TRANSFORMER PROTECTION RELAY, MODEL: TR-7570,MAKE: PECON ELECTRONICS.USED FOR WINDINGTEMPERATURE PROTECTION, AUX SUPPLY: 240V/110V\",\n\"description\": null,\n\"product_code\": \"3804020043\",\n\"user_created\": \"3679fa4b-98bb-46f6-86ce-e2dbe7e9188a\",\n\"date_created\": \"2022-07-08T10:28:26.810Z\",\n\"user_updated\": \"df785208-d87a-4948-a736-8304660cb694\",\n\"date_updated\": \"2022-07-13T09:35:19.996Z\",\n\"hsn\": null,\n\"category\": null\n}\n}\n}];\n\nlet existing_products = [\n{\n\"id\": 911,\n\"user_created\": \"e1f38166-49dc-4d8c-b79c-875109b74beb\",\n\"date_created\": \"2022-07-13T10:17:53.698Z\",\n\"user_updated\": null,\n\"date_updated\": null,\n\"product_name\": \"TRANSFORMER PROTECTION RELAY, MODEL: TR-7570,MAKE: PECON ELECTRONICS.USED FOR WINDINGTEMPERATURE PROTECTION, AUX SUPPLY: 240V/110V\",\n\"description\": null,\n\"product_code\": \"3804020043\",\n\"hsn\": null\n},\n{\n\"id\": 912,\n\"user_created\": \"e1f38166-49dc-4d8c-b79c-875109b74beb\",\n\"date_created\": \"2022-07-13T10:17:53.725Z\",\n\"user_updated\": null,\n\"date_updated\": null,\n\"product_name\": \"TRANSFORMER PROTECTION RELAY, MODEL: TR-7570,MAKE: PECON ELECTRONICS.USED FOR WINDINGTEMPERATURE PROTECTION, AUX SUPPLY: 240V/110V\",\n\"description\": null,\n\"product_code\": \"3804020043\",\n\"hsn\": null\n}\n];\nlet resultFilter = \n   products.filter(products=>\n     !existing_products.some(\n      data=> data.product_code === products[\"sd_mozart_vendor_product_mapping_id\"][\"product\"][\"product_code\"] \n    )\n  );\nexisting_products.forEach(function(prod,index){\n  existing_product_codes.push(prod.product_code);\n})\n//let toFindDuplicates = product_codes.filter((item, index) => index !== product_codes.indexOf(item));\nlet toFindDuplicates = r1.filter((e, i, a) => a.indexOf(e) !== i) // [2, 4]\nvar duplicates = product_codes.reduce(function(acc, el, i, arr) {\n  if (arr.indexOf(el) !== i && acc.indexOf(el) < 0) acc.push(el); return acc;\n}, []);\n\nduplicates.forEach(function(code,index){\n  let filterProducts = products.filter(prod => prod[\"sd_mozart_vendor_product_mapping_id\"][\"product\"][\"product_code\"] == code);\n  let filterExistingProducts = existing_products.filter(prod=>prod.product_code == code);\n  if(filterProducts.length>filterExistingProducts.length){\n    resultFilter.push(filterProducts[0]);\n  }\n})\n//let x = r1.filter( function(currentValue, index, r1), thisValue )\n// let x = r1.filter(function(v, i, self)\n//             {\n                  \n//                 // It returns the index of the first\n//                 // instance of each value\n//                 return i == self.indexOf(v);\n//             });\n// let y = r2.filter(function(v, i, self)\n//             {\n                  \n//                 // It returns the index of the first\n//                 // instance of each value\n//                 return i == self.indexOf(v);\n//             });\n\n// items[0].json.r1 = r1;\n// items[0].json.r2 = r2;\n// items[0].json.rf = rf;\n// items[0].json.x = x;\n// items[0].json.y = y;\n\nitems[0].json.products = products;\nitems[0].json.existing_products = existing_products;\nitems[0].json.resultFilter = resultFilter;\nitems[0].json.toFindDuplicates = toFindDuplicates;\nitems[0].json.duplicates = duplicates;\n\nreturn items;"
       },
       "name": "Function",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        820,
+        460,
         300
       ]
-    },
-    {
-      "parameters": {
-        "authentication": "headerAuth",
-        "url": "=https://sdqa.mozart.shakedeal.com/assets/17a59799-5631-462b-892d-d7a7247a4ec6",
-        "allowUnauthorizedCerts": true,
-        "responseFormat": "file",
-        "options": {}
-      },
-      "name": "HTTP Request",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        500,
-        300
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
-        }
-      }
     }
   ],
-  "settings": {
-    "saveManualExecutions": true
-  },
+  "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-06-30T13:13:07.536Z"
+  "updatedAt": "2022-07-14T05:50:03.993Z"
 }
