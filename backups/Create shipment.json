@@ -125,7 +125,7 @@
             },
             {
               "name": "mozart_dms_url",
-              "value": "={{$node[\"Wait for shipment\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ?\"https://mozart.shakedeal.com\":\"https://sdqa.mozart.shakedeal.com\"}}"
+              "value": "=https://sdqa.mozart.shakedeal.com"
             }
           ]
         },
@@ -142,7 +142,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "=https://sdqa.vpanel.shakedeal.com/assets/{{$node[\"Wait for shipment\"].json[\"body\"][\"payload\"][\"shipment_file\"]}}",
+        "url": "={{$node[\"Globals\"].json[\"vpanel_dms_url\"]}}assets/{{$node[\"Wait for shipment\"].json[\"body\"][\"payload\"][\"shipment_file\"]}}",
         "responseFormat": "file",
         "options": {}
       },
@@ -181,7 +181,7 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "POST",
-        "url": "= {{$node[\"Globals\"].json[\"mozart_dms_url\"]}}/files",
+        "url": "={{$node[\"Globals\"].json[\"mozart_dms_url\"]}}/files",
         "allowUnauthorizedCerts": true,
         "jsonParameters": true,
         "options": {
@@ -304,5 +304,5 @@
       "updatedAt": "2022-05-30T07:16:52.136Z"
     }
   ],
-  "updatedAt": "2022-06-29T09:24:58.711Z"
+  "updatedAt": "2022-07-14T10:05:37.127Z"
 }
