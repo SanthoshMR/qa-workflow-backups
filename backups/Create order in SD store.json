@@ -27,7 +27,40 @@
       "main": [
         [
           {
+            "node": "Get contact details based on plant",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get contact details based on plant": {
+      "main": [
+        [
+          {
             "node": "Function for creating order details object",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function for creating order details object": {
+      "main": [
+        [
+          {
+            "node": "Update the order details in order",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update the order details in order": {
+      "main": [
+        [
+          {
+            "node": "Create order in SD store",
             "type": "main",
             "index": 0
           }
@@ -60,7 +93,7 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        60,
+        -60,
         320
       ],
       "webhookId": "1551211b-b856-41c1-ab75-dcebbf03ce9d",
@@ -81,7 +114,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        420,
+        340,
         320
       ],
       "credentials": {
@@ -133,19 +166,84 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        240,
+        140,
         320
       ]
     },
     {
       "parameters": {
-        "functionCode": "let order_obj = {};\nlet user_details = {};\nlet order_details = $node[\"Get the po_details\"].json[\"data\"][\"order_details\"];\nlet product_details = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"].product_details\nlet order_total = 0;\nlet sub_total = 0;\nlet products = [];\nlet firstname = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"po_num\"][\"issuer_name\"][\"user\"][\"first_name\"];\nlet lastname = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"po_num\"][\"issuer_name\"][\"user\"][\"last_name\"];\norder_details.forEach(function(product,index){\n    let matched_product = product_details.filter(obj=>product.sd_mozart_vendor_product_mapping_id.product.id == obj.sd_mozart_vendor_product_mapping_id.product);\n    let product_price = matched_product[0].rate*product.qty_placed + (matched_product[0].rate*product.qty_placed*matched_product[0].tax_percentage)/100;\n    order_total = order_total+ product_price;\n    sub_total = sub_total + parseInt(matched_product[0].rate);\n    products[index]={};\n    products[index].product = product.sd_mozart_vendor_product_mapping_id.product.product_name;\n    products[index].productsku = product.sd_mozart_vendor_product_mapping_id.product.product_code;\n    products[index].hsn_code = product.sd_mozart_vendor_product_mapping_id.product.hsn;\n    products[index].tax_ids = \"\";\n    products[index].price = product_price;\n    products[index].pri = matched_product[0].rate;\n    products[index].rate_value = matched_product[0].tax_percentage.toString();\n    products[index].pricecalculation = \"on\";\n    products[index].amount = product.qty_placed.toString();\n    products[index].status=\"D\"\n}); \nuser_details.b_firstname = firstname;\nuser_details.b_lastname = lastname;\nuser_details.b_phone = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"po_num\"][\"issuer_name\"][\"phone_number\"];\nuser_details.b_state = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"delivery_address\"][\"state\"][\"code\"];\nuser_details.b_zipcode = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"delivery_address\"][\"zip_code\"];\nuser_details.b_address = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"delivery_address\"][\"address\"]\nuser_details.b_address_2 = \"\";\nuser_details.b_city = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"delivery_address\"][\"city\"];\nuser_details.b_country = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"delivery_address\"][\"country\"];\nuser_details.email = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"po_num\"][\"issuer_name\"][\"user\"][\"email\"];\nuser_details.cname = firstname+\" \"+\"lastname\";\nuser_details.company_name = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"delivery_address\"][\"company_name\"];\nuser_details.passwrod = $node[\"Globals\"].json[\"password\"];\nuser_details.s_firstname = firstname;\nuser_details.s_lastname = lastname;\nuser_details.s_phone = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"po_num\"][\"issuer_name\"][\"phone_number\"];\nuser_details.s_state = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"delivery_address\"][\"state\"][\"code\"];\nuser_details.s_zipcode = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"delivery_address\"][\"zip_code\"];\nuser_details.s_address = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"delivery_address\"][\"address\"]\nuser_details.s_address_2 = \"\";\nuser_details.s_city = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"delivery_address\"][\"city\"];\nuser_details.s_country = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"delivery_address\"][\"country\"];\n\n\norder_obj.hash = $node[\"Globals\"].json[\"hash\"];\norder_obj.company_id = $node[\"Globals\"].json[\"company_id\"];\norder_obj.custom_order = $node[\"Globals\"].json[\"custom_order\"];\norder_obj.invoice_no = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"invoice_number\"];\norder_obj.purchase_order_no = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"vendor_po_number\"];\norder_obj.invoice_date = new Date().toISOString().slice(0, 10);\norder_obj.start_date = '';\norder_obj.buyer_gsttin =  $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"delivery_address\"][\"gstin\"]\norder_obj.po_date =  $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"po_num\"][\"po_date\"]\norder_obj.sales_person = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"po_num\"][\"shakedeal_poc_details\"][\"email\"]\norder_obj.reference_number = $node[\"Wait for order\"].json[\"body\"][\"key\"];\norder_obj.user_data = user_details;\norder_obj.ship_to_another = \"1\";\norder_obj.payment_id = \"12\";\norder_obj.payment_terms= $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"po_num\"][\"payment_terms\"];\norder_obj.shipping_cost = \"\";\norder_obj.advance_amount = order_total;\norder_obj.custom_order_type = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"po_num\"][\"po_type\"] == \"routing\"?\"1\":\"2\"\norder_obj.custom_client_type = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"po_num\"][\"client\"]\norder_obj.product_data = products;\norder_obj.ajax_subtotal = sub_total.toString();\norder_obj.ajax_total = order_total.toString();\norder_obj.security_hash = $node[\"Globals\"].json[\"security_hash\"]\norder_obj.dispatch = $node[\"Globals\"].json[\"dispatch\"]\n\n\nitems[0].json.order_obj = order_obj\n\nreturn items;"
+        "functionCode": "let order_obj = {};\nlet user_details = {};\nlet order_details = $node[\"Get the po_details\"].json[\"data\"][\"order_details\"];\nlet product_details = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"].product_details;\nlet order_total = 0;\nlet sub_total = 0;\nlet products = [];\nlet firstname = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"company_name\"];\nlet lastname = \"\";\nlet vendor_id = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"vendor\"];\norder_details.forEach(function(product,index){\n    let matched_product = product_details.filter(obj=>product.sd_mozart_vendor_product_mapping_id.product.id == obj.sd_mozart_vendor_product_mapping_id.product);\n    let product_price = matched_product[0].rate*product.qty_placed + (matched_product[0].rate*product.qty_placed*matched_product[0].tax_percentage)/100;\n    order_total = order_total+ product_price;\n    sub_total = sub_total + matched_product[0].rate*product.qty_placed;\n    products[index]={};\n    products[index].product = product.sd_mozart_vendor_product_mapping_id.product.product_name;\n    products[index].productsku = product.sd_mozart_vendor_product_mapping_id.product.product_code;\n    //products[index].hsn_code = product.sd_mozart_vendor_product_mapping_id.product.hsn;\n    products[index].hsn_code = \"12345678\"\n    products[index].tax_ids = \"\";\n    //products[index].price = product_price;\n    products[index].price = matched_product[0].rate;\n    //products[index].pri = matched_product[0].rate;\n    //products[index].rate_value = matched_product[0].tax_percentage.toString();\n    products[index].rate_value = \"18.000\";\n    products[index].pricecalculation = \"on\";\n    products[index].amount = product.qty_placed.toString();\n    products[index].status=\"D\";\n    products[index].main_category = \"3622\";\n    products[index].tax_ids = \"13\"\n    //update the order details obj to update the order details in order\n    product.rate = matched_product[0].rate;\n    product.product_total = product_price;\n    product.tax_value = matched_product[0].tax_percentage;\n    product.sub_total = matched_product[0].rate*product.qty_placed;\n    product.plant = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"product_details\"][0][\"plant\"];\n    product.sd_mozart_vendor_product_mapping_id.vendor = vendor_id;\n}); \nuser_details.b_firstname = firstname;\nuser_details.b_lastname = lastname;\nuser_details.b_phone = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"mobile\"];\nuser_details.b_state = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"destination_of_supply\"];\n//user_details.b_zipcode = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"delivery_address\"][\"zip_code\"];\nuser_details.b_address = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"delivery_address\"];\n// user_details.b_address_2 = \"\";\n// user_details.b_city = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"delivery_address\"][\"city\"];\nuser_details.b_country = \"IN\"\nuser_details.email = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"po_num\"][\"issuer_name\"][\"user\"][\"email\"];\nuser_details.cname = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"company_name\"];\nuser_details.company_name = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"company_name\"];\n user_details.passwrod = $node[\"Globals\"].json[\"password\"];\nuser_details.s_firstname = firstname;\nuser_details.s_lastname = lastname;\nuser_details.s_phone = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"mobile\"];\nuser_details.s_state = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"destination_of_supply\"];\n// user_details.s_zipcode = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"delivery_address\"][\"zip_code\"];\nuser_details.s_address = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"delivery_address\"];\n// user_details.s_address_2 = \"\";\n//user_details.s_city = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"delivery_address\"][\"city\"];\nuser_details.s_country = \"IN\";\n\n\norder_obj.hash = $node[\"Globals\"].json[\"hash\"];\norder_obj.company_id = $node[\"Globals\"].json[\"company_id\"];\norder_obj.custom_order = $node[\"Globals\"].json[\"custom_order\"];\norder_obj.invoice_no = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"invoice_number\"];\norder_obj.purchase_order_no = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"vendor_po_number\"];\norder_obj.invoice_date = new Date().toISOString().slice(0, 10);\norder_obj.start_date = '';\n//order_obj.buyer_gsttin =  $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"delivery_address\"][\"gstin\"]\norder_obj.po_date =  $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"po_num\"][\"po_date\"]\norder_obj.sales_person = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"po_num\"][\"shakedeal_poc_details\"][\"email\"]\norder_obj.reference_number = $node[\"Wait for order\"].json[\"body\"][\"key\"];\norder_obj.user_data = user_details;\norder_obj.ship_to_another = \"1\";\norder_obj.payment_id = \"12\";\norder_obj.payment_terms= $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"po_num\"][\"payment_terms\"];\norder_obj.shipping_cost = \"\";\norder_obj.advance_amount = order_total.toString();\norder_obj.custom_order_type = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"po_num\"][\"po_type\"] == \"routing\"?\"1\":\"2\"\norder_obj.custom_client_type = \"2\"\norder_obj.product_data = products;\norder_obj.ajax_subtotal = sub_total.toString();\norder_obj.ajax_total = order_total.toString();\norder_obj.security_hash = $node[\"Globals\"].json[\"security_hash\"];\norder_obj.dispatch = $node[\"Globals\"].json[\"dispatch\"];\n\n\nitems[0].json.order_obj = order_obj;\n\nitems[0].json.updated_order_details_obj =  order_details;\nreturn items;"
       },
       "name": "Function for creating order details object",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        600,
+        780,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://sdqa.mozart.shakedeal.com/items/sdm_plants?filter={\"plant\":{\"_eq\":\"{{$node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"product_details\"][0][\"plant\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Get contact details based on plant",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        580,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "=https://sdqa.mozart.shakedeal.com/items/sd_mozart_orders/{{$node[\"Wait for order\"].json[\"body\"][\"key\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "=order_details",
+              "value": "={{$node[\"Function for creating order details object\"].json[\"updated_order_details_obj\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update the order details in order",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1060,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "=https://vinay.kumar%40shakedeal.com:9kle94lA95TkHX2gFBD4Z9T34E7hdN3M@sdqa.shakedeal.com/api/QocOrders/",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Function for creating order details object\"].json[\"order_obj\"]}}"
+      },
+      "name": "Create order in SD store",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1280,
         320
       ]
     }
@@ -163,5 +261,5 @@
       "updatedAt": "2022-05-30T07:16:52.136Z"
     }
   ],
-  "updatedAt": "2022-07-14T12:36:45.383Z"
+  "updatedAt": "2022-07-15T09:08:12.857Z"
 }
