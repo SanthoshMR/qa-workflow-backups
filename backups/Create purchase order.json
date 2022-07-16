@@ -246,7 +246,7 @@
       "main": [
         [
           {
-            "node": "Check for Customer",
+            "node": "Get contact details based on plant",
             "type": "main",
             "index": 0
           }
@@ -304,6 +304,11 @@
             "node": "Upload PO in vpanel",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "Upload PO in mozart",
+            "type": "main",
+            "index": 0
           }
         ]
       ]
@@ -312,7 +317,7 @@
       "main": [
         [
           {
-            "node": "Check for vendor in vpanel",
+            "node": "Wait for file upload",
             "type": "main",
             "index": 0
           }
@@ -486,6 +491,50 @@
           }
         ]
       ]
+    },
+    "Get contact details based on plant": {
+      "main": [
+        [
+          {
+            "node": "Check for Customer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload PO in mozart": {
+      "main": [
+        [
+          {
+            "node": "Wait for file upload",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Update the vendor po_file in mozart": {
+      "main": [
+        [
+          {
+            "node": "Check for vendor in vpanel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait for file upload": {
+      "main": [
+        [
+          {
+            "node": "Update the vendor po_file in mozart",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2022-06-01T05:58:55.158Z",
@@ -504,6 +553,7 @@
     },
     {
       "parameters": {
+        "authentication": "basicAuth",
         "httpMethod": "POST",
         "path": "create_po",
         "options": {}
@@ -512,10 +562,16 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        -580,
+        -720,
         300
       ],
-      "webhookId": "e527030c-1bfc-4f07-8b57-24aa8cae6d0d"
+      "webhookId": "e527030c-1bfc-4f07-8b57-24aa8cae6d0d",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
     },
     {
       "parameters": {
@@ -554,7 +610,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        -400,
+        -520,
         300
       ]
     },
@@ -742,9 +798,17 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "=https://books.zoho.com/api/v3/vendors/?organization_id=685685414&contact_name={{$node[\"Get po_details\"].json[\"data\"][\"vendor\"][\"vendor_company\"]}}&gst_no={{$node[\"Get po_details\"].json[\"data\"][\"vendor\"][\"gstin\"]}}",
+        "url": "=https://books.zoho.com/api/v3/vendors/?organization_id=685685414",
         "allowUnauthorizedCerts": true,
-        "options": {}
+        "options": {},
+        "queryParametersUi": {
+          "parameter": [
+            {
+              "name": "email",
+              "value": "={{$node[\"Get po_details\"].json[\"data\"][\"vendor\"][\"vendor_email\"]}}"
+            }
+          ]
+        }
       },
       "name": "Check for vendor",
       "type": "n8n-nodes-base.httpRequest",
@@ -762,7 +826,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let contact_name=$node[\"Get po_details\"].json[\"data\"][\"vendor\"][\"vendor_company\"]\nlet tax_treatment = \"\";\nlet gst_treatment = \"\";\nlet contact_type = \"vendor\"; \nlet JSONString={\n  \"contact_name\":contact_name\n }\n if($node[\"Get po_details\"].json[\"data\"][\"vendor\"][\"is_sez\"] == \"1\"){\n   tax_treatment = \"business_sez\";\n   gst_treatment = \"business_sez\";\n }else if($node[\"Get po_details\"].json[\"data\"][\"vendor\"][\"gstin\"] && $node[\"Get po_details\"].json[\"data\"][\"vendor\"][\"is_sez\"] == \"0\"){\n   tax_treatment = \"business_gst\";\n   gst_treatment = \"business_gst\";\n }else {\n   tax_treatment = \"consumer\";\n   gst_treatment = \"consumer\";\n }\n let billing_address= {\n    \"address\": $node[\"Get po_details\"].json[\"data\"][\"vendor\"][\"vendor_address\"]\n}\n items[0].json.contact_type = contact_type;\n items[0].json.tax_treatment = tax_treatment;\n items[0].json.gst_treatment = gst_treatment;\n items[0].json.billing_address = billing_address;\n items[0].json.JSONString=JSONString;\nreturn items;"
+        "functionCode": "let contact_name=$node[\"Get po_details\"].json[\"data\"][\"vendor\"][\"vendor_company\"]\nlet tax_treatment = \"\";\nlet gst_treatment = \"\";\nlet contact_type = \"vendor\"; \nlet JSONString={\n  \"contact_name\":contact_name\n }\nif($node[\"Get po_details\"].json[\"data\"][\"vendor\"][\"gstin\"]){\n   tax_treatment = \"vat_registered\";\n   gst_treatment = \"business_gst\";\n }else {\n   tax_treatment = \"vat_not_registered\";\n   gst_treatment = \"business_none\";\n }\n let billing_address= {\n    \"address\": $node[\"Get po_details\"].json[\"data\"][\"vendor\"][\"vendor_address\"]\n}\n items[0].json.contact_type = contact_type;\n items[0].json.tax_treatment = tax_treatment;\n items[0].json.gst_treatment = gst_treatment;\n items[0].json.billing_address = billing_address;\n items[0].json.JSONString=JSONString;\nreturn items;"
       },
       "name": "Function to create vendor",
       "type": "n8n-nodes-base.function",
@@ -808,7 +872,7 @@
             },
             {
               "name": "place_of_contact",
-              "value": "=KA"
+              "value": "={{$node[\"Get po_details\"].json[\"data\"][\"vendor\"][\"source_of_supply\"]}}"
             },
             {
               "name": "contact_type",
@@ -853,7 +917,7 @@
           "parameter": [
             {
               "name": "contact_name",
-              "value": "={{$node[\"Get po_details\"].json[\"data\"][\"po_num\"][\"issuer_name\"][\"company_name\"]}}"
+              "value": "={{$node[\"Get contact details based on plant\"].json[\"data\"][0][\"company_name\"]}}"
             }
           ]
         }
@@ -874,7 +938,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let contact_name=$node[\"wait for order data\"].json[\"body\"][\"contact_name\"]\nlet tax_treatment = \"\";\nlet gst_treatment = \"\";\nlet contact_type = \"customer\"; \nlet JSONString={\n  \"contact_name\":contact_name\n }\n if($node[\"wait for order data\"].json[\"body\"][\"contact_details\"][\"is_sez\"] == \"1\"){\n   tax_treatment = \"business_sez\";\n   gst_treatment = \"business_sez\";\n }else if($node[\"wait for order data\"].json[\"body\"][\"contact_details\"][\"gst_no\"] && $node[\"wait for order data\"].json[\"body\"][\"contact_details\"][\"is_sez\"] == \"0\"){\n   tax_treatment = \"business_gst\";\n   gst_treatment = \"business_gst\";\n }else {\n   tax_treatment = \"consumer\";\n   gst_treatment = \"consumer\";\n }\n items[0].json.contact_type = contact_type;\n items[0].json.tax_treatment = tax_treatment;\n items[0].json.gst_treatment = gst_treatment;\n items[0].json.JSONString=JSONString;\nreturn items;"
+        "functionCode": "let contact_name=$node[\"Get contact details based on plant\"].json[\"data\"][0][\"company_name\"]\nlet tax_treatment = \"\";\nlet gst_treatment = \"\";\nlet contact_type = \"customer\"; \nlet JSONString={\n  \"contact_name\":contact_name\n }\n\nif($node[\"Get contact details based on plant\"].json[\"data\"][0][\"gst\"]){\n   tax_treatment = \"vat_registered\";\n   gst_treatment = \"business_gst\";\n }else {\n   tax_treatment = \"vat_not_registered\";\n   gst_treatment = \"business_none\";\n }\nlet billing_address= {\n    \"address\": $node[\"Get contact details based on plant\"].json[\"data\"][0][\"delivery_address\"],\n    \"country\":\"India\"\n}\n items[0].json.contact_type = contact_type;\n items[0].json.tax_treatment = tax_treatment;\n items[0].json.gst_treatment = gst_treatment;\n items[0].json.billing_address = billing_address;\n items[0].json.JSONString=JSONString;\nreturn items;"
       },
       "name": "Function to create contact",
       "type": "n8n-nodes-base.function",
@@ -888,7 +952,7 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "POST",
-        "url": "=https://books.zoho.com/api/v3/contacts?organization_id={{$node[\"Globals\"].json[\"organization_id\"]}}",
+        "url": "=https://books.zoho.com/api/v3/contacts?organization_id=685685414",
         "allowUnauthorizedCerts": true,
         "options": {
           "bodyContentType": "json"
@@ -897,23 +961,23 @@
           "parameter": [
             {
               "name": "billing_address",
-              "value": "={{$node[\"wait for order data\"].json[\"body\"][\"billing_address\"]}}"
+              "value": "={{$node[\"Function to create contact\"].json[\"billing_address\"]}}"
             },
             {
               "name": "shipping_address",
-              "value": "={{$node[\"wait for order data\"].json[\"body\"][\"shipping_address\"]}}"
+              "value": "={{$node[\"Function to create contact\"].json[\"billing_address\"]}}"
             },
             {
               "name": "contact_name",
-              "value": "={{$node[\"wait for order data\"].json[\"body\"][\"contact_details\"][\"company_name\"]}}"
+              "value": "={{$node[\"Get contact details based on plant\"].json[\"data\"][0][\"company_name\"]}}"
             },
             {
               "name": "first_name",
-              "value": "={{$node[\"wait for order data\"].json[\"body\"][\"contact_details\"][\"first_name\"]}}"
+              "value": "={{$node[\"Get contact details based on plant\"].json[\"data\"][0][\"company_name\"]}}"
             },
             {
               "name": "last_name",
-              "value": "={{$node[\"wait for order data\"].json[\"body\"][\"contact_details\"][\"last_name\"]}}"
+              "value": "={{$node[\"Get contact details based on plant\"].json[\"data\"][0][\"last_name\"]}}"
             },
             {
               "name": "email",
@@ -921,11 +985,11 @@
             },
             {
               "name": "mobile",
-              "value": "={{$node[\"wait for order data\"].json[\"body\"][\"contact_details\"][\"mobile\"]}}"
+              "value": "={{$node[\"Get contact details based on plant\"].json[\"data\"][0][\"mobile\"]}}"
             },
             {
               "name": "place_of_contact",
-              "value": "={{$node[\"wait for order data\"].json[\"body\"][\"contact_details\"][\"place_of_contact\"]}}"
+              "value": "={{$node[\"Get contact details based on plant\"].json[\"data\"][0][\"destination_of_supply\"]}}"
             },
             {
               "name": "contact_type",
@@ -933,7 +997,7 @@
             },
             {
               "name": "gst_no",
-              "value": "={{$node[\"wait for order data\"].json[\"body\"][\"contact_details\"][\"gst_no\"]}}"
+              "value": "={{$node[\"Get contact details based on plant\"].json[\"data\"][0][\"gst\"]}}"
             },
             {
               "name": "gst_treatment",
@@ -945,7 +1009,7 @@
             },
             {
               "name": "company_name",
-              "value": "={{$node[\"wait for order data\"].json[\"body\"][\"contact_details\"][\"company_name\"]}}"
+              "value": "={{$node[\"Get contact details based on plant\"].json[\"data\"][0][\"company_name\"]}}"
             }
           ]
         }
@@ -997,7 +1061,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "=https://sdqa.mozart.shakedeal.com/items/sd_mozart_vendor_po_details/{{$node[\"Webhook\"].json[\"body\"][\"keys\"][0]}}?fields=vendor_po_number,id,po_date,po_value,vendor.*,product_details.*,product_details.sd_mozart_vendor_product_mapping_id.*,product_details.sd_mozart_vendor_product_mapping_id.product.*,po_num.*,po_num.issuer_name.*,po_num.issuer_name.user.*,delivery_address,po_num.source_of_supply.*,po_num.destination_of_supply.*",
+        "url": "=https://sdqa.mozart.shakedeal.com/items/sd_mozart_vendor_po_details/{{$node[\"Webhook\"].json[\"body\"][\"keys\"][0]}}?fields=vendor_po_number,id,po_date,po_value,vendor.*,product_details.*,product_details.sd_mozart_vendor_product_mapping_id.*,product_details.sd_mozart_vendor_product_mapping_id.product.*,po_num.*,po_num.issuer_name.*,po_num.issuer_name.user.*",
         "options": {
           "ignoreResponseCode": true
         }
@@ -1006,7 +1070,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        -200,
+        -340,
         300
       ],
       "credentials": {
@@ -1035,7 +1099,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        3360,
+        3100,
         260
       ],
       "credentials": {
@@ -1047,13 +1111,13 @@
     },
     {
       "parameters": {
-        "functionCode": "\nlet pro_items=$node[\"Get po_details\"].json[\"data\"][\"product_details\"]\n//let payment_terms = $node[\"wait for order data\"].json[\"body\"][\"payment_terms\"]?$node[\"wait for order data\"].json[\"body\"][\"payment_terms\"]:\"Advance\";\nconst id= [];\nconst custom_fields=[];\nlet contact_id=\"\"\n// custom_fields.push(\n//     {\n//         label:\"PO Date\",\n//         value:$node[\"wait for order data\"].json[\"body\"][\"po_date\"]\n//     }\n    \n// )\n\nfor (const [index,item] of items.entries()) {\n  if(item.json.hasOwnProperty(\"code\")){\n     let list = pro_items.find(data=>data[\"sd_mozart_vendor_product_mapping_id\"][\"product\"][\"product_name\"] === (item.json.hasOwnProperty(\"item\")?item.json[\"item\"][\"name\"]:item.json[\"items\"][0][\"item_name\"]))\n     id.push(\n     {\n         item_id: item.json.hasOwnProperty(\"item\")?item.json[\"item\"][\"item_id\"]:item.json[\"items\"][0][\"item_id\"],\n         quantity:list[\"req_qty\"],\n         rate:list[\"rate\"],\n         reverse_charge_tax_id:\"\",\n         product_type: \"service\",\n         tax_id: item.json.hasOwnProperty(\"item\")?item.json[\"item\"][\"item_tax_preferences\"][0][\"tax_id\"]:item.json[\"items\"][0][\"item_tax_preferences\"][0][\"tax_id\"],\n         //tax_name: \"IGST18\",\n         //tax_type: \"tax\",\n        // tax_percentage: 18,\n     }); \n  }   \n}\nif($node[\"Check for Customer\"].json[\"contacts\"].length!==0){\n    contact_id=$node[\"Check for Customer\"].json[\"contacts\"][0][\"contact_id\"]\n}else{\n    contact_id=$node[\"create contact\"].json[\"contact\"][\"contact_id\"]\n}\nlet delivery_address= {\n    \"address\": $node[\"Get po_details\"].json[\"data\"][\"delivery_address\"]\n}\nlet invoice_obj={\n \"delivery_customer_id\":contact_id,\n  \"line_items\":id,\n \"date\":$node[\"Get po_details\"].json[\"data\"][\"po_date\"],\n \"reference_number\":\"1test\"+$node[\"Get po_details\"].json[\"data\"][\"po_num\"][\"po_num\"],\n //\"salesperson_name\":$node[\"wait for order data\"].json[\"body\"][\"salesperson_name\"],\n //\"custom_fields\":custom_fields,\n \"payment_terms\":30,\n //\"discount\": $node[\"wait for order data\"].json[\"body\"][\"discount\"],\n //\"shipping_charge\":$node[\"wait for order data\"].json[\"body\"][\"shipping_charge\"],\n //\"billing_address\":$node[\"wait for order data\"].json[\"body\"][\"billing_address\"],\n //\"shipping_address\":$node[\"wait for order data\"].json[\"body\"][\"shipping_address\"],\n \"source_of_supply\":$node[\"Get po_details\"].json[\"data\"][\"po_num\"][\"source_of_supply\"][\"code\"],\n \"destination_of_supply\":$node[\"Get po_details\"].json[\"data\"][\"po_num\"][\"destination_of_supply\"][\"code\"],\n \"is_discount_before_tax\":false,\n \"vendor_id\":$node[\"Check for vendor\"].json[\"contacts\"][0][\"contact_id\"],\n \"delivery_address\":delivery_address\n}  \nlet returnItems = []\nreturnItems.push({\njson:invoice_obj\n})\nreturn returnItems ;\n"
+        "functionCode": "\nlet pro_items=$node[\"Get po_details\"].json[\"data\"][\"product_details\"]\npro_items.map((obj, i) => ({ ...obj, isMapped: false }));\n//let payment_terms = $node[\"wait for order data\"].json[\"body\"][\"payment_terms\"]?$node[\"wait for order data\"].json[\"body\"][\"payment_terms\"]:\"Advance\";\nconst id= [];\nconst custom_fields=[];\nlet contact_id=\"\";\nlet vendor_id = \"\";\nlet source_of_supply = $node[\"Get po_details\"].json[\"data\"][\"vendor\"][\"source_of_supply\"];\nlet destination_of_supply = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"destination_of_supply\"];\nlet vendor_gst_treatment = \"\";\n\nif($node[\"Check for Customer\"].json[\"contacts\"].length!==0){\n    contact_id=$node[\"Check for Customer\"].json[\"contacts\"][0][\"contact_id\"]\n}else{\n    contact_id=$node[\"create contact\"].json[\"contact\"][\"contact_id\"]\n}\nif($node[\"Check for vendor\"].json[\"contacts\"].length!==0){\n    vendor_id=$node[\"Check for vendor\"].json[\"contacts\"][0][\"contact_id\"]\n    vendor_gst_treatment=$node[\"Check for vendor\"].json[\"contacts\"][0][\"gst_treatment\"]\n}else{\n    vendor_id=$node[\"create vendor\"].json[\"contact\"][\"contact_id\"]\n    vendor_gst_treatment=$node[\"create vendor\"].json[\"contact\"][\"gst_treatment\"]\n}\n\nfor (const [index,item] of items.entries()) {\n  if(item.json.hasOwnProperty(\"code\")){\n     let tax_name = source_of_supply == destination_of_supply?\"intra\":\"inter\";\n     let item_tax_preferences = item.json.hasOwnProperty(\"item\")?item.json[\"item\"][\"item_tax_preferences\"]:item.json[\"items\"][0][\"item_tax_preferences\"];\n     let taxId = item_tax_preferences.find(tax =>tax.tax_specification == tax_name);\n     let list = pro_items.find(data=>data[\"sd_mozart_vendor_product_mapping_id\"][\"product\"][\"product_code\"]===(item.json.hasOwnProperty(\"item\")?item.json[\"item\"][\"sku\"]:item.json[\"items\"][0][\"sku\"])&& !data[\"isMapped\"])\n     pro_items[pro_items.findIndex(product=>product[\"sd_mozart_vendor_product_mapping_id\"][\"product\"][\"product_code\"]===(item.json.hasOwnProperty(\"item\")?item.json[\"item\"][\"sku\"]:item.json[\"items\"][0][\"sku\"])&& !product[\"isMapped\"])].isMapped = true\n        id.push(\n        {\n            item_id: item.json.hasOwnProperty(\"item\")?item.json[\"item\"][\"item_id\"]:item.json[\"items\"][0][\"item_id\"],\n            quantity:list[\"req_qty\"],\n            rate:list[\"rate\"],\n            reverse_charge_tax_id:vendor_gst_treatment == \"business_none\"?taxId[\"tax_id\"]:\"\",\n            product_type: \"goods\",\n            tax_id:vendor_gst_treatment == \"business_none\"?\"\":taxId[\"tax_id\"],\n        });\n  }   \n}\n\nlet delivery_address= {\n    \"address\": $node[\"Get contact details based on plant\"].json[\"data\"][0][\"delivery_address\"]\n}\nlet invoice_obj={\n \"delivery_customer_id\":contact_id,\n  \"line_items\":id,\n \"date\":$node[\"Get po_details\"].json[\"data\"][\"po_date\"],\n \"reference_number\":\"1test\"+$node[\"Get po_details\"].json[\"data\"][\"po_num\"][\"po_num\"],\n //\"salesperson_name\":$node[\"wait for order data\"].json[\"body\"][\"salesperson_name\"],\n //\"custom_fields\":custom_fields,\n \"payment_terms\":30,\n //\"discount\": $node[\"wait for order data\"].json[\"body\"][\"discount\"],\n //\"shipping_charge\":$node[\"wait for order data\"].json[\"body\"][\"shipping_charge\"],\n //\"billing_address\":$node[\"wait for order data\"].json[\"body\"][\"billing_address\"],\n //\"shipping_address\":$node[\"wait for order data\"].json[\"body\"][\"shipping_address\"],\n \"source_of_supply\":$node[\"Get po_details\"].json[\"data\"][\"vendor\"][\"source_of_supply\"],\n \"destination_of_supply\":$node[\"Get contact details based on plant\"].json[\"data\"][0][\"destination_of_supply\"],\n \"is_discount_before_tax\":false,\n \"vendor_id\":vendor_id,\n \"delivery_address\":delivery_address,\n \"vendor_gst_treatment\":vendor_gst_treatment\n}  \nlet returnItems = []\nreturnItems.push({\njson:invoice_obj\n})\nreturn returnItems ;\n"
       },
       "name": "Function to create po",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        2920,
+        2720,
         260
       ]
     },
@@ -1110,12 +1174,8 @@
               "value": "={{$node[\"Function to create po\"].json[\"vendor_id\"]}}"
             },
             {
-              "name": "tax_exemption_code",
-              "value": "={{\"GST TAXABLE\"}}"
-            },
-            {
-              "name": "reverse_charge_tax_id",
-              "value": "={{\"\"}}"
+              "name": "reverse_charge_tax_amount",
+              "value": "={{100}}"
             }
           ]
         }
@@ -1124,7 +1184,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        3160,
+        2920,
         260
       ],
       "alwaysOutputData": true,
@@ -1147,7 +1207,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        3700,
+        3460,
         260
       ],
       "credentials": {
@@ -1174,8 +1234,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        4040,
-        260
+        3820,
+        120
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -1197,7 +1257,7 @@
       "type": "n8n-nodes-base.moveBinaryData",
       "typeVersion": 1,
       "position": [
-        3860,
+        3640,
         260
       ]
     },
@@ -1211,7 +1271,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        4300,
+        4360,
         260
       ],
       "credentials": {
@@ -1259,6 +1319,10 @@
             {
               "name": "password",
               "value": "=vendor@123"
+            },
+            {
+              "name": "role",
+              "value": "=afb9d0f3-e000-449a-8ed9-ce0901df7cf4"
             }
           ]
         }
@@ -1366,7 +1430,7 @@
     },
     {
       "parameters": {
-        "functionCode": "\nlet action = \"\";\nlet products = $node[\"Get po_details\"].json[\"data\"][\"product_details\"];\n\nlet existing_products = items[0].json.data\nlet resultFilter = \n   products.filter(products=>\n     !existing_products.some(\n      data=> data.product_code === products[\"sd_mozart_vendor_product_mapping_id\"][\"product\"][\"product_code\"] \n    )\n  );\n\n\nlet products_to_create = []\nitems[0].json.length= resultFilter .length;\nif(resultFilter.length>0){\n   action=\"post the products\";\n   resultFilter.forEach(function(obj,index){\n     products_to_create[index]={};\n     products_to_create[index].product_name = obj[\"sd_mozart_vendor_product_mapping_id\"][\"product\"][\"product_name\"]\n     products_to_create[index].product_code = obj[\"sd_mozart_vendor_product_mapping_id\"][\"product\"][\"product_code\"]\n     products_to_create[index].hsn = obj[\"sd_mozart_vendor_product_mapping_id\"][\"product\"][\"hsn\"]\n     products_to_create[index].description = obj[\"sd_mozart_vendor_product_mapping_id\"][\"product\"][\"description\"]\n   })\n\n}else action = \"no products to post\";\n\nitems[0].json.postProducts=products_to_create ;\nitems[0].json.products=products;\n\n\n\nitems[0].json.action = action;\n\n\n\nreturn items;"
+        "functionCode": "\nlet action = \"\";\nlet products = $node[\"Get po_details\"].json[\"data\"][\"product_details\"];\nlet product_codes = $node[\"Function for getting sku\"].json.product_codes;\nlet existing_product_codes = [];\n\nlet existing_products = items[0].json.data\nlet resultFilter = \n   products.filter(products=>\n     !existing_products.some(\n      data=> data.product_code === products[\"sd_mozart_vendor_product_mapping_id\"][\"product\"][\"product_code\"] \n    )\n  );\n\nexisting_products.forEach(function(prod,index){\n  existing_product_codes.push(prod.product_code);\n});\n\nvar toFindDuplicates = product_codes.reduce(function(acc, el, i, arr) {\n  if (arr.indexOf(el) !== i && acc.indexOf(el) < 0) acc.push(el); return acc;\n}, []);\n\ntoFindDuplicates.forEach(function(code,index){\n  let filterProducts = products.filter(prod => prod[\"sd_mozart_vendor_product_mapping_id\"][\"product\"][\"product_code\"] == code);\n  let filterExistingProducts = existing_products.filter(prod=>prod.product_code == code);\n  if(filterProducts.length>filterExistingProducts.length){\n    resultFilter.push(filterProducts[0]);\n  }\n});\n\n\nlet products_to_create = []\nitems[0].json.length= resultFilter .length;\nif(resultFilter.length>0){\n   action=\"post the products\";\n   resultFilter.forEach(function(obj,index){\n     products_to_create[index]={};\n     products_to_create[index].product_name = obj[\"sd_mozart_vendor_product_mapping_id\"][\"product\"][\"product_name\"]\n     products_to_create[index].product_code = obj[\"sd_mozart_vendor_product_mapping_id\"][\"product\"][\"product_code\"]\n     products_to_create[index].hsn = obj[\"sd_mozart_vendor_product_mapping_id\"][\"product\"][\"hsn\"]\n     products_to_create[index].description = obj[\"sd_mozart_vendor_product_mapping_id\"][\"product\"][\"description\"]\n   })\n\n}else action = \"no products to post\";\n\nitems[0].json.postProducts=products_to_create ;\nitems[0].json.products=products;\nitems[0].json.existing_product_codes=existing_product_codes;\nitems[0].json.toFindDuplicates=toFindDuplicates;\n\n\n\nitems[0].json.action = action;\n\n\n\nreturn items;"
       },
       "name": "Function to create products",
       "type": "n8n-nodes-base.function",
@@ -1501,7 +1565,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let po_to_products = [];\nlet concat_products = $node[\"Function to create products\"].json.action == \"post the products\"?[...$node[\"post product details\"].json.data,...$node[\"Get the products\"].json.data]:$node[\"Get the products\"].json.data;\nlet product_details = $node[\"Get po_details\"].json[\"data\"][\"product_details\"]\nproduct_details.forEach(function(obj,index){\n  let product = concat_products.filter(prod=>prod.product_code == obj[\"sd_mozart_vendor_product_mapping_id\"][\"product\"][\"product_code\"]);\n  po_to_products[index]={};\n  po_to_products[index].sdv_products_id = product[0].id;\n  po_to_products[index].sdv_vendor_pos_id = Array.isArray($node[\"Create po in vpanel\"].json.data)?$node[\"Create po in vpanel\"].json.data[0].id:$node[\"Create po in vpanel\"].json.data.id;\n  po_to_products[index].req_qty = obj.req_qty\n  po_to_products[index].rate = obj.rate\n  po_to_products[index].sub_total = obj.sub_total\n  po_to_products[index].tax_value = obj.tax_value\n  po_to_products[index].product_total = obj.product_total\n})\n\n\nitems[0].json.po_to_products= po_to_products;\nitems[0].json.concat_products= concat_products;\nitems[0].json.product_details= product_details;\nreturn items;"
+        "functionCode": "let po_to_products = [];\nlet concat_products = $node[\"Function to create products\"].json.action == \"post the products\"?[...$node[\"post product details\"].json.data,...$node[\"Get the products\"].json.data]:$node[\"Get the products\"].json.data;\nconcat_products.map((obj, i) => ({ ...obj, isMapped: false }));\nlet product_details = $node[\"Get po_details\"].json[\"data\"][\"product_details\"]\nproduct_details.forEach(function(obj,index){\n  let product = concat_products.filter(prod=>prod.product_code == obj[\"sd_mozart_vendor_product_mapping_id\"][\"product\"][\"product_code\"] && !prod[\"isMapped\"]);\n  concat_products[concat_products.findIndex(prod=>prod.product_code == obj[\"sd_mozart_vendor_product_mapping_id\"][\"product\"][\"product_code\"]&& !prod[\"isMapped\"])].isMapped = true;\n  po_to_products[index]={};\n  po_to_products[index].sdv_products_id = product[0].id;\n  po_to_products[index].sdv_vendor_pos_id = Array.isArray($node[\"Create po in vpanel\"].json.data)?$node[\"Create po in vpanel\"].json.data[0].id:$node[\"Create po in vpanel\"].json.data.id;\n  po_to_products[index].req_qty = obj.req_qty\n  po_to_products[index].rate = obj.rate\n  po_to_products[index].sub_total = obj.sub_total\n  po_to_products[index].tax_value = obj.tax_value\n  po_to_products[index].product_total = obj.product_total\n})\n\n\nitems[0].json.po_to_products= po_to_products;\nitems[0].json.concat_products= concat_products;\nitems[0].json.product_details= product_details;\nreturn items;"
       },
       "name": "Function to map po and product",
       "type": "n8n-nodes-base.function",
@@ -1530,7 +1594,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        3540,
+        3280,
         260
       ],
       "credentials": {
@@ -1539,9 +1603,99 @@
           "name": "header auth creds"
         }
       }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://sdqa.mozart.shakedeal.com/items/sdm_plants?filter={\"plant\":{\"_eq\":\"{{$node[\"Get po_details\"].json[\"data\"][\"product_details\"][0][\"plant\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Get contact details based on plant",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        -160,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "=https://sdqa.mozart.shakedeal.com/files",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {
+          "bodyContentType": "multipart-form-data"
+        },
+        "sendBinaryData": true,
+        "binaryPropertyName": "=input_file:po_file"
+      },
+      "name": "Upload PO in mozart",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3800,
+        440
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "=https://sdqa.mozart.shakedeal.com/items/sd_mozart_vendor_po_details/{{$node[\"Webhook\"].json[\"body\"][\"keys\"][0]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "po_file",
+              "value": "={{$node[\"Upload PO in mozart\"].json[\"data\"][\"id\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update the vendor po_file in mozart",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        4180,
+        260
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "wait"
+      },
+      "name": "Wait for file upload",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 1,
+      "position": [
+        4000,
+        260
+      ]
     }
   ],
-  "settings": {},
+  "settings": {
+    "saveManualExecutions": true
+  },
   "staticData": null,
   "tags": [
     {
@@ -1551,5 +1705,5 @@
       "updatedAt": "2022-05-30T07:16:52.136Z"
     }
   ],
-  "updatedAt": "2022-06-07T06:04:14.782Z"
+  "updatedAt": "2022-07-15T07:19:34.975Z"
 }
