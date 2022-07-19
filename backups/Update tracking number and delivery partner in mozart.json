@@ -141,7 +141,7 @@
           "parameter": [
             {
               "name": "shipment_Status",
-              "value": "=awaiting_pod"
+              "value": "=intransit"
             }
           ]
         }
@@ -150,7 +150,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1040,
+        1060,
         320
       ],
       "credentials": {
@@ -175,6 +175,10 @@
             {
               "name": "delivery_partners",
               "value": "={{$node[\"Wait for delivery info\"].json[\"body\"][\"payload\"][\"delivery_partner\"]}}"
+            },
+            {
+              "name": "shipment_status",
+              "value": "=intransit"
             }
           ]
         }
@@ -203,7 +207,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1200,
+        1260,
         320
       ],
       "credentials": {
@@ -224,5 +228,5 @@
       "updatedAt": "2022-05-30T07:16:52.136Z"
     }
   ],
-  "updatedAt": "2022-06-15T08:59:24.396Z"
+  "updatedAt": "2022-07-19T09:21:45.386Z"
 }
