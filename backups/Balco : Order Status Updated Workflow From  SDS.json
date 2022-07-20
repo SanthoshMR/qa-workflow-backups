@@ -150,7 +150,7 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        260,
+        160,
         120
       ],
       "webhookId": "084f66e5-8038-4f44-b38e-867d26d8a5b6",
@@ -193,8 +193,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "22",
-          "name": "Balcoqa-Dms-Token"
+          "id": "31",
+          "name": "header auth creds"
         }
       }
     },
@@ -235,13 +235,13 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        850,
+        840,
         120
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "22",
-          "name": "Balcoqa-Dms-Token"
+          "id": "31",
+          "name": "header auth creds"
         }
       }
     },
@@ -264,7 +264,7 @@
             },
             {
               "name": "dms_url",
-              "value": "={{ $node[\"Receive_order_status\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" && $node[\"Receive_order_status\"].json[\"headers\"][\"client\"] === \"balco\" ? \"https://balco.mozart.shakedeal.com\" : $node[\"Receive_order_status\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" && $node[\"Receive_order_status\"].json[\"headers\"][\"client\"] === \"vedanta\"?\"https://vedanta.mozart.shakedeal.com\":$node[\"Receive_order_status\"].json[\"headers\"][\"x-sd-env\"] === \"qa\" && $node[\"Receive_order_status\"].json[\"headers\"][\"client\"] === \"vedanta\"?\"https://vedantaqa.mozart.shakedeal.com\":\"https://balcoqa.mozart.shakedeal.com\"}}"
+              "value": "={{ $node[\"Receive_order_status\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" && $node[\"Receive_order_status\"].json[\"headers\"][\"client\"] === \"balco\" ? \"https://balco.mozart.shakedeal.com\" : $node[\"Receive_order_status\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" && $node[\"Receive_order_status\"].json[\"headers\"][\"client\"] === \"vedanta\"?\"https://vedanta.mozart.shakedeal.com\":$node[\"Receive_order_status\"].json[\"headers\"][\"x-sd-env\"] === \"qa\" && $node[\"Receive_order_status\"].json[\"headers\"][\"client\"] === \"vedanta\"?\"https://sdqa.mozart.shakedeal.com\":\"https://balcoqa.mozart.shakedeal.com\"}}"
             },
             {
               "name": "order_prefix",
@@ -282,7 +282,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        460,
+        400,
         120
       ]
     },
@@ -294,7 +294,7 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        650,
+        640,
         120
       ]
     },
@@ -342,8 +342,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "22",
-          "name": "Balcoqa-Dms-Token"
+          "id": "31",
+          "name": "header auth creds"
         }
       }
     },
@@ -402,8 +402,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "22",
-          "name": "Balcoqa-Dms-Token"
+          "id": "31",
+          "name": "header auth creds"
         }
       }
     },
@@ -421,5 +421,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-05-17T12:46:41.957Z"
+  "updatedAt": "2022-07-19T10:46:46.061Z"
 }
