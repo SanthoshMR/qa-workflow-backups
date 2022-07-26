@@ -5,7 +5,7 @@
       "main": [
         [
           {
-            "node": "Globals",
+            "node": "Get url and token",
             "type": "main",
             "index": 0
           }
@@ -55,6 +55,17 @@
           }
         ]
       ]
+    },
+    "Get url and token": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2022-06-06T08:33:49.062Z",
@@ -68,7 +79,7 @@
       "typeVersion": 1,
       "position": [
         240,
-        300
+        180
       ]
     },
     {
@@ -81,7 +92,7 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        480,
+        320,
         320
       ],
       "webhookId": "c516d643-d6ec-43dc-af7a-b4e70d758894"
@@ -93,11 +104,11 @@
           "string": [
             {
               "name": "mozart_url",
-              "value": "={{$node[\"Wait for delivery info\"].json[\"headers\"][\"x-sd-env\"] === \"prod\"?\"https://mozart.shakedeal.com\":\"https://sdqa.mozart.shakedeal.com\"}}"
+              "value": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}"
             },
             {
               "name": "vpanel_url",
-              "value": "={{$node[\"Wait for delivery info\"].json[\"headers\"][\"x-sd-env\"] === \"prod\"?\"https://vpanel.shakedeal.com\":\"https://sdqa.vpanel.shakedeal.com\"}}"
+              "value": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}"
             }
           ]
         },
@@ -126,8 +137,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "51",
+          "name": "VendorPanel DMS Token"
         }
       }
     },
@@ -155,8 +166,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "51",
+          "name": "VendorPanel DMS Token"
         }
       }
     },
@@ -192,8 +203,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "50",
+          "name": "Mozart DMS Token"
         }
       }
     },
@@ -212,8 +223,41 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "=https://qan8n.shakedeal.com/webhook/get-url",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "client",
+              "value": "={{$node[\"Wait for delivery info\"].json[\"body\"][\"payload\"][\"client\"]}}"
+            },
+            {
+              "name": "env",
+              "value": "={{$node[\"Wait for delivery info\"].json[\"headers\"][\"x-sd-env\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Get url and token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        500,
+        320
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
         }
       }
     }
@@ -228,5 +272,5 @@
       "updatedAt": "2022-05-30T07:16:52.136Z"
     }
   ],
-  "updatedAt": "2022-07-22T05:45:46.131Z"
+  "updatedAt": "2022-07-25T12:49:05.815Z"
 }
