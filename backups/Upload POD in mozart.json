@@ -38,7 +38,7 @@
       "main": [
         [
           {
-            "node": "Globals",
+            "node": "Get url and token",
             "type": "main",
             "index": 0
           }
@@ -88,6 +88,17 @@
           }
         ]
       ]
+    },
+    "Get url and token": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2022-06-06T10:14:27.413Z",
@@ -100,8 +111,8 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        240,
-        300
+        200,
+        0
       ]
     },
     {
@@ -115,7 +126,7 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        520,
+        280,
         260
       ],
       "webhookId": "80f461c4-7cb8-4be7-8cf3-d72a47ba4320",
@@ -132,11 +143,11 @@
           "string": [
             {
               "name": "vpanel_dms_url",
-              "value": "={{$node[\"Wait for pod\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ?\"https://vpanel.shakedeal.com\":\"https://sdqa.vpanel.shakedeal.com\"}}"
+              "value": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}"
             },
             {
               "name": "mozart_dms_url",
-              "value": "={{$node[\"Wait for pod\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ?\"https://mozart.shakedeal.com\":\"https://sdqa.mozart.shakedeal.com\"}}"
+              "value": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}"
             }
           ]
         },
@@ -166,8 +177,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "51",
+          "name": "VendorPanel DMS Token"
         }
       }
     },
@@ -210,8 +221,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "50",
+          "name": "Mozart DMS Token"
         }
       }
     },
@@ -230,8 +241,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "51",
+          "name": "VendorPanel DMS Token"
         }
       }
     },
@@ -250,8 +261,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "50",
+          "name": "Mozart DMS Token"
         }
       }
     },
@@ -283,8 +294,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "50",
+          "name": "Mozart DMS Token"
         }
       }
     },
@@ -312,8 +323,41 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "=https://qan8n.shakedeal.com/webhook/get-url",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "client",
+              "value": "={{$node[\"Wait for pod\"].json[\"body\"][\"payload\"][\"client\"]}}"
+            },
+            {
+              "name": "env",
+              "value": "={{$node[\"Wait for pod\"].json[\"headers\"][\"x-sd-env\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Get url and token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        500,
+        260
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
         }
       }
     }
@@ -328,5 +372,5 @@
       "updatedAt": "2022-05-30T07:16:52.136Z"
     }
   ],
-  "updatedAt": "2022-07-19T09:39:30.920Z"
+  "updatedAt": "2022-07-25T11:57:01.881Z"
 }
