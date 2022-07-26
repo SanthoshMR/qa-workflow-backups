@@ -5,7 +5,7 @@
       "main": [
         [
           {
-            "node": "Globals",
+            "node": "Get url and token",
             "type": "main",
             "index": 0
           }
@@ -243,6 +243,17 @@
           }
         ]
       ]
+    },
+    "Get url and token": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2022-07-18T06:50:13.889Z",
@@ -255,8 +266,8 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        240,
-        300
+        420,
+        120
       ]
     },
     {
@@ -279,7 +290,7 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        440,
+        220,
         300
       ],
       "webhookId": "ae1aedbf-59f4-418f-b783-c8d7cc233b63",
@@ -297,7 +308,7 @@
           "string": [
             {
               "name": "dms_url",
-              "value": "={{ $node[\"Get Invoice Details\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" && $node[\"Get Invoice Details\"].json[\"headers\"][\"client\"] === \"balco\" ? \"https://balco.mozart.shakedeal.com\" : $node[\"Get Invoice Details\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" && $node[\"Get Invoice Details\"].json[\"headers\"][\"client\"] === \"vedanta\"?\"https://vedanta.mozart.shakedeal.com\":$node[\"Get Invoice Details\"].json[\"headers\"][\"x-sd-env\"] === \"qa\" && $node[\"Get Invoice Details\"].json[\"headers\"][\"client\"] === \"vedanta\"?\"https://sdqa.mozart.shakedeal.com\":\"https://balcoqa.mozart.shakedeal.com\"}}"
+              "value": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}"
             },
             {
               "name": "order_prefix",
@@ -309,7 +320,7 @@
             },
             {
               "name": "vpanel_url",
-              "value": "={{$node[\"Get Invoice Details\"].json[\"headers\"][\"x-sd-env\"] === \"prod\"?\"https://vpanel.shakedeal.com\":\"https://sdqa.vpanel.shakedeal.com\"}}"
+              "value": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}"
             }
           ]
         },
@@ -355,8 +366,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "22",
-          "name": "Balcoqa-Dms-Token"
+          "id": "50",
+          "name": "Mozart DMS Token"
         }
       }
     },
@@ -396,8 +407,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "22",
-          "name": "Balcoqa-Dms-Token"
+          "id": "50",
+          "name": "Mozart DMS Token"
         }
       }
     },
@@ -471,8 +482,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "22",
-          "name": "Balcoqa-Dms-Token"
+          "id": "50",
+          "name": "Mozart DMS Token"
         }
       }
     },
@@ -497,8 +508,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "22",
-          "name": "Balcoqa-Dms-Token"
+          "id": "51",
+          "name": "VendorPanel DMS Token"
         }
       }
     },
@@ -541,8 +552,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "51",
+          "name": "VendorPanel DMS Token"
         }
       }
     },
@@ -596,8 +607,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "51",
+          "name": "VendorPanel DMS Token"
         }
       }
     },
@@ -638,8 +649,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "51",
+          "name": "VendorPanel DMS Token"
         }
       }
     },
@@ -662,8 +673,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "51",
+          "name": "VendorPanel DMS Token"
         }
       }
     },
@@ -691,8 +702,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "50",
+          "name": "Mozart DMS Token"
         }
       }
     },
@@ -720,8 +731,41 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "=https://qan8n.shakedeal.com/webhook/get-url",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "client",
+              "value": "={{$node[\"Get Invoice Details\"].json[\"headers\"][\"client\"]}}"
+            },
+            {
+              "name": "env",
+              "value": "={{$node[\"Get Invoice Details\"].json[\"headers\"][\"x-sd-env\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Get url and token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        420,
+        300
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
         }
       }
     }
@@ -738,5 +782,5 @@
       "updatedAt": "2022-05-30T07:16:52.136Z"
     }
   ],
-  "updatedAt": "2022-07-22T09:27:24.107Z"
+  "updatedAt": "2022-07-25T12:04:08.407Z"
 }
