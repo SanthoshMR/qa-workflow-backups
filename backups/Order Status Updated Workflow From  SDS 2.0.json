@@ -1,0 +1,609 @@
+{
+  "active": true,
+  "connections": {
+    "Receive_order_status": {
+      "main": [
+        [
+          {
+            "node": "Get url and token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update the Status in Dms": {
+      "main": [
+        [
+          {
+            "node": "Get the order id from vpanel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the id": {
+      "main": [
+        [
+          {
+            "node": "Update the Status in Dms",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Constructing email heading,body_content based on order_status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Constructing email heading,body_content based on order_status": {
+      "main": [
+        [
+          {
+            "node": "Get the id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Get the products and orders",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the products and orders": {
+      "main": [
+        [
+          {
+            "node": "Function for po_status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function for po_status": {
+      "main": [
+        [
+          {
+            "node": "IF1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF1": {
+      "main": [
+        [
+          {
+            "node": "Update po status",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the order id from vpanel": {
+      "main": [
+        [
+          {
+            "node": "Condition to check order exits in vpanel or not",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update the order status in vpanel": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get url and token": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Condition to check order exits in vpanel or not": {
+      "main": [
+        [
+          {
+            "node": "NoOp2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update the order status in vpanel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NoOp2": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2022-07-19T10:48:00.043Z",
+  "id": "156",
+  "name": "Order Status Updated Workflow From  SDS 2.0",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        -560,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "update_status_in_dms",
+        "responseMode": "lastNode",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "sd_order_status",
+                "value": "46534643-64327468724"
+              }
+            ]
+          }
+        }
+      },
+      "name": "Receive_order_status",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -960,
+        480
+      ],
+      "webhookId": "084f66e5-8038-4f44-b38e-867d26d8a5b6",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "21",
+          "name": "Balco_basic_auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_orders/{{$json[\"data\"][0][\"id\"]}}",
+        "allowUnauthorizedCerts": true,
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "order_status",
+              "value": "={{$node[\"Globals\"].json[\"order_status\"]}}"
+            },
+            {
+              "name": "stopwebhookcall",
+              "value": "=true"
+            }
+          ]
+        },
+        "headerParametersUi": {
+          "parameter": []
+        }
+      },
+      "name": "Update the Status in Dms",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        -140,
+        480
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "handyalasairam9177@gmail.com",
+        "toEmail": "sairam.shakedeal@gmail.com",
+        "subject": "={{$node[\"Constructing email heading,body_content based on order_status\"].json[\"subject\"]}}",
+        "text": "=",
+        "html": "=<!DoCtYPe html><html lang=\"en\"><head><style id=\"stndzstyle\"></style>\n <meta http-equiv=\"Content-Type\" content=\"text\n/html; charset=UTF-8\">\n <meta name=\"viewport\" content=\"width=device-width,\ninitial-scale=1, shrink-to-fit=no\">\n <meta name=\"description\" content=\"\">\n <meta name=\"author\" content=\"Mark Otto, Jacob\nThornton, and Bootstrap contributors\">\n <meta name=\"generator\" content=\"\nAcelleSystemLayouts\">\n\n <!-- Bootstrap core CSS -->\n <link href=\"https://marketing.shakedeal.com/assets\n/templates/60584da7bdf65/css/bootstrap.min.css\" rel=\"\nstylesheet\">\n <script id=\"spHTMLFormElementPrototypeScript\">\n(function()\n {\n try\n {\n var sp_old_HTMLFormElementPrototype_submit = \nHTMLFormElement.prototype.submit;\n HTMLFormElement.prototype.submit = function\n(AEvent)\n {\n try\n {\n var spEvent = document.createEvent('Event');\n spEvent.initEvent('sp_submit', true, true);\n this.dispatchEvent(spEvent);\n }\n catch(ErrorMessage)\n {\n console.error('spFormElementPrototype()\nError sending \"sp_submit\" event from HTMLFormElement.\nprototype.submit: ' + ErrorMessage);\n }\n sp_old_HTMLFormElementPrototype_submit.apply\n(this);\n };\n }\n catch(ErrorMessage)\n {\n console.error('spFormElementPrototype() Error\nattaching to HTMLFormElement.prototype.submit: ' +\nErrorMessage);\n }\n try\n {\n if (typeof __doPostBack == 'function')\n {\n var sp_old__doPostBack = __doPostBack;\n __doPostBack = function(eventTarget,\neventArgument)\n {\n try\n {\n var spEvent = document.createEvent\n('Event');\n spEvent.initEvent('sp_submit', true, true);\n window.dispatchEvent(spEvent);\n }\n catch(ErrorMessage)\n {\n console.error('spFormElementPrototype()\nError sending \"sp_submit\" event from __doPostBack(): '\n+ ErrorMessage);\n }\n sp_old__doPostBack(eventTarget,\neventArgument);\n };\n }\n }\n catch(ErrorMessage)\n {\n console.error('spFormElementPrototype() Error\nattaching to __doPostBack(): ' + ErrorMessage);\n }\n })();</script><link href=\"https://fonts.googleapis.\ncom/icon?family=Material+Icons\" rel=\"stylesheet\"><link\nhref=\"https://fonts.googleapis.com/icon?\nfamily=Material+Icons+Outlined\" rel=\"stylesheet\"></head>\n\n <body data-new-gr-c-s-check-loaded=\"14.990.0\" datagr-ext-installed=\"\">\n<main role=\"main\">\n<div class=\"py-5 bg-light\">\n<div class=\"container\">\n<h1 class=\"my-4 display-4 text-center\">{{$node[\"Constructing email heading,body_content based on order_status\"].json[\"heading\"]}}</h1>\n<p class=\"lead text-center\">{{$node[\"Constructing email heading,body_content based on order_status\"].json[\"bodyContent\"]}}</p>\n<div><img class=\"my-2\" src=\"\" width=\"100%\" /></div>\n</div>\n</div>\n</main><footer class=\"text-muted py-5\">\n<div class=\"container\">\n<div class=\"row\">\n<div class=\"col-md-8\">\n<p class=\"mb-1\">Copyright &copy; OpCommerce Online PVT\nLTD, All rights reserved.</p>\n<p class=\"mb-0\">Please email us on <a href=\"\nsupport@shakedeal.com\">support@shakedeal.com</a> in\ncase of any queries.\n</div>\n<div class=\"col-md-4\">\n<p class=\"float-right\"><a href=\"#\">Back to top</a></p>\n</div>\n</div>\n</div>\n</footer>\n</body></html>",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "name": "POI Informed the Order_status by WFS.",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        0,
+        200
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "17",
+          "name": "smtp(sai)creds"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_orders?filter={\"order_id\":{\"_eq\":\"{{$node[\"Constructing email heading,body_content based on order_status\"].json[\"add_prefix\"]}}\"}}&fields= id,order_id,vendor_invoice_number.*,\nvendor_invoice_number.vendor_po_num.po_num.*",
+        "allowUnauthorizedCerts": true,
+        "options": {}
+      },
+      "name": "Get the id",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        -320,
+        480
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "order_id",
+              "value": "={{$node[\"Receive_order_status\"].json[\"body\"][\"order_id\"]}}"
+            },
+            {
+              "name": "order_status",
+              "value": "={{$json[\"body\"][\"order_status\"]}}"
+            },
+            {
+              "name": "po_number",
+              "value": "={{$node[\"Receive_order_status\"].json[\"body\"][\"purchase_order_no\"]}}"
+            },
+            {
+              "name": "dms_url",
+              "value": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}"
+            },
+            {
+              "name": "order_prefix",
+              "value": "=OD"
+            },
+            {
+              "name": "token",
+              "value": "={{ $node[\"Receive_order_status\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" && $node[\"Receive_order_status\"].json[\"headers\"][\"client\"] === \"balco\" ? \"d1b1178f-637a-4927-8c41-29f4a8219a95\" : $node[\"Receive_order_status\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" && $node[\"Receive_order_status\"].json[\"headers\"][\"client\"] === \"vedanta\"?\"d1b1178f-637a-4927-8c41-29f4a8219a96\":$node[\"Receive_order_status\"].json[\"headers\"][\"x-sd-env\"] === \"qa\" && $node[\"Receive_order_status\"].json[\"headers\"][\"client\"] === \"vedanta\"?\"def15ddc-f52f-4b2f-a749-b545fbc372e3\":\"def15ddc-f52f-4b2f-a749-b545fbc372e2\"}}"
+            },
+            {
+              "name": "vpanel_url",
+              "value": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        -640,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let orderNumber =  items[0].json[\"order_id\"]\nlet po_num =  items[0].json[\"po_number\"]\norderStatus= items[0].json[\"order_status\"]\nitems[0].json.orderStatus = orderStatus\nif(orderStatus ===\"processed\"){\n   items[0].json.subject = `Order ${orderNumber} for Purchase Order ${po_num} has been Processed`\n   items[0].json.heading = `Order ${orderNumber} against PO ${po_num} has processed`\n  items[0].json.bodyContent = `Order ${orderNumber} against PO ${po_num} \nhas been processed and will shortly shipped to it’s destination. \nWe will keep you updated with the status of your shipment.`\n}\nif(orderStatus===\"intransit\"){\n   items[0].json.subject = `Order ${orderNumber} for Purchase Order ${po_num} \nis In Transit`\n   items[0].json.heading = `Order ${orderNumber} against PO ${po_num} has \nbeen Dispatched`\n   items[0].json.bodyContent = `Order  ${orderNumber} against PO ${po_num} \nhas been Shipped and will arrive at it’s destination soon.`\n}\n\nif(orderStatus === \"complete\"){\n    items[0].json.subject = `Order ${orderNumber}  for Purchase Order ${po_num} \nhas reached it’s destination`\n    items[0].json.heading = `: Order ${orderNumber} against PO ${po_num} has \nreached it’s Destination.`\n     items[0].json.bodyContent = `: Order ${orderNumber} against PO ${po_num} \nhas been reached it’s destination and is now complete.`\n\n}\n\n\nlet order_prefix = $node[\"Globals\"].json[\"order_prefix\"]\nlet add_prefix = order_prefix+orderNumber \n\nitems[0].json.add_prefix = add_prefix \nreturn items;"
+      },
+      "name": "Constructing email heading,body_content based on order_status",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Receive_order_status\"].json[\"body\"][\"order_status\"]}}",
+              "value2": "complete"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        620,
+        480
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        900,
+        620
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_po_details?filter={\"po_num\":\"{{$node[\"Get the id\"].json[\"data\"][0][\"vendor_invoice_number\"][\"vendor_po_num\"][\"po_num\"][\"po_num\"]}}\"}&fields=products.req_qty,orders.order_details.qty_placed,id",
+        "options": {}
+      },
+      "name": "Get the products and orders",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        840,
+        380
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let products = $node[\"Get the products and orders\"].json.data[0].products;\nlet orders = $node[\"Get the products and orders\"].json.data[0].orders;\nlet req_qty = 0;\nlet placed_qty = 0;\nlet po_status = \"\";\nproducts.forEach(function(product,index){\n  req_qty=req_qty+parseInt(product[\"req_qty\"])\n})\norders.forEach(function(order,index){\n  order.order_details.forEach(function(obj,idx){\n    placed_qty = placed_qty+parseInt(obj.qty_placed)\n  })\n})\n\nif(req_qty == placed_qty ){\n  po_status= \"payment_pending\"\n}\nitems[0].json.products = products;\nitems[0].json.orders = orders;\nitems[0].json.req_qty = req_qty;\nitems[0].json.placed_qty = placed_qty;\nitems[0].json.po_status = po_status;\nreturn items;"
+      },
+      "name": "Function for po_status",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Function for po_status\"].json[\"po_status\"]}}",
+              "value2": "payment_pending"
+            }
+          ]
+        }
+      },
+      "name": "IF1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1360,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_po_details/{{$node[\"Get the products and orders\"].json[\"data\"][0][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "po_status",
+              "value": "={{$node[\"Function for po_status\"].json[\"po_status\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update po status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1680,
+        280
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "name": "NoOp1",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1700,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"vpanel_url\"]}}/items/sdv_orders?filter={\"order_id\":{\"_eq\":\"{{$node[\"Constructing email heading,body_content based on order_status\"].json[\"add_prefix\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Get the order id from vpanel",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        60,
+        480
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"vpanel_url\"]}}/items/sdv_orders/{{$node[\"Get the order id from vpanel\"].json[\"data\"][0][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "order_status",
+              "value": "={{$node[\"Globals\"].json[\"order_status\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update the order status in vpanel",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        420,
+        580
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "=https://qan8n.shakedeal.com/webhook/get-url",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "client",
+              "value": "={{$node[\"Receive_order_status\"].json[\"headers\"][\"client\"]}}"
+            },
+            {
+              "name": "env",
+              "value": "={{$node[\"Receive_order_status\"].json[\"headers\"][\"x-sd-env\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Get url and token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        -800,
+        480
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Get the order id from vpanel\"].json[\"data\"].length}}",
+              "operation": "equal"
+            }
+          ]
+        }
+      },
+      "name": "Condition to check order exits in vpanel or not",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        220,
+        480
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "NoOp2",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        420,
+        340
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [
+    {
+      "id": "5",
+      "name": "Mozart",
+      "createdAt": "2022-05-30T07:16:52.136Z",
+      "updatedAt": "2022-05-30T07:16:52.136Z"
+    }
+  ],
+  "updatedAt": "2022-07-25T11:36:11.481Z"
+}
