@@ -5,7 +5,7 @@
       "main": [
         [
           {
-            "node": "Globals",
+            "node": "Get url and token",
             "type": "main",
             "index": 0
           }
@@ -77,6 +77,17 @@
           }
         ]
       ]
+    },
+    "Get url and token": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2022-05-30T07:16:53.844Z",
@@ -89,7 +100,7 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        240,
+        140,
         300
       ]
     },
@@ -104,7 +115,7 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        480,
+        320,
         300
       ],
       "webhookId": "6068e010-29ce-48cd-bfa2-ed6de444d572",
@@ -121,11 +132,11 @@
           "string": [
             {
               "name": "vpanel_dms_url",
-              "value": "={{$node[\"Wait for shipment\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ?\"https://vpanel.shakedeal.com/\":\"https://sdqa.vpanel.shakedeal.com/\"}}"
+              "value": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}"
             },
             {
               "name": "mozart_dms_url",
-              "value": "=https://sdqa.mozart.shakedeal.com"
+              "value": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}"
             }
           ]
         },
@@ -142,7 +153,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"vpanel_dms_url\"]}}assets/{{$node[\"Wait for shipment\"].json[\"body\"][\"payload\"][\"shipment_file\"]}}",
+        "url": "={{$node[\"Globals\"].json[\"vpanel_dms_url\"]}}/assets/{{$node[\"Wait for shipment\"].json[\"body\"][\"payload\"][\"shipment_file\"]}}",
         "responseFormat": "file",
         "options": {}
       },
@@ -155,8 +166,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "51",
+          "name": "VendorPanel DMS Token"
         }
       }
     },
@@ -199,15 +210,15 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "50",
+          "name": "Mozart DMS Token"
         }
       }
     },
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"vpanel_dms_url\"]}}items/sdv_vendor_pos/{{$node[\"Wait for shipment\"].json[\"body\"][\"payload\"][\"vendor_po_number\"]}}",
+        "url": "={{$node[\"Globals\"].json[\"vpanel_dms_url\"]}}/items/sdv_vendor_pos/{{$node[\"Wait for shipment\"].json[\"body\"][\"payload\"][\"vendor_po_number\"]}}",
         "options": {}
       },
       "name": "Get the po number",
@@ -219,8 +230,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "51",
+          "name": "VendorPanel DMS Token"
         }
       }
     },
@@ -239,8 +250,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "50",
+          "name": "Mozart DMS Token"
         }
       }
     },
@@ -288,8 +299,41 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "=https://qan8n.shakedeal.com/webhook/get-url",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "client",
+              "value": "={{$node[\"Wait for shipment\"].json[\"body\"][\"payload\"][\"client\"]}}"
+            },
+            {
+              "name": "env",
+              "value": "={{$node[\"Wait for shipment\"].json[\"headers\"][\"x-sd-env\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Get url and token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        500,
+        300
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
         }
       }
     }
@@ -304,5 +348,5 @@
       "updatedAt": "2022-05-30T07:16:52.136Z"
     }
   ],
-  "updatedAt": "2022-07-14T10:05:37.127Z"
+  "updatedAt": "2022-07-25T11:53:43.029Z"
 }
