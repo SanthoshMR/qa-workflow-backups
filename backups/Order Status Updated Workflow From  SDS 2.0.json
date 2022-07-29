@@ -275,8 +275,8 @@
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 1,
       "position": [
-        0,
-        200
+        -320,
+        -20
       ],
       "credentials": {
         "smtp": {
@@ -527,8 +527,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "51",
+          "name": "VendorPanel DMS Token"
         }
       }
     },
@@ -605,5 +605,5 @@
       "updatedAt": "2022-05-30T07:16:52.136Z"
     }
   ],
-  "updatedAt": "2022-07-25T11:36:11.481Z"
+  "updatedAt": "2022-07-29T06:16:58.907Z"
 }
