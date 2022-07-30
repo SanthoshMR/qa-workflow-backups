@@ -22,6 +22,68 @@
           }
         ]
       ]
+    },
+    "Check for pending sd_invoice_Status": {
+      "main": [
+        [
+          {
+            "node": "Function to prepare irn data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to prepare irn data": {
+      "main": [
+        [
+          {
+            "node": "Send the irn data to SD store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send the irn data to SD store": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Function to prepare update SD invoice status obj",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to prepare update SD invoice status obj": {
+      "main": [
+        [
+          {
+            "node": "Update the SD invoice status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2022-05-06T08:37:16.625Z",
@@ -61,6 +123,14 @@
             {
               "name": "dms_url",
               "value": "=https://dmsqa.shakedeal.com"
+            },
+            {
+              "name": "sdStore_url",
+              "value": "=http://sddev.shakedeal.com/index.php?dispatch=wfs_update.retrieve_irn_invoice"
+            },
+            {
+              "name": "hash",
+              "value": "=wfs%#hash"
             }
           ]
         },
@@ -93,9 +163,107 @@
           "name": "header auth creds"
         }
       }
+    },
+    {
+      "parameters": {
+        "functionCode": "let hash = $node[\"Globals\"].json.hash;\nlet order_data = $node[\"Check for pending sd_invoice_Status\"].json.data;\nlet irn_obj = {};\nlet irn_data = [];\n\norder_data.forEach(function(data,index){\n  irn_data[index] = {};\n  irn_data[index].order_id = data.id.replace(\"OD\",\"\");\n  irn_data[index].irn = data.irn_number;\n  irn_data[index].irn_qrcode = data.qr_link;\n  irn_data[index].ack_no = data.ack_number;\n  irn_data[index].ack_date = data.ack_date;\n})\n\nirn_obj.hash = hash;\nirn_obj.irn_data = irn_data;\n\nitems[0].json.irn_obj = irn_obj;\n\nreturn items;"
+      },
+      "name": "Function to prepare irn data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"sdStore_url\"]}}",
+        "jsonParameters": true,
+        "options": {
+          "timeout": 10000
+        },
+        "bodyParametersJson": "={{$node[\"Function to prepare irn data\"].json[\"irn_obj\"]}}"
+      },
+      "name": "Send the irn data to SD store",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1260,
+        280
+      ],
+      "alwaysOutputData": true,
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$node[\"Send the irn data to SD store\"].json.hasOwnProperty(\"error\")}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1440,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/orders",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Function to prepare update SD invoice status obj\"].json[\"update_order_obj\"]}}"
+      },
+      "name": "Update the SD invoice status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1900,
+        400
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let response_data = $node[\"Send the irn data to SD store\"].json.rdata;\nlet order_data =  $node[\"Check for pending sd_invoice_Status\"].json.data;\nlet updated_order = response_data.filter(rd =>rd.irn_status == 2);\nlet update_shakedeal_status_keys = [];\nlet update_order_obj = {};\n\nif(updated_order){\n  updated_order.forEach(function(data,index){\n    let matched_order_obj = order_data.find(od => od.id == \"OD\"+data.order_id);\n    update_shakedeal_status_keys.push(matched_order_obj.id);\n  })\n}\n\nupdate_order_obj.keys = update_shakedeal_status_keys;\nupdate_order_obj.data = {\"sd_invoice_status\":\"sent\"};\n\n\nitems[0].json.updated_order = updated_order;\nitems[0].json.update_shakedeal_status_keys =  update_shakedeal_status_keys;\nitems[0].json.update_order_obj = update_order_obj;\n\nreturn items;"
+      },
+      "name": "Function to prepare update SD invoice status obj",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1640,
+        400
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1640,
+        80
+      ]
     }
   ],
-  "settings": {},
+  "settings": {
+    "saveManualExecutions": true
+  },
   "staticData": null,
   "tags": [
     {
@@ -105,5 +273,5 @@
       "updatedAt": "2022-04-25T07:09:37.693Z"
     }
   ],
-  "updatedAt": "2022-05-06T08:44:23.752Z"
+  "updatedAt": "2022-07-28T12:23:57.384Z"
 }
