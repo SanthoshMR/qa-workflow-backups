@@ -1,6 +1,18 @@
 {
-  "active": false,
-  "connections": {},
+  "active": true,
+  "connections": {
+    "Wait for client and env": {
+      "main": [
+        [
+          {
+            "node": "Construct for urls and token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
   "createdAt": "2022-06-10T07:22:26.319Z",
   "id": "134",
   "name": "Get base url based on client",
@@ -11,7 +23,43 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        240,
+        100,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "=get-url",
+        "responseMode": "lastNode",
+        "responseData": "allEntries",
+        "options": {}
+      },
+      "name": "Wait for client and env",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        260,
+        300
+      ],
+      "webhookId": "3550fbc0-f2de-4dfb-8a67-077d83e10e34",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let client = $node[\"Wait for client and env\"].json.body.client;\nlet enviroment = $node[\"Wait for client and env\"].json.body.env;\nlet mozart_url = \"\";\nlet vendor_panel_url = \"\";\nlet mozart_token = \"\";\nlet vendor_panel_token = \"\";\n\nswitch(client+enviroment){\n  case \"balcoqa\":\n    mozart_url = \"https://balcoqa.mozart.shakedeal.com\";\n    mozart_token = \"def15ddc-f52f-4b2f-a749-b545fbc372e2\";\n    vendor_panel_url = \"https://sdqa.vpanel.shakedeal.com\";\n    vendor_panel_token = \"oes-token-to-check-spec\";\n    break;\n  case \"vedantaqa\":\n    mozart_url = \"https://sdqa.mozart.shakedeal.com\";\n    mozart_token = \"oes-token-to-check-spec\";\n    vendor_panel_url = \"https://sdqa.vpanel.shakedeal.com\";\n    vendor_panel_token = \"oes-token-to-check-spec\";\n    break;\n  case \"balcoprod\":\n    mozart_url = \"https://balco.mozart.shakedeal.com\";\n    mozart_token = \"d1b1178f-637a-4927-8c41-29f4a8219a95\";\n    vendor_panel_url = \"https://vpanel.shakedeal.com\";\n    vendor_panel_token = \"oes-token-to-check-spec\";\n    break;\n  case \"vedantaprod\":\n    mozart_url = \"https://mozart.shakedeal.com\";\n    mozart_token = \"oes-token-to-check-spec\";\n    vendor_panel_url = \"https://vpanel.shakedeal.com\";\n    vendor_panel_token = \"oes-token-to-check-spec\";\n    break;\n}\n\nitems[0].json.client = client;\nitems[0].json.enviroment = enviroment;\nitems[0].json.mozart_url = mozart_url;\nitems[0].json.mozart_token = mozart_token;\nitems[0].json.vendor_panel_url = vendor_panel_url;\nitems[0].json.vendor_panel_token = vendor_panel_token;\nreturn items;"
+      },
+      "name": "Construct for urls and token",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        480,
         300
       ]
     }
@@ -26,5 +74,5 @@
       "updatedAt": "2022-05-30T07:16:52.136Z"
     }
   ],
-  "updatedAt": "2022-06-10T07:22:31.306Z"
+  "updatedAt": "2022-07-22T12:46:14.028Z"
 }
