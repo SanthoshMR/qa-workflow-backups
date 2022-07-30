@@ -5,7 +5,7 @@
       "main": [
         [
           {
-            "node": "Globals",
+            "node": "Get url and token",
             "type": "main",
             "index": 0
           }
@@ -110,6 +110,17 @@
           }
         ]
       ]
+    },
+    "Get url and token": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2022-06-14T05:22:31.448Z",
@@ -122,8 +133,8 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        -60,
-        140
+        -240,
+        80
       ]
     },
     {
@@ -137,7 +148,7 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        -60,
+        -260,
         320
       ],
       "webhookId": "1551211b-b856-41c1-ab75-dcebbf03ce9d",
@@ -163,18 +174,19 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "50",
+          "name": "Mozart DMS Token"
         }
       }
     },
     {
       "parameters": {
+        "keepOnlySet": true,
         "values": {
           "string": [
             {
               "name": "dms_url",
-              "value": "={{$node[\"Wait for order\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ?\"https://mozart.shakedeal.com\":\"https://sdqa.mozart.shakedeal.com\"}}"
+              "value": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}"
             },
             {
               "name": "hash",
@@ -202,7 +214,11 @@
             },
             {
               "name": "vpanel_url",
-              "value": "={{$node[\"Wait for order\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ?\"https://vpanel.shakedeal.com\":\"https://sdqa.vpanel.shakedeal.com\"}}"
+              "value": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}"
+            },
+            {
+              "name": "sd_store_url",
+              "value": "=https://vinay.kumar%40shakedeal.com:9kle94lA95TkHX2gFBD4Z9T34E7hdN3M@sdqa.shakedeal.com/api/QocOrders/"
             }
           ],
           "number": [
@@ -237,7 +253,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "=https://sdqa.mozart.shakedeal.com/items/sdm_plants?filter={\"plant\":{\"_eq\":\"{{$node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"product_details\"][0][\"plant\"]}}\"}}",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sdm_plants?filter={\"plant\":{\"_eq\":\"{{$node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"product_details\"][0][\"plant\"]}}\"}}",
         "options": {}
       },
       "name": "Get contact details based on plant",
@@ -249,8 +265,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "50",
+          "name": "Mozart DMS Token"
         }
       }
     },
@@ -258,7 +274,7 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "PATCH",
-        "url": "=https://sdqa.mozart.shakedeal.com/items/sd_mozart_orders/{{$node[\"Wait for order\"].json[\"body\"][\"key\"]}}",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_orders/{{$node[\"Wait for order\"].json[\"body\"][\"key\"]}}",
         "options": {},
         "bodyParametersUi": {
           "parameter": [
@@ -298,15 +314,15 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "50",
+          "name": "Mozart DMS Token"
         }
       }
     },
     {
       "parameters": {
         "requestMethod": "POST",
-        "url": "=https://vinay.kumar%40shakedeal.com:9kle94lA95TkHX2gFBD4Z9T34E7hdN3M@sdqa.shakedeal.com/api/QocOrders/",
+        "url": "={{$node[\"Globals\"].json[\"sd_store_url\"]}}",
         "jsonParameters": true,
         "options": {},
         "bodyParametersJson": "={{$node[\"Function for creating order details object\"].json[\"order_obj\"]}}"
@@ -351,8 +367,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "50",
+          "name": "Mozart DMS Token"
         }
       }
     },
@@ -380,8 +396,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "50",
+          "name": "Mozart DMS Token"
         }
       }
     },
@@ -400,8 +416,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "51",
+          "name": "VendorPanel DMS Token"
         }
       }
     },
@@ -429,8 +445,41 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "=https://qan8n.shakedeal.com/webhook/get-url",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "client",
+              "value": "={{$node[\"Wait for order\"].json[\"headers\"][\"client\"]}}"
+            },
+            {
+              "name": "env",
+              "value": "={{$node[\"Wait for order\"].json[\"headers\"][\"x-sd-env\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Get url and token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        -40,
+        320
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
         }
       }
     }
@@ -448,5 +497,5 @@
       "updatedAt": "2022-05-30T07:16:52.136Z"
     }
   ],
-  "updatedAt": "2022-07-21T10:10:19.253Z"
+  "updatedAt": "2022-07-25T12:23:50.016Z"
 }
