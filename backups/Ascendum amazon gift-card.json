@@ -42,9 +42,9 @@
       "parameters": {
         "resource": "worksheet",
         "operation": "getContent",
-        "workbook": "A6E890F58473778D!3809",
-        "worksheet": "{E4FF10BC-E191-41F3-BB42-DC020C160A76}",
-        "range": "A2:H552"
+        "workbook": "A6E890F58473778D!6098",
+        "worksheet": "{9995008C-0FFB-4EE5-A3B2-84E446581FE8}",
+        "range": "A1:H468"
       },
       "name": "Microsoft Excel",
       "type": "n8n-nodes-base.microsoftExcel",
@@ -63,10 +63,10 @@
     {
       "parameters": {
         "fromEmail": "=voucher.ops@shakedeal.com",
-        "toEmail": "={{$node[\"Microsoft Excel\"].json[\"Email ID\"]}}",
+        "toEmail": "={{$node[\"Microsoft Excel\"].json[\" Email id\"]}}",
         "subject": "=Motivational Amazon Gift Voucher details",
         "text": "=",
-        "html": "=<p>Hi {{$node[\"Microsoft Excel\"].json[\"Employee Name\"]}},</p>\n</br>\n<p style=\"width: 682.4pt;\">Please find below the details of Amazon Gift Voucher for Motivational Budget.\n</p></br>\n<p style=\"width: 682.4pt;\">Add this voucher to your account today only and let me know if you face any issue.\n</p></br>\n\n<table class=\"x_-1420528032MsoNormalTable\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"371\" style=\"width: 279pt;border-collapse: collapse;\">\n<tbody>\n<tr style=\"height: 25.5pt;\">\n<td width=\"143\" style=\"width: 107.0pt;border: solid windowtext 1.0pt;background: rgb(102,102,153);padding: 0.0cm 5.4pt 0.0cm 5.4pt;height: 25.5pt;\">\n<p class=\"MsoNormal\" align=\"center\" style=\"text-align: center;\"><b><span style=\"color: white;\">Emp. Code</span></b></p>\n</td>\n<td width=\"143\" style=\"width: 107.0pt;border: solid windowtext 1.0pt;background: rgb(102,102,153);padding: 0.0cm 5.4pt 0.0cm 5.4pt;height: 25.5pt;\">\n<p class=\"MsoNormal\" align=\"center\" style=\"text-align: center;\"><b><span style=\"color: white;\">Code</span></b></p>\n</td>\n<td width=\"143\" style=\"width: 107.0pt;border: solid windowtext 1.0pt;background: rgb(102,102,153);padding: 0.0cm 5.4pt 0.0cm 5.4pt;height: 25.5pt;\">\n<p class=\"MsoNormal\" align=\"center\" style=\"text-align: center;\"><b><span style=\"color: white;\">Reference ID</span></b></p>\n</td>\n<td width=\"107\" style=\"width: 80.0pt;border: solid windowtext 1.0pt;border-left: none;background: rgb(102,102,153);padding: 0.0cm 5.4pt 0.0cm 5.4pt;height: 25.5pt;\">\n<p class=\"MsoNormal\" align=\"center\" style=\"text-align: center;\"><b><span style=\"color: white;\">Amount</span></b></p>\n</td>\n<td width=\"108\" style=\"width: 81.0pt;border: solid windowtext 1.0pt;border-left: none;background: rgb(102,102,153);padding: 0.0cm 5.4pt 0.0cm 5.4pt;height: 25.5pt;\">\n<p class=\"MsoNormal\" align=\"center\" style=\"text-align: center;\"><b><span style=\"color: white;\">Expiry Date</span></b></p>\n</td>\n</tr>\n<tr style=\"height: 21.0pt;\">\n<td width=\"70\" nowrap=\"\" style=\"width: 52.4pt;border: solid windowtext 1.0pt;border-top: none;padding: 0.0cm 5.4pt 0.0cm 5.4pt;height: 21.0pt;border-right: solid windowtext 1.0pt;\">\n<p class=\"MsoNormal\"><span style=\"font-size: 10.0pt;font-family: Arial, sans-serif;\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n{{$node[\"Microsoft Excel\"].json[\"Emp. ID\"]}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n</span></p>\n</td>\n<td width=\"70\" nowrap=\"\" style=\"width: 52.4pt;border: solid windowtext 1.0pt;border-top: none;padding: 0.0cm 5.4pt 0.0cm 5.4pt;height: 21.0pt;border-right: solid windowtext 1.0pt;\">\n<p class=\"MsoNormal\"><span style=\"font-size: 10.0pt;font-family: Arial, sans-serif;\">{{$node[\"Microsoft Excel\"].json[\"Code\"]}}</span></p>\n</td>\n<td width=\"70\" nowrap=\"\" style=\"width: 52.4pt;border: solid windowtext 1.0pt;border-top: none;padding: 0.0cm 5.4pt 0.0cm 5.4pt;height: 21.0pt;border-right: solid windowtext 1.0pt;\">\n<p class=\"MsoNormal\"><span style=\"font-size: 10.0pt;font-family: Arial, sans-serif;\">{{$node[\"Microsoft Excel\"].json[\"Reference ID\"]}}</span></p>\n</td>\n<td width=\"107\" nowrap=\"\" style=\"width: 80.0pt;border-top: none;border-left: none;border-bottom: solid windowtext 1.0pt;border-right: solid windowtext 1.0pt;padding: 0.0cm 5.4pt 0.0cm 5.4pt;height: 21.0pt;\">\n<p class=\"MsoNormal\" align=\"center\" style=\"text-align: center;\"><span style=\"font-size: 10.0pt;font-family: Arial, sans-serif;\">{{$node[\"Microsoft Excel\"].json[\"Amount\"]}}</span></p>\n</td>\n<td width=\"108\" nowrap=\"\" style=\"width: 81.0pt;border-top: none;border-left: none;border-bottom: solid windowtext 1.0pt;border-right: solid windowtext 1.0pt;padding: 0.0cm 5.4pt 0.0cm 5.4pt;height: 21.0pt;\">\n<p class=\"MsoNormal\" align=\"center\" style=\"text-align: center;\"><span style=\"font-size: 10.0pt;font-family: Arial, sans-serif;\">{{$node[\"Microsoft Excel\"].json[\"Expiry Date\"]}}</span></p>\n</td>\n</tr>\n</tbody>\n</table>\n</br></br></br>\n<p>From ASCENDUM KPS PRIVATE LIMITED</b></p>",
+        "html": "=<p>Hi {{$node[\"Microsoft Excel\"].json[\"Employee Name\"]}},</p>\n</br>\n<p style=\"width: 682.4pt;\">Please find below the details of Amazon Gift Voucher for Motivational Budget.\n</p></br>\n<p style=\"width: 682.4pt;\">Add this voucher to your account today only and let me know if you face any issue.\n</p></br>\n\n<table class=\"x_-1420528032MsoNormalTable\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"371\" style=\"width: 279pt;border-collapse: collapse;\">\n<tbody>\n<tr style=\"height: 25.5pt;\">\n<td width=\"143\" style=\"width: 107.0pt;border: solid windowtext 1.0pt;background: rgb(102,102,153);padding: 0.0cm 5.4pt 0.0cm 5.4pt;height: 25.5pt;\">\n<p class=\"MsoNormal\" align=\"center\" style=\"text-align: center;\"><b><span style=\"color: white;\">Emp. Code</span></b></p>\n</td>\n<td width=\"143\" style=\"width: 107.0pt;border: solid windowtext 1.0pt;background: rgb(102,102,153);padding: 0.0cm 5.4pt 0.0cm 5.4pt;height: 25.5pt;\">\n<p class=\"MsoNormal\" align=\"center\" style=\"text-align: center;\"><b><span style=\"color: white;\">Code</span></b></p>\n</td>\n<td width=\"143\" style=\"width: 107.0pt;border: solid windowtext 1.0pt;background: rgb(102,102,153);padding: 0.0cm 5.4pt 0.0cm 5.4pt;height: 25.5pt;\">\n<p class=\"MsoNormal\" align=\"center\" style=\"text-align: center;\"><b><span style=\"color: white;\">Reference ID</span></b></p>\n</td>\n<td width=\"107\" style=\"width: 80.0pt;border: solid windowtext 1.0pt;border-left: none;background: rgb(102,102,153);padding: 0.0cm 5.4pt 0.0cm 5.4pt;height: 25.5pt;\">\n<p class=\"MsoNormal\" align=\"center\" style=\"text-align: center;\"><b><span style=\"color: white;\">Amount</span></b></p>\n</td>\n<td width=\"108\" style=\"width: 81.0pt;border: solid windowtext 1.0pt;border-left: none;background: rgb(102,102,153);padding: 0.0cm 5.4pt 0.0cm 5.4pt;height: 25.5pt;\">\n<p class=\"MsoNormal\" align=\"center\" style=\"text-align: center;\"><b><span style=\"color: white;\">Expiry Date</span></b></p>\n</td>\n</tr>\n<tr style=\"height: 21.0pt;\">\n<td width=\"70\" nowrap=\"\" style=\"width: 52.4pt;border: solid windowtext 1.0pt;border-top: none;padding: 0.0cm 5.4pt 0.0cm 5.4pt;height: 21.0pt;border-right: solid windowtext 1.0pt;\">\n<p class=\"MsoNormal\"><span style=\"font-size: 10.0pt;font-family: Arial, sans-serif;\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n{{$node[\"Microsoft Excel\"].json[\"Emp. ID\"]}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n</span></p>\n</td>\n<td width=\"70\" nowrap=\"\" style=\"width: 52.4pt;border: solid windowtext 1.0pt;border-top: none;padding: 0.0cm 5.4pt 0.0cm 5.4pt;height: 21.0pt;border-right: solid windowtext 1.0pt;\">\n<p class=\"MsoNormal\"><span style=\"font-size: 10.0pt;font-family: Arial, sans-serif;\">{{$node[\"Microsoft Excel\"].json[\"Gift Card Code\"]}}</span></p>\n</td>\n<td width=\"70\" nowrap=\"\" style=\"width: 52.4pt;border: solid windowtext 1.0pt;border-top: none;padding: 0.0cm 5.4pt 0.0cm 5.4pt;height: 21.0pt;border-right: solid windowtext 1.0pt;\">\n<p class=\"MsoNormal\"><span style=\"font-size: 10.0pt;font-family: Arial, sans-serif;\">{{$node[\"Microsoft Excel\"].json[\"Reference ID\"]}}</span></p>\n</td>\n<td width=\"107\" nowrap=\"\" style=\"width: 80.0pt;border-top: none;border-left: none;border-bottom: solid windowtext 1.0pt;border-right: solid windowtext 1.0pt;padding: 0.0cm 5.4pt 0.0cm 5.4pt;height: 21.0pt;\">\n<p class=\"MsoNormal\" align=\"center\" style=\"text-align: center;\"><span style=\"font-size: 10.0pt;font-family: Arial, sans-serif;\">{{$node[\"Microsoft Excel\"].json[\"Amount\"]}}</span></p>\n</td>\n<td width=\"108\" nowrap=\"\" style=\"width: 81.0pt;border-top: none;border-left: none;border-bottom: solid windowtext 1.0pt;border-right: solid windowtext 1.0pt;padding: 0.0cm 5.4pt 0.0cm 5.4pt;height: 21.0pt;\">\n<p class=\"MsoNormal\" align=\"center\" style=\"text-align: center;\"><span style=\"font-size: 10.0pt;font-family: Arial, sans-serif;\">{{$node[\"Microsoft Excel\"].json[\"Expiry Date\"]}}</span></p>\n</td>\n</tr>\n</tbody>\n</table>\n</br></br></br>\n<p>From ASCENDUM KPS PRIVATE LIMITED</b></p>",
         "options": {}
       },
       "name": "Send Email",
@@ -81,11 +81,13 @@
           "id": "36",
           "name": "SendGrid"
         }
-      },
-      "disabled": true
+      }
     }
   ],
-  "settings": {},
+  "settings": {
+    "saveExecutionProgress": "DEFAULT",
+    "saveManualExecutions": true
+  },
   "staticData": null,
   "tags": [
     {
@@ -95,5 +97,5 @@
       "updatedAt": "2022-04-25T11:54:47.715Z"
     }
   ],
-  "updatedAt": "2022-04-26T12:39:39.368Z"
+  "updatedAt": "2022-07-25T12:32:11.095Z"
 }
