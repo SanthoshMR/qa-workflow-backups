@@ -718,7 +718,7 @@
     },
     {
       "parameters": {
-        "functionCode": "items[0].json.attachmentIndex = items[0].binary ? Object.values(items[0].binary).findIndex(key => key.mimeType === \"application/pdf\") : -1;\nif(items[0].json.attachmentIndex !== -1){\n  items[0].json.data = items[0].binary[items[0].json.attachmentIndex];\n}\n\nlet fromEmails = [\"sairam.reddy@shakedeal.com\",\"ordersender-prod@ansmtp.ariba.com\",\"chidanand@shakedeal.com\",\"surya.kc@shakedeal.com\"];\nlet toEmails = [\"shakedeal.mozart+balco@shakedeal.com\",\"shakedeal.mozart+vedanta@shakedeal.com\",\"sairam.shakedeal+vedantaqa@gmail.com\",\"sairam.shakedeal+balcoqa@gmail.com\"]\n\nitems[0].json.fromEmails = fromEmails;\n\nreturn items\n"
+        "functionCode": "items[0].json.attachmentIndex = items[0].binary ? Object.values(items[0].binary).findIndex(key => key.mimeType === \"application/pdf\") : -1;\nif(items[0].json.attachmentIndex !== -1){\n  items[0].json.data = items[0].binary[items[0].json.attachmentIndex];\n}\n\nlet fromEmails = [\"sairam.reddy@shakedeal.com\",\"ordersender-prod@ansmtp.ariba.com\",\"chidanand@shakedeal.com\",\"surya.kc@shakedeal.com\",\"mozartautomationtest@gmail.com\"];\nlet toEmails = [\"shakedeal.mozart+balco@shakedeal.com\",\"shakedeal.mozart+vedanta@shakedeal.com\",\"sairam.shakedeal+vedantaqa@gmail.com\",\"sairam.shakedeal+balcoqa@gmail.com\"]\n\nitems[0].json.fromEmails = fromEmails;\n\nreturn items\n"
       },
       "name": "Get the index of attachment",
       "type": "n8n-nodes-base.function",
@@ -1697,5 +1697,5 @@
       "updatedAt": "2022-05-30T07:16:52.136Z"
     }
   ],
-  "updatedAt": "2022-08-09T12:06:14.438Z"
+  "updatedAt": "2022-08-10T10:39:13.161Z"
 }
