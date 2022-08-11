@@ -71,7 +71,7 @@
       "main": [
         [
           {
-            "node": "Nextcloud1",
+            "node": "Send Email",
             "type": "main",
             "index": 0
           }
@@ -146,8 +146,8 @@
       "type": "n8n-nodes-base.nextCloud",
       "typeVersion": 1,
       "position": [
-        1180,
-        320
+        1240,
+        460
       ],
       "credentials": {
         "nextCloudApi": {
@@ -245,10 +245,32 @@
         }
       },
       "disabled": true
+    },
+    {
+      "parameters": {
+        "fromEmail": "webmaster@shakedeal.com",
+        "toEmail": "santhosh@shakedeal.com, santhosh.mreddy@gmail.com",
+        "subject": "Sample",
+        "attachments": "data",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        1220,
+        280
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "7",
+          "name": "AWS SES Creds"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2021-02-04T17:45:20.466Z"
+  "updatedAt": "2022-08-11T09:34:26.023Z"
 }
