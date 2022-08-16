@@ -365,6 +365,10 @@
             {
               "name": "vpanel_url",
               "value": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}"
+            },
+            {
+              "name": "sds_url",
+              "value": "={{ $node[\"Receive the order_status\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ? \"https://www.shakedeal.com\" : \"https://sdqa.shakedeal.com\" }}"
             }
           ]
         },
@@ -631,5 +635,5 @@
       "updatedAt": "2022-05-30T07:16:52.136Z"
     }
   ],
-  "updatedAt": "2022-07-29T06:15:52.600Z"
+  "updatedAt": "2022-08-13T10:38:50.182Z"
 }
