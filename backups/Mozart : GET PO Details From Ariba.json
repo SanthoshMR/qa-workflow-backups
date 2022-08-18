@@ -1,0 +1,162 @@
+{
+  "active": false,
+  "connections": {
+    "Generate Token": {
+      "main": [
+        [
+          {
+            "node": "Get Purchase order",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Generate Token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Purchase order": {
+      "main": [
+        [
+          {
+            "node": "Get Line Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2022-08-18T09:30:56.925Z",
+  "id": "167",
+  "name": "Mozart : GET PO Details From Ariba",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://api.ariba.com/v2/oauth/token",
+        "allowUnauthorizedCerts": true,
+        "options": {
+          "bodyContentType": "form-urlencoded"
+        },
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "grant_type",
+              "value": "client_credentials"
+            }
+          ]
+        },
+        "headerParametersUi": {
+          "parameter": [
+            {
+              "name": "Authorization",
+              "value": "Basic MDIwYzE5MDctNWZmZi00ZGViLTg0ZGMtNmM1MGYxYzY4MzM1Onlkb1Z6blNURGV0b0U2bG93NW1nMm1seWNkVTdaNDRH"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/x-www-form-urlencoded"
+            }
+          ]
+        },
+        "queryParametersUi": {
+          "parameter": []
+        }
+      },
+      "name": "Generate Token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        600,
+        300
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "url": "https://openapi.ariba.com/api/purchase-orders-supplier/v1/prod/orders",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {},
+        "headerParametersJson": "={\n\"X-ARIBA-NETWORK-ID\":\"AN01470389119\",\n\"apiKey\":\"iHw5PyU978ywmbDs1vMlBp0nAskQjfyq\",\n\"Authorization\": \"Bearer {{$node[\"Generate Token\"].json[\"access_token\"]}}\"\n}",
+        "queryParametersJson": "={\n\"$filter\":\"documentNumber eq {{$node[\"Globals\"].json[\"poNumber\"]}}\"\n}"
+      },
+      "name": "Get Purchase order",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        780,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "poNumber",
+              "value": "7100027662"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        420,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://openapi.ariba.com/api/purchase-orders-supplier/v1/prod/items",
+        "jsonParameters": true,
+        "options": {},
+        "headerParametersJson": "={\n\"X-ARIBA-NETWORK-ID\":\"AN01470389119\",\n\"apiKey\":\"iHw5PyU978ywmbDs1vMlBp0nAskQjfyq\",\n\"Authorization\": \"Bearer {{$node[\"Generate Token\"].json[\"access_token\"]}}\"\n}",
+        "queryParametersJson": "={\n\"$filter\":\"documentNumber eq {{$node[\"Globals\"].json[\"poNumber\"]}}\"\n}"
+      },
+      "name": "Get Line Items",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        980,
+        300
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2022-08-18T10:12:30.741Z"
+}
