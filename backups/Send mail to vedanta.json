@@ -1,0 +1,90 @@
+{
+  "active": false,
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Microsoft Excel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Microsoft Excel": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2022-08-23T07:14:03.801Z",
+  "id": "170",
+  "name": "Send mail to vedanta",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "worksheet",
+        "operation": "getContent",
+        "workbook": "A6E890F58473778D!6156",
+        "worksheet": "{00000000-0001-0000-0000-000000000000}",
+        "range": "A1:E33"
+      },
+      "name": "Microsoft Excel",
+      "type": "n8n-nodes-base.microsoftExcel",
+      "typeVersion": 1,
+      "position": [
+        440,
+        300
+      ],
+      "credentials": {
+        "microsoftExcelOAuth2Api": {
+          "id": "34",
+          "name": "Microsoft excel creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "toEmail": "={{$node[\"Microsoft Excel\"].json[\"email\"]}}",
+        "subject": "=",
+        "text": "=Hi {{$node[\"Microsoft Excel\"].json[\"first_name\"]}},",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        660,
+        300
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "36",
+          "name": "SendGrid"
+        }
+      },
+      "disabled": true
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2022-08-23T07:21:04.667Z"
+}
