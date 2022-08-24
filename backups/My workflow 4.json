@@ -22,6 +22,11 @@
           }
         ]
       ]
+    },
+    "Webhook": {
+      "main": [
+        []
+      ]
     }
   },
   "createdAt": "2022-08-19T09:58:24.322Z",
@@ -34,8 +39,8 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        320,
-        280
+        200,
+        160
       ]
     },
     {
@@ -82,18 +87,8 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "=https://books.zoho.com/api/v3/purchaseorders?organization_id=685685414",
-        "responseFormat": "file",
-        "dataPropertyName": "po_file",
-        "options": {},
-        "queryParametersUi": {
-          "parameter": [
-            {
-              "name": "reference_number",
-              "value": "=7100027630"
-            }
-          ]
-        }
+        "url": "=https://books.zoho.com/api/v3/invoices?organization_id=685685414",
+        "options": {}
       },
       "name": "Get PO attachment",
       "type": "n8n-nodes-base.httpRequest",
@@ -108,10 +103,32 @@
           "name": "zoho books creds"
         }
       }
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "path": "update_po_status",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        120,
+        320
+      ],
+      "webhookId": "61a4583e-0fe9-4af4-9862-8cd1389cc6ae",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      },
+      "disabled": true
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-08-19T10:02:25.194Z"
+  "updatedAt": "2022-08-23T07:13:46.784Z"
 }
