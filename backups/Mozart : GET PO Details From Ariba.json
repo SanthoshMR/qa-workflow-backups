@@ -1,44 +1,82 @@
 {
   "active": false,
   "connections": {
-    "Generate Token": {
-      "main": [
-        [
-          {
-            "node": "Get Purchase order",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Start": {
       "main": [
         [
           {
-            "node": "Globals",
+            "node": "Mock Data",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Globals": {
+    "Mock Data": {
       "main": [
         [
           {
-            "node": "Generate Token",
+            "node": "SplitInBatches",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Get Purchase order": {
+    "SplitInBatches": {
       "main": [
         [
           {
-            "node": "Get Line Items",
+            "node": "Generate Token1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "All PO Details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Token1": {
+      "main": [
+        [
+          {
+            "node": "Get Purchase order1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Purchase order1": {
+      "main": [
+        [
+          {
+            "node": "Get Line Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Line Items1": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "SplitInBatches",
             "type": "main",
             "index": 0
           }
@@ -56,8 +94,52 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        240,
-        300
+        -380,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "const pos = [7100027008,7100027006,7100027014,7100027013,7100027017,7100027036,7100027034,7100027037,7100027033,7100027041,7100027046,7100027043,7100027067,7100027068,7100027066,7100027421,7100027430,7100027429,7100027428,7100027434,7100027437,7100027443,7100027445,7100027444,7100027449,7100027442,7100027500,7100027520,7100027534,7100027531,7100027529,7100027533,7100027538,7100027541,7100027547,7100027552,7100027562,7100027573,7100027574,7100027575,7100027608,7100027604,7100027621,7100027631,7100027629,7100027630,7100027644,7100027643,7100027645,7100027647,7100027646,7100027662,7100027660,7100027673,7100027664,7100027661,7100027672,7100027663,7100027659,7100027674,7100027696,7100027695,7100027694,7100027699,7100027712,7100027717,7100027720,7100027715,7100027722,7100027714,7100027729,7100027730,7100027727,7100027748,7100027746,7100027776,7100027790,7100027778,7100027780,7100027781,7100027791,7100027782,7100027779,7100027806,7100027805,7100027804,7100027808,7100027807,7100027831,7100027828,7100027848];\n\nreturn pos.map(po => {\n  return {\n    json: {\n      poNumber: po\n    }\n  }\n});"
+      },
+      "name": "Mock Data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -200,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "batchSize": 1,
+        "options": {}
+      },
+      "name": "SplitInBatches",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 1,
+      "position": [
+        -20,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$node[\"SplitInBatches\"].context[\"noItemsLeft\"]}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
       ]
     },
     {
@@ -92,12 +174,12 @@
           "parameter": []
         }
       },
-      "name": "Generate Token",
+      "name": "Generate Token1",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        600,
-        300
+        160,
+        100
       ],
       "alwaysOutputData": true
     },
@@ -107,35 +189,15 @@
         "allowUnauthorizedCerts": true,
         "jsonParameters": true,
         "options": {},
-        "headerParametersJson": "={\n\"X-ARIBA-NETWORK-ID\":\"AN01470389119\",\n\"apiKey\":\"iHw5PyU978ywmbDs1vMlBp0nAskQjfyq\",\n\"Authorization\": \"Bearer {{$node[\"Generate Token\"].json[\"access_token\"]}}\"\n}",
-        "queryParametersJson": "={\n\"$filter\":\"documentNumber eq {{$node[\"Globals\"].json[\"poNumber\"]}}\"\n}"
+        "headerParametersJson": "={\n\"X-ARIBA-NETWORK-ID\":\"AN01470389119\",\n\"apiKey\":\"iHw5PyU978ywmbDs1vMlBp0nAskQjfyq\",\n\"Authorization\": \"Bearer {{$node[\"Generate Token1\"].json[\"access_token\"]}}\"\n}",
+        "queryParametersJson": "={\n\"$filter\":\"documentNumber eq '{{$node[\"SplitInBatches\"].json[\"poNumber\"]}}' and startDate eq '2022-06-30T17:48:55' and endDate eq '2022-07-28T23:18:55' \"\n}"
       },
-      "name": "Get Purchase order",
+      "name": "Get Purchase order1",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        780,
-        300
-      ]
-    },
-    {
-      "parameters": {
-        "values": {
-          "string": [
-            {
-              "name": "poNumber",
-              "value": "7100027782"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "name": "Globals",
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 1,
-      "position": [
-        420,
-        300
+        340,
+        100
       ]
     },
     {
@@ -143,20 +205,32 @@
         "url": "https://openapi.ariba.com/api/purchase-orders-supplier/v1/prod/items",
         "jsonParameters": true,
         "options": {},
-        "headerParametersJson": "={\n\"X-ARIBA-NETWORK-ID\":\"AN01470389119\",\n\"apiKey\":\"iHw5PyU978ywmbDs1vMlBp0nAskQjfyq\",\n\"Authorization\": \"Bearer {{$node[\"Generate Token\"].json[\"access_token\"]}}\"\n}",
-        "queryParametersJson": "={\n\"$filter\":\"documentNumber eq {{$node[\"Globals\"].json[\"poNumber\"]}}\"\n}"
+        "headerParametersJson": "={\n\"X-ARIBA-NETWORK-ID\":\"AN01470389119\",\n\"apiKey\":\"iHw5PyU978ywmbDs1vMlBp0nAskQjfyq\",\n\"Authorization\": \"Bearer {{$node[\"Generate Token1\"].json[\"access_token\"]}}\"\n}",
+        "queryParametersJson": "={\n\"$filter\":\"documentNumber eq '{{$node[\"SplitInBatches\"].json[\"poNumber\"]}}' and startDate eq '2022-06-30T17:48:55' and endDate eq '2022-07-27T23:18:55' \",\n\"$top\":100\n}"
       },
-      "name": "Get Line Items",
+      "name": "Get Line Items1",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        980,
-        300
+        520,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let results = [],\n    i = 0;\n\ndo {\n    try {    \n        let allPOData = $items(\"Get Line Items1\", 0, i);  \n        let poList= [];\n        allPOData.forEach(function(poData,index){\n            poData.json.content.forEach(function(po,index){\n                pos={};\n                pos.poNumber=po.documentNumber;\n                pos.materialCode=po.supplierPart;\n                pos.uom=po.unitOfMeasure;\n                poList[index]=pos;\n            });\n        });  \n        results = results.concat(poList); \n    } catch (error) {\n        return results;\n    }\n    i++;\n} while (true);"
+      },
+      "name": "All PO Details",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        920,
+        -40
       ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-08-22T11:23:38.109Z"
+  "updatedAt": "2022-08-26T12:01:25.766Z"
 }
