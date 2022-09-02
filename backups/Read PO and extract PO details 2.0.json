@@ -1690,7 +1690,7 @@
   },
   "staticData": {
     "node:Wait for PO Email": {
-      "lastMessageUid": 926
+      "lastMessageUid": 1179
     }
   },
   "tags": [
@@ -1701,5 +1701,5 @@
       "updatedAt": "2022-05-30T07:16:52.136Z"
     }
   ],
-  "updatedAt": "2022-08-17T09:34:40.002Z"
+  "updatedAt": "2022-09-02T14:40:39.421Z"
 }
