@@ -1,0 +1,167 @@
+{
+  "active": false,
+  "connections": {
+    "IMAP Email": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "HTML Extract",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML Extract": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2022-09-06T11:48:44.998Z",
+  "id": "178",
+  "name": "Mozart: Update Goods Received",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "name": "IMAP Email",
+      "type": "n8n-nodes-base.emailReadImap",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ],
+      "credentials": {
+        "imap": {
+          "id": "24",
+          "name": "Sample Gmail"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "subject",
+              "value": "Vedanta ( IOB ) Goods receipt detail OP COMMERCE"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        620,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"IMAP Email\"].json[\"subject\"]}}",
+              "operation": "contains",
+              "value2": "={{$node[\"Globals\"].json[\"subject\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        780,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "dataPropertyName": "textHtml",
+        "extractionValues": {
+          "values": [
+            {
+              "key": "headers",
+              "cssSelector": "table > tbody > tr > th",
+              "returnArray": true
+            },
+            {
+              "key": "fields",
+              "cssSelector": "table > tbody > tr > td",
+              "returnArray": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "HTML Extract",
+      "type": "n8n-nodes-base.htmlExtract",
+      "typeVersion": 1,
+      "position": [
+        980,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "const headers = $json.headers;\nconst fields = $json.fields;\nlet result = [];\n\nwhile(fields.length) {\n  let fieldValues = fields.splice(0, headers.length);\n  let obj = {};\n  headers.forEach((header, index) => {\n      obj[header] = fieldValues[index];\n  });\n  result.push(obj);\n}\n\nreturn result;\n\n\n\n"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1160,
+        160
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2022-09-06T13:12:57.350Z"
+}
