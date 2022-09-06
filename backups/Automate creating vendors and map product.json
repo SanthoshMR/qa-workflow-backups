@@ -1,0 +1,442 @@
+{
+  "active": false,
+  "connections": {
+    "Microsoft Excel": {
+      "main": [
+        [
+          {
+            "node": "Function to get vendor codes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for vendors": {
+      "main": [
+        [
+          {
+            "node": "Combine data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to get vendor codes": {
+      "main": [
+        [
+          {
+            "node": "Check for vendors",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function for creating obj to create vendor": {
+      "main": [
+        [
+          {
+            "node": "Check for whether to create vendor or not",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for whether to create vendor or not": {
+      "main": [
+        [
+          {
+            "node": "Set1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Vendor to create",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Microsoft Excel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create vendor": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Combine data": {
+      "main": [
+        [
+          {
+            "node": "Function for creating obj to create vendor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Vendor to create": {
+      "main": [
+        [
+          {
+            "node": "Create vendor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Existing vendors": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Function to map product and vendors",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to map product and vendors": {
+      "main": [
+        [
+          {
+            "node": "Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set1": {
+      "main": [
+        [
+          {
+            "node": "Existing vendors",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2022-08-04T11:28:15.045Z",
+  "id": "160",
+  "name": "Automate creating vendors and map product",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        60,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "worksheet",
+        "operation": "getContent",
+        "workbook": "A6E890F58473778D!6125",
+        "worksheet": "{00000000-0001-0000-0000-000000000000}",
+        "range": "A1:AE500"
+      },
+      "name": "Microsoft Excel",
+      "type": "n8n-nodes-base.microsoftExcel",
+      "typeVersion": 1,
+      "position": [
+        280,
+        300
+      ],
+      "credentials": {
+        "microsoftExcelOAuth2Api": {
+          "id": "34",
+          "name": "Microsoft excel creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://sdqa.mozart.shakedeal.com/items/vendors?filter={\"ariba_vendor_id\" :{\"_in\":{{$node[\"Function to get vendor codes\"].json[\"vendor_codes\"]}}}}",
+        "options": {}
+      },
+      "name": "Check for vendors",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        660,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let vendor = [];\nlet vendor_codes = [];\nfor (item of items) {\n  Object.entries(item.json).forEach(([key, value]) => {\n\n     if(key.includes(\"Supplier\") && value){\n       let vendor_obj = {}\n       let  vendor_details = value.split(/ (.*)/s)\n       vendor_obj.ariba_vendor_id = vendor_details[0];\n       vendor_obj.vendor_name = vendor_details[1].trim();\n       vendor_codes.push(vendor_details[0]);\n       vendor_obj.material = item.json.Material\n       vendor.push(vendor_obj);\n     }\n  });\n  item.json.vendor = vendor\n  item.json.vendor_codes = vendor_codes\n  vendor= [];\n  vendor_codes = [];\n}\n\n// You can write logs to the b\n\n//items[0].json.vendor = vendor\nreturn items;"
+      },
+      "name": "Function to get vendor codes",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let vendor_data = $node[\"Function to get vendor codes\"].json;\nfor (item of items) {\n  let vendors_to_create = \n   item.json.vendor.filter(vd=>\n     !item.json.data.some(\n      data=> data.code === vd.code \n    )\n  );\n  //item.json.vendor_data = vendor_data\n  item.json.vendors_to_create = vendors_to_create;\n}\n\n// items.forEach(function(item,index){\n//   item.json.vendor_data = vendor_data\n// })\n\nreturn items;"
+      },
+      "name": "Function for creating obj to create vendor",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1060,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Function for creating obj to create vendor\"].json[\"vendors_to_create\"].length}}",
+              "operation": "equal"
+            }
+          ]
+        }
+      },
+      "name": "Check for whether to create vendor or not",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1260,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "=https://sdqa.mozart.shakedeal.com/items/vendors",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Vendor to create\"].json[\"vendors_to_create\"]}}"
+      },
+      "name": "Create vendor",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1580,
+        420
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "//let exising_vendors = $node[\"Function for creating obj to create vendor\"].json[\"vendors_to_create\"]?$node[\"Existing vendors\"].json.vendor;\n//let product = $node[\"Function to get vendor codes\"].json.Material;\nlet created_vendor = $node[\"Merge\"].json.data;\nlet keys = [];\nfor (item of items) {\n  \n  let product_vendor_list = {};\n  item.json.data.forEach(function(data,index){\n    keys.push(data.id);\n  })\n  product_vendor_list.keys = keys;\n  item.json.product_vendor_list = product_vendor_list;\n  item.json.created_vendor = created_vendor;\n  //item.json.product = product;\n  //item.json.exising_vendors = exising_vendors;\n  item.json.myNewField = 1;\n  keys = [];\n}\n\n\n\nreturn items;"
+      },
+      "name": "Function to map product and vendors",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1980,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "vendor",
+              "value": "={{$node[\"Function to get vendor codes\"].json[\"vendor\"]}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Combine data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        860,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "value": "={{$node[\"Microsoft Excel\"].json[\"Material\"]}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Vendor to create",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1420,
+        420
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "Existing vendors",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1520,
+        140
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 1,
+      "position": [
+        1780,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "=https://sdqa.mozart.shakedeal.com/items/products",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "product_code",
+              "value": "={{$node[\"Microsoft Excel\"].json[\"Material\"]}}"
+            },
+            {
+              "name": "vendor",
+              "value": "={{$node[\"Function to map product and vendors\"].json[\"product_vendor_list\"][\"keys\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2340,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "value": "={{$node[\"Microsoft Excel\"].json[\"Material\"]}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        2160,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "value": "={{$node[\"Microsoft Excel\"].json[\"Material\"]}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1360,
+        140
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [
+    {
+      "id": "5",
+      "name": "Mozart",
+      "createdAt": "2022-05-30T07:16:52.136Z",
+      "updatedAt": "2022-05-30T07:16:52.136Z"
+    }
+  ],
+  "updatedAt": "2022-08-04T15:04:11.854Z"
+}
