@@ -104,7 +104,11 @@
       "parameters": {
         "triggerTimes": {
           "item": [
-            {}
+            {
+              "mode": "everyX",
+              "value": 5,
+              "unit": "minutes"
+            }
           ]
         }
       },
@@ -126,7 +130,7 @@
             },
             {
               "name": "sdStore_url",
-              "value": "=http://sddev.shakedeal.com/index.php?dispatch=wfs_update.retrieve_irn_invoice"
+              "value": "=https://sdqa.shakedeal.com/index.php?dispatch=wfs_update.retrieve_irn_invoice"
             },
             {
               "name": "hash",
@@ -273,5 +277,5 @@
       "updatedAt": "2022-04-25T07:09:37.693Z"
     }
   ],
-  "updatedAt": "2022-07-28T12:23:57.384Z"
+  "updatedAt": "2022-08-12T16:22:31.332Z"
 }
