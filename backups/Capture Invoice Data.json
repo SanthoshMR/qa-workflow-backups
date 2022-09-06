@@ -1,0 +1,211 @@
+{
+  "active": false,
+  "connections": {
+    "Function to update shakedeal payment status": {
+      "main": [
+        [
+          {
+            "node": "Get the invoice details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get url and token": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Function to update shakedeal payment status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the invoice details": {
+      "main": [
+        [
+          {
+            "node": "Update the shakedeal payment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait for invoice Email": {
+      "main": [
+        [
+          {
+            "node": "Get url and token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2022-09-06T07:05:46.732Z",
+  "id": "176",
+  "name": "Capture Invoice Data",
+  "nodes": [
+    {
+      "parameters": {
+        "functionCode": "let invoice_text = $node[\"Wait for invoice Email\"].json[\"text\"];\nlet subject = $node[\"Wait for invoice Email\"].json[\"subject\"];\nlet lines=  invoice_text.split(\"\\n\");\nlet dp_number = lines.find(line=>line.includes(\"Our Unique Reference number (DP number):\")).split(\":\")[1].trim();\nlet invoice_number = lines.find(line=>line.includes(\"Invoice number\")).split(\":\")[1].trim();\nlet payment_status = \"\";\nlet processing_number = \"\";\nif(subject.includes(\"processed\")){\n  payment_status = \"processed\"; \n  processing_number = lines.find(line=>line.includes(\"Invoice Processing number\")).split(\":\")[1].trim();\n}else if(subject.includes(\"rejected\")){\n  payment_status = \"rejected\";\n}else payment_status = \"paymentpending\"\n\nitems[0].json.invoice_text = invoice_text;\nitems[0].json.lines = lines;\nitems[0].json.dp_number = dp_number;\nitems[0].json.invoice_number = invoice_number;\nitems[0].json.payment_status = payment_status;\nitems[0].json.processing_number = processing_number;\nitems[0].json.subject = subject;\nreturn items;"
+      },
+      "name": "Function to update shakedeal payment status",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        640,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_payment_advise/{{$node[\"Get the invoice details\"].json[\"data\"][0][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "dp_number",
+              "value": "={{$node[\"Function to update shakedeal payment status\"].json[\"dp_number\"]}}"
+            },
+            {
+              "name": "processing_number",
+              "value": "={{$node[\"Function to update shakedeal payment status\"].json[\"processing_number\"]}}"
+            },
+            {
+              "name": "shakedeal_payment_status",
+              "value": "={{$node[\"Function to update shakedeal payment status\"].json[\"payment_status\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update the shakedeal payment",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1060,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "=https://qan8n.shakedeal.com/webhook/get-url",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "client",
+              "value": "=vedanta"
+            },
+            {
+              "name": "env",
+              "value": "=qa"
+            }
+          ]
+        }
+      },
+      "name": "Get url and token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        320,
+        300
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "dms_url",
+              "value": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sd_mozart_payment_advise?filter={\"order\":{\"vendor_invoice_number\":{\"invoice_number\":{\"_eq\":\"{{$node[\"Function to update shakedeal payment status\"].json.invoice_number}}\"}}}}",
+        "options": {}
+      },
+      "name": "Get the invoice details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        840,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "name": "Wait for invoice Email",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        140,
+        300
+      ]
+    }
+  ],
+  "settings": {
+    "saveManualExecutions": true
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "id": "5",
+      "name": "Mozart",
+      "createdAt": "2022-05-30T07:16:52.136Z",
+      "updatedAt": "2022-05-30T07:16:52.136Z"
+    }
+  ],
+  "updatedAt": "2022-09-06T11:46:26.312Z"
+}
