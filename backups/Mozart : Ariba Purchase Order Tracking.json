@@ -1,0 +1,379 @@
+{
+  "active": false,
+  "connections": {
+    "Generate Token": {
+      "main": [
+        [
+          {
+            "node": "Get Purchase order",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Purchase order": {
+      "main": [
+        [
+          {
+            "node": "Extract PO Numbers",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Start Loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract PO Numbers": {
+      "main": [
+        [
+          {
+            "node": "Get Existing PO List",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Non Exist PO": {
+      "main": [
+        [
+          {
+            "node": "Post Data To All PO Tracking",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Existing PO List": {
+      "main": [
+        [
+          {
+            "node": "Filter Non Exist PO",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post Data To All PO Tracking": {
+      "main": [
+        [
+          {
+            "node": "Increment Pagination",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Records": {
+      "main": [
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Start Loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start Loop": {
+      "main": [
+        [
+          {
+            "node": "Generate Token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Increment Pagination": {
+      "main": [
+        [
+          {
+            "node": "Check Records",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2022-08-17T07:35:55.162Z",
+  "id": "166",
+  "name": "Mozart : Ariba Purchase Order Tracking",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        -20,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://api.ariba.com/v2/oauth/token",
+        "allowUnauthorizedCerts": true,
+        "options": {
+          "bodyContentType": "form-urlencoded"
+        },
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "grant_type",
+              "value": "client_credentials"
+            }
+          ]
+        },
+        "headerParametersUi": {
+          "parameter": [
+            {
+              "name": "Authorization",
+              "value": "Basic MDIwYzE5MDctNWZmZi00ZGViLTg0ZGMtNmM1MGYxYzY4MzM1Onlkb1Z6blNURGV0b0U2bG93NW1nMm1seWNkVTdaNDRH"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/x-www-form-urlencoded"
+            }
+          ]
+        },
+        "queryParametersUi": {
+          "parameter": []
+        }
+      },
+      "name": "Generate Token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        520,
+        120
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "url": "https://openapi.ariba.com/api/purchase-orders-supplier/v1/prod/orders",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {},
+        "headerParametersJson": "={\n\"X-ARIBA-NETWORK-ID\":\"AN01470389119\",\n\"apiKey\":\"iHw5PyU978ywmbDs1vMlBp0nAskQjfyq\",\n\"Authorization\": \"Bearer {{$node[\"Generate Token\"].json[\"access_token\"]}}\"\n}",
+        "queryParametersJson": "={\n\"$filter\":\"startDate eq '2022-08-01T12:01:00' and endDate eq '{{new Date(new Date().getTime() + (5*60+30)*60000).toISOString().slice(0, 19)}}' and orderStatus eq 'new'\",\n\"$top\":{{$node[\"Globals\"].json[\"fetchRecords\"]}},\n\"$skip\":{{$node[\"Start Loop\"].json[\"skip\"]}}\n}"
+      },
+      "name": "Get Purchase order",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        700,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "number": [
+            {
+              "name": "skip"
+            },
+            {
+              "name": "fetchRecords",
+              "value": 100
+            }
+          ],
+          "string": [
+            {
+              "name": "mozartURL",
+              "value": "https://sdqa.mozart.shakedeal.com"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        160,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let poDetails=$node[\"Get Purchase order\"].json[\"content\"];\nlet poList= [];\nlet poNumbers= [];\npoDetails.forEach(function(poDetail,index){\n  pos={};\n  pos.poNumber=poDetail.documentNumber;\n  pos.created=poDetail.created;\n  poList[index]=pos;\n  poNumbers[index]=poDetail.documentNumber;\n});\nitems[0].json.purchanseOrders=poList;\nitems[0].json.poNumbers=poNumbers;\nreturn items;"
+      },
+      "name": "Extract PO Numbers",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        880,
+        120
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "functionCode": "let newPOList=$node[\"Extract PO Numbers\"].json[\"purchanseOrders\"];\nlet existingPONumbers=$node[\"Get Existing PO List\"].json[\"data\"];\n\nlet resultFilter = \n  newPOList.filter(ponumber =>\n     !existingPONumbers.some(\n      existingPONumbers=> existingPONumbers.po_number === ponumber.poNumber\n  )\n);\n\nlet poNumbers= [];\nresultFilter.forEach(function(poNumber,index){\n  poNumbers[index]={};\n  poNumbers[index].po_number=poNumber.poNumber;\n  poNumbers[index].po_created_date=new Date(poNumber.created).toISOString();\n});\n\nitems[0].json.poNumbers = poNumbers;\n\nreturn items;"
+      },
+      "name": "Filter Non Exist PO",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -20,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"mozartURL\"]}}/items/sdm_ariba_purchase_order?filter={\"po_number\":{\"_in\":\"{{$node[\"Extract PO Numbers\"].json[\"poNumbers\"]}}\"}}",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {},
+        "queryParametersJson": "="
+      },
+      "name": "Get Existing PO List",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1060,
+        120
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"mozartURL\"]}}/items/sdm_ariba_purchase_order",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Filter Non Exist PO\"].json[\"poNumbers\"]}}"
+      },
+      "name": "Post Data To All PO Tracking",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        160,
+        420
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Get Purchase order\"].json[\"lastPage\"].toString()}}",
+              "value2": "true"
+            }
+          ]
+        }
+      },
+      "name": "Check Records",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        520,
+        420
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        700,
+        320
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "Start Loop",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        340,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "number": [
+            {
+              "name": "skip",
+              "value": "={{$node[\"Start Loop\"].json[\"skip\"]+$node[\"Globals\"].json[\"fetchRecords\"]}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Increment Pagination",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        340,
+        420
+      ]
+    }
+  ],
+  "settings": {
+    "timezone": "Asia/Calcutta"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "id": "5",
+      "name": "Mozart",
+      "createdAt": "2022-05-30T07:16:52.136Z",
+      "updatedAt": "2022-05-30T07:16:52.136Z"
+    }
+  ],
+  "updatedAt": "2022-08-25T13:25:34.790Z"
+}
