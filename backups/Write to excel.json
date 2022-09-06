@@ -1,0 +1,212 @@
+{
+  "active": false,
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "Spreadsheet File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Spreadsheet File": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets1": {
+      "main": [
+        [
+          {
+            "node": "Spreadsheet File1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Spreadsheet File1": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2022-08-11T06:00:42.441Z",
+  "id": "161",
+  "name": "Write to excel",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        -40,
+        60
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// let concated_product_vendor = [\n// {\n// \"id\": 96,\n// \"product\": 75,\n// \"vendor\": 12,\n// \"test\":\"a\"\n// },\n// {\n// \"id\": 97,\n// \"product\": 76,\n// \"vendor\": 12,\n// \"test\":\"b\"\n// },\n// {\n// \"id\": 98,\n// \"product\": 77,\n// \"vendor\": 14,\n// \"test\":\"c\"\n// },\n// {\n// \"id\": 99,\n// \"product\": 78,\n// \"vendor\": 15,\n// \"test\":\"d\"\n// },\n// {\n// \"id\": 100,\n// \"product\": 79,\n// \"vendor\": 15,\n// \"test\":\"d\"\n// },\n// {\n// \"id\": 101,\n// \"product\": 80,\n// \"vendor\": 15,\n// \"test\":\"d\"\n// }\n// ]\n\n// items[0].json.concated_product_vendor = concated_product_vendor;\n\n// return items;\nconst result = [];\nfor(let i=0; i<10; i++){\n  result.push({\n    json:{\n      a: i,\n      b: i*2,\n      c: String(i)\n    }\n  });\n}\nreturn result;"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        420,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "toFile",
+        "fileFormat": "xlsx",
+        "options": {
+          "fileName": "Test",
+          "sheetName": "Sheet1"
+        }
+      },
+      "name": "Spreadsheet File",
+      "type": "n8n-nodes-base.spreadsheetFile",
+      "typeVersion": 1,
+      "position": [
+        580,
+        320
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "resource": "spreadsheet",
+        "title": "test",
+        "sheetsUi": {
+          "sheetValues": [
+            {
+              "propertiesUi": {
+                "title": "sheet"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 1,
+      "position": [
+        800,
+        320
+      ],
+      "credentials": {
+        "googleApi": {
+          "id": "44",
+          "name": "Google account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "sheetId": "={{$node[\"Google Sheets\"].json[\"spreadsheetId\"]}}",
+        "rawData": true,
+        "dataProperty": "={{$node[\"Function\"].json[\"concated_product_vendor\"]}}",
+        "options": {
+          "valueInputMode": "RAW"
+        }
+      },
+      "name": "Google Sheets1",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        300
+      ],
+      "credentials": {
+        "googleApi": {
+          "id": "44",
+          "name": "Google account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "toFile",
+        "fileFormat": "xlsx",
+        "options": {
+          "fileName": "test.xlsx"
+        }
+      },
+      "name": "Spreadsheet File1",
+      "type": "n8n-nodes-base.spreadsheetFile",
+      "typeVersion": 1,
+      "position": [
+        1220,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "=handyalasairam9177@gmail.com",
+        "toEmail": "sairam.reddy@shakedeal.com",
+        "attachments": "=data",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        1520,
+        320
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "17",
+          "name": "smtp(sai)creds"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2022-08-11T10:30:48.565Z"
+}
