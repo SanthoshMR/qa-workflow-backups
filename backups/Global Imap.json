@@ -1,0 +1,108 @@
+{
+  "active": true,
+  "connections": {
+    "Wait for PO Email": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Workflow": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "createdAt": "2022-09-02T12:38:30.539Z",
+  "id": "174",
+  "name": "Global Imap",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        -100,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "={{$node[\"Globals\"].json[\"workflow_id\"]}}"
+      },
+      "name": "Execute Workflow",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        560,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "format": "resolved",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "name": "Wait for PO Email",
+      "type": "n8n-nodes-base.emailReadImap",
+      "typeVersion": 1,
+      "position": [
+        180,
+        300
+      ],
+      "credentials": {
+        "imap": {
+          "id": "18",
+          "name": "Imap creds(sai)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "values": {
+          "number": [
+            {
+              "name": "workflow_id",
+              "value": "={{$node[\"Wait for PO Email\"].json[\"to\"][\"value\"][0][\"address\"]==\"sairam.shakedeal+vedantaqa@gmail.com\"?164:176}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        360,
+        300
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": {
+    "node:Wait for PO Email": {
+      "lastMessageUid": 1202
+    }
+  },
+  "tags": [],
+  "updatedAt": "2022-09-06T11:45:22.548Z"
+}
