@@ -195,8 +195,8 @@
       "webhookId": "5ece4636-a8cb-46f2-b082-ceead3f001db",
       "credentials": {
         "httpBasicAuth": {
-          "id": "21",
-          "name": "Balco_basic_auth"
+          "id": "2",
+          "name": "SD Basic Auth"
         }
       }
     },
@@ -507,5 +507,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-05-17T12:34:06.356Z"
+  "updatedAt": "2022-07-19T07:25:37.106Z"
 }
