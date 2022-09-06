@@ -88,6 +88,17 @@
           }
         ]
       ]
+    },
+    "Create shipment in mozart": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2022-05-30T07:16:53.844Z",
@@ -137,6 +148,14 @@
             {
               "name": "mozart_dms_url",
               "value": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}"
+            },
+            {
+              "name": "send_from_email",
+              "value": "=handyalasairam9177@gmail.com"
+            },
+            {
+              "name": "accounts_email",
+              "value": "=sairam.reddy@shakedeal.com"
             }
           ]
         },
@@ -286,6 +305,10 @@
             {
               "name": "vendor_po_num",
               "value": "={{$node[\"Get po_id from mozart\"].json[\"data\"][0][\"id\"]}}"
+            },
+            {
+              "name": "net_invoice_value",
+              "value": "={{$node[\"Wait for shipment\"].json[\"body\"][\"payload\"][\"net_invoice_value\"]}}"
             }
           ]
         }
@@ -336,6 +359,27 @@
           "name": "SD Basic Auth"
         }
       }
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{$node[\"Globals\"].json[\"send_from_email\"]}}",
+        "toEmail": "={{$node[\"Globals\"].json[\"accounts_email\"]}}",
+        "subject": "=Shipment Created for invoice number: {{$node[\"Wait for shipment\"].json[\"body\"][\"payload\"][\"invoice_number\"]}}",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        2400,
+        300
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "17",
+          "name": "smtp(sai)creds"
+        }
+      }
     }
   ],
   "settings": {},
@@ -348,5 +392,5 @@
       "updatedAt": "2022-05-30T07:16:52.136Z"
     }
   ],
-  "updatedAt": "2022-07-25T11:53:43.029Z"
+  "updatedAt": "2022-09-05T07:18:54.590Z"
 }
