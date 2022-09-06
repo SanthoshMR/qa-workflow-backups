@@ -1,0 +1,352 @@
+{
+  "active": false,
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Read po number from excel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read po number from excel": {
+      "main": [
+        [
+          {
+            "node": "Function for formatting file name",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get po details": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function for formatting file name": {
+      "main": [
+        [
+          {
+            "node": "Get po details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Check for vendor po",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for vendor po": {
+      "main": [
+        [
+          {
+            "node": "Check for po",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for po": {
+      "main": [
+        [
+          {
+            "node": "NoOp1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get the po file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the po file": {
+      "main": [
+        [
+          {
+            "node": "post the  vendor pos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2022-06-21T13:04:35.840Z",
+  "id": "141",
+  "name": "Automate vendor pos from excel",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        80,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "worksheet",
+        "operation": "getContent",
+        "workbook": "A6E890F58473778D!1961",
+        "worksheet": "{E025ED17-54C8-40EE-A5F8-3D1399378AF1}",
+        "range": "A1:F229"
+      },
+      "name": "Read po number from excel",
+      "type": "n8n-nodes-base.microsoftExcel",
+      "typeVersion": 1,
+      "position": [
+        340,
+        300
+      ],
+      "executeOnce": true,
+      "alwaysOutputData": true,
+      "credentials": {
+        "microsoftExcelOAuth2Api": {
+          "id": "34",
+          "name": "Microsoft excel creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://sdqa.mozart.shakedeal.com/items/sd_mozart_po_details?filter={\"po_num\":{\"_eq\":\"{{$node[\"Read po number from excel\"].json[\"PO Number\"]}}\"}}&fields=id,po_value,po_date,products.*,products.sd_mozart_vendor_product_mapping_id.*,po_num,po_type",
+        "allowUnauthorizedCerts": true,
+        "options": {}
+      },
+      "name": "Get po details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        860,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "23",
+          "name": "Balco-mozart-bearer-token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Get po details\"].json[\"data\"].length}}",
+              "operation": "equal"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "\nfor (item of items) {\n  let split_vendor_po_number = item.json[\"Shakedeal PO No\"].split(\" \")\n  item.json.v_po_num = split_vendor_po_number[0]\n}\n\n\n\nreturn items;"
+      },
+      "name": "Function for formatting file name",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        540,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "=https://sdqa.mozart.shakedeal.com/items/sd_mozart_vendor_po_details",
+        "allowUnauthorizedCerts": true,
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "po_file",
+              "value": "={{$node[\"Get the po file\"].json[\"data\"].length?$node[\"Get the po file\"].json[\"data\"][0].id:\"\"}}"
+            },
+            {
+              "name": "vendor_po_number",
+              "value": "={{$node[\"Function for formatting file name\"].json[\"Shakedeal PO No\"]}}"
+            },
+            {
+              "name": "vendor",
+              "value": "={{$node[\"Get po details\"].json[\"data\"][0][\"products\"][0][\"sd_mozart_vendor_product_mapping_id\"][\"vendor\"]}}"
+            },
+            {
+              "name": "po_status",
+              "value": "=open"
+            },
+            {
+              "name": "po_num",
+              "value": "={{$node[\"Get po details\"].json[\"data\"][0][\"id\"]}}"
+            },
+            {
+              "name": "po_date",
+              "value": "={{$node[\"Get po details\"].json[\"data\"][0][\"po_date\"]}}"
+            },
+            {
+              "name": "po_value",
+              "value": "={{$node[\"Get po details\"].json[\"data\"][0][\"po_value\"]}}"
+            },
+            {
+              "name": "po_type",
+              "value": "={{$node[\"Get po details\"].json[\"data\"][0][\"po_type\"]}}"
+            },
+            {
+              "name": "delivery_address",
+              "value": "={{2}}"
+            },
+            {
+              "name": "product_details",
+              "value": "={{$node[\"Get po details\"].json[\"data\"][0][\"products\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "post the  vendor pos",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1640,
+        680
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://sdqa.mozart.shakedeal.com/items/sd_mozart_vendor_po_details?filter={\"vendor_po_number\":{\"_contains\":\"{{$node[\"Function for formatting file name\"].json[\"v_po_num\"]}}\"}}",
+        "allowUnauthorizedCerts": true,
+        "options": {}
+      },
+      "name": "Check for vendor po",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1180,
+        460
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "23",
+          "name": "Balco-mozart-bearer-token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Check for vendor po\"].json[\"data\"].length}}",
+              "operation": "notEqual"
+            }
+          ]
+        }
+      },
+      "name": "Check for po",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        460
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        100
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "NoOp1",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1400,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://sdqa.mozart.shakedeal.com/files?filter={\"filename_download\":{\"_contains\":\"{{$node[\"Function for formatting file name\"].json[\"v_po_num\"]}}\"}}",
+        "allowUnauthorizedCerts": true,
+        "options": {}
+      },
+      "name": "Get the po file",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1440,
+        680
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "23",
+          "name": "Balco-mozart-bearer-token"
+        }
+      }
+    }
+  ],
+  "settings": {
+    "saveManualExecutions": true
+  },
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2022-06-28T12:38:43.534Z"
+}
