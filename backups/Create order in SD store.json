@@ -71,7 +71,7 @@
       "main": [
         [
           {
-            "node": "Update the order details in order",
+            "node": "Get pr_advance payment",
             "type": "main",
             "index": 0
           }
@@ -127,17 +127,6 @@
         [
           {
             "node": "Get the shipment id",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Add order_prefix": {
-      "main": [
-        [
-          {
-            "node": "Get the order_id",
             "type": "main",
             "index": 0
           }
@@ -254,7 +243,102 @@
       "main": [
         [
           {
-            "node": "Add order_prefix",
+            "node": "Get the order_id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create payment to vendors": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get pr_advance payment": {
+      "main": [
+        [
+          {
+            "node": "Function to create payment to vendors",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to create payment to vendors": {
+      "main": [
+        [
+          {
+            "node": "Create payment to vendors",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Function to update advance payments",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update the residual amounts": {
+      "main": [
+        [
+          {
+            "node": "Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NoOp1": {
+      "main": [
+        [
+          {
+            "node": "Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to update advance payments": {
+      "main": [
+        [
+          {
+            "node": "Update the residual amounts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set": {
+      "main": [
+        [
+          {
+            "node": "Update the order details in order",
             "type": "main",
             "index": 0
           }
@@ -287,7 +371,7 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        -260,
+        -300,
         320
       ],
       "webhookId": "1551211b-b856-41c1-ab75-dcebbf03ce9d",
@@ -308,7 +392,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        340,
+        260,
         320
       ],
       "credentials": {
@@ -364,6 +448,13 @@
             {
               "name": "company_id",
               "value": "={{98}}"
+            },
+            {
+              "name": "max_percentage",
+              "value": 90
+            },
+            {
+              "name": "min_percentage"
             }
           ]
         },
@@ -373,7 +464,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        140,
+        80,
         320
       ]
     },
@@ -385,7 +476,7 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        780,
+        700,
         320
       ]
     },
@@ -399,7 +490,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        580,
+        500,
         320
       ],
       "credentials": {
@@ -448,8 +539,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1600,
-        320
+        2240,
+        340
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -470,7 +561,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1060,
+        900,
         320
       ]
     },
@@ -501,7 +592,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1320,
+        1080,
         320
       ],
       "credentials": {
@@ -530,8 +621,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2240,
-        320
+        2840,
+        340
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -550,8 +641,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1840,
-        320
+        2400,
+        340
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -579,8 +670,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2040,
-        320
+        2620,
+        340
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -612,7 +703,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        -40,
+        -120,
         320
       ],
       "credentials": {
@@ -632,8 +723,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2740,
-        320
+        3040,
+        340
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -654,8 +745,8 @@
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 1,
       "position": [
-        4660,
-        320
+        4960,
+        340
       ],
       "credentials": {
         "smtp": {
@@ -666,27 +757,14 @@
     },
     {
       "parameters": {
-        "functionCode": "let order_id = $node[\"Get Invoice Details\"].json[\"body\"][\"order_id\"]\nlet order_prefix = $node[\"Globals\"].json[\"order_prefix\"]\n\nlet add_prefix = order_prefix+order_id \n\nitems[0].json.add_prefix = add_prefix \nreturn items;"
-      },
-      "name": "Add order_prefix",
-      "type": "n8n-nodes-base.function",
-      "typeVersion": 1,
-      "position": [
-        2480,
-        320
-      ],
-      "disabled": true
-    },
-    {
-      "parameters": {
         "functionCode": "let order_details = Array.isArray($node[\"Get the order_id\"].json.data)? $node[\"Get the order_id\"].json.data[0].order_details:$node[\"Get the order_id\"].json.data.order_details;\nlet product_codes = [];\norder_details.forEach(function(order,index){\n  product_codes.push(order.sd_mozart_vendor_product_mapping_id.product.product_code);\n})\n\nitems[0].json.order_details = order_details;\nitems[0].json.product_codes = product_codes;\nreturn items;"
       },
       "name": "Function to get product codes",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        3160,
-        320
+        3480,
+        340
       ]
     },
     {
@@ -699,8 +777,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        3380,
-        320
+        3780,
+        340
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -724,8 +802,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        3740,
-        320
+        4220,
+        340
       ]
     },
     {
@@ -736,8 +814,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        3560,
-        320
+        4020,
+        340
       ]
     },
     {
@@ -754,8 +832,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        3920,
-        140
+        4420,
+        120
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -770,8 +848,8 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        3940,
-        500
+        4460,
+        540
       ]
     },
     {
@@ -782,7 +860,7 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        4140,
+        4600,
         340
       ]
     },
@@ -796,8 +874,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2960,
-        320
+        3280,
+        340
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -820,7 +898,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        4380,
+        4780,
         340
       ],
       "credentials": {
@@ -829,6 +907,187 @@
           "name": "VendorPanel DMS Token"
         }
       }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_vendor_invoice_details",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "vendor_po_number",
+              "value": "={{$node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"id\"]}}"
+            },
+            {
+              "name": "order",
+              "value": "={{$node[\"Wait for order\"].json[\"body\"][\"key\"]}}"
+            },
+            {
+              "name": "vendor_invoice",
+              "value": "={{$node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_invoice\"]}}"
+            },
+            {
+              "name": "invoice_number",
+              "value": "={{$node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"invoice_number\"]}}"
+            },
+            {
+              "name": "invoice_date",
+              "value": "={{$node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"invoice_date\"]}}"
+            },
+            {
+              "name": "invoice_value",
+              "value": "={{$node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"invoice_value\"]}}"
+            },
+            {
+              "name": "total_paid_amount",
+              "value": "={{$node[\"Function to create payment to vendors\"].json[\"total_paid_amount\"]}}"
+            },
+            {
+              "name": "total_percentage_paid",
+              "value": "={{$node[\"Function to create payment to vendors\"].json[\"percentage_paid\"]}}"
+            },
+            {
+              "name": "remaining_to_pay",
+              "value": "={{$node[\"Function to create payment to vendors\"].json[\"remaining_order_value\"]}}"
+            },
+            {
+              "name": "vendor_payment",
+              "value": "={{$node[\"Function to create payment to vendors\"].json[\"payment_status\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Create payment to vendors",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1600,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/pr_vendor_advance?filter={\"_and\": [{\"vendor_po_number\": {\"_eq\":\"{{$node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"id\"]}}\"}},{\"payment_status\":{\"_eq\":\"payment_released\"}},{\"residual_amount\":{\"_gt\":0}}]}",
+        "options": {}
+      },
+      "name": "Get pr_advance payment",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1240,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let advance_payments = $node[\"Get pr_advance payment\"].json.data;\nlet order_value = parseInt($node[\"Function for creating order details object\"].json[\"order_obj\"][\"ajax_total\"]);\nlet remaining_order_value = order_value;\nlet update_residual_amount_obj = [];\nlet payment_status = \"\";\nlet max_percentage = $node[\"Globals\"].json[\"max_percentage\"];\nlet min_percentage = $node[\"Globals\"].json[\"min_percentage\"];\nif(advance_payments.length>0){\n  advance_payments.forEach(function(payment,index){\n    if(remaining_order_value>0){\n      let residual_amount = remaining_order_value>=payment.residual_amount?0:(payment.residual_amount-remaining_order_value);\n      remaining_order_value= payment.residual_amount>=remaining_order_value?0:remaining_order_value-payment.residual_amount;\n      update_residual_amount_obj[index] = {};\n      update_residual_amount_obj[index].id = payment.id;\n      update_residual_amount_obj[index].residual_amount = residual_amount\n    }\n  })\n}\nlet total_paid_amount = order_value - remaining_order_value;\nlet percentage_paid = (total_paid_amount*100)/order_value;\nif(percentage_paid>=max_percentage){\n  payment_status=\"paymentreleased\"\n}else if(percentage_paid>min_percentage && percentage_paid<90){\n  payment_status=\"partiallypaid\"\n}else payment_status=\"paymentpending\"\n\n\n\nitems[0].json.total_paid_amount = total_paid_amount;\nitems[0].json.advance_payments = advance_payments;\nitems[0].json.order_value = order_value;\nitems[0].json.remaining_order_value = remaining_order_value;\nitems[0].json.update_residual_amount_obj = update_residual_amount_obj;\nitems[0].json.percentage_paid = percentage_paid;\nitems[0].json.payment_status = payment_status;\nreturn items;"
+      },
+      "name": "Function to create payment to vendors",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1420,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Function to create payment to vendors\"].json[\"advance_payments\"].length}}",
+              "operation": "larger"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1740,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Function to update advance payments\"].json[\"url\"]}}/items/pr_vendor_advance/{{$node[\"Function to update advance payments\"].json[\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "residual_amount",
+              "value": "={{$node[\"Function to update advance payments\"].json[\"residual_amount\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update the residual amounts",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2080,
+        -100
+      ],
+      "retryOnFail": true,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "name": "NoOp1",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        2000,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "const update_residual_amount_obj = $node[\"Function to create payment to vendors\"].json[\"update_residual_amount_obj\"]\n\nlet returnItems =[]\n\nupdate_residual_amount_obj.forEach(function(obj,index){  \n    returnItems.push({\n    json: {\n       id : obj.id,\n       residual_amount : obj.residual_amount,\n       url : $node[\"Globals\"].json[\"dms_url\"]\n    }\n  });\n  \n})\n\nreturn returnItems;"
+      },
+      "name": "Function to update advance payments",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1780,
+        -100
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "name": "Set",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        2040,
+        300
+      ],
+      "executeOnce": true
     }
   ],
   "settings": {
@@ -844,5 +1103,5 @@
       "updatedAt": "2022-05-30T07:16:52.136Z"
     }
   ],
-  "updatedAt": "2022-08-29T06:40:41.331Z"
+  "updatedAt": "2022-09-05T12:00:39.928Z"
 }
