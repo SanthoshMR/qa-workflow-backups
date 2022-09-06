@@ -49,7 +49,7 @@
       "main": [
         [
           {
-            "node": "Update delivery info in mozart",
+            "node": "Get the ASN document",
             "type": "main",
             "index": 0
           }
@@ -61,6 +61,50 @@
         [
           {
             "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update delivery info in mozart": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Move Binary Data": {
+      "main": [
+        [
+          {
+            "node": "Upload asn_document in mozart",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the ASN document": {
+      "main": [
+        [
+          {
+            "node": "Move Binary Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload asn_document in mozart": {
+      "main": [
+        [
+          {
+            "node": "Update delivery info in mozart",
             "type": "main",
             "index": 0
           }
@@ -109,6 +153,13 @@
             {
               "name": "vpanel_url",
               "value": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}"
+            },
+            {
+              "name": "send_from_email",
+              "value": "="
+            },
+            {
+              "name": "to_email"
             }
           ]
         },
@@ -190,6 +241,10 @@
             {
               "name": "shipment_status",
               "value": "=intransit"
+            },
+            {
+              "name": "asn_document",
+              "value": "={{$node[\"Upload asn_document in mozart\"].json[\"data\"][\"id\"]}}"
             }
           ]
         }
@@ -198,7 +253,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1460,
+        2120,
         320
       ],
       "credentials": {
@@ -260,6 +315,92 @@
           "name": "SD Basic Auth"
         }
       }
+    },
+    {
+      "parameters": {
+        "fromEmail": "=handyalasairam9177@gmail.com",
+        "toEmail": "=sairam.reddy@shakedeal.com",
+        "subject": "=shipment is ready",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        2300,
+        320
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "17",
+          "name": "smtp(sai)creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "setAllData": false,
+        "destinationKey": "asn_file",
+        "options": {
+          "keepSource": true,
+          "keepAsBase64": true
+        }
+      },
+      "name": "Move Binary Data",
+      "type": "n8n-nodes-base.moveBinaryData",
+      "typeVersion": 1,
+      "position": [
+        1660,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"vpanel_dms_url\"]}}/assets/{{$node[\"Wait for delivery info\"].json[\"body\"][\"payload\"][\"asn_document\"]}}",
+        "responseFormat": "file",
+        "options": {}
+      },
+      "name": "Get the ASN document",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1440,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"mozart_dms_url\"]}}/files",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {
+          "bodyContentType": "multipart-form-data"
+        },
+        "sendBinaryData": true,
+        "binaryPropertyName": "=input_file:data"
+      },
+      "name": "Upload asn_document in mozart",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1920,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
     }
   ],
   "settings": {},
@@ -272,5 +413,5 @@
       "updatedAt": "2022-05-30T07:16:52.136Z"
     }
   ],
-  "updatedAt": "2022-07-25T12:49:05.815Z"
+  "updatedAt": "2022-09-05T06:58:46.840Z"
 }
