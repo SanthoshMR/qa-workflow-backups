@@ -1,0 +1,231 @@
+{
+  "active": true,
+  "connections": {
+    "Wait for assignee status update": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Check for payload status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for payload status": {
+      "main": [
+        [
+          {
+            "node": "Get the assignee details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the assignee details": {
+      "main": [
+        [
+          {
+            "node": "Get the assignee team",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the assignee team": {
+      "main": [
+        [
+          {
+            "node": "Function to create obj for updating assignee status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to create obj for updating assignee status": {
+      "main": [
+        [
+          {
+            "node": "Update the assignee status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2022-08-03T09:33:41.005Z",
+  "id": "159",
+  "name": "order_aged",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "update-assignee-status",
+        "responseMode": "lastNode",
+        "responseData": "allEntries",
+        "options": {}
+      },
+      "name": "Wait for assignee status update",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        480,
+        280
+      ],
+      "webhookId": "d645427f-5c13-4276-a4ee-f55071ce810b",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "dms_url",
+              "value": "=https://dmsqa.shakedeal.com"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        720,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$node[\"Wait for assignee status update\"].json[\"body\"][\"payload\"][\"status\"]}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "Check for payload status",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        940,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_assignee_details/{{$node[\"Globals\"].json[\"body\"][\"keys\"][0]}}",
+        "options": {}
+      },
+      "name": "Get the assignee details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1140,
+        140
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_assignee_details?filter={\"team_name\":{\"_eq\":{{$node[\"Get the assignee details\"].json[\"data\"][\"team_name\"]}}}}",
+        "options": {}
+      },
+      "name": "Get the assignee team",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1380,
+        140
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let assignee_teams_data = $node[\"Get the assignee team\"].json.data;\nassignee_true_tatus_details = assignee_teams_data.filter(data => data.status);\nupdate_assignee_status = {};\nupdate_keys = [];\n\nif(assignee_teams_data.length == assignee_true_tatus_details.length){\n  assignee_teams_data.forEach(function(data,index){\n    update_keys.push(data.id);\n  })\n}\nupdate_assignee_status.keys = update_keys;\nupdate_assignee_status.data = {\"status\":false};\n\nitems[0].json.assignee_true_tatus_details = assignee_true_tatus_details;\nitems[0].json.update_assignee_status = update_assignee_status\nreturn items;"
+      },
+      "name": "Function to create obj for updating assignee status",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1600,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_assignee_details",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Function to create obj for updating assignee status\"].json[\"update_assignee_status\"]}}"
+      },
+      "name": "Update the assignee status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1820,
+        140
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    }
+  ],
+  "settings": {
+    "saveExecutionProgress": "DEFAULT",
+    "saveManualExecutions": true
+  },
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2022-08-03T10:03:56.056Z"
+}
