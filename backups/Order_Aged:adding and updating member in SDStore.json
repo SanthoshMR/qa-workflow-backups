@@ -237,8 +237,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1010,
-        160
+        1020,
+        140
       ],
       "credentials": {
         "httpBasicAuth": {
@@ -288,5 +288,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2021-07-27T13:21:51.889Z"
+  "updatedAt": "2022-08-03T12:36:13.290Z"
 }
