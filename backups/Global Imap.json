@@ -22,11 +22,6 @@
           }
         ]
       ]
-    },
-    "Execute Workflow": {
-      "main": [
-        []
-      ]
     }
   },
   "createdAt": "2022-09-02T12:38:30.539Z",
@@ -82,7 +77,7 @@
           "number": [
             {
               "name": "workflow_id",
-              "value": "={{$node[\"Wait for PO Email\"].json[\"to\"][\"value\"][0][\"address\"]==\"sairam.shakedeal+vedantaqa@gmail.com\"?164:176}}"
+              "value": "={{$node[\"Wait for PO Email\"].json[\"to\"][\"value\"][0][\"address\"]==\"sairam.shakedeal+vedanta@gmail.com\"?164:176}}"
             }
           ]
         },
@@ -100,9 +95,9 @@
   "settings": {},
   "staticData": {
     "node:Wait for PO Email": {
-      "lastMessageUid": 1202
+      "lastMessageUid": 1210
     }
   },
   "tags": [],
-  "updatedAt": "2022-09-06T11:45:22.548Z"
+  "updatedAt": "2022-09-06T17:25:06.328Z"
 }
