@@ -564,7 +564,7 @@
       "main": [
         [
           {
-            "node": "SA is informed that PO is generated",
+            "node": "Function to create obj for updating the vendor po in po items",
             "type": "main",
             "index": 0
           }
@@ -598,6 +598,28 @@
         [
           {
             "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to create obj for updating the vendor po in po items": {
+      "main": [
+        [
+          {
+            "node": "Update the vendor po in po items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update the vendor po in po items": {
+      "main": [
+        [
+          {
+            "node": "SA is informed that PO is generated",
             "type": "main",
             "index": 0
           }
@@ -1309,9 +1331,10 @@
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 1,
       "position": [
-        2180,
-        1180
+        2720,
+        1200
       ],
+      "executeOnce": true,
       "credentials": {
         "smtp": {
           "id": "17",
@@ -1632,7 +1655,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let prodven = $node[\"Extracting PO details\"].json[\"prodven\"];\nlet poDetails = $node[\"constructing po_details\"].json.po_details;\nlet poProducts = $node[\"constructing po_details\"].json.po_details[0].po_items;\nlet productsDetails = $node[\"constructing po_details\"].json.concated_products;\nlet po_date =$node[\"Merging the globals and file Id\"].json[\"po_date\"]; \nlet po_value= $node[\"Merging the globals and file Id\"].json[\"po_value\"];\nlet po_deliver_date = $node[\"Extracting PO details\"].json[\"max_date\"];\nlet po_type = $node[\"Extracting PO details\"].json[\"po_type\"];\nlet commision_percentage = $node[\"Globals\"].json[\"commision_percentage\"]; \nlet client = $node[\"Globals\"].json[\"client\"];\nlet vendorPoDetails = [];\nlet vendor_po_num_prefix = $node[\"Globals\"].json[\"vendor_po_num_prefix\"];\nlet po_number = $node[\"Merging the globals and file Id\"].json[\"po_num\"];\npoProducts = poProducts.map((obj, i) => ({ ...obj, req_qty: parseInt(obj.req_qty) }));\n\n//Reduce commision charges and if client is vedanta and po_type is routing\nif(client == \"vedanta\" && po_type == \"routing\" ){\n  poProducts = poProducts.map((obj, i) => ({ ...obj, product_total: obj.product_total-(obj.product_total*commision_percentage)/100 }));\n}\n\n\npo_items = [];\nuniqueArr = Object.create(null),\n    uniqueVendorPlantArr = prodven.filter(o => {\n        var key = ['plant', 'email'].map(k => o[k]).join('|');\n        if (!uniqueArr[key]) {\n            uniqueArr[key] = true;\n            return true;\n        }\n    });\n\nuniqueVendorPlantArr.forEach(function(obj,index){\n  po_items[index]={};\n  let matchedProdVen = prodven.filter(pv => pv.email == obj.email && pv.plant == obj.plant);\n  let productVendorDetails = \n   poProducts.filter(product=>\n     matchedProdVen.some(\n      data=> data.productCode === product.product \n    )\n  );\n  \n  let vendor_po_number = `${vendor_po_num_prefix+po_number}/${index+1}`\n  po_items[index].po_items = productVendorDetails;\n   po_items[index].vendor_po_number = vendor_po_number \n  let po_total = productVendorDetails.reduce((total,obj)=>obj.product_total+ total, 0);\n  let net_po_value = productVendorDetails.reduce((total,obj)=>(obj.rate+ obj.req_qty)+total, 0);\n  vendorPoDetails[index]={};\n  vendorPoDetails[index].vendor_po_number = vendor_po_number;\n  vendorPoDetails[index].vendor=obj.vendor\n  vendorPoDetails[index].po_num=$node[\"post the po_details\"].json.data[0].id;\n  vendorPoDetails[index].po_value= po_total;\n  vendorPoDetails[index].po_status=\"draft\";\n  vendorPoDetails[index].po_date=new Date(po_date).toISOString();\n  vendorPoDetails[index].po_type=client == \"vedanta\"?po_type:\"routing\";\n  vendorPoDetails[index].po_deliver_date =new Date(po_deliver_date).toISOString(); \n  vendorPoDetails[index].product_details= productVendorDetails;\n  vendorPoDetails[index].net_po_value = net_po_value\n  //vendorPoDetails[index].delivery_address = 1;\n  \n})\n\n\nitems[0].json.uniqueVendorPlantArr = uniqueVendorPlantArr;\nitems[0].json.prodven= prodven;\nitems[0].json.poDetails =  poDetails;\nitems[0].json.poProducts = poProducts;\nitems[0].json.productsDetails = productsDetails;\nitems[0].json.vendorPoDetails =  vendorPoDetails;\nitems[0].json.po_items = po_items\nreturn items;"
+        "functionCode": "let prodven = $node[\"Extracting PO details\"].json[\"prodven\"];\nlet poDetails = $node[\"constructing po_details\"].json.po_details;\nlet poProducts = $node[\"constructing po_details\"].json.po_details[0].po_items;\nlet productsDetails = $node[\"constructing po_details\"].json.concated_products;\nlet po_date =$node[\"Merging the globals and file Id\"].json[\"po_date\"]; \nlet po_value= $node[\"Merging the globals and file Id\"].json[\"po_value\"];\nlet po_deliver_date = $node[\"Extracting PO details\"].json[\"max_date\"];\nlet po_type = $node[\"Extracting PO details\"].json[\"po_type\"];\nlet commision_percentage = $node[\"Globals\"].json[\"commision_percentage\"]; \nlet client = $node[\"Globals\"].json[\"client\"];\nlet vendorPoDetails = [];\nlet vendor_po_num_prefix = $node[\"Globals\"].json[\"vendor_po_num_prefix\"];\nlet po_number = $node[\"Merging the globals and file Id\"].json[\"po_num\"];\npoProducts = poProducts.map((obj, i) => ({ ...obj, req_qty: parseInt(obj.req_qty) }));\n\n//Reduce commision charges and if client is vedanta and po_type is routing\nif(client == \"vedanta\" && po_type == \"routing\" ){\n  poProducts = poProducts.map((obj, i) => ({ ...obj, product_total: obj.product_total-(obj.product_total*commision_percentage)/100 }));\n}\n\n\npo_items = [];\nuniqueArr = Object.create(null),\n    uniqueVendorPlantArr = prodven.filter(o => {\n        var key = ['plant', 'email'].map(k => o[k]).join('|');\n        if (!uniqueArr[key]) {\n            uniqueArr[key] = true;\n            return true;\n        }\n    });\n\nuniqueVendorPlantArr.forEach(function(obj,index){\n  po_items[index]={};\n  let matchedProdVen = prodven.filter(pv => pv.email == obj.email && pv.plant == obj.plant);\n  let productVendorDetails = \n   poProducts.filter(product=>\n     matchedProdVen.some(\n      data=> data.productCode === product.product \n    )\n  );\n  \n  let vendor_po_number = `${vendor_po_num_prefix+po_number}/${index+1}`\n  po_items[index].po_items = productVendorDetails;\n   po_items[index].vendor_po_number = vendor_po_number \n  let po_total = productVendorDetails.reduce((total,obj)=>obj.gross_price+ total, 0);\n  let net_po_value = productVendorDetails.reduce((total,obj)=>(obj.rate+ obj.req_qty)+total, 0);\n  vendorPoDetails[index]={};\n  vendorPoDetails[index].id = vendor_po_number;\n  vendorPoDetails[index].vendor=obj.email\n  vendorPoDetails[index].po_num=$node[\"post the po_details\"].json.data[0].id;\n  vendorPoDetails[index].po_value= po_total;\n  vendorPoDetails[index].po_status=\"draft\";\n  vendorPoDetails[index].po_date=new Date(po_date).toISOString();\n  vendorPoDetails[index].po_type=client == \"vedanta\"?po_type:\"routing\";\n  vendorPoDetails[index].po_deliver_date =new Date(po_deliver_date).toISOString(); \n  vendorPoDetails[index].net_po_value = net_po_value\n  //vendorPoDetails[index].delivery_address = 1;\n  \n})\n\n\nitems[0].json.uniqueVendorPlantArr = uniqueVendorPlantArr;\nitems[0].json.prodven= prodven;\nitems[0].json.poDetails =  poDetails;\nitems[0].json.poProducts = poProducts;\nitems[0].json.productsDetails = productsDetails;\nitems[0].json.vendorPoDetails =  vendorPoDetails;\nitems[0].json.po_items = po_items\nreturn items;"
       },
       "name": "Constructing Vendor PO Details",
       "type": "n8n-nodes-base.function",
@@ -1646,7 +1669,7 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "POST",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_vendor_po_details",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sdm_vendor_pos",
         "allowUnauthorizedCerts": true,
         "jsonParameters": true,
         "options": {},
@@ -1664,8 +1687,7 @@
           "id": "22",
           "name": "Balcoqa-Dms-Token"
         }
-      },
-      "disabled": true
+      }
     },
     {
       "parameters": {
@@ -1723,10 +1745,45 @@
           "name": "Imap creds(sai)"
         }
       }
+    },
+    {
+      "parameters": {
+        "functionCode": "\nlet po_items=$node[\"Constructing Vendor PO Details\"].json[\"po_items\"];\nlet returnItems =[]\n\npo_items.forEach(function(obj,index){  \n   let ids = [];\n   let data ={};\n   data.vendor_po = obj.vendor_po_number;\n   obj[\"po_items\"].map((item,index)=>ids.push(item.id));\n   let update_items = {};\n   update_items.keys = ids;\n   update_items.data = data\n    returnItems.push({\n    json: [\n      {\n       update_items_obj :update_items,\n        url :  $node[\"Globals\"].json[\"dms_url\"],\n      \n    }\n    ]\n  });\n  \n})\n\nreturn returnItems;"
+      },
+      "name": "Function to create obj for updating the vendor po in po items",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        2160,
+        1180
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Function to create obj for updating the vendor po in po items\"].json[\"0\"][\"url\"]}}/items/sdm_po_items",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Function to create obj for updating the vendor po in po items\"].json[\"0\"][\"update_items_obj\"]}}"
+      },
+      "name": "Update the vendor po in po items",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2440,
+        1180
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "22",
+          "name": "Balcoqa-Dms-Token"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-09-12T13:07:12.841Z"
+  "updatedAt": "2022-09-13T06:53:28.957Z"
 }
