@@ -259,7 +259,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sdm_orders?filter={\"order_id\":{\"_eq\":\"{{$node[\"Add order_prefix\"].json[\"add_prefix\"]}}\"}}&fields=order_id,order_status,order_value,order_type,vendor_invoice_number.*,order_details.*,order_details.sd_mozart_vendor_product_mapping_id.*,order_details.sd_mozart_vendor_product_mapping_id.product.*,id,date_created",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sdm_orders?filter={\"order_id\":{\"_eq\":\"{{$node[\"Add order_prefix\"].json[\"add_prefix\"]}}\"}}&fields=order_id,order_status,order_value,order_type,shipment.*,order_items.*,order_items.sdm_po_items_id.*,order_details.sdm_po_items_id.product.*,id,date_created",
         "options": {}
       },
       "name": "Get the order_id",
@@ -452,13 +452,14 @@
           "id": "51",
           "name": "VendorPanel DMS Token"
         }
-      }
+      },
+      "disabled": true
     },
     {
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "PATCH",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sdm_shipments/{{$node[\"Get the order_id\"].json[\"data\"][0][\"vendor_invoice_number\"][\"id\"]}}",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sdm_shipments/{{$node[\"Get the order_id\"].json[\"data\"][0][\"shipment\"][\"id\"]}}",
         "options": {},
         "bodyParametersUi": {
           "parameter": [
@@ -549,5 +550,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-09-14T08:40:57.907Z"
+  "updatedAt": "2022-09-15T06:35:48.710Z"
 }
