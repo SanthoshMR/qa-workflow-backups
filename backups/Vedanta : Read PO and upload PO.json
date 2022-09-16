@@ -1655,7 +1655,7 @@
       "parameters": {
         "resource": "worksheet",
         "operation": "getContent",
-        "workbook": "A6E890F58473778D!6258",
+        "workbook": "A6E890F58473778D!6260",
         "worksheet": "={{$node[\"Check from_adress & to_adress\"].json[\"subject\"]}}",
         "range": "=A2:V{{$node[\"Check from_adress & to_adress\"].json[\"subject\"].split(\" \")[1]}}",
         "rawData": true,
@@ -1729,5 +1729,5 @@
     }
   },
   "tags": [],
-  "updatedAt": "2022-09-15T06:55:14.587Z"
+  "updatedAt": "2022-09-16T06:11:27.319Z"
 }
