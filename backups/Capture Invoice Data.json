@@ -167,7 +167,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sd_mozart_payment_advise?filter={\"order\":{\"vendor_invoice_number\":{\"invoice_number\":{\"_eq\":\"{{$node[\"Function to update shakedeal payment status\"].json.invoice_number}}\"}}}}",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_payment_advise?filter={\"order\":{\"shipment\":{\"invoice_number\":{\"_eq\":\"{{$node[\"Function to update shakedeal payment status\"].json.invoice_number}}\"}}}}",
         "options": {}
       },
       "name": "Get the invoice details",
@@ -207,5 +207,5 @@
       "updatedAt": "2022-05-30T07:16:52.136Z"
     }
   ],
-  "updatedAt": "2022-09-06T11:46:26.312Z"
+  "updatedAt": "2022-09-16T05:57:20.453Z"
 }
