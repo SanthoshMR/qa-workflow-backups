@@ -1,5 +1,5 @@
 {
-  "active": false,
+  "active": true,
   "connections": {
     "Move Binary Data": {
       "main": [
@@ -1628,7 +1628,11 @@
     }
   ],
   "settings": {},
-  "staticData": null,
+  "staticData": {
+    "node:Wait for PO Email": {
+      "lastMessageUid": 1317
+    }
+  },
   "tags": [],
-  "updatedAt": "2022-09-16T11:59:55.644Z"
+  "updatedAt": "2022-09-17T13:10:52.021Z"
 }
