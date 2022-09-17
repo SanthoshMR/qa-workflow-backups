@@ -1670,8 +1670,8 @@
       ],
       "credentials": {
         "microsoftExcelOAuth2Api": {
-          "id": "34",
-          "name": "Microsoft excel creds"
+          "id": "54",
+          "name": "Microsoft Excel account"
         }
       }
     },
@@ -1729,5 +1729,5 @@
     }
   },
   "tags": [],
-  "updatedAt": "2022-09-16T06:11:27.319Z"
+  "updatedAt": "2022-09-17T08:48:48.314Z"
 }
