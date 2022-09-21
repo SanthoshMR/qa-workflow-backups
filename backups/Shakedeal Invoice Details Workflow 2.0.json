@@ -1,5 +1,5 @@
 {
-  "active": true,
+  "active": false,
   "connections": {
     "Get Invoice Details": {
       "main": [
@@ -558,5 +558,5 @@
       "updatedAt": "2022-05-30T07:16:52.136Z"
     }
   ],
-  "updatedAt": "2022-09-02T07:33:26.688Z"
+  "updatedAt": "2022-09-21T09:27:11.998Z"
 }
