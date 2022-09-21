@@ -531,6 +531,10 @@
             {
               "name": "payment_details",
               "value": "={{$node[\"Create payment to shakedeal\"].json[\"data\"][\"id\"]}}"
+            },
+            {
+              "name": "order_date",
+              "value": "={{new Date().toISOString()}}"
             }
           ]
         }
@@ -1093,5 +1097,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-09-15T13:20:31.515Z"
+  "updatedAt": "2022-09-21T05:58:23.272Z"
 }
