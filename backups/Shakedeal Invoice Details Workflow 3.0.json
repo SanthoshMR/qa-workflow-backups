@@ -1,5 +1,5 @@
 {
-  "active": false,
+  "active": true,
   "connections": {
     "Get Invoice Details": {
       "main": [
@@ -550,5 +550,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-09-15T06:35:48.710Z"
+  "updatedAt": "2022-09-21T09:27:13.019Z"
 }
