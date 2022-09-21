@@ -1,5 +1,5 @@
 {
-  "active": false,
+  "active": true,
   "connections": {
     "Receive the order_status": {
       "main": [
@@ -275,7 +275,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sdm_orders/{{$node[\"Globals\"].json[\"order_id\"]}}?fields=shipment.vendor_po_num.po_num.po_num,order_id",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sdm_orders/{{$node[\"Globals\"].json[\"order_id\"]}}?fields=shipment.vendor_po_num.po_num,order_id",
         "allowUnauthorizedCerts": true,
         "options": {}
       },
@@ -296,7 +296,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sdm_pos?filter={\"id\":{\"_eq\":\"{{$node[\"Get po_number\"].json[\"data\"][\"shipment\"][\"vendor_po_num\"][\"po_num\"][\"id\"]}}\"}}&fields=issuer_name.user.email",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sdm_pos?filter={\"id\":{\"_eq\":\"{{$node[\"Get po_number\"].json[\"data\"][\"shipment\"][\"vendor_po_num\"][\"po_num\"]}}\"}}&fields=issuer_name.user.email",
         "allowUnauthorizedCerts": true,
         "options": {}
       },
@@ -384,7 +384,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let orderNumber =  $node[\"Get po_number\"].json.data[\"order_id\"]\n\nlet po_number =  $node[\"Get po_number\"].json.data[\"vendor_invoice_number\"][\"vendor_po_num\"][\"po_num\"][\"id\"];\nlet orderStatus= $node[\"Globals\"].json[\"order_status\"];\n\nitems[0].json.orderStatus = orderStatus\nif(orderStatus ===\"processed\"){\n   items[0].json.subject = `Order ${orderNumber} for Purchase Order ${po_number} has been Processed`\n   items[0].json.heading = `Order ${orderNumber} against PO ${po_number} has processed`\n  items[0].json.bodyContent = `Order ${orderNumber} against PO ${po_number} \nhas been processed and will shortly shipped to it’s destination. \nWe will keep you updated with the status of your shipment.`\n}\nif(orderStatus===\"intransit\"){\n   items[0].json.subject = `Order ${orderNumber} for Purchase Order ${po_number} \nis In Transit`\n   items[0].json.heading = `Order ${orderNumber} against PO ${po_number} has \nbeen Dispatched`\n   items[0].json.bodyContent = `Order  ${orderNumber} against PO ${po_number} \nhas been Shipped and will arrive at it’s destination soon.`\n}\n\nif(orderStatus === \"complete\"){\n    items[0].json.subject = `Order ${orderNumber}  for Purchase Order ${po_number} \nhas reached it’s destination`\n    items[0].json.heading = `: Order ${orderNumber} against PO ${po_number} has \nreached it’s Destination.`\n     items[0].json.bodyContent = `: Order ${orderNumber} against PO ${po_number} \nhas been reached it’s destination and is now complete.`\n\n}\n\nlet order_prefix = $node[\"Globals\"].json[\"order_prefix\"]\n\nlet remove_prefix = orderNumber.replace(order_prefix,\"\");\n\n\nitems[0].json.remove_prefix =remove_prefix \n\nitems[0].json.po_number = po_number \nitems[0].json.orderNumber = orderNumber;\nitems[0].json.orderStatus = orderStatus\nreturn items;\n"
+        "functionCode": "let orderNumber =  $node[\"Get po_number\"].json.data[\"order_id\"]\n\nlet po_number =  $node[\"Get po_number\"].json.data[\"shipment\"][\"vendor_po_num\"][\"po_num\"];\nlet orderStatus= $node[\"Globals\"].json[\"order_status\"];\n\nitems[0].json.orderStatus = orderStatus\nif(orderStatus ===\"processed\"){\n   items[0].json.subject = `Order ${orderNumber} for Purchase Order ${po_number} has been Processed`\n   items[0].json.heading = `Order ${orderNumber} against PO ${po_number} has processed`\n  items[0].json.bodyContent = `Order ${orderNumber} against PO ${po_number} \nhas been processed and will shortly shipped to it’s destination. \nWe will keep you updated with the status of your shipment.`\n}\nif(orderStatus===\"intransit\"){\n   items[0].json.subject = `Order ${orderNumber} for Purchase Order ${po_number} \nis In Transit`\n   items[0].json.heading = `Order ${orderNumber} against PO ${po_number} has \nbeen Dispatched`\n   items[0].json.bodyContent = `Order  ${orderNumber} against PO ${po_number} \nhas been Shipped and will arrive at it’s destination soon.`\n}\n\nif(orderStatus === \"complete\"){\n    items[0].json.subject = `Order ${orderNumber}  for Purchase Order ${po_number} \nhas reached it’s destination`\n    items[0].json.heading = `: Order ${orderNumber} against PO ${po_number} has \nreached it’s Destination.`\n     items[0].json.bodyContent = `: Order ${orderNumber} against PO ${po_number} \nhas been reached it’s destination and is now complete.`\n\n}\n\nlet order_prefix = $node[\"Globals\"].json[\"order_prefix\"]\n\nlet remove_prefix = orderNumber.replace(order_prefix,\"\");\n\n\nitems[0].json.remove_prefix =remove_prefix \n\nitems[0].json.po_number = po_number \nitems[0].json.orderNumber = orderNumber;\nitems[0].json.orderStatus = orderStatus\nreturn items;\n"
       },
       "name": "Constructing email content based on order_status",
       "type": "n8n-nodes-base.function",
@@ -416,7 +416,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sdm_pos?filter={\"id\":{{$node[\"Get po_number\"].json[\"data\"][\"shipment\"][\"vendor_po_num\"][\"po_num\"][\"id\"]}}}&fields=po_items.requested_qty,orders.order_details.qty_placed,id",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sdm_pos?filter={\"id\":{{$node[\"Get po_number\"].json[\"data\"][\"shipment\"][\"vendor_po_num\"][\"po_num\"]}}}&fields=po_items.requested_qty,orders.order_details.qty_placed,id",
         "options": {}
       },
       "name": "Get the products and orders",
@@ -628,5 +628,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-09-15T06:42:18.527Z"
+  "updatedAt": "2022-09-21T09:51:54.485Z"
 }
