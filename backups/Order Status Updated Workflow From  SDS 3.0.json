@@ -1,5 +1,5 @@
 {
-  "active": false,
+  "active": true,
   "connections": {
     "Receive_order_status": {
       "main": [
@@ -234,7 +234,7 @@
           "parameter": [
             {
               "name": "order_status",
-              "value": "={{$node[\"Globals\"].json[\"order_status\"]}}"
+              "value": "={{$node[\"Receive_order_status\"].json[\"body\"][\"order_status\"]}}"
             },
             {
               "name": "stopwebhookcall",
@@ -513,7 +513,7 @@
           "parameter": [
             {
               "name": "order_status",
-              "value": "={{$node[\"Globals\"].json[\"order_status\"]}}"
+              "value": "={{$node[\"Receive_order_status\"].json[\"body\"][\"order_status\"]}}"
             }
           ]
         }
@@ -598,5 +598,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-09-15T06:43:11.071Z"
+  "updatedAt": "2022-09-21T09:29:23.128Z"
 }
