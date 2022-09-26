@@ -266,7 +266,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"mozart_url\"]}}/items/sdm_shipments?filter={\"vendor_po_num\":{\"vendor_po_number\":{\"_eq\":\"{{$node[\"Get the vendor po_number\"].json[\"data\"][\"vendor_po_number\"][\"po_number\"]}}\"}}}",
+        "url": "={{$node[\"Globals\"].json[\"mozart_url\"]}}/items/sdm_shipments?filter={\"vendor_po_num\":{\"_eq\":\"{{$node[\"Get the vendor po_number\"].json[\"data\"][\"vendor_po_number\"][\"po_number\"]}}\"}}",
         "options": {}
       },
       "name": "Get the vendor po id",
@@ -293,7 +293,7 @@
           "parameter": [
             {
               "name": "client",
-              "value": "={{$node[\"Wait for delivery info\"].json[\"body\"][\"payload\"][\"client\"]}}"
+              "value": "=vedanta"
             },
             {
               "name": "env",
@@ -413,5 +413,5 @@
       "updatedAt": "2022-05-30T07:16:52.136Z"
     }
   ],
-  "updatedAt": "2022-09-15T06:36:59.551Z"
+  "updatedAt": "2022-09-26T12:03:44.968Z"
 }
