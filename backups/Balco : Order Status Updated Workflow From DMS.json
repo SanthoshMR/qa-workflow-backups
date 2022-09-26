@@ -5,7 +5,7 @@
       "main": [
         [
           {
-            "node": "Get url and token",
+            "node": "Globals",
             "type": "main",
             "index": 0
           }
@@ -124,21 +124,10 @@
           }
         ]
       ]
-    },
-    "Get url and token": {
-      "main": [
-        [
-          {
-            "node": "Globals",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
     }
   },
-  "createdAt": "2021-02-25T07:56:48.754Z",
-  "id": "34",
+  "createdAt": "2022-07-21T10:13:48.782Z",
+  "id": "157",
   "name": "Balco : Order Status Updated Workflow From DMS",
   "nodes": [
     {
@@ -147,8 +136,8 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        240,
-        -100
+        90,
+        100
       ]
     },
     {
@@ -166,7 +155,7 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        140,
+        280,
         260
       ],
       "webhookId": "b92090c1-974f-45f7-8d77-fe21124243d0",
@@ -224,7 +213,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_orders/{{$node[\"Globals\"].json[\"order_id\"]}}?fields=vendor_invoice_number.vendor_po_num.po_num.po_num,order_id",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_orders/{{$node[\"Globals\"].json[\"order_id\"]}}?fields=po_num.po_num,order_id",
         "allowUnauthorizedCerts": true,
         "options": {}
       },
@@ -237,15 +226,15 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "50",
-          "name": "Mozart DMS Token"
+          "id": "22",
+          "name": "Balcoqa-Dms-Token"
         }
       }
     },
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_po_details?filter={\"po_num\":{\"_eq\":\"{{$node[\"Get po_number\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"po_num\"][\"po_num\"]}}\"}}&fields=issuer_name.user.email",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_po_details?filter={\"po_num\":{\"_eq\":\"{{$node[\"Get po_number\"].json[\"data\"][\"po_num\"][\"po_num\"]}}\"}}&fields=issuer_name.user.email",
         "allowUnauthorizedCerts": true,
         "options": {}
       },
@@ -258,8 +247,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "50",
-          "name": "Mozart DMS Token"
+          "id": "22",
+          "name": "Balcoqa-Dms-Token"
         }
       }
     },
@@ -301,7 +290,7 @@
             },
             {
               "name": "dms_url",
-              "value": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}"
+              "value": "={{ $node[\"Receive the order_status\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" && $node[\"Receive the order_status\"].json[\"headers\"][\"client\"] === \"balco\" ? \"https://balco.mozart.shakedeal.com\" : $node[\"Receive the order_status\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" && $node[\"Receive the order_status\"].json[\"headers\"][\"client\"] === \"vedanta\"?\"https://vedanta.mozart.shakedeal.com\":$node[\"Receive the order_status\"].json[\"headers\"][\"x-sd-env\"] === \"qa\" && $node[\"Receive the order_status\"].json[\"headers\"][\"client\"] === \"vedanta\"?\"https://vedantaqa.mozart.shakedeal.com\":\"https://balcoqa.mozart.shakedeal.com\"}}"
             },
             {
               "name": "order_prefix",
@@ -310,10 +299,6 @@
             {
               "name": "token",
               "value": "={{ $node[\"Receive the order_status\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" && $node[\"Receive the order_status\"].json[\"headers\"][\"client\"] === \"balco\" ? \"d1b1178f-637a-4927-8c41-29f4a8219a95\" : $node[\"Receive the order_status\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" && $node[\"Receive the order_status\"].json[\"headers\"][\"client\"] === \"vedanta\"?\"d1b1178f-637a-4927-8c41-29f4a8219a96\":$node[\"Receive the order_status\"].json[\"headers\"][\"x-sd-env\"] === \"qa\" && $node[\"Receive the order_status\"].json[\"headers\"][\"client\"] === \"vedanta\"?\"def15ddc-f52f-4b2f-a749-b545fbc372e3\":\"def15ddc-f52f-4b2f-a749-b545fbc372e2\"}}"
-            },
-            {
-              "name": "vpanel_url",
-              "value": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}"
             }
           ]
         },
@@ -329,13 +314,13 @@
     },
     {
       "parameters": {
-        "functionCode": "let orderNumber =  $node[\"Get po_number\"].json.data[\"order_id\"]\n\nlet po_number =  $node[\"Get po_number\"].json.data[\"vendor_invoice_number\"][\"vendor_po_num\"][\"po_num\"][\"po_num\"];\nlet orderStatus= $node[\"Globals\"].json[\"order_status\"];\n\nitems[0].json.orderStatus = orderStatus\nif(orderStatus ===\"processed\"){\n   items[0].json.subject = `Order ${orderNumber} for Purchase Order ${po_number} has been Processed`\n   items[0].json.heading = `Order ${orderNumber} against PO ${po_number} has processed`\n  items[0].json.bodyContent = `Order ${orderNumber} against PO ${po_number} \nhas been processed and will shortly shipped to it’s destination. \nWe will keep you updated with the status of your shipment.`\n}\nif(orderStatus===\"intransit\"){\n   items[0].json.subject = `Order ${orderNumber} for Purchase Order ${po_number} \nis In Transit`\n   items[0].json.heading = `Order ${orderNumber} against PO ${po_number} has \nbeen Dispatched`\n   items[0].json.bodyContent = `Order  ${orderNumber} against PO ${po_number} \nhas been Shipped and will arrive at it’s destination soon.`\n}\n\nif(orderStatus === \"complete\"){\n    items[0].json.subject = `Order ${orderNumber}  for Purchase Order ${po_number} \nhas reached it’s destination`\n    items[0].json.heading = `: Order ${orderNumber} against PO ${po_number} has \nreached it’s Destination.`\n     items[0].json.bodyContent = `: Order ${orderNumber} against PO ${po_number} \nhas been reached it’s destination and is now complete.`\n\n}\n\nlet order_prefix = $node[\"Globals\"].json[\"order_prefix\"]\n\nlet remove_prefix = orderNumber.replace(order_prefix,\"\");\n\n\nitems[0].json.remove_prefix =remove_prefix \n\nitems[0].json.po_number = po_number \nitems[0].json.orderNumber = orderNumber;\nitems[0].json.orderStatus = orderStatus\nreturn items;\n"
+        "functionCode": "let orderNumber =  $node[\"Get po_number\"].json.data[\"order_id\"]\n\nlet po_number =  $node[\"Get po_number\"].json.data[\"po_num\"][\"po_num\"]\nlet orderStatus= $node[\"Globals\"].json[\"order_status\"]\n\nitems[0].json.orderStatus = orderStatus\nif(orderStatus ===\"processed\"){\n   items[0].json.subject = `Order ${orderNumber} for Purchase Order ${po_number} has been Processed`\n   items[0].json.heading = `Order ${orderNumber} against PO ${po_number} has processed`\n  items[0].json.bodyContent = `Order ${orderNumber} against PO ${po_number} \nhas been processed and will shortly shipped to it’s destination. \nWe will keep you updated with the status of your shipment.`\n}\nif(orderStatus===\"intransit\"){\n   items[0].json.subject = `Order ${orderNumber} for Purchase Order ${po_number} \nis In Transit`\n   items[0].json.heading = `Order ${orderNumber} against PO ${po_number} has \nbeen Dispatched`\n   items[0].json.bodyContent = `Order  ${orderNumber} against PO ${po_number} \nhas been Shipped and will arrive at it’s destination soon.`\n}\n\nif(orderStatus === \"complete\"){\n    items[0].json.subject = `Order ${orderNumber}  for Purchase Order ${po_number} \nhas reached it’s destination`\n    items[0].json.heading = `: Order ${orderNumber} against PO ${po_number} has \nreached it’s Destination.`\n     items[0].json.bodyContent = `: Order ${orderNumber} against PO ${po_number} \nhas been reached it’s destination and is now complete.`\n\n}\n\nlet order_prefix = $node[\"Globals\"].json[\"order_prefix\"]\n\nlet remove_prefix = orderNumber.replace(order_prefix,\"\");\n\n\nitems[0].json.remove_prefix =remove_prefix \n\nitems[0].json.po_number = po_number \nitems[0].json.orderNumber = orderNumber;\nitems[0].json.orderStatus = orderStatus\nreturn items;\n"
       },
       "name": "Constructing email content based on order_status",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1100,
+        1110,
         260
       ]
     },
@@ -361,7 +346,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_po_details?filter={\"po_num\":{{$node[\"Get po_number\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"po_num\"][\"po_num\"]}}}&fields=products.req_qty,orders.order_details.qty_placed,id",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_po_details?filter={\"po_num\":{{$node[\"Get po_number\"].json[\"data\"][\"po_num\"][\"po_num\"]}}}&fields=products.req_qty,orders.order_details.qty_placed,id",
         "options": {}
       },
       "name": "Get the products and orders",
@@ -373,8 +358,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "22",
+          "name": "Balcoqa-Dms-Token"
         }
       }
     },
@@ -433,8 +418,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "22",
+          "name": "Balcoqa-Dms-Token"
         }
       }
     },
@@ -457,43 +442,10 @@
         1880,
         400
       ]
-    },
-    {
-      "parameters": {
-        "authentication": "basicAuth",
-        "requestMethod": "POST",
-        "url": "=https://qan8n.shakedeal.com/webhook/get-url",
-        "options": {},
-        "bodyParametersUi": {
-          "parameter": [
-            {
-              "name": "client",
-              "value": "={{$node[\"Receive the order_status\"].json[\"headers\"][\"client\"]}}"
-            },
-            {
-              "name": "env",
-              "value": "={{$node[\"Receive the order_status\"].json[\"headers\"][\"x-sd-env\"]}}"
-            }
-          ]
-        }
-      },
-      "name": "Get url and token",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        320,
-        260
-      ],
-      "credentials": {
-        "httpBasicAuth": {
-          "id": "2",
-          "name": "SD Basic Auth"
-        }
-      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-09-21T06:59:20.376Z"
+  "updatedAt": "2022-07-21T10:13:48.782Z"
 }
