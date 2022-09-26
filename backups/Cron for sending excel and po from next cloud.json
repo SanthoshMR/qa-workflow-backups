@@ -1,0 +1,181 @@
+{
+  "active": false,
+  "connections": {
+    "Nextcloud": {
+      "main": [
+        [
+          {
+            "node": "Get the sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Nextcloud",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the sheet": {
+      "main": [
+        [
+          {
+            "node": "Get the pdf",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the pdf": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email": {
+      "main": [
+        []
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2022-09-26T05:37:50.412Z",
+  "id": "188",
+  "name": "Cron for sending excel and po from next cloud",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        -140,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "operation": "list",
+        "path": "/Excel-POs"
+      },
+      "name": "Nextcloud",
+      "type": "n8n-nodes-base.nextCloud",
+      "typeVersion": 1,
+      "position": [
+        100,
+        320
+      ],
+      "credentials": {
+        "nextCloudApi": {
+          "id": "55",
+          "name": "Sairam nextcloud Creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "path": "={{$node[\"Nextcloud\"].json[\"path\"].replace(\"es/sairam/\",'')}}",
+        "binaryPropertyName": "data1"
+      },
+      "name": "Get the sheet",
+      "type": "n8n-nodes-base.nextCloud",
+      "typeVersion": 1,
+      "position": [
+        280,
+        320
+      ],
+      "credentials": {
+        "nextCloudApi": {
+          "id": "55",
+          "name": "Sairam nextcloud Creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "path": "=/POs/Vedanta-POs/September-PO's/24-09-2022/{{$node[\"Get the sheet\"].binary.data1.fileName.replace(\"xlsx\",\"pdf\")}}",
+        "binaryPropertyName": "data2"
+      },
+      "name": "Get the pdf",
+      "type": "n8n-nodes-base.nextCloud",
+      "typeVersion": 1,
+      "position": [
+        500,
+        320
+      ],
+      "credentials": {
+        "nextCloudApi": {
+          "id": "55",
+          "name": "Sairam nextcloud Creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "=handyalasairam9177@gmail.com",
+        "toEmail": "=sairam.reddy@shakedeal.com",
+        "attachments": "data1,data2",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        900,
+        320
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "17",
+          "name": "smtp(sai)creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 2,
+        "unit": "minutes"
+      },
+      "name": "Wait",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [
+        680,
+        320
+      ],
+      "webhookId": "5e21f189-f4bd-4cfe-8fed-ad8e7d98f04b"
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2022-09-26T09:16:47.612Z"
+}
