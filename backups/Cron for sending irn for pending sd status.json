@@ -163,8 +163,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "56",
+          "name": "Dmsqa creds"
         }
       }
     },
@@ -237,8 +237,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "56",
+          "name": "Dmsqa creds"
         }
       }
     },
@@ -277,5 +277,5 @@
       "updatedAt": "2022-04-25T07:09:37.693Z"
     }
   ],
-  "updatedAt": "2022-08-12T16:22:31.332Z"
+  "updatedAt": "2022-09-27T13:31:52.132Z"
 }
