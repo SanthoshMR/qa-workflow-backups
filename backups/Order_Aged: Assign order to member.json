@@ -452,8 +452,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "56",
+          "name": "Dmsqa creds"
         }
       }
     },
@@ -521,8 +521,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "56",
+          "name": "Dmsqa creds"
         }
       }
     },
@@ -602,13 +602,13 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        3370,
+        3360,
         400
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "56",
+          "name": "Dmsqa creds"
         }
       }
     },
@@ -755,8 +755,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "56",
+          "name": "Dmsqa creds"
         }
       }
     },
@@ -1096,8 +1096,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "56",
+          "name": "Dmsqa creds"
         }
       }
     },
@@ -1116,8 +1116,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "56",
+          "name": "Dmsqa creds"
         }
       }
     },
@@ -1160,8 +1160,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "56",
+          "name": "Dmsqa creds"
         }
       }
     },
@@ -1204,8 +1204,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "56",
+          "name": "Dmsqa creds"
         }
       }
     },
@@ -1262,8 +1262,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "56",
+          "name": "Dmsqa creds"
         }
       }
     },
@@ -1323,8 +1323,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "56",
+          "name": "Dmsqa creds"
         }
       }
     },
@@ -1352,8 +1352,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "56",
+          "name": "Dmsqa creds"
         }
       }
     },
@@ -1384,8 +1384,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "56",
+          "name": "Dmsqa creds"
         }
       }
     },
@@ -1441,8 +1441,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "56",
+          "name": "Dmsqa creds"
         }
       }
     },
@@ -1478,8 +1478,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "56",
+          "name": "Dmsqa creds"
         }
       }
     },
@@ -1527,8 +1527,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "56",
+          "name": "Dmsqa creds"
         }
       }
     },
@@ -1564,8 +1564,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "56",
+          "name": "Dmsqa creds"
         }
       }
     },
@@ -1584,8 +1584,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "56",
+          "name": "Dmsqa creds"
         }
       }
     },
@@ -1613,8 +1613,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "56",
+          "name": "Dmsqa creds"
         }
       },
       "continueOnFail": true
@@ -1634,8 +1634,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "56",
+          "name": "Dmsqa creds"
         }
       }
     },
@@ -1698,8 +1698,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "56",
+          "name": "Dmsqa creds"
         }
       }
     }
@@ -1707,5 +1707,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-05-26T06:04:53.938Z"
+  "updatedAt": "2022-09-27T13:28:56.235Z"
 }
