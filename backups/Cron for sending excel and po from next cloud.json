@@ -45,11 +45,6 @@
         ]
       ]
     },
-    "Send Email": {
-      "main": [
-        []
-      ]
-    },
     "Wait": {
       "main": [
         [
@@ -139,7 +134,7 @@
     {
       "parameters": {
         "fromEmail": "=handyalasairam9177@gmail.com",
-        "toEmail": "=sairam.reddy@shakedeal.com",
+        "toEmail": "=sairam.shakedeal+vedantaqa@gmail.com",
         "attachments": "data1,data2",
         "options": {
           "allowUnauthorizedCerts": true
@@ -171,11 +166,12 @@
         680,
         320
       ],
-      "webhookId": "5e21f189-f4bd-4cfe-8fed-ad8e7d98f04b"
+      "webhookId": "5e21f189-f4bd-4cfe-8fed-ad8e7d98f04b",
+      "disabled": true
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-09-26T09:16:47.612Z"
+  "updatedAt": "2022-09-27T09:35:28.664Z"
 }
