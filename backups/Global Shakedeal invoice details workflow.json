@@ -1,0 +1,109 @@
+{
+  "active": true,
+  "connections": {
+    "Get Invoice Details": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2022-09-28T09:49:08.165Z",
+  "id": "191",
+  "name": "Global Shakedeal invoice details workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "shakedeal_invoice_details",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "sd_shakedeal_invoice",
+                "value": "325155-87767-668888"
+              }
+            ]
+          }
+        }
+      },
+      "name": "Get Invoice Details",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        460,
+        280
+      ],
+      "webhookId": "ae1aedbf-59f4-418f-b783-c8d7cc233b63",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "21",
+          "name": "Balco_basic_auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": "={{$node[\"Globals\"].json[\"workflow_id\"]}}"
+      },
+      "name": "Execute Workflow",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        860,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "number": [
+            {
+              "name": "workflow_id",
+              "value": "={{$node[\"Get Invoice Details\"].json[\"headers\"][\"client\"]==\"vedanta\"?183:53}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        660,
+        280
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2022-09-28T10:11:19.756Z"
+}
