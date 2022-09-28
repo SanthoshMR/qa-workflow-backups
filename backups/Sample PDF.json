@@ -135,7 +135,11 @@
     }
   ],
   "settings": {},
-  "staticData": null,
+  "staticData": {
+    "node:IMAP Email": {
+      "lastMessageUid": 228
+    }
+  },
   "tags": [],
-  "updatedAt": "2021-04-15T04:32:28.220Z"
+  "updatedAt": "2022-09-27T16:38:52.003Z"
 }
