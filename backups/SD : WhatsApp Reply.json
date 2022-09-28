@@ -1,0 +1,37 @@
+{
+  "active": true,
+  "connections": {},
+  "createdAt": "2022-09-28T05:33:48.336Z",
+  "id": "190",
+  "name": "SD : WhatsApp Reply",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "path": "57fdd9b8-2636-4c8e-8aed-25776118c4ea",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        600,
+        160
+      ],
+      "webhookId": "57fdd9b8-2636-4c8e-8aed-25776118c4ea"
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2022-09-28T06:49:46.336Z"
+}
