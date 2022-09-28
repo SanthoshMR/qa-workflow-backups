@@ -1,17 +1,6 @@
 {
-  "active": true,
+  "active": false,
   "connections": {
-    "Receive_order_status": {
-      "main": [
-        [
-          {
-            "node": "Get url and token",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Update the Status in Dms": {
       "main": [
         [
@@ -175,54 +164,23 @@
           }
         ]
       ]
+    },
+    "Receive_order_status": {
+      "main": [
+        [
+          {
+            "node": "Get url and token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2022-09-14T08:49:09.481Z",
   "id": "184",
   "name": "Order Status Updated Workflow From  SDS 3.0",
   "nodes": [
-    {
-      "parameters": {},
-      "name": "Start",
-      "type": "n8n-nodes-base.start",
-      "typeVersion": 1,
-      "position": [
-        120,
-        120
-      ]
-    },
-    {
-      "parameters": {
-        "authentication": "basicAuth",
-        "httpMethod": "POST",
-        "path": "update_status_in_dms",
-        "responseMode": "lastNode",
-        "options": {
-          "responseHeaders": {
-            "entries": [
-              {
-                "name": "sd_order_status",
-                "value": "46534643-64327468724"
-              }
-            ]
-          }
-        }
-      },
-      "name": "Receive_order_status",
-      "type": "n8n-nodes-base.webhook",
-      "typeVersion": 1,
-      "position": [
-        -140,
-        380
-      ],
-      "webhookId": "084f66e5-8038-4f44-b38e-867d26d8a5b6",
-      "credentials": {
-        "httpBasicAuth": {
-          "id": "21",
-          "name": "Balco_basic_auth"
-        }
-      }
-    },
     {
       "parameters": {
         "authentication": "headerAuth",
@@ -593,10 +551,20 @@
         1240,
         240
       ]
+    },
+    {
+      "parameters": {},
+      "name": "Receive_order_status",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        -180,
+        380
+      ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-09-21T09:29:23.128Z"
+  "updatedAt": "2022-09-28T10:05:39.379Z"
 }
