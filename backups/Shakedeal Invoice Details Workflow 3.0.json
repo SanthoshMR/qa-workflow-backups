@@ -1,17 +1,6 @@
 {
-  "active": true,
+  "active": false,
   "connections": {
-    "Get Invoice Details": {
-      "main": [
-        [
-          {
-            "node": "Get url and token",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Globals": {
       "main": [
         [
@@ -54,7 +43,7 @@
       "main": [
         [
           {
-            "node": "Create order in vpanel",
+            "node": "Update shipment status in mozart",
             "type": "main",
             "index": 0
           }
@@ -116,22 +105,11 @@
         ]
       ]
     },
-    "Create order in vpanel": {
-      "main": [
-        [
-          {
-            "node": "Update shipment status in mozart",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Update shipment status in mozart": {
       "main": [
         [
           {
-            "node": "Update the shipment status in vpanel",
+            "node": "Get the shipment id",
             "type": "main",
             "index": 0
           }
@@ -142,7 +120,7 @@
       "main": [
         [
           {
-            "node": "ACC Informed that shakedeal invoice is available by WFS",
+            "node": "Get the order id from vpanel",
             "type": "main",
             "index": 0
           }
@@ -159,53 +137,56 @@
           }
         ]
       ]
+    },
+    "Get the shipment id": {
+      "main": [
+        [
+          {
+            "node": "Update the shipment status in vpanel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update the irn invoice in vpanel": {
+      "main": [
+        [
+          {
+            "node": "ACC Informed that shakedeal invoice is available by WFS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the order id from vpanel": {
+      "main": [
+        [
+          {
+            "node": "Update the irn invoice in vpanel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Invoice Details": {
+      "main": [
+        [
+          {
+            "node": "Get url and token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2022-09-14T08:39:41.133Z",
   "id": "183",
   "name": "Shakedeal Invoice Details Workflow 3.0",
   "nodes": [
-    {
-      "parameters": {},
-      "name": "Start",
-      "type": "n8n-nodes-base.start",
-      "typeVersion": 1,
-      "position": [
-        60,
-        320
-      ]
-    },
-    {
-      "parameters": {
-        "authentication": "basicAuth",
-        "httpMethod": "POST",
-        "path": "shakedeal_invoice_details",
-        "options": {
-          "responseHeaders": {
-            "entries": [
-              {
-                "name": "sd_shakedeal_invoice",
-                "value": "325155-87767-668888"
-              }
-            ]
-          }
-        }
-      },
-      "name": "Get Invoice Details",
-      "type": "n8n-nodes-base.webhook",
-      "typeVersion": 1,
-      "position": [
-        160,
-        180
-      ],
-      "webhookId": "ae1aedbf-59f4-418f-b783-c8d7cc233b63",
-      "credentials": {
-        "httpBasicAuth": {
-          "id": "21",
-          "name": "Balco_basic_auth"
-        }
-      }
-    },
     {
       "parameters": {
         "keepOnlySet": true,
@@ -329,7 +310,7 @@
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 1,
       "position": [
-        3060,
+        3560,
         180
       ],
       "credentials": {
@@ -433,31 +414,6 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "requestMethod": "POST",
-        "url": "={{$node[\"Globals\"].json[\"vpanel_url\"]}}/items/sdv_orders",
-        "allowUnauthorizedCerts": true,
-        "jsonParameters": true,
-        "options": {},
-        "bodyParametersJson": "={{$node[\"Function to create order obj\"].json[\"order_obj\"]}}"
-      },
-      "name": "Create order in vpanel",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        2160,
-        180
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "51",
-          "name": "VendorPanel DMS Token"
-        }
-      },
-      "disabled": true
-    },
-    {
-      "parameters": {
-        "authentication": "headerAuth",
         "requestMethod": "PATCH",
         "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sdm_shipments/{{$node[\"Get the order_id\"].json[\"data\"][0][\"shipment\"][\"id\"]}}",
         "options": {},
@@ -474,7 +430,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2500,
+        2140,
         180
       ],
       "credentials": {
@@ -545,10 +501,89 @@
           "name": "SD Basic Auth"
         }
       }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"vpanel_url\"]}}/items/sdv_shipments?filter={\"invoice_number\":{\"_eq\":\"{{$node[\"Get the order_id\"].json[\"data\"][0][\"shipment\"][\"invoice_number\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Get the shipment id",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2460,
+        180
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"vpanel_url\"]}}/items/sdv_orders/{{Array.isArray($node[\"Get the order id from vpanel\"].json[\"data\"])?$node[\"Get the order id from vpanel\"].json[\"data\"][0][\"id\"]:$node[\"Get the order id from vpanel\"].json[\"data\"][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "invoice_file",
+              "value": "={{$node[\"Post the file to vpanel\"].json[\"data\"][\"id\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update the irn invoice in vpanel",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3300,
+        180
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"vpanel_url\"]}}/items/sdv_orders?filter={\"order_id\":{\"_eq\":\"{{$node[\"Add order_prefix\"].json[\"add_prefix\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Get the order id from vpanel",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3040,
+        180
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "name": "Get Invoice Details",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        140,
+        180
+      ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-09-21T09:27:13.019Z"
+  "updatedAt": "2022-09-28T09:57:09.986Z"
 }
