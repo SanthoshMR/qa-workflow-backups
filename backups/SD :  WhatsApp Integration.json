@@ -57,6 +57,10 @@
             {
               "name": "channel",
               "value": "whatsapp"
+            },
+            {
+              "name": "media_url",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"media_url\"]}}"
             }
           ]
         },
@@ -123,5 +127,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-09-28T11:32:32.238Z"
+  "updatedAt": "2022-09-30T11:34:10.563Z"
 }
