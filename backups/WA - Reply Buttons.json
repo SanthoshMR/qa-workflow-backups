@@ -1,0 +1,89 @@
+{
+  "active": false,
+  "connections": {},
+  "createdAt": "2022-10-02T10:07:14.203Z",
+  "id": "195",
+  "name": "WA - Reply Buttons",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://api.in.kaleyra.io//v1/HXIN1732535738IN/messages",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "api-key",
+              "value": "A826baea1feaa6207057eb1f52f68fde8"
+            },
+            {
+              "name": "from",
+              "value": "+917406700552"
+            },
+            {
+              "name": "to",
+              "value": "+919886791181"
+            },
+            {
+              "name": "type",
+              "value": "reply"
+            },
+            {
+              "name": "channel",
+              "value": "whatsapp"
+            },
+            {
+              "name": "template_name",
+              "value": "payment_pending_order_3"
+            },
+            {
+              "name": "body",
+              "value": "Hi Santhosh,\n\nWelcome to the Diwali campaign! 🎉\n\nIt is our pleasure to invite you to participate in this campaign with loads of prizes to be won.\n\nType 1️⃣ for more details.\nType 2️⃣ to see all the prizes to be won.\nType 3️⃣ to select a language.\nType 4️⃣ to opt out of the campaign. "
+            },
+            {
+              "name": "lang_code",
+              "value": "en"
+            },
+            {
+              "name": "header_type",
+              "value": "text"
+            },
+            {
+              "name": "header_value",
+              "value": "Welcome!"
+            },
+            {
+              "name": "callback_url",
+              "value": "https://qan8n.shakedeal.com/webhook/wa-reply"
+            },
+            {
+              "name": "action",
+              "value": "{\n \"button\": \"Options\",\n \"sections\": [\n    {\n      \"title\": \"Diwali Campaign\",\n      \"rows\": [\n        {\n          \"id\": \"campaign_details\",\n          \"title\": \"Campaign Details\",\n          \"description\": \"All the details of the campaign\"\n        },\n        {\n          \"id\": \"prize_details\",\n          \"title\": \"Rewards & Prizes\",\n          \"description\": \"Loads of prizes and rewards to be won\"\n        },\n        {\n          \"id\": \"language_details\",\n          \"title\": \"Languages\",\n          \"description\": \"Available languages for communication\"\n        },\n        {\n          \"id\": \"opt_out\",\n          \"title\": \"Opt Out\",\n          \"description\": \"Opt me out of this campaign\"\n        }\n      ]\n    }\n  ]\n}"
+            }
+          ]
+        }
+      },
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        -120,
+        180
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2022-10-02T10:27:35.613Z"
+}
