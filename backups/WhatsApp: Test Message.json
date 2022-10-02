@@ -56,15 +56,19 @@
             },
             {
               "name": "template_name",
-              "value": "otp"
+              "value": "aw_select_lang_en"
             },
             {
               "name": "params",
-              "value": "1234"
+              "value": "\"Santhosh\",\"Diwali\""
             },
             {
               "name": "lang_code",
-              "value": "end"
+              "value": "en"
+            },
+            {
+              "name": "callback_url",
+              "value": "https://qan8n.shakedeal.com/webhook/wa-reply"
             }
           ]
         }
@@ -78,8 +82,12 @@
       ]
     }
   ],
-  "settings": {},
+  "settings": {
+    "timezone": "Asia/Calcutta",
+    "saveExecutionProgress": "DEFAULT",
+    "saveManualExecutions": true
+  },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-09-06T11:48:31.428Z"
+  "updatedAt": "2022-10-02T12:26:21.130Z"
 }
