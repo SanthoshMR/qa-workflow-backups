@@ -1,0 +1,41 @@
+{
+  "active": true,
+  "connections": {},
+  "createdAt": "2022-10-02T10:04:33.580Z",
+  "id": "194",
+  "name": "WA Reply",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "path": "wa-reply",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        760,
+        280
+      ],
+      "webhookId": "6e48fde2-7844-4600-9bef-6c0b218dec21"
+    }
+  ],
+  "settings": {
+    "timezone": "Asia/Calcutta",
+    "saveExecutionProgress": "DEFAULT"
+  },
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2022-10-02T11:55:24.602Z"
+}
