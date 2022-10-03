@@ -1,0 +1,127 @@
+{
+  "active": true,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2022-10-03T13:55:34.739Z",
+  "id": "197",
+  "name": "Adani : WhatsApp Integration",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        200,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://api.kaleyra.io/v1/HXIN1732535738IN/messages",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "from",
+              "value": "+917406700552"
+            },
+            {
+              "name": "to",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"mobile_no\"]}}"
+            },
+            {
+              "name": "type",
+              "value": "template"
+            },
+            {
+              "name": "params",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"params\"]}}"
+            },
+            {
+              "name": "template_name",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"template_name\"]}}"
+            },
+            {
+              "name": "channel",
+              "value": "whatsapp"
+            }
+          ]
+        },
+        "headerParametersUi": {
+          "parameter": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "api-key",
+              "value": "A826baea1feaa6207057eb1f52f68fde8"
+            }
+          ]
+        },
+        "queryParametersUi": {
+          "parameter": [
+            {}
+          ]
+        }
+      },
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        600,
+        200
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "sendwanotification",
+        "responseMode": "lastNode",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "X-SD-WHATSAPP",
+                "value": "8765-9876-8956-5325"
+              }
+            ]
+          }
+        }
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        420,
+        200
+      ],
+      "webhookId": "7e8461a3-2b7c-40af-8a0f-56adc090374a",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2022-10-03T14:33:57.635Z"
+}
