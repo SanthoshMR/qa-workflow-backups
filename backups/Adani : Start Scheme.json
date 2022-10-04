@@ -1,0 +1,154 @@
+{
+  "active": true,
+  "connections": {
+    "sendintimationhook": {
+      "main": [
+        [
+          {
+            "node": "getpartners",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "getpartners": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "Call integration workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2022-10-04T06:42:07.791Z",
+  "id": "203",
+  "name": "Adani : Start Scheme",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "start-scheme",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "name": "sendintimationhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ],
+      "webhookId": "9ece7d05-1ff8-48c9-827b-1699c01319cc"
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=http://157.245.104.124:8056/items/sp_campaigns?fields=*.*.*&filter={\"id\":{\"_in\":\"{{$node[\"sendintimationhook\"].json[\"body\"][\"payload\"][\"keys\"]}}\"}}",
+        "options": {}
+      },
+      "name": "getpartners",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        640,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "57",
+          "name": "Adani header auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "console.log($node[\"getpartners\"].json[\"data\"])\nlet groups=$node[\"getpartners\"].json[\"data\"][0].groups;\nlet campaign = $node[\"getpartners\"].json[\"data\"][0].name;\n\nlet from_date = $node[\"getpartners\"].json[\"data\"][0].start_date;\nlet end_date = $node[\"getpartners\"].json[\"data\"][0].end_date;\nlet partners =[]\n\ngroups.forEach(function(grp,index){\n  grp.partners.forEach(function(partner){\n    if(partner.wa_notifications!=false) partners.push({\n    json: [{partner:partner,campaign : campaign,from_date : from_date,end_date:end_date}]});\n  })  \n})\n\nreturn partners;"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        880,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "=https://qan8n.shakedeal.com/webhook/sendwanotification",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "mobile_no",
+              "value": "={{\"+91\"+$node[\"Function\"].json[\"0\"][\"partner\"][\"phone\"]}}"
+            },
+            {
+              "name": "params",
+              "value": "=\"{{$node[\"Function\"].json[\"0\"][\"partner\"][\"first_name\"]}}\",\"{{$node[\"Function\"].json[\"0\"][\"partner\"][\"last_name\"]}}\",\"{{$node[\"Function\"].json[\"0\"][\"campaign\"]}}\",\"{{new Date($node[\"Function\"].json[\"0\"][\"end_date\"]).toLocaleDateString().replaceAll(\"/\",\"-\")}}\""
+            },
+            {
+              "name": "template_name",
+              "value": "={{$node[\"Function\"].json[\"0\"][\"partner\"][\"language\"]==\"English\"?\"start_of_scheme_1_english\":\"start_of_scheme_1_hindi\"}}"
+            },
+            {
+              "name": "media_url",
+              "value": "=https://sdqa.shakedeal.com/images/shake_deal/adani/welcome.jpg"
+            },
+            {
+              "name": "partner",
+              "value": "={{$node[\"Function\"].json[\"0\"][\"partner\"][\"id\"]}}"
+            },
+            {
+              "name": "campaign",
+              "value": "={{$node[\"getpartners\"].json[\"data\"][0][\"id\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Call integration workflow",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1080,
+        300
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2022-10-04T06:52:08.274Z"
+}
