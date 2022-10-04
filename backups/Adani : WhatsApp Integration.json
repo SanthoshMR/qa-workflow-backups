@@ -5,7 +5,29 @@
       "main": [
         [
           {
-            "node": "HTTP Request",
+            "node": "Call Kaleyra",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Kaleyra": {
+      "main": [
+        [
+          {
+            "node": "Get the template id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the template id": {
+      "main": [
+        [
+          {
+            "node": "Create log",
             "type": "main",
             "index": 0
           }
@@ -26,66 +48,6 @@
         200,
         200
       ]
-    },
-    {
-      "parameters": {
-        "requestMethod": "POST",
-        "url": "https://api.kaleyra.io/v1/HXIN1732535738IN/messages",
-        "options": {},
-        "bodyParametersUi": {
-          "parameter": [
-            {
-              "name": "from",
-              "value": "+917406700552"
-            },
-            {
-              "name": "to",
-              "value": "={{$node[\"Webhook\"].json[\"body\"][\"mobile_no\"]}}"
-            },
-            {
-              "name": "type",
-              "value": "template"
-            },
-            {
-              "name": "params",
-              "value": "={{$node[\"Webhook\"].json[\"body\"][\"params\"]}}"
-            },
-            {
-              "name": "template_name",
-              "value": "={{$node[\"Webhook\"].json[\"body\"][\"template_name\"]}}"
-            },
-            {
-              "name": "channel",
-              "value": "whatsapp"
-            }
-          ]
-        },
-        "headerParametersUi": {
-          "parameter": [
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            },
-            {
-              "name": "api-key",
-              "value": "A826baea1feaa6207057eb1f52f68fde8"
-            }
-          ]
-        },
-        "queryParametersUi": {
-          "parameter": [
-            {}
-          ]
-        }
-      },
-      "name": "HTTP Request",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        600,
-        200
-      ],
-      "alwaysOutputData": true
     },
     {
       "parameters": {
@@ -118,10 +80,147 @@
           "name": "SD Basic Auth"
         }
       }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "=http://157.245.104.124:8056/items/sp_whatsapp_history",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "id",
+              "value": "={{$node[\"Call Kaleyra\"].json[\"data\"][0][\"message_id\"]}}"
+            },
+            {
+              "name": "partner",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"partner\"]}}"
+            },
+            {
+              "name": "campaign",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"campaign\"]}}"
+            },
+            {
+              "name": "template",
+              "value": "={{$node[\"Get the template id\"].json[\"data\"][0].id}}"
+            },
+            {
+              "name": "status",
+              "value": "=sent"
+            },
+            {
+              "name": "whatsapp_history",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"vendor_progress_id\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Create log",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        960,
+        200
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "57",
+          "name": "Adani header auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://api.kaleyra.io/v1/HXIN1732535738IN/messages",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "from",
+              "value": "+917406700552"
+            },
+            {
+              "name": "to",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"mobile_no\"]}}"
+            },
+            {
+              "name": "type",
+              "value": "mediatemplate"
+            },
+            {
+              "name": "params",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"params\"]}}"
+            },
+            {
+              "name": "template_name",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"template_name\"]}}"
+            },
+            {
+              "name": "channel",
+              "value": "whatsapp"
+            },
+            {
+              "name": "media_url",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"media_url\"]}}"
+            },
+            {
+              "name": "callback_url",
+              "value": "https://qan8n.shakedeal.com/webhook/whatsappcallback"
+            }
+          ]
+        },
+        "headerParametersUi": {
+          "parameter": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "api-key",
+              "value": "A826baea1feaa6207057eb1f52f68fde8"
+            }
+          ]
+        },
+        "queryParametersUi": {
+          "parameter": [
+            {}
+          ]
+        }
+      },
+      "name": "Call Kaleyra",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        600,
+        200
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=http://157.245.104.124:8056/items/sp_wa_templates?filter={\"translations\":{\"sp_template_id\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"template_name\"]}}\"}}}&fields=translations.*,id",
+        "options": {}
+      },
+      "name": "Get the template id",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        780,
+        200
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "57",
+          "name": "Adani header auth"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-10-03T14:33:57.635Z"
+  "updatedAt": "2022-10-04T08:52:50.541Z"
 }
