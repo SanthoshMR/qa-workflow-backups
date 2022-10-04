@@ -1,6 +1,98 @@
 {
-  "active": false,
-  "connections": {},
+  "active": true,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get the partner id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to get whatapp details": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "IF1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Function to get whatapp details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the partner id": {
+      "main": [
+        [
+          {
+            "node": "Get partner progress",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF1": {
+      "main": [
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update language",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update language": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get partner progress": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
   "createdAt": "2022-10-03T14:37:53.390Z",
   "id": "198",
   "name": "Adani : WhatsApp Reply",
@@ -11,8 +103,8 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        240,
-        300
+        280,
+        140
       ]
     },
     {
@@ -24,14 +116,276 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        440,
-        300
+        160,
+        320
       ],
       "webhookId": "57fdd9b8-2636-4c8e-8aed-25776118c4ea"
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://api.kaleyra.io/v1/HXIN1732535738IN/messages",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "from",
+              "value": "+917406700552"
+            },
+            {
+              "name": "to",
+              "value": "={{+$node[\"Webhook\"].json[\"query\"][\"mobile\"]"
+            },
+            {
+              "name": "type",
+              "value": "mediatemplate"
+            },
+            {
+              "name": "params",
+              "value": "={{$node[\"Function to get whatapp details\"].json[\"params\"]}}"
+            },
+            {
+              "name": "template_name",
+              "value": "={{$node[\"Function to get whatapp details\"].json[\"template_name\"]}}"
+            },
+            {
+              "name": "channel",
+              "value": "whatsapp"
+            },
+            {
+              "name": "media_url",
+              "value": "={{$node[\"Function to get whatapp details\"].json[\"media_url\"]}}"
+            }
+          ]
+        },
+        "headerParametersUi": {
+          "parameter": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "api-key",
+              "value": "A826baea1feaa6207057eb1f52f68fde8"
+            }
+          ]
+        },
+        "queryParametersUi": {
+          "parameter": [
+            {}
+          ]
+        }
+      },
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1240,
+        440
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "functionCode": "let reply = $node[\"Webhook\"].json[\"query\"][\"body\"];\n\nlet params = \"\"\nlet template_name =\"\";\nlet media_url = \"\";\nlet partner_language = $node[\"Get the partner id\"].json[\"data\"][0][\"partner\"][\"language\"];\nlet first_name = $node[\"Get the partner id\"].json[\"data\"][0][\"partner\"][\"first_name\"];\nlet last_name = $node[\"Get the partner id\"].json[\"data\"][0][\"partner\"][\"last_name\"];\nlet campaign_name = $node[\"Get the partner id\"].json[\"data\"][0][\"campaign\"]?$node[\"Get the partner id\"].json[\"data\"][0][\"campaign\"]:\"\";\nlet amount = $node[\"Get partner progress\"].json[\"data\"][0][\"total\"]?$node[\"Get partner progress\"].json[\"data\"][0][\"total\"]:\"0\";\nlet date = new Date().toLocaleDateString().replaceAll(\"/\",\"-\")\nif(reply == \"Campaign Details\"){\n  template_name = \"campaign_details_english\";\n  media_url = \"https://sdqa.shakedeal.com/images/shake_deal/adani/Diwali_Dhamaka.pdf\";\n  \n}else if(reply == \"Prizes To Be Won\"){\n  template_name = \"prizes_to_be_won_english\";\n  media_url = \"https://sdqa.shakedeal.com/images/shake_deal/adani/diwali_award.jpg\";\n}else if(reply == \"Change Language\" || reply == \"भाषा बदलिए\"){\n  template_name = \"language_selection_1\";\n}else if(reply == \"अभियान विवरण\"){\n  template_name = \"campaign_details_hindi\";\n  media_url = \"https://sdqa.shakedeal.com/images/shake_deal/adani/Diwali_Dhamaka.pdf\";\n}else if(reply == \"पुरस्कार विवरण\"){\n  template_name = \"prizes_to_be_won_hindi\";\n  media_url = \"https://sdqa.shakedeal.com/images/shake_deal/adani/diwali_award.jpg\";\n}else if(reply == \"Current Progress\"){\n  template_name = \"my_progress_1_english\";\n  params = `'${first_name}','${last_name}','${campaign_name}','${amount}','${date}'`\n}else if(reply == \"मेरी तरक्की\"){\n  template_name = \"my_progress_hindi\";\n  params = `'${first_name+last_name}','${campaign_name}','${amount}','${date}'`\n}\n\n\nitems[0].json.params= params;\nitems[0].json.template_name = template_name;\nitems[0].json.media_url = media_url;\nreturn items;"
+      },
+      "name": "Function to get whatapp details",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        980,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Webhook\"].json[\"query\"][\"body\"]}}",
+              "value2": "English"
+            },
+            {
+              "value1": "={{$node[\"Webhook\"].json[\"query\"][\"body\"]}}",
+              "value2": "हिंदी"
+            }
+          ]
+        },
+        "combineOperation": "any"
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        680,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=http://157.245.104.124:8056/items/sp_whatsapp_history?filter={\"partner\":{\"phone\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"query\"][\"mobile\"].replace(\"91\",\"\")}}\"}}}&fields=partner.*,campaign.*",
+        "options": {}
+      },
+      "name": "Get the partner id",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        340,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "57",
+          "name": "Adani header auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "=http://157.245.104.124:8056/items/sp_partners/{{$node[\"Get the partner id\"].json[\"data\"][0][\"partner\"][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "language",
+              "value": "={{$node[\"Webhook\"].json[\"query\"][\"body\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update language",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1240,
+        220
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "57",
+          "name": "Adani header auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Get the partner id\"].json[\"data\"][0][\"partner\"][\"language\"]}}",
+              "value2": "={{$node[\"Webhook\"].json[\"query\"][\"body\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "IF1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        840,
+        140
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1240,
+        40
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://api.kaleyra.io/v1/HXIN1732535738IN/messages",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "from",
+              "value": "+917406700552"
+            },
+            {
+              "name": "to",
+              "value": "={{+$node[\"Webhook\"].json[\"query\"][\"mobile\"]"
+            },
+            {
+              "name": "type",
+              "value": "mediatemplate"
+            },
+            {
+              "name": "params",
+              "value": "=\"{{$node[\"Get the partner id\"].json[\"data\"][0][\"partner\"][\"first_name\"]}}\",\"{{$node[\"Get the partner id\"].json[\"data\"][0][\"partner\"][\"last_name\"]}}\",\"{{$node[\"Webhook\"].json[\"query\"][\"body\"]==\"English\"?\"Fortune\":\"फॉर्चन \"}}\",\"{{$node[\"Webhook\"].json[\"query\"][\"body\"]==\"English\"?\"Diwali Dhamka Contest\":\"दिवाली धमका प्रतियोगिता\"}}\",\"{{new Date($node[\"Get the partner id\"].json[\"data\"][0][\"campaign\"][\"start_date\"]).toLocaleDateString().replaceAll(\"/\",\"-\")}}\",\"{{new Date($node[\"Get the partner id\"].json[\"data\"][0][\"campaign\"][\"end_date\"]).toLocaleDateString().replaceAll(\"/\",\"-\")}}\""
+            },
+            {
+              "name": "template_name",
+              "value": "={{$node[\"Webhook\"].json[\"query\"][\"body\"] == \"English\"?\"scheme_intimation_english_1\":\"scheme_intimation_1_hindi\"}}"
+            },
+            {
+              "name": "channel",
+              "value": "whatsapp"
+            },
+            {
+              "name": "media_url",
+              "value": "=https://sdqa.shakedeal.com/images/shake_deal/adani/welcome.jpg"
+            }
+          ]
+        },
+        "headerParametersUi": {
+          "parameter": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "api-key",
+              "value": "A826baea1feaa6207057eb1f52f68fde8"
+            }
+          ]
+        },
+        "queryParametersUi": {
+          "parameter": [
+            {}
+          ]
+        }
+      },
+      "name": "HTTP Request1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1500,
+        220
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=http://157.245.104.124:8056/items/sp_partner_progress?filter={\"partner\":{\"_eq\":\"{{$node[\"Get the partner id\"].json[\"data\"][0][\"partner\"][\"id\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Get partner progress",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        500,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "57",
+          "name": "Adani header auth"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-10-03T14:38:49.051Z"
+  "updatedAt": "2022-10-04T11:55:57.172Z"
 }
