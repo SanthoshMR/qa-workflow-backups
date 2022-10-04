@@ -1,42 +1,8 @@
 {
   "active": false,
-  "connections": {
-    "Start": {
-      "main": [
-        [
-          {
-            "node": "Microsoft Excel",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Get the pdf": {
-      "main": [
-        [
-          {
-            "node": "Send Email",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Microsoft Excel": {
-      "main": [
-        [
-          {
-            "node": "Get the pdf",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    }
-  },
-  "createdAt": "2022-09-01T07:48:54.318Z",
-  "id": "172",
+  "connections": {},
+  "createdAt": "2022-10-03T14:41:56.323Z",
+  "id": "199",
   "name": "My workflow 7",
   "nodes": [
     {
@@ -45,76 +11,27 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        100,
+        240,
         300
       ]
     },
     {
       "parameters": {
-        "fromEmail": "=voucher.ops@shakedeal.com",
-        "toEmail": "={{$node[\"Microsoft Excel\"].json[\"Email-ID\"]}}",
-        "subject": "=\"Token of Appreciation” for winners of Best of Best Scheme-2021",
-        "html": "=<body contenteditable=\"true\" data-gramm=\"false\" data-bp-ignore-extension=\"true\" data-bp-node=\"true\" data-zwproofread-id=\"00361872914759247\" spellcheck=\"false\" class=\"ze_body\" data-enableshortcuts=\"true\"><div style=\"color: rgb(0, 0, 0); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 13.3333px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;\" class=\"x_-2068988686zmail_extra\"><blockquote style=\"margin: 0px;\"><div class=\"zm_-7311751669608999293_parse_-5004157529704904191\"><div style=\"page: WordSection1;\" class=\"x_-1336299648WordSection1\"><p class=\"\"><span style=\"font-size: 11pt;\" class=\"x_969085377size\"><span style=\"color: rgb(0, 32, 96);\" class=\"x_969085377colour\"><span style=\"font-family: &quot;Bahnschrift SemiLight&quot;, sans-serif;\" class=\"x_969085377font\"><span style=\"font-size: 12pt;\" class=\"x_969085377size\">Dear Sir,</span></span></span></span><br></p><p class=\"\"><span style=\"font-size: 11pt;\" class=\"x_969085377size\"><span style=\"color: rgb(0, 32, 96);\" class=\"x_969085377colour\"><span style=\"font-family: &quot;Bahnschrift SemiLight&quot;, sans-serif;\" class=\"x_969085377font\"><span style=\"font-size: 12pt;\" class=\"x_969085377size\">&nbsp;</span></span></span></span><br></p><p style=\"text-align: justify;\" class=\"\"><span style=\"font-size: 11pt; text-align: justify;\" class=\"x_969085377size\"><span style=\"color: rgb(0, 32, 96);\" class=\"x_969085377colour\"><span style=\"font-family: &quot;Bahnschrift SemiLight&quot;, sans-serif;\" class=\"x_969085377font\"><span style=\"font-size: 12pt;\" class=\"x_969085377size\">Congratulations !!!!! you are one of the winners for Best of Best scheme</span></span></span><span style=\"color: rgb(68, 84, 106);\" class=\"x_969085377colour\"><span style=\"font-family: &quot;Bahnschrift SemiLight&quot;, sans-serif;\" class=\"x_969085377font\"><span style=\"font-size: 12pt;\" class=\"x_969085377size\">-2021</span></span></span><span style=\"color: rgb(0, 32, 96);\" class=\"x_969085377colour\"><span style=\"font-family: &quot;Bahnschrift SemiLight&quot;, sans-serif;\" class=\"x_969085377font\"><span style=\"font-size: 12pt;\" class=\"x_969085377size\">.</span></span></span></span><br></p><p class=\"\"><span style=\"font-size: 11pt;\" class=\"x_969085377size\"><span style=\"color: rgb(0, 32, 96);\" class=\"x_969085377colour\"><span style=\"font-family: &quot;Bahnschrift SemiLight&quot;, sans-serif;\" class=\"x_969085377font\"><span style=\"font-size: 12pt;\" class=\"x_969085377size\">&nbsp;</span></span></span></span><br></p><p class=\"\"><span style=\"font-size: 11pt;\" class=\"x_969085377size\"><span style=\"color: rgb(0, 32, 96);\" class=\"x_969085377colour\"><span style=\"font-family: &quot;Bahnschrift SemiLight&quot;, sans-serif;\" class=\"x_969085377font\"><span style=\"font-size: 12pt;\" class=\"x_969085377size\">Best of Best scheme was launched exclusively for operational units<span>&nbsp;</span></span></span></span><span style=\"color: rgb(68, 84, 106);\" class=\"x_969085377colour\"><span style=\"font-family: &quot;Bahnschrift SemiLight&quot;, sans-serif;\" class=\"x_969085377font\"><span style=\"font-size: 12pt;\" class=\"x_969085377size\">considering various aspects of Safety and operational excellence<span>&nbsp;</span></span></span></span><span style=\"color: rgb(0, 32, 96);\" class=\"x_969085377colour\"><span style=\"font-family: &quot;Bahnschrift SemiLight&quot;, sans-serif;\" class=\"x_969085377font\"><span style=\"font-size: 12pt;\" class=\"x_969085377size\">during the Town hall by CEO in the Month of July’2021.<span>&nbsp;</span></span></span></span><span style=\"color: rgb(68, 84, 106);\" class=\"x_969085377colour\"><span style=\"font-family: &quot;Bahnschrift SemiLight&quot;, sans-serif;\" class=\"x_969085377font\"><span style=\"font-size: 12pt;\" class=\"x_969085377size\">First batch “</span></span></span><span style=\"color: rgb(0, 32, 96);\" class=\"x_969085377colour\"><span style=\"font-family: &quot;Bahnschrift SemiLight&quot;, sans-serif;\" class=\"x_969085377font\"><span style=\"font-size: 12pt;\" class=\"x_969085377size\">Winners</span></span></span><span style=\"color: rgb(68, 84, 106);\" class=\"x_969085377colour\"><span style=\"font-family: &quot;Bahnschrift SemiLight&quot;, sans-serif;\" class=\"x_969085377font\"><span style=\"font-size: 12pt;\" class=\"x_969085377size\"><span>&nbsp;</span>and Runners up</span></span></span><span style=\"color: rgb(0, 32, 96);\" class=\"x_969085377colour\"><span style=\"font-family: &quot;Bahnschrift SemiLight&quot;, sans-serif;\" class=\"x_969085377font\"><span style=\"font-size: 12pt;\" class=\"x_969085377size\"><span>&nbsp;</span>were declared on 18</span></span></span><span style=\"color: rgb(68, 84, 106);\" class=\"x_969085377colour\"><span style=\"font-family: &quot;Bahnschrift SemiLight&quot;, sans-serif;\" class=\"x_969085377font\"><span style=\"font-size: 12pt;\" class=\"x_969085377size\">the April’22 by CEO<span>&nbsp;</span></span></span></span><span style=\"color: rgb(0, 32, 96);\" class=\"x_969085377colour\"><span style=\"font-family: &quot;Bahnschrift SemiLight&quot;, sans-serif;\" class=\"x_969085377font\"><span style=\"font-size: 12pt;\" class=\"x_969085377size\">during his visit to<span>&nbsp;</span></span></span></span><span style=\"color: rgb(68, 84, 106);\" class=\"x_969085377colour\"><span style=\"font-family: &quot;Bahnschrift SemiLight&quot;, sans-serif;\" class=\"x_969085377font\"><span style=\"font-size: 12pt;\" class=\"x_969085377size\">the Refinery.</span></span></span></span><br></p><p class=\"\"><span style=\"font-size: 11pt;\" class=\"x_969085377size\"><span style=\"color: rgb(0, 32, 96);\" class=\"x_969085377colour\"><span style=\"font-family: &quot;Bahnschrift SemiLight&quot;, sans-serif;\" class=\"x_969085377font\"><span style=\"font-size: 10pt;\" class=\"x_969085377size\">&nbsp;</span></span></span></span><br></p><p class=\"\"><span style=\"font-size: 11pt;\" class=\"x_969085377size\"><span style=\"color: rgb(0, 32, 96);\" class=\"x_969085377colour\"><span style=\"font-family: &quot;Bahnschrift SemiLight&quot;, sans-serif;\" class=\"x_969085377font\"><span style=\"font-size: 12pt;\" class=\"x_969085377size\">Looking to the continuous participation and involvement of each employee for his / her commitment towards integration of OSH in our organization’s work culture</span></span></span><span style=\"color: rgb(68, 84, 106);\" class=\"x_969085377colour\"><span style=\"font-family: &quot;Bahnschrift SemiLight&quot;, sans-serif;\" class=\"x_969085377font\"><span style=\"font-size: 12pt;\" class=\"x_969085377size\">,</span></span></span><span style=\"color: rgb(0, 32, 96);\" class=\"x_969085377colour\"><span style=\"font-family: &quot;Bahnschrift SemiLight&quot;, sans-serif;\" class=\"x_969085377font\"><span style=\"font-size: 12pt;\" class=\"x_969085377size\"><span>&nbsp;</span><u>Management has decided to issue<span>&nbsp;</span><b>E Gift Voucher</b><span>&nbsp;</span>to each winner as<span>&nbsp;</span><b>“</b>T<b>oken of Appreciation”</b><span>&nbsp;</span>for<span>&nbsp;</span></u></span></span></span><u><span style=\"color: rgb(68, 84, 106);\" class=\"x_969085377colour\"><span style=\"font-family: &quot;Bahnschrift SemiLight&quot;, sans-serif;\" class=\"x_969085377font\"><span style=\"font-size: 12pt;\" class=\"x_969085377size\">your</span></span></span></u><u><span style=\"color: rgb(0, 32, 96);\" class=\"x_969085377colour\"><span style=\"font-family: &quot;Bahnschrift SemiLight&quot;, sans-serif;\" class=\"x_969085377font\"><span style=\"font-size: 12pt;\" class=\"x_969085377size\"><span>&nbsp;</span>efforts and dedication.</span></span></span></u></span><br></p><p class=\"\"><span style=\"font-size: 11pt;\" class=\"x_969085377size\"><span style=\"color: rgb(0, 32, 96);\" class=\"x_969085377colour\"><span style=\"font-family: &quot;Bahnschrift SemiLight&quot;, sans-serif;\" class=\"x_969085377font\"><span style=\"font-size: 12pt;\" class=\"x_969085377size\">&nbsp;</span></span></span></span><br></p><p class=\"\"><span style=\"font-size: 11pt;\" class=\"x_969085377size\"><span style=\"color: rgb(68, 84, 106);\" class=\"x_969085377colour\"><span style=\"font-family: &quot;Bahnschrift SemiLight&quot;, sans-serif;\" class=\"x_969085377font\"><span style=\"font-size: 12pt;\" class=\"x_969085377size\">Employees</span></span></span><span style=\"color: rgb(0, 32, 96);\" class=\"x_969085377colour\"><span style=\"font-family: &quot;Bahnschrift SemiLight&quot;, sans-serif;\" class=\"x_969085377font\"><span style=\"font-size: 12pt;\" class=\"x_969085377size\"><span>&nbsp;</span>can activate<span>&nbsp;</span><b><u>E Gift Voucher</u></b><u><span>&nbsp;</span></u>using credential viewing guidelines attached with the mail. E Gift Voucher will come with the validity of 1 year.<span>&nbsp;</span></span></span></span><span style=\"color: rgb(68, 84, 106);\" class=\"x_969085377colour\"><span style=\"font-family: &quot;Bahnschrift SemiLight&quot;, sans-serif;\" class=\"x_969085377font\"><span style=\"font-size: 12pt;\" class=\"x_969085377size\">@ Note: Received voucher (Flip Kart) will be in active mode, need to be uploaded directly in the wallet.</span></span></span></span><br></p><p class=\"\"><span style=\"font-size: 11pt;\" class=\"x_969085377size\"><span style=\"color: rgb(68, 84, 106);\" class=\"x_969085377colour\"><span style=\"font-family: Arial, sans-serif;\" class=\"x_969085377font\"><span style=\"font-size: 9pt;\" class=\"x_969085377size\">&ZeroWidthSpace;</span></span></span></span><br></p></div></div><table style=\"word-break: normal; border-collapse: collapse;\" class=\"x_-2068988686MsoNormalTable\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\"><tbody><tr style=\"height: 14.5pt;\"><td style=\"border: 1pt solid windowtext; padding: 0cm 5.4pt; height: 14.5pt;\" nowrap=\"\" valign=\"bottom\"><p style=\"margin-bottom: 0cm; line-height: normal; margin-top: 0px;\" class=\"\"><span style=\"color: black;\" class=\"x_969085377colour\">Code</span><br></p></td><td style=\"border-top: 1pt solid windowtext; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-image: initial; border-left: none; padding: 0cm 5.4pt; height: 14.5pt;\" nowrap=\"\" valign=\"bottom\"><p style=\"margin-bottom: 0cm; line-height: normal; margin-top: 0px;\" class=\"\"><span style=\"color: black;\" class=\"x_969085377colour\">Pin</span><br></p></td><td style=\"border-top: 1pt solid windowtext; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-image: initial; border-left: none; padding: 0cm 5.4pt; height: 14.5pt;\" nowrap=\"\" valign=\"bottom\"><p style=\"margin-bottom: 0cm; line-height: normal; margin-top: 0px;\" class=\"\"><span style=\"color: black;\" class=\"x_969085377colour\">Value</span><br></p></td><td style=\"border-top: 1pt solid windowtext; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-image: initial; border-left: none; padding: 0cm 5.4pt; height: 14.5pt;\" nowrap=\"\" valign=\"bottom\"><p style=\"margin-bottom: 0cm; line-height: normal; margin-top: 0px;\" class=\"\"><span style=\"color: black;\" class=\"x_969085377colour\">Valdity</span><br></p></td></tr><tr style=\"height: 14.5pt;\"><td style=\"border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-left: 1pt solid windowtext; border-image: initial; border-top: none; padding: 0cm 5.4pt; height: 14.5pt;\" nowrap=\"\" valign=\"bottom\"><p style=\"margin-bottom: 0cm; line-height: normal; margin-top: 0px;\" class=\"\"><span style=\"color: black;\" class=\"x_969085377colour\">{{$node[\"Microsoft Excel\"].json[\"Code\"]}}</span><br></p></td><td style=\"border-top: none; border-left: none; border-bottom: 1pt solid windowtext; border-right: 1pt solid windowtext; padding: 0cm 5.4pt; height: 14.5pt;\" nowrap=\"\" valign=\"bottom\"><p style=\"margin-bottom: 0cm; line-height: normal; margin-top: 0px;\" class=\"\"><span style=\"color: black;\" class=\"x_969085377colour\">{{$node[\"Microsoft Excel\"].json[\"PIN\"]}}</span><br></p></td><td style=\"border-top: none; border-left: none; border-bottom: 1pt solid windowtext; border-right: 1pt solid windowtext; padding: 0cm 5.4pt; height: 14.5pt;\" nowrap=\"\" valign=\"bottom\"><p style=\"margin-bottom: 0cm; line-height: normal; margin-top: 0px;\" class=\"\"><span style=\"color: black;\" class=\"x_969085377colour\">{{$node[\"Microsoft Excel\"].json[\"Balance\"]}}</span><br></p></td><td style=\"border-top: none; border-left: none; border-bottom: 1pt solid windowtext; border-right: 1pt solid windowtext; padding: 0cm 5.4pt; height: 14.5pt;\" nowrap=\"\" valign=\"bottom\"><p style=\"margin-bottom: 0cm; text-align: right; line-height: normal; margin-top: 0px;\" class=\"\" align=\"right\"><span style=\"color: black;\" class=\"x_969085377colour\">{{$node[\"Microsoft Excel\"].json[\"Expiry Date\"]}}</span><br></p></td></tr></tbody></table></blockquote></div><div style=\"color: rgb(0, 0, 0); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 13.3333px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;\"><br></div><div style=\"color: rgb(0, 0, 0); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 13.3333px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;\" class=\"x_-2068988686zmail_extra\"><blockquote style=\"margin: 0px;\"><div class=\"zm_-7311751669608999293_parse_-5004157529704904191\"><div style=\"page: WordSection1;\" class=\"x_-1336299648WordSection1\"><p class=\"\"><span style=\"font-size: 11pt;\" class=\"x_969085377size\"><span style=\"color: rgb(0, 32, 96);\" class=\"x_969085377colour\"><span style=\"font-family: &quot;Bahnschrift SemiLight&quot;, sans-serif;\" class=\"x_969085377font\"><span style=\"font-size: 12pt;\" class=\"x_969085377size\">In case of any clarification, please write us on<span>&nbsp;</span><a style=\"color: rgb(5, 99, 193); cursor: pointer; text-decoration: underline;\" target=\"_blank\" href=\"mailto:Safety.Associate@nayaraenergy.com\">Safety.Associate@nayaraenergy.com</a></span></span></span></span><br></p><p class=\"\"><span style=\"font-size: 11pt;\" class=\"x_969085377size\"><span style=\"color: rgb(0, 32, 96);\" class=\"x_969085377colour\"><span style=\"font-family: &quot;Bahnschrift SemiLight&quot;, sans-serif;\" class=\"x_969085377font\"><span style=\"font-size: 12pt;\" class=\"x_969085377size\">&nbsp;</span></span></span></span><br></p><p class=\"\"><span style=\"font-size: 11pt;\" class=\"x_969085377size\"><span style=\"color: rgb(0, 32, 96);\" class=\"x_969085377colour\"><span style=\"font-family: &quot;Bahnschrift SemiLight&quot;, sans-serif;\" class=\"x_969085377font\"><span style=\"font-size: 12pt;\" class=\"x_969085377size\">Once again Congratulations for the achievement.</span></span></span></span><br></p><p class=\"\"><span style=\"font-size: 11pt;\" class=\"x_969085377size\"><span style=\"color: rgb(0, 32, 96);\" class=\"x_969085377colour\"><span style=\"font-family: &quot;Bahnschrift SemiLight&quot;, sans-serif;\" class=\"x_969085377font\"><span style=\"font-size: 9pt;\" class=\"x_969085377size\">&nbsp;</span></span></span></span><br></p><p class=\"\"><span style=\"font-size: 11pt;\" class=\"x_969085377size\"><span style=\"color: rgb(0, 32, 96);\" class=\"x_969085377colour\"><span style=\"font-family: &quot;Bahnschrift SemiLight&quot;, sans-serif;\" class=\"x_969085377font\"><span style=\"font-size: 12pt;\" class=\"x_969085377size\">Regards,</span></span></span></span><br></p><p class=\"\"><span style=\"font-size: 11pt;\" class=\"x_969085377size\"><span style=\"color: rgb(68, 84, 106);\" class=\"x_969085377colour\"><span style=\"font-family: Arial, sans-serif;\" class=\"x_969085377font\"><span style=\"font-size: 9pt;\" class=\"x_969085377size\">&nbsp;</span></span></span></span><br></p><p class=\"\"><span style=\"font-size: 11pt;\" class=\"x_969085377size\"><span style=\"color: rgb(0, 32, 96);\" class=\"x_969085377colour\"><span style=\"font-family: &quot;Bahnschrift SemiLight&quot;, sans-serif;\" class=\"x_969085377font\"><span style=\"font-size: 12pt;\" class=\"x_969085377size\">Nayara Safety Team</span></span></span></span><br></p></div></div></blockquote></div><div><br></div><div class=\"zmail_signature_below\"><div id=\"Zm-_Id_-Sgn\" data-zbluepencil-ignore=\"true\" data-sigid=\"7285392000000012003\"><div><br></div></div></div><div><br></div></body>",
-        "attachments": "=data",
-        "options": {
-          "allowUnauthorizedCerts": false
-        }
-      },
-      "name": "Send Email",
-      "type": "n8n-nodes-base.emailSend",
-      "typeVersion": 1,
-      "position": [
-        740,
-        300
-      ],
-      "credentials": {
-        "smtp": {
-          "id": "36",
-          "name": "SendGrid"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "url": "=https://sdqa.shakedeal.com/images/shake_deal/spl/How_to_add_codes_to_wallet.pdf",
-        "allowUnauthorizedCerts": true,
-        "responseFormat": "file",
-        "dataPropertyName": "=data",
+        "path": "get-contacts",
         "options": {}
       },
-      "name": "Get the pdf",
-      "type": "n8n-nodes-base.httpRequest",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
         460,
         300
-      ]
-    },
-    {
-      "parameters": {
-        "resource": "worksheet",
-        "operation": "getContent",
-        "workbook": "A6E890F58473778D!1982",
-        "worksheet": "{7AB55FF8-643B-499C-A80C-7A7C91C69817}",
-        "range": "A1:H3"
-      },
-      "name": "Microsoft Excel",
-      "type": "n8n-nodes-base.microsoftExcel",
-      "typeVersion": 1,
-      "position": [
-        280,
-        300
       ],
-      "credentials": {
-        "microsoftExcelOAuth2Api": {
-          "id": "34",
-          "name": "Microsoft excel creds"
-        }
-      }
+      "webhookId": "71b5db5f-79b2-416c-92df-bb929cfb6ccb"
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-09-01T09:40:48.920Z"
+  "updatedAt": "2022-10-03T14:41:56.323Z"
 }
