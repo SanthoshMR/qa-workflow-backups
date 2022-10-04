@@ -1,0 +1,164 @@
+{
+  "active": true,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set": {
+      "main": [
+        [
+          {
+            "node": "Get partner data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get partner data": {
+      "main": [
+        [
+          {
+            "node": "Send progress",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2022-10-04T07:06:00.898Z",
+  "id": "204",
+  "name": "Adani : Send Progress",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "send-progress",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        480,
+        300
+      ],
+      "webhookId": "6998a478-e48f-4f0f-9fc1-15e501100401"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "name": "Set",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        680,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=http://157.245.104.124:8056/items/sp_partner_progress/{{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"keys\"][0]}}?fields= id,partner.*,campaign.*",
+        "options": {}
+      },
+      "name": "Get partner data",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        900,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "57",
+          "name": "Adani header auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://api.kaleyra.io/v1/HXIN1732535738IN/messages",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "from",
+              "value": "+917406700552"
+            },
+            {
+              "name": "to",
+              "value": "={{\"+91\"+$node[\"Get partner data\"].json[\"data\"][\"partner\"][\"phone\"]}}"
+            },
+            {
+              "name": "type",
+              "value": "mediatemplate"
+            },
+            {
+              "name": "params",
+              "value": "=\"{{$node[\"Get partner data\"].json[\"data\"][\"partner\"][\"first_name\"]}} {{$node[\"Get partner data\"].json[\"data\"][\"partner\"][\"last_name\"]}}\",\"{{$node[\"Get partner data\"].json[\"data\"][\"partner\"][\"language\"]==\"English\"?\"Diwali Dhamka Contest\":\"दिवाली धमका प्रतियोगिता\"}}\",\"{{new Date($node[\"Get partner data\"].json[\"data\"][\"campaign\"][\"end_date\"]).toLocaleDateString().replaceAll(\"/\",\"-\")}}\""
+            },
+            {
+              "name": "template_name",
+              "value": "={{$node[\"Get partner data\"].json[\"data\"][\"partner\"][\"language\"]== \"English\"?\"nudge_2_english\":\"progress_1_hindi\"}}"
+            },
+            {
+              "name": "channel",
+              "value": "whatsapp"
+            }
+          ]
+        },
+        "headerParametersUi": {
+          "parameter": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "api-key",
+              "value": "A826baea1feaa6207057eb1f52f68fde8"
+            }
+          ]
+        },
+        "queryParametersUi": {
+          "parameter": [
+            {}
+          ]
+        }
+      },
+      "name": "Send progress",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        300
+      ],
+      "alwaysOutputData": true
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2022-10-04T11:57:11.438Z"
+}
