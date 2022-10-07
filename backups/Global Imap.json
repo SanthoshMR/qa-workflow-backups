@@ -1,5 +1,5 @@
 {
-  "active": false,
+  "active": true,
   "connections": {
     "Wait for PO Email": {
       "main": [
@@ -13,6 +13,17 @@
       ]
     },
     "Globals": {
+      "main": [
+        [
+          {
+            "node": "Get workflow id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get workflow id": {
       "main": [
         [
           {
@@ -40,13 +51,13 @@
     },
     {
       "parameters": {
-        "workflowId": "={{$node[\"Globals\"].json[\"workflow_id\"]}}"
+        "workflowId": "={{$node[\"Get workflow id\"].json[\"workflow_id\"]}}"
       },
       "name": "Execute Workflow",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1,
       "position": [
-        560,
+        760,
         300
       ]
     },
@@ -90,14 +101,26 @@
         360,
         300
       ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let to_email = $node[\"Wait for PO Email\"].json[\"to\"][\"value\"][0][\"address\"];\nlet workflow_id = 0;\nif(to_email == \"sairam.shakedeal+vedanta@gmail.com\"){\n  workflow_id = 164;\n}else if(to_email == \"sairam.shakedeal+payments@gmail.com\"){\n  workflow_id= 176;\n}else if(to_email == \"sairam.shakedeal+grn@gmail.com\"){\n  workflow_id= 205;\n}\n\nitems[0].json.to_email= to_email;\nitems[0].json.workflow_id = workflow_id;\nreturn items;"
+      },
+      "name": "Get workflow id",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        560,
+        300
+      ]
     }
   ],
   "settings": {},
   "staticData": {
     "node:Wait for PO Email": {
-      "lastMessageUid": 1408
+      "lastMessageUid": 1573
     }
   },
   "tags": [],
-  "updatedAt": "2022-09-27T06:17:56.853Z"
+  "updatedAt": "2022-10-07T09:08:25.764Z"
 }
