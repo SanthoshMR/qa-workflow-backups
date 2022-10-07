@@ -67,7 +67,7 @@
       "main": [
         [
           {
-            "node": "Call integration workflow",
+            "node": "Merge",
             "type": "main",
             "index": 0
           }
@@ -75,6 +75,17 @@
       ]
     },
     "Create partner program": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge": {
       "main": [
         [
           {
@@ -138,7 +149,7 @@
     },
     {
       "parameters": {
-        "functionCode": "console.log($node[\"getpartners\"].json[\"data\"])\nlet groups=$node[\"getpartners\"].json[\"data\"][0].groups;\nlet campaign = $node[\"getpartners\"].json[\"data\"][0].name;\nlet campaign_id =  $node[\"getpartners\"].json[\"data\"][0][\"id\"];\n\nlet from_date = $node[\"getpartners\"].json[\"data\"][0].start_date;\nlet end_date = $node[\"getpartners\"].json[\"data\"][0].end_date;\nlet partners =[]\n\ngroups.forEach(function(grp,index){\n  grp.partners.forEach(function(partner){\n    if(partner.wa_notifications!=false) partners.push({\n    json: [{partner:partner,campaign : campaign,from_date : from_date,end_date:end_date,campaign_id:campaign_id}]});\n  })  \n})\n\nreturn partners;"
+        "functionCode": "console.log($node[\"getpartners\"].json[\"data\"])\nlet groups=$node[\"getpartners\"].json[\"data\"][0].groups;\nlet campaign = $node[\"getpartners\"].json[\"data\"][0].name;\nlet campaign_id =  $node[\"getpartners\"].json[\"data\"][0][\"id\"];\n\nlet from_date = $node[\"getpartners\"].json[\"data\"][0].start_date;\nlet end_date = $node[\"getpartners\"].json[\"data\"][0].end_date;\nlet partners =[]\n\ngroups.forEach(function(grp,index){\n  grp.partners.forEach(function(partner){\n    if(partner.wa_notifications!=false) partners.push({\n    json: {partner:partner,campaign : campaign,from_date : from_date,end_date:end_date,campaign_id:campaign_id}});\n  })  \n})\n\nreturn partners;"
       },
       "name": "Function",
       "type": "n8n-nodes-base.function",
@@ -207,8 +218,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1260,
-        100
+        1540,
+        120
       ],
       "alwaysOutputData": true,
       "disabled": true
@@ -256,20 +267,21 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1100,
-        120
+        1360,
+        140
       ],
       "credentials": {
         "httpBasicAuth": {
           "id": "2",
           "name": "SD Basic Auth"
         }
-      }
+      },
+      "disabled": true
     },
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "=http://157.245.104.124:8056/items/sp_partner_progress?filter={\"_and\": [{\"partner\": {\"_eq\":\"{{$node[\"Function\"].json[\"0\"][\"partner\"][\"id\"]}}\"}},{\"campaign\":{\"_eq\":\"{{$node[\"Function\"].json[\"0\"][\"campaign_id\"]}}\"}}]}",
+        "url": "=http://157.245.104.124:8056/items/sp_partner_progress?filter={\"_and\": [{\"partner\": {\"_eq\":\"{{$node[\"Function\"].json[\"partner\"][\"id\"]}}\"}},{\"campaign\":{\"_eq\":\"{{$node[\"Function\"].json[\"campaign_id\"]}}\"}}]}",
         "options": {}
       },
       "name": "Get the partner progress",
@@ -291,8 +303,8 @@
         "conditions": {
           "number": [
             {
-              "value1": "={{$node[\"Get the partner progress\"].json[\"data\"].length}}",
-              "operation": "notEqual"
+              "value1": "={{$node[\"Get the partner progress\"].json[\"data\"]}}",
+              "operation": "isNotEmpty"
             }
           ]
         }
@@ -325,11 +337,11 @@
           "parameter": [
             {
               "name": "partner",
-              "value": "={{$node[\"Function\"].json[\"0\"][\"partner\"][\"id\"]}}"
+              "value": "={{$node[\"Function\"].json[\"partner\"][\"id\"]}}"
             },
             {
               "name": "campaign",
-              "value": "={{$node[\"Function\"].json[\"0\"][\"campaign_id\"]}}"
+              "value": "={{$node[\"Function\"].json[\"campaign_id\"]}}"
             }
           ]
         }
@@ -347,10 +359,20 @@
           "name": "Adani header auth"
         }
       }
+    },
+    {
+      "parameters": {},
+      "name": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 1,
+      "position": [
+        1160,
+        140
+      ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-10-04T09:24:12.259Z"
+  "updatedAt": "2022-10-07T14:44:24.335Z"
 }
