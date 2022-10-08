@@ -49,14 +49,14 @@
       "main": [
         [
           {
-            "node": "NoOp",
+            "node": "Create partner program",
             "type": "main",
             "index": 0
           }
         ],
         [
           {
-            "node": "Create partner program",
+            "node": "NoOp",
             "type": "main",
             "index": 0
           }
@@ -69,7 +69,7 @@
           {
             "node": "Merge",
             "type": "main",
-            "index": 0
+            "index": 1
           }
         ]
       ]
@@ -80,7 +80,7 @@
           {
             "node": "Merge",
             "type": "main",
-            "index": 1
+            "index": 0
           }
         ]
       ]
@@ -303,8 +303,8 @@
         "conditions": {
           "number": [
             {
-              "value1": "={{$node[\"Get the partner progress\"].json[\"data\"]}}",
-              "operation": "isNotEmpty"
+              "value1": "={{$node[\"Get the partner progress\"].json[\"data\"].length}}",
+              "operation": "equal"
             }
           ]
         }
@@ -323,8 +323,8 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        940,
-        -80
+        1020,
+        300
       ]
     },
     {
@@ -350,8 +350,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1040,
-        300
+        960,
+        -60
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -374,5 +374,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-10-07T14:44:24.335Z"
+  "updatedAt": "2022-10-07T14:57:59.491Z"
 }
