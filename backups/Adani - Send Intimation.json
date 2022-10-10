@@ -56,17 +56,6 @@
         ],
         [
           {
-            "node": "NoOp",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "NoOp": {
-      "main": [
-        [
-          {
             "node": "Merge",
             "type": "main",
             "index": 1
@@ -149,7 +138,7 @@
     },
     {
       "parameters": {
-        "functionCode": "console.log($node[\"getpartners\"].json[\"data\"])\nlet groups=$node[\"getpartners\"].json[\"data\"][0].groups;\nlet campaign = $node[\"getpartners\"].json[\"data\"][0].name;\nlet campaign_id =  $node[\"getpartners\"].json[\"data\"][0][\"id\"];\n\nlet from_date = $node[\"getpartners\"].json[\"data\"][0].start_date;\nlet end_date = $node[\"getpartners\"].json[\"data\"][0].end_date;\nlet partners =[]\n\ngroups.forEach(function(grp,index){\n  grp.partners.forEach(function(partner){\n    if(partner.wa_notifications!=false) partners.push({\n    json: {partner:partner,campaign : campaign,from_date : from_date,end_date:end_date,campaign_id:campaign_id}});\n  })  \n})\n\nreturn partners;"
+        "functionCode": "console.log($node[\"getpartners\"].json[\"data\"])\nlet groups=$node[\"getpartners\"].json[\"data\"][0].groups;\nlet campaign = $node[\"getpartners\"].json[\"data\"][0].name;\nlet campaign_id =  $node[\"getpartners\"].json[\"data\"][0][\"id\"];\n\nlet from_date = $node[\"getpartners\"].json[\"data\"][0].start_date;\nlet end_date = $node[\"getpartners\"].json[\"data\"][0].end_date;\n// let partners =[]\n\n// groups.forEach(function(grp,index){\n//   grp.partners.forEach(function(partner){\n//     if(partner.wa_notifications!=false) partners.push({\n//     json: {partner:partner,campaign : campaign,from_date : from_date,end_date:end_date,campaign_id:campaign_id}});\n//   })  \n// })\n\nlet partners =[[\n  {\n    \"id\": '065d355a-a5e9-40b7-9f0f-dcce7d63adf3',\n    \"compaign_id\":'16fa8fc1-4440-4543-80a2-4557351e9c51',\n    \"partner\":\"first\"\n  }],\n  [{\n    \"id\": '2eb5b4a6-56a1-4059-b1fd-bf0636ade8cb',\n    \"compaign_id\":'16fa8fc1-4440-4543-80a2-4557351e9c51',\n     \"partner\":\"second\"\n  }],\n  [{\n    \"id\":'0ee14cb7-c7c0-41eb-b3b1-09eee2696350',\n    \"compaign_id\":'16fa8fc1-4440-4543-80a2-4557351e9c51',\n     \"partner\":\"third\"\n  }]\n];\nreturn partners;"
       },
       "name": "Function",
       "type": "n8n-nodes-base.function",
@@ -281,8 +270,10 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "=http://157.245.104.124:8056/items/sp_partner_progress?filter={\"_and\": [{\"partner\": {\"_eq\":\"{{$node[\"Function\"].json[\"partner\"][\"id\"]}}\"}},{\"campaign\":{\"_eq\":\"{{$node[\"Function\"].json[\"campaign_id\"]}}\"}}]}",
-        "options": {}
+        "url": "=http://157.245.104.124:8056/items/sp_partner_progress?filter={\"_and\": [{\"partner\": {\"_eq\":\"{{$node[\"Function\"].json[\"0\"][\"id\"]}}\"}},{\"campaign\":{\"_eq\":\"{{$node[\"Function\"].json[\"0\"][\"compaign_id\"]}}\"}}]}",
+        "options": {
+          "fullResponse": false
+        }
       },
       "name": "Get the partner progress",
       "type": "n8n-nodes-base.httpRequest",
@@ -303,8 +294,8 @@
         "conditions": {
           "number": [
             {
-              "value1": "={{$node[\"Get the partner progress\"].json[\"data\"].length}}",
-              "operation": "equal"
+              "value1": "={{$node[\"Get the partner progress\"].json[\"data\"][0]['id']}}",
+              "operation": "isEmpty"
             }
           ]
         }
@@ -318,16 +309,6 @@
       ]
     },
     {
-      "parameters": {},
-      "name": "NoOp",
-      "type": "n8n-nodes-base.noOp",
-      "typeVersion": 1,
-      "position": [
-        1020,
-        300
-      ]
-    },
-    {
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "POST",
@@ -337,7 +318,7 @@
           "parameter": [
             {
               "name": "partner",
-              "value": "={{$node[\"Function\"].json[\"partner\"][\"id\"]}}"
+              "value": "={{$node[\"Function\"].json[\"partner\"]}}"
             },
             {
               "name": "campaign",
@@ -374,5 +355,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-10-07T14:57:59.491Z"
+  "updatedAt": "2022-10-10T09:05:05.152Z"
 }
