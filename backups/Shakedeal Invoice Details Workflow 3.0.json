@@ -32,18 +32,7 @@
       "main": [
         [
           {
-            "node": "Update Shakedeal Invoice Details in sd_orders ",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Update Shakedeal Invoice Details in sd_orders ": {
-      "main": [
-        [
-          {
-            "node": "Update shipment status in mozart",
+            "node": "Create order invoices",
             "type": "main",
             "index": 0
           }
@@ -181,6 +170,17 @@
           }
         ]
       ]
+    },
+    "Create order invoices": {
+      "main": [
+        [
+          {
+            "node": "Update shipment status in mozart",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2022-09-14T08:39:41.133Z",
@@ -248,47 +248,6 @@
       "typeVersion": 1,
       "position": [
         1660,
-        180
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "50",
-          "name": "Mozart DMS Token"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "authentication": "headerAuth",
-        "requestMethod": "PATCH",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sdm_orders/{{Array.isArray($node[\"Get the order_id\"].json[\"data\"])?$node[\"Get the order_id\"].json[\"data\"][0][\"id\"]:$node[\"Get the order_id\"].json[\"data\"][\"id\"]}}",
-        "options": {},
-        "bodyParametersUi": {
-          "parameter": [
-            {
-              "name": "invoice_number",
-              "value": "={{$node[\"Get Invoice Details\"].json[\"body\"][\"invoice_no\"]}}"
-            },
-            {
-              "name": "invoice_date",
-              "value": "={{new Date($node[\"Get Invoice Details\"].json[\"body\"][\"invoice_date\"]).toISOString()}}"
-            },
-            {
-              "name": "invoice_value",
-              "value": "={{$node[\"Get Invoice Details\"].json[\"body\"][\"invoice_total\"]}}"
-            },
-            {
-              "name": "view_shakedeal_invoice",
-              "value": "={{$node[\"Post the file to mozart\"].json[\"data\"][\"id\"]}}"
-            }
-          ]
-        }
-      },
-      "name": "Update Shakedeal Invoice Details in sd_orders ",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        1820,
         180
       ],
       "credentials": {
@@ -580,10 +539,51 @@
         140,
         180
       ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sdm_order_invoices",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "invoice_number",
+              "value": "={{$node[\"Get Invoice Details\"].json[\"body\"][\"invoice_no\"]}}"
+            },
+            {
+              "name": "invoice_date",
+              "value": "={{new Date($node[\"Get Invoice Details\"].json[\"body\"][\"invoice_date\"]).toISOString()}}"
+            },
+            {
+              "name": "invoice_value",
+              "value": "={{$node[\"Get Invoice Details\"].json[\"body\"][\"invoice_total\"]}}"
+            },
+            {
+              "name": "view_shakedeal_invoice",
+              "value": "={{$node[\"Post the file to mozart\"].json[\"data\"][\"id\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Create order invoices",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1860,
+        180
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-09-28T09:57:09.986Z"
+  "updatedAt": "2022-10-10T06:34:32.097Z"
 }
