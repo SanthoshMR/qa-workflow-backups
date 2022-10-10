@@ -104,7 +104,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let to_email = $node[\"Wait for PO Email\"].json[\"to\"][\"value\"][0][\"address\"];\nlet workflow_id = 0;\nif(to_email == \"sairam.shakedeal+vedanta@gmail.com\"){\n  workflow_id = 164;\n}else if(to_email == \"sairam.shakedeal+payments@gmail.com\"){\n  workflow_id= 176;\n}else if(to_email == \"sairam.shakedeal+grn@gmail.com\"){\n  workflow_id= 205;\n}\n\nitems[0].json.to_email= to_email;\nitems[0].json.workflow_id = workflow_id;\nreturn items;"
+        "functionCode": "let to_email = $node[\"Wait for PO Email\"].json[\"to\"][\"value\"][0][\"address\"];\nlet workflow_id = 0;\nif(to_email == \"sairam.shakedeal+vedanta@gmail.com\"){\n  workflow_id = 179;\n}else if(to_email == \"sairam.shakedeal+payments@gmail.com\"){\n  workflow_id= 176;\n}else if(to_email == \"sairam.shakedeal+grn@gmail.com\"){\n  workflow_id= 205;\n}\n\nitems[0].json.to_email= to_email;\nitems[0].json.workflow_id = workflow_id;\nreturn items;"
       },
       "name": "Get workflow id",
       "type": "n8n-nodes-base.function",
@@ -118,9 +118,9 @@
   "settings": {},
   "staticData": {
     "node:Wait for PO Email": {
-      "lastMessageUid": 1573
+      "lastMessageUid": 1583
     }
   },
   "tags": [],
-  "updatedAt": "2022-10-07T09:08:25.764Z"
+  "updatedAt": "2022-10-10T07:39:24.339Z"
 }
