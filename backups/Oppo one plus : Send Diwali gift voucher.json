@@ -1,0 +1,84 @@
+{
+  "active": false,
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2022-10-10T09:13:44.338Z",
+  "id": "206",
+  "name": "Oppo one plus : Send Diwali gift voucher",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "handyalasairam9177@gmail.com",
+        "toEmail": "=sairam.reddy@shakedeal.com",
+        "html": "=<body contenteditable=\"true\" data-gramm=\"false\" data-bp-ignore-extension=\"true\" data-bp-node=\"true\" data-zwproofread-id=\"045906716729718067\" spellcheck=\"false\" class=\"ze_body\" data-enableshortcuts=\"true\"><div style=\"color: rgb(0, 0, 0); font-family: &quot;Lato 2&quot;, system-ui, -apple-system, &quot;Segoe UI&quot;, Roboto, Ubuntu, Cantarell, &quot;Noto Sans&quot;, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;\"><span style=\"background-color: rgb(255, 255, 255);\" class=\"x_610731451highlight\"><span style=\"color: rgb(0, 0, 0);\" class=\"x_610731451colour\"><span style=\"font-family: arial, sans-serif;\" class=\"x_610731451font\"><span style=\"font-size: 13.3333px; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;\" class=\"x_610731451size\">Hi \"Employee Name\"<br><br>Hope you are&nbsp;doing well!<br><br>Adit wishes you and your family a happy and safe Diwali. May the divine light of Diwali bring good health, prosperity, and happiness to your life.&nbsp;</span></span></span></span></div><div style=\"color: rgb(0, 0, 0); font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 13.3333px; background-color: rgb(255, 255, 255);\"><div><span style=\"font-family: arial, sans-serif;\" class=\"x_610731451font\"><br>Apologize that we couldn't make it to your doorstep this time but we hope we will bring a smile to your face through this&nbsp;<b>Amazon Gift Voucher</b>.<br></span></div><div><span style=\"font-family: arial, sans-serif;\">Hope you enjoy the most out of this Amazon Pay Gift Card!</span><br></div><div><br></div><div><span style=\"font-family: arial, sans-serif;\"><img src=\"/zm/ImageSignature?fileName=1665400336899004_574093940.png&amp;accountId=7285392000000008002&amp;storeName=740967073&amp;frm=c\" orig_width=\"679\" orig_height=\"673\" width=\"400\" height=\"396\" size_option=\"bestfit\"></span><br></div><div class=\"x_-1038802123gmail_signature\" dir=\"ltr\"><div dir=\"ltr\"><div><b style=\"font-family: arial, sans-serif;\"><u>Voucher Code:</u>&nbsp; xxxxxxxx</b><br></div><div><br></div><div><b style=\"font-family: arial, sans-serif;\">GC ID:<br><br><u>Steps to add Amazon Pay Gift Card to your account:</u></b></div><div><br></div><div><span style=\"font-family: arial, sans-serif;\" class=\"x_610731451font\">1. Visit&nbsp;</span><a style=\"color: rgb(89, 143, 222); cursor: pointer; font-family: arial, sans-serif;\" target=\"_blank\" href=\"http://ec2-34-221-130-80.us-west-2.compute.amazonaws.com/x/d?c=25760877&amp;l=c32ab227-cd35-4c67-96ed-0c478315164f&amp;r=ab88566f-e974-4f88-a272-bb2fa472407b\">www.amazon.in/addgiftcard</a><br></div><div><span style=\"font-family: arial, sans-serif;\" class=\"x_610731451font\">2. Enter the Gift Card Code</span><br></div><div><span style=\"font-family: arial, sans-serif;\" class=\"x_610731451font\">3. Click on Add to your balance.</span><br></div><div><br></div><div><span style=\"font-family: arial, sans-serif;\" class=\"x_610731451font\">Your Amazon Pay balance can be selected as a payment option during the checkout process. Alternatively, you can enter the gift card code during checkout.</span><br></div><div><br></div><div><span style=\"font-family: arial, sans-serif;\" class=\"x_610731451font\">If you are not an Amazon customer yet, please sign up and then add the gift card to your Amazon Pay balance.</span><br></div><div><br></div><div><span style=\"font-family: arial, sans-serif;\" class=\"x_610731451font\">Thank You!!</span><br></div></div></div></div><div><br></div></body>",
+        "attachments": "=data",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        920,
+        300
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "17",
+          "name": "smtp(sai)creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://sdqa.shakedeal.com/images/shake_deal/spl/Amazon Gift Card - Terms & Conditions.pdf",
+        "responseFormat": "file",
+        "options": {}
+      },
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ]
+    }
+  ],
+  "settings": {
+    "saveManualExecutions": true
+  },
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2022-10-10T11:35:15.540Z"
+}
