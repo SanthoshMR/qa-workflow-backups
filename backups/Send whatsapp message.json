@@ -1,0 +1,51 @@
+{
+  "active": false,
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2022-10-11T09:43:51.534Z",
+  "id": "207",
+  "name": "Send whatsapp message",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        540,
+        300
+      ],
+      "disabled": true
+    }
+  ],
+  "settings": {
+    "saveExecutionProgress": "DEFAULT",
+    "saveManualExecutions": true
+  },
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2022-10-11T10:02:27.731Z"
+}
