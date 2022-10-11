@@ -5,6 +5,22 @@
       "main": [
         [
           {
+            "node": "HTML Extract",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        []
+      ]
+    },
+    "HTML Extract": {
+      "main": [
+        [
+          {
             "node": "Function",
             "type": "main",
             "index": 0
@@ -29,13 +45,35 @@
     },
     {
       "parameters": {
-        "functionCode": "let data  = $node[\"Start\"].json.text.split(\"\\n\")\n\nlet data1 = data.filter(n => n)\nitems[0].json.data =data\nitems[0].json.data1 =data1\nreturn items;"
+        "functionCode": "let data  = $node[\"Start\"].json.text.split(\"\\n\");\nlet html = $node[\"Start\"].json.html;\nlet data1 = data.filter(n => n)\nitems[0].json.data =data\nitems[0].json.data1 =data1\nreturn items;"
       },
       "name": "Function",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        600,
+        620,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "dataPropertyName": "html",
+        "extractionValues": {
+          "values": [
+            {
+              "key": "table tr",
+              "returnValue": "value",
+              "returnArray": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "HTML Extract",
+      "type": "n8n-nodes-base.htmlExtract",
+      "typeVersion": 1,
+      "position": [
+        440,
         300
       ]
     }
@@ -43,5 +81,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-10-10T07:38:52.236Z"
+  "updatedAt": "2022-10-11T08:56:05.092Z"
 }
