@@ -160,8 +160,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "56",
+          "name": "Dmsqa creds"
         }
       }
     },
@@ -180,8 +180,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "56",
+          "name": "Dmsqa creds"
         }
       }
     },
@@ -215,8 +215,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "56",
+          "name": "Dmsqa creds"
         }
       }
     }
@@ -227,5 +227,5 @@
   },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-08-03T10:03:56.056Z"
+  "updatedAt": "2022-10-12T10:57:22.760Z"
 }
