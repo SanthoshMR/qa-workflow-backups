@@ -187,7 +187,7 @@
             },
             {
               "name": "media_url",
-              "value": "=https://sdqa.shakedeal.com/images/shake_deal/adani/welcome.jpg"
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"media_url\"]}}"
             },
             {
               "name": "callback_url",
@@ -224,7 +224,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let template = $node[\"Webhook\"].json[\"body\"][\"template_name\"];\nlet request_params = $node[\"Webhook\"].json[\"body\"][\"params\"];\nlet message  = \"\"\nlet template_name = \"\"\nlet params = \"\";\nif(template == \"otp\"){\n  message = `${request_params[0]} is your OTP for account verification on ShakeDeal. The OTP is valid for 30 mins. Please do not share OTP with anyone.\nTeam ShakeDeal`\n}else if(template == \"processed\"){\n  params = `\"${request_params[0]}\",\"${request_params[1]}\",\"${request_params[2]}\",\"${request_params[3]}\",\"${request_params[4]}\",\"${request_params[5]}\"`\n  template_name = \"scheme_intimation_english_1\"\n}else if(template == \"completed\"){\n  params = `\"${request_params[0]}\",\"${request_params[1]}\",\"${request_params[2]}\",\"${request_params[3]}\",\"${request_params[4]}\",\"${request_params[5]}\"`\n  template_name = \"scheme_intimation_1_hindi\"\n} \n\nitems[0].json.template= template;\nitems[0].json.request_params= request_params;\nitems[0].json.message= message;\nitems[0].json.template_name= template_name;\nitems[0].json.params= params;\nreturn items;"
+        "functionCode": "let template = $node[\"Webhook\"].json[\"body\"][\"template_name\"];\nlet request_params = $node[\"Webhook\"].json[\"body\"][\"params\"];\nlet message  = \"\"\nlet template_name = \"\"\nlet params = \"\";\nif(template == \"otp\"){\n  message = `${request_params[0]} is your OTP for account verification on ShakeDeal. The OTP is valid for 30 mins. Please do not share OTP with anyone.\nTeam ShakeDeal`\n}else if(template == \"points_delivery\"){\n  params = `\"${request_params[0]}\",\"${request_params[1]}\",\"${request_params[2]}\"`\n  template_name = \"points_delivery\"\n}else if(template == \"voucher_delivery\"){\n  params = `\"${request_params[0]}\",\"${request_params[1]}\",\"${request_params[2]}\",\"${request_params[3]}\",\"${request_params[4]}\",\"${request_params[5]}\",\"${request_params[6]}\"`\n  template_name = \"voucher_delivery_2\"\n} \n\nitems[0].json.template= template;\nitems[0].json.request_params= request_params;\nitems[0].json.message= message;\nitems[0].json.template_name= template_name;\nitems[0].json.params= params;\nreturn items;"
       },
       "name": "Function to get params and templates",
       "type": "n8n-nodes-base.function",
@@ -238,5 +238,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-10-12T06:05:52.958Z"
+  "updatedAt": "2022-10-13T11:43:07.179Z"
 }
