@@ -1,0 +1,75 @@
+{
+  "active": false,
+  "connections": {
+    "Wait for PO Email": {
+      "main": [
+        [
+          {
+            "node": "Read PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2022-10-13T06:58:54.805Z",
+  "id": "210",
+  "name": "Mozart : Capture client advice file",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        80,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "format": "resolved",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "name": "Wait for PO Email",
+      "type": "n8n-nodes-base.emailReadImap",
+      "typeVersion": 1,
+      "position": [
+        340,
+        280
+      ],
+      "credentials": {
+        "imap": {
+          "id": "18",
+          "name": "Imap creds(sai)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "binaryPropertyName": "attachment_0"
+      },
+      "name": "Read PDF",
+      "type": "n8n-nodes-base.readPDF",
+      "typeVersion": 1,
+      "position": [
+        600,
+        160
+      ]
+    }
+  ],
+  "settings": {
+    "saveExecutionProgress": "DEFAULT",
+    "saveManualExecutions": true
+  },
+  "staticData": {
+    "node:Wait for PO Email": {
+      "lastMessageUid": 1603
+    }
+  },
+  "tags": [],
+  "updatedAt": "2022-10-13T10:19:03.338Z"
+}
