@@ -27,7 +27,7 @@
       "main": [
         [
           {
-            "node": "Get the partner progress",
+            "node": "Create partner program",
             "type": "main",
             "index": 0
           }
@@ -47,13 +47,7 @@
     },
     "IF": {
       "main": [
-        [
-          {
-            "node": "Create partner program",
-            "type": "main",
-            "index": 0
-          }
-        ],
+        [],
         [
           {
             "node": "Merge",
@@ -64,17 +58,6 @@
       ]
     },
     "Create partner program": {
-      "main": [
-        [
-          {
-            "node": "Merge",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Merge": {
       "main": [
         [
           {
@@ -112,7 +95,7 @@
       "typeVersion": 1,
       "position": [
         200,
-        120
+        140
       ],
       "webhookId": "9ece7d05-1ff8-48c9-827b-1699c01319cc"
     },
@@ -127,7 +110,7 @@
       "typeVersion": 1,
       "position": [
         380,
-        120
+        140
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -138,80 +121,15 @@
     },
     {
       "parameters": {
-        "functionCode": "console.log($node[\"getpartners\"].json[\"data\"])\nlet groups=$node[\"getpartners\"].json[\"data\"][0].groups;\nlet campaign = $node[\"getpartners\"].json[\"data\"][0].name;\nlet campaign_id =  $node[\"getpartners\"].json[\"data\"][0][\"id\"];\n\nlet from_date = $node[\"getpartners\"].json[\"data\"][0].start_date;\nlet end_date = $node[\"getpartners\"].json[\"data\"][0].end_date;\n// let partners =[]\n\n// groups.forEach(function(grp,index){\n//   grp.partners.forEach(function(partner){\n//     if(partner.wa_notifications!=false) partners.push({\n//     json: {partner:partner,campaign : campaign,from_date : from_date,end_date:end_date,campaign_id:campaign_id}});\n//   })  \n// })\n\nlet partners =[[\n  {\n    \"id\": '065d355a-a5e9-40b7-9f0f-dcce7d63adf3',\n    \"compaign_id\":'16fa8fc1-4440-4543-80a2-4557351e9c51',\n    \"partner\":\"first\"\n  }],\n  [{\n    \"id\": '2eb5b4a6-56a1-4059-b1fd-bf0636ade8cb',\n    \"compaign_id\":'16fa8fc1-4440-4543-80a2-4557351e9c51',\n     \"partner\":\"second\"\n  }],\n  [{\n    \"id\":'0ee14cb7-c7c0-41eb-b3b1-09eee2696350',\n    \"compaign_id\":'16fa8fc1-4440-4543-80a2-4557351e9c51',\n     \"partner\":\"third\"\n  }]\n];\nreturn partners;"
+        "functionCode": "console.log($node[\"getpartners\"].json[\"data\"])\nlet groups=$node[\"getpartners\"].json[\"data\"][0].groups;\nlet campaign = $node[\"getpartners\"].json[\"data\"][0].name;\nlet campaign_id =  $node[\"getpartners\"].json[\"data\"][0][\"id\"];\n\nlet from_date = $node[\"getpartners\"].json[\"data\"][0].start_date;\nlet end_date = $node[\"getpartners\"].json[\"data\"][0].end_date;\nlet partners =[]\n\ngroups.forEach(function(grp,index){\n  grp.partners.forEach(function(partner){\n    if(partner.wa_notifications!=false) partners.push({\n    json: {partner:partner,campaign : campaign,from_date : from_date,end_date:end_date,campaign_id:campaign_id}});\n  })  \n})\n\n// let partners =[[\n//   {\n//     \"id\": '065d355a-a5e9-40b7-9f0f-dcce7d63adf3',\n//     \"compaign_id\":'16fa8fc1-4440-4543-80a2-4557351e9c51',\n//     \"partner\":\"first\"\n//   }],\n//   [{\n//     \"id\": '2eb5b4a6-56a1-4059-b1fd-bf0636ade8cb',\n//     \"compaign_id\":'16fa8fc1-4440-4543-80a2-4557351e9c51',\n//      \"partner\":\"second\"\n//   }],\n//   [{\n//     \"id\":'0ee14cb7-c7c0-41eb-b3b1-09eee2696350',\n//     \"compaign_id\":'16fa8fc1-4440-4543-80a2-4557351e9c51',\n//      \"partner\":\"third\"\n//   }]\n// ];\nreturn partners;"
       },
       "name": "Function",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        540,
-        120
+        560,
+        140
       ]
-    },
-    {
-      "parameters": {
-        "requestMethod": "POST",
-        "url": "https://api.kaleyra.io/v1/HXIN1732535738IN/messages",
-        "options": {},
-        "bodyParametersUi": {
-          "parameter": [
-            {
-              "name": "from",
-              "value": "+917406700552"
-            },
-            {
-              "name": "to",
-              "value": "={{\"+91\"+$node[\"Function\"].json[\"0\"][\"partner\"][\"phone\"]}}"
-            },
-            {
-              "name": "type",
-              "value": "mediatemplate"
-            },
-            {
-              "name": "params",
-              "value": "=\"{{$node[\"Function\"].json[\"0\"][\"partner\"][\"first_name\"]}}\",\"{{$node[\"Function\"].json[\"0\"][\"partner\"][\"last_name\"]}}\",\"{{$node[\"Function\"].json[\"0\"][\"campaign\"]}}\",\"{{new Date($node[\"Function\"].json[\"0\"][\"from_date\"]).toLocaleString('en-US',{month:'long'})}}\",\"{{new Date($node[\"Function\"].json[\"0\"][\"from_date\"]).toLocaleDateString().replaceAll(\"/\",\"-\")}}\",\"{{new Date($node[\"Function\"].json[\"0\"][\"end_date\"]).toLocaleDateString().replaceAll(\"/\",\"-\")}}\""
-            },
-            {
-              "name": "template_name",
-              "value": "={{$node[\"Function\"].json[\"0\"][\"partner\"][\"language\"]==\"English\"?\"scheme_intimation_english_1\":\"scheme_intimation_1_hindi\"}}"
-            },
-            {
-              "name": "channel",
-              "value": "whatsapp"
-            },
-            {
-              "name": "media_url",
-              "value": "=https://www.kaleyra.com/wp-content/uploads/kaleyra.png"
-            }
-          ]
-        },
-        "headerParametersUi": {
-          "parameter": [
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            },
-            {
-              "name": "api-key",
-              "value": "A826baea1feaa6207057eb1f52f68fde8"
-            }
-          ]
-        },
-        "queryParametersUi": {
-          "parameter": [
-            {}
-          ]
-        }
-      },
-      "name": "Send notifaction",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        1540,
-        120
-      ],
-      "alwaysOutputData": true,
-      "disabled": true
     },
     {
       "parameters": {
@@ -223,15 +141,15 @@
           "parameter": [
             {
               "name": "mobile_no",
-              "value": "={{\"+91\"+$node[\"Function\"].json[\"0\"][\"partner\"][\"phone\"]}}"
+              "value": "={{\"+91\"+$node[\"Function\"].json[\"partner\"][\"phone\"]}}"
             },
             {
               "name": "params",
-              "value": "=\"{{$node[\"Function\"].json[\"0\"][\"partner\"][\"first_name\"]}}\",\"{{$node[\"Function\"].json[\"0\"][\"partner\"][\"last_name\"]}}\",\"{{$node[\"Function\"].json[\"0\"][\"partner\"][\"language\"]==\"English\"?\"Fortune\":\"फॉर्चन \"}}\",\"{{$node[\"Function\"].json[\"0\"][\"partner\"][\"language\"]==\"English\"?\"Diwali Dhamka Contest\":\"दिवाली धमका प्रतियोगिता\"}}\",\"{{new Date($node[\"Function\"].json[\"0\"][\"from_date\"]).toLocaleDateString().replaceAll(\"/\",\"-\")}}\",\"{{new Date($node[\"Function\"].json[\"0\"][\"end_date\"]).toLocaleDateString().replaceAll(\"/\",\"-\")}}\""
+              "value": "=\"{{$node[\"Function\"].json[\"partner\"][\"first_name\"]}}\",\"{{$node[\"Function\"].json[\"partner\"][\"last_name\"]}}\",\"{{$node[\"Function\"].json[\"partner\"][\"language\"]==\"English\"?\"Fortune\":\"फॉर्चन \"}}\",\"{{$node[\"Function\"].json[\"partner\"][\"language\"]==\"English\"?\"Diwali Dhamka Contest\":\"दिवाली धमका प्रतियोगिता\"}}\",\"{{new Date($node[\"Function\"].json[\"from_date\"]).toLocaleDateString().replaceAll(\"/\",\"-\")}}\",\"{{new Date($node[\"Function\"].json[\"end_date\"]).toLocaleDateString().replaceAll(\"/\",\"-\")}}\""
             },
             {
               "name": "template_name",
-              "value": "={{$node[\"Function\"].json[\"0\"][\"partner\"][\"language\"]==\"English\"?\"scheme_intimation_english_1\":\"scheme_intimation_1_hindi\"}}"
+              "value": "={{$node[\"Function\"].json[\"partner\"][\"language\"]== \"English\"?\"scheme_intimation_english_1\":\"scheme_intimation_1_hindi\"}}"
             },
             {
               "name": "media_url",
@@ -239,11 +157,11 @@
             },
             {
               "name": "partner",
-              "value": "={{$node[\"Function\"].json[\"0\"][\"partner\"][\"id\"]}}"
+              "value": "={{$node[\"Function\"].json[\"partner\"][\"id\"]}}"
             },
             {
               "name": "campaign",
-              "value": "={{$node[\"getpartners\"].json[\"data\"][0][\"id\"]}}"
+              "value": "={{$node[\"Function\"].json[\"campaign_id\"]}}"
             },
             {
               "name": "vendor_progress_id",
@@ -256,7 +174,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1360,
+        940,
         140
       ],
       "credentials": {
@@ -264,13 +182,12 @@
           "id": "2",
           "name": "SD Basic Auth"
         }
-      },
-      "disabled": true
+      }
     },
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "=http://157.245.104.124:8056/items/sp_partner_progress?filter={\"_and\": [{\"partner\": {\"_eq\":\"{{$node[\"Function\"].json[\"0\"][\"id\"]}}\"}},{\"campaign\":{\"_eq\":\"{{$node[\"Function\"].json[\"0\"][\"compaign_id\"]}}\"}}]}",
+        "url": "=http://157.245.104.124:8056/items/sp_partner_progress?filter={\"_and\": [{\"partner\": {\"_eq\":\"{{$node[\"Function\"].json[\"partner\"][\"id\"]}}\"}},{\"campaign\":{\"_eq\":\"{{$node[\"Function\"].json[\"campaign_id\"]}}\"}}]}&limit=1",
         "options": {
           "fullResponse": false
         }
@@ -279,15 +196,16 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        680,
-        120
+        420,
+        420
       ],
       "credentials": {
         "httpHeaderAuth": {
           "id": "57",
           "name": "Adani header auth"
         }
-      }
+      },
+      "disabled": true
     },
     {
       "parameters": {
@@ -304,9 +222,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        820,
-        120
-      ]
+        560,
+        420
+      ],
+      "disabled": true
     },
     {
       "parameters": {
@@ -323,6 +242,10 @@
             {
               "name": "campaign",
               "value": "={{$node[\"Function\"].json[\"campaign_id\"]}}"
+            },
+            {
+              "name": "partner_campaign",
+              "value": "={{$node[\"Function\"].json[\"partner\"][\"id\"]}}_{{$node[\"Function\"].json[\"campaign_id\"]}}"
             }
           ]
         }
@@ -331,15 +254,16 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        960,
-        -60
+        740,
+        140
       ],
       "credentials": {
         "httpHeaderAuth": {
           "id": "57",
           "name": "Adani header auth"
         }
-      }
+      },
+      "continueOnFail": true
     },
     {
       "parameters": {},
@@ -347,13 +271,13 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 1,
       "position": [
-        1160,
-        140
+        940,
+        520
       ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-10-10T09:05:05.152Z"
+  "updatedAt": "2022-10-15T11:08:46.117Z"
 }
