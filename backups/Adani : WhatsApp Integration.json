@@ -27,6 +27,17 @@
       "main": [
         [
           {
+            "node": "Get the partner progress",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the partner progress": {
+      "main": [
+        [
+          {
             "node": "Create log",
             "type": "main",
             "index": 0
@@ -45,8 +56,8 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        200,
-        200
+        0,
+        80
       ]
     },
     {
@@ -70,8 +81,8 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        420,
-        200
+        200,
+        220
       ],
       "webhookId": "7e8461a3-2b7c-40af-8a0f-56adc090374a",
       "credentials": {
@@ -111,7 +122,7 @@
             },
             {
               "name": "whatsapp_history",
-              "value": "={{$node[\"Webhook\"].json[\"body\"][\"vendor_progress_id\"]}}"
+              "value": "={{$node[\"Get the partner progress\"].json[\"data\"][0][\"id\"]}}"
             }
           ]
         }
@@ -120,8 +131,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        960,
-        200
+        900,
+        220
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -193,8 +204,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        600,
-        200
+        380,
+        220
       ],
       "alwaysOutputData": true
     },
@@ -208,8 +219,30 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        780,
-        200
+        560,
+        220
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "57",
+          "name": "Adani header auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=http://157.245.104.124:8056/items/sp_partner_progress?filter={\"_and\": [{\"partner\": {\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"partner\"]}}\"}},{\"campaign\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"campaign\"]}}\"}}]}&limit=1",
+        "options": {
+          "fullResponse": false
+        }
+      },
+      "name": "Get the partner progress",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        740,
+        220
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -222,5 +255,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-10-04T08:52:50.541Z"
+  "updatedAt": "2022-10-15T11:10:57.095Z"
 }
