@@ -1,20 +1,48 @@
 {
   "active": false,
   "connections": {
-    "IMAP Email": {
+    "Read HTML from Email": {
       "main": [
         [
           {
-            "node": "Function",
+            "node": "Globals",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Function": {
+    "Extract HTML Table Data": {
       "main": [
-        []
+        [
+          {
+            "node": "Get Orders ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Get url and token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get url and token": {
+      "main": [
+        [
+          {
+            "node": "Extract HTML Table Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     }
   },
@@ -28,8 +56,20 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        240,
-        300
+        -700,
+        -20
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "function extractTableData(tableContent) {\n  const cheerio = require('cheerio');\n  const $ = cheerio.load(tableContent);\n  var data=[];\n  var headerData=[];  \n  var rowData = $(\"table tr\");   \n  for(var i = 0 ; i < rowData.length ; i++) { \n  \tlet dataObject={};    \n    let columnData = $(rowData[i]).children('td');  \n    for(var j = 0 ; j < columnData.length ; j++) { \n      if(i == 0){\n        headerData.push($(columnData[j]).text().replace(/[^a-zA-Z0-9]/g, \"\"));\n      }\n      else{\n        dataObject[headerData[j]]=$(columnData[j]).text();\n      }\n    }\n    if(i > 0){\n    \tdata.push(dataObject);\n    }\n  }\n  \n  return data;\n};\n\nvar htmlData=$node[\"Read HTML from Email\"].json[\"html\"];\nreturn extractTableData(htmlData);\n"
+      },
+      "name": "Extract HTML Table Data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -240,
+        220
       ]
     },
     {
@@ -39,12 +79,12 @@
           "allowUnauthorizedCerts": true
         }
       },
-      "name": "IMAP Email",
+      "name": "Read HTML from Email",
       "type": "n8n-nodes-base.emailReadImap",
       "typeVersion": 1,
       "position": [
-        460,
-        300
+        -740,
+        220
       ],
       "credentials": {
         "imap": {
@@ -55,15 +95,77 @@
     },
     {
       "parameters": {
-        "functionCode": "function extractTableData(tableContent) {\n  // var parser = new DOMParser();\n  // var htmlContent=parser.parseFromString(tableContent, 'text/html');\n  const cheerio = require('cheerio');\n  const $ = cheerio.load(tableContent);\n  var data=[];\n  var headerData=[];  \n  var rowData = $(\"table tr\");   \n  for(var i = 0 ; i < rowData.length ; i++) { \n  \tlet dataObject={};    \n    let columnData = $(rowData[i]).children('td');  \n    for(var j = 0 ; j < columnData.length ; j++) { \n      if(i == 0){\n        headerData.push($(columnData[j]).text().replace(/[^a-zA-Z0-9]/g, \"\"));\n      }\n      else{\n        dataObject[headerData[j]]=$(columnData[j]).text();\n      }\n    }\n    if(i > 0){\n    \tdata.push(dataObject);\n    }\n  }\n  \n  return data;\n};\n\nvar htmlData=$node[\"IMAP Email\"].json[\"html\"];\nreturn extractTableData(htmlData);\n"
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_orders?fields=order_status,order_items.*,order_items.sdm_po_items_id.*&filter={\"order_items\":{\"sdm_po_items_id\":{\"id\":{\"_eq\":\"7100027443-7\"}}}}",
+        "jsonParameters": true,
+        "options": {}
       },
-      "name": "Function",
-      "type": "n8n-nodes-base.function",
+      "name": "Get Orders ",
+      "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        660,
-        300
+        -60,
+        220
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "dms_url",
+              "value": "={{$node[\"Read HTML from Email\"].json[\"to\"][\"value\"][0][\"address\"] == \"sairam.shakedeal+vedanta@gmail.com\"?\"https://sdqa.mozart.shakedeal.com\":\"https://vedanta.mozart.shakedeal.com\"}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        -580,
+        220
       ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "=https://qan8n.shakedeal.com/webhook/get-url",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "client",
+              "value": "=vedanta"
+            },
+            {
+              "name": "env",
+              "value": "=qa"
+            }
+          ]
+        }
+      },
+      "name": "Get url and token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        -420,
+        220
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
     }
   ],
   "settings": {},
@@ -76,5 +178,5 @@
       "updatedAt": "2022-05-30T07:16:52.136Z"
     }
   ],
-  "updatedAt": "2022-10-15T14:21:30.169Z"
+  "updatedAt": "2022-10-17T10:19:29.039Z"
 }
