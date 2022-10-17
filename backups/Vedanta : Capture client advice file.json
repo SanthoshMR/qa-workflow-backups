@@ -27,7 +27,7 @@
       "main": [
         [
           {
-            "node": "Create client payment advice",
+            "node": "Get payment to shakedeal record",
             "type": "main",
             "index": 0
           }
@@ -39,6 +39,28 @@
         [
           {
             "node": "Get url and token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get payment to shakedeal record": {
+      "main": [
+        [
+          {
+            "node": "Function to construct client advice obj",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to construct client advice obj": {
+      "main": [
+        [
+          {
+            "node": "Create client payment advice",
             "type": "main",
             "index": 0
           }
@@ -56,8 +78,8 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        80,
-        280
+        -20,
+        140
       ]
     },
     {
@@ -124,7 +146,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        800,
+        820,
         260
       ],
       "credentials": {
@@ -136,7 +158,7 @@
     },
     {
       "parameters": {
-        "functionCode": "const pdf = require('pdf-parse');\nlet payment_number = \"\";\nlet payment_date = \"\"\nlet invoiceBills = [];\nlet deductions = [];\nlet clientPaymentAdvice = {};\nlet paymentReferenceNumber = '';\nlet bodyText = $node[\"Wait for PO Email\"].json[\"text\"];\n\nfunction render_page(pageData) {\n  //check documents https://mozilla.github.io/pdf.js/\n  let render_options = {\n    //replaces all occurrences of whitespace with standard spaces (0x20). The default value is `false`.\n    normalizeWhitespace: false,\n    //do not attempt to combine same line TextItem's. The default value is `false`.\n    disableCombineTextItems: false,\n  };\n\n  return pageData.getTextContent(render_options).then(function (textContent) {\n    let lastY,\n      text = \"\";\n    for (let item of textContent.items) {\n      text += `\\n${item.str}`;\n      \n    }\n    return text;\n  });\n}\n\nlet options = {\n  pagerender: render_page,\n  max: 200,\n};\n\nconst binaryData = Buffer.from(items[0].binary[\"attachment_\" + 0].data, \"base64\");\nlet content = await pdf(binaryData, options);\n\nlet contentSubStringArray = content.text.split(\"\\n\");\n\n//Split body text to extract payment reference number\nlet bodyTextArray = bodyText.split(\"\\n\");\n\n//Object keys for Shakedeal payments\nconst headerKeys = [\"invoice_number\",\"ref_number\",\"payment_date\",\"gross_value\",\"short_billed\",\"excess_billed\",\"net_payable_amount\"];\n\n//Strings of array to match for payment refernce number\nconst paymentReferenceMatchArray = [\"Payment Ref No\"];\n\n//Texts to ignore in contentSubStringArray\nconst headerIgnore = [\n  \"Invoice\",\n  \"No\",\n  \"Ref. No.\",\n  \"Date\",\n  \"Gross Value\",\n  \"Short\",\n  \"billed\",\n  \"Excess\",\n  \"Billed\",\n  \"Remarks\",\n  \"Net Amount\",\n  \"\",\n];\n\nconst invoice = {};\nlet isFinished = false;\nlet isStarted = false;\nlet invIndex = 1;\nlet totalPayable = 0;\nlet netReceived = 0;\nlet totalDeductions = 0;\n\nfor(i=0;i<contentSubStringArray.length;i++){\n  \n  if(headerIgnore.includes(contentSubStringArray[i].trim())){\n    \n  } else if(contentSubStringArray[i].includes(\"PAYMENT NO\")){\n    payment_number = contentSubStringArray[i].split(\":\")[1].trim();\n  }else if(contentSubStringArray[i].includes(\"PAYMENT DT\")){\n    payment_date = contentSubStringArray[i].split(\":\")[1].trim();\n  }else if(contentSubStringArray[i].indexOf(\"INV\")== 0){\n    if(contentSubStringArray[i].includes(\"-\")) {\n      invoice[contentSubStringArray[i++]+contentSubStringArray[i]] = { \"invoice_number\": contentSubStringArray[i] };\n    } else {\n      invoice[contentSubStringArray[i]] = { \"invoice_number\": contentSubStringArray[i]};\n    }\n    isStarted = true;\n    invIndex = 1;\n  } else if(contentSubStringArray[i].indexOf(\"Credit memo\")== 0){\n    deductions.push({\n      id : contentSubStringArray[i+1]?.split(\"-\")[0].trim(),\n      name : contentSubStringArray[i]?.trim(),\n      detail : contentSubStringArray[i+1]?.trim(),\n      deduction_amount : contentSubStringArray[i+2]?.trim(),\n    })\n  \n  }else if(contentSubStringArray[i].includes(\"Total\")) {\n    if(contentSubStringArray[i]?.trim()==\"Total\") {\n      totalPayable = contentSubStringArray[i+1];\n    }\n    isFinished = true;\n  } else if(!isFinished && isStarted) {\n    \n    invoice[Object.keys(invoice)[Object.keys(invoice).length-1]][headerKeys[invIndex]] = contentSubStringArray[i];\n\n    invIndex++;\n  }else if(contentSubStringArray[i].includes(\"Net Payable\")){\n    totalDeductions = contentSubStringArray[i-1].trim();\n    netReceived = contentSubStringArray[i+1].trim();\n  }\n  \n}\n\nfor(i=0;i<bodyTextArray.length;i++){\n  if(paymentReferenceMatchArray.some(search=>bodyTextArray[i].includes(search))){\n    paymentReferenceNumber = bodyTextArray[i+1].replace(/[^a-zA-Z0-9]/g, \"\").trim();\n  }\n}\n\ninvoiceBills = [ ...Object.values(invoice) ];\ninvoiceBills = invoiceBills.map((obj, i) => (\n              { ...obj, \n              payment_status: \"payment_received\",\n              payment_date : new Date(obj[\"payment_date\"].trim().split(\".\").reverse().join(\"-\")).toISOString()\n              }));\n\n\n//construct client payment advice obj\nclientPaymentAdvice.id = paymentReferenceNumber;\nclientPaymentAdvice.payment_number = payment_number;\nclientPaymentAdvice.net_payable_amount = totalPayable;\nclientPaymentAdvice.net_received_amount = netReceived;\nclientPaymentAdvice.payment_date = new Date(payment_date.trim().split(\".\").reverse().join(\"-\")).toISOString();\nclientPaymentAdvice.total_deductions = totalDeductions;\nclientPaymentAdvice.shakedeal_payments = invoiceBills;\nclientPaymentAdvice.shakedeal_deductions = deductions;\n//construct client payment advice obj\n\n\nitems[0].json.invoice_bills = invoiceBills;\nitems[0].json.totalPayable = totalPayable;\nitems[0].json.netReceived = netReceived;\nitems[0].json.totalDeductions = totalDeductions;\nitems[0].json.deductions = deductions;\nitems[0].json.contentSubStringArray = contentSubStringArray;\nitems[0].json.payment_number = payment_number;\nitems[0].json.bodyText = bodyText;\nitems[0].json.bodyTextArray = bodyTextArray;\nitems[0].json.paymentReferenceNumber = paymentReferenceNumber;\nitems[0].json.clientPaymentAdvice = clientPaymentAdvice;\nreturn items;"
+        "functionCode": "const pdf = require(\"pdf-parse\");\nlet payment_number = \"\";\nlet payment_date = \"\"\nlet invoiceBills = [];\nlet deductions = [];\nlet clientPaymentAdvice = {};\nlet paymentReferenceNumber = '';\nlet bodyText = $node[\"Wait for PO Email\"].json[\"text\"];\n\nfunction render_page(pageData) {\n  //check documents https://mozilla.github.io/pdf.js/\n  let render_options = {\n    //replaces all occurrences of whitespace with standard spaces (0x20). The default value is `false`.\n    normalizeWhitespace: false,\n    //do not attempt to combine same line TextItem's. The default value is `false`.\n    disableCombineTextItems: false,\n  };\n\n  return pageData.getTextContent(render_options).then(function (textContent) {\n    let lastY,\n      text = \"\";\n    for (let item of textContent.items) {\n      text += `\\n${item.str}`;\n      \n    }\n    return text;\n  });\n}\n\nlet options = {\n  pagerender: render_page,\n  max: 200,\n};\n\nconst binaryData = Buffer.from(items[0].binary[\"attachment_\" + 0].data, \"base64\");\nlet content = await pdf(binaryData, options);\n\nlet contentSubStringArray = content.text.split(\"\\n\");\n\n//Split body text to extract payment reference number\nlet bodyTextArray = bodyText.split(\"\\n\");\n\n//Object keys for Shakedeal payments\nconst headerKeys = [\"invoice_num\",\"ref_number\",\"payment_date\",\"gross_value\",\"short_billed\",\"excess_billed\",\"net_payable_amount\"];\n\n//Strings of array to match for payment refernce number\nconst paymentReferenceMatchArray = [\"Payment Ref No\"];\n\n//Texts to ignore in contentSubStringArray\nconst headerIgnore = [\n  \"Invoice\",\n  \"No\",\n  \"Ref. No.\",\n  \"Date\",\n  \"Gross Value\",\n  \"Short\",\n  \"billed\",\n  \"Excess\",\n  \"Billed\",\n  \"Remarks\",\n  \"Net Amount\",\n  \"\",\n];\n\nconst invoice = {};\nlet isFinished = false;\nlet isStarted = false;\nlet invIndex = 1;\nlet totalPayable = 0;\nlet netReceived = 0;\nlet totalDeductions = 0;\n\nfor(i=0;i<contentSubStringArray.length;i++){\n  \n  if(headerIgnore.includes(contentSubStringArray[i].trim())){\n    \n  } else if(contentSubStringArray[i].includes(\"PAYMENT NO\")){\n    payment_number = contentSubStringArray[i].split(\":\")[1].trim();\n  }else if(contentSubStringArray[i].includes(\"PAYMENT DT\")){\n    payment_date = contentSubStringArray[i].split(\":\")[1].trim();\n  }else if(contentSubStringArray[i].indexOf(\"INV\")== 0){\n    if(contentSubStringArray[i].includes(\"-\")) {\n      invoice[contentSubStringArray[i++]+contentSubStringArray[i]] = { \"invoice_number\": contentSubStringArray[i-1]+contentSubStringArray[i]};\n    } else {\n      invoice[contentSubStringArray[i]] = { \"invoice_number\": contentSubStringArray[i]};\n    }\n    isStarted = true;\n    invIndex = 1;\n  } else if(contentSubStringArray[i].indexOf(\"Credit memo\")== 0){\n    deductions.push({\n      id : contentSubStringArray[i+1]?.split(\"-\")[0].trim(),\n      name : contentSubStringArray[i]?.trim(),\n      detail : contentSubStringArray[i+1]?.trim(),\n      deduction_amount : contentSubStringArray[i+2]?.trim(),\n    })\n  \n  }else if(contentSubStringArray[i].includes(\"Total\")) {\n    if(contentSubStringArray[i]?.trim()==\"Total\") {\n      totalPayable = contentSubStringArray[i+1];\n    }\n    isFinished = true;\n  } else if(!isFinished && isStarted) {\n    \n    invoice[Object.keys(invoice)[Object.keys(invoice).length-1]][headerKeys[invIndex]] = contentSubStringArray[i];\n\n    invIndex++;\n  }else if(contentSubStringArray[i].includes(\"Net Payable\")){\n    totalDeductions = contentSubStringArray[i-1].trim();\n    netReceived = contentSubStringArray[i+1].trim();\n  }\n  \n}\n\nfor(i=0;i<bodyTextArray.length;i++){\n  if(paymentReferenceMatchArray.some(search=>bodyTextArray[i].includes(search))){\n    paymentReferenceNumber = bodyTextArray[i+1].replace(/[^a-zA-Z0-9]/g, \"\").trim();\n  }\n}\n\ninvoiceBills = [ ...Object.values(invoice) ];\nlet invoiceNumberArray = invoiceBills.map(invoiceBill => invoiceBill.invoice_number);\ninvoiceBills = invoiceBills.map((obj, i) => (\n              { ...obj, \n              payment_status: \"payment_received\",\n              payment_date : new Date(obj[\"payment_date\"].trim().split(\".\").reverse().join(\"-\")).toISOString()\n              }));\n\n\n//construct client payment advice obj\nclientPaymentAdvice.id = paymentReferenceNumber;\nclientPaymentAdvice.payment_number = payment_number;\nclientPaymentAdvice.net_payable_amount = totalPayable;\nclientPaymentAdvice.net_received_amount = netReceived;\nclientPaymentAdvice.payment_date = new Date(payment_date.trim().split(\".\").reverse().join(\"-\")).toISOString();\nclientPaymentAdvice.total_deductions = totalDeductions;\nclientPaymentAdvice.shakedeal_payments = invoiceBills;\nclientPaymentAdvice.shakedeal_deductions = deductions;\n//construct client payment advice obj\n\n\nitems[0].json.invoice_bills = invoiceBills;\nitems[0].json.payment_date = payment_date;\nitems[0].json.totalPayable = totalPayable;\nitems[0].json.netReceived = netReceived;\nitems[0].json.totalDeductions = totalDeductions;\nitems[0].json.deductions = deductions;\nitems[0].json.contentSubStringArray = contentSubStringArray;\nitems[0].json.payment_number = payment_number;\nitems[0].json.bodyText = bodyText;\nitems[0].json.bodyTextArray = bodyTextArray;\nitems[0].json.paymentReferenceNumber = paymentReferenceNumber;\nitems[0].json.clientPaymentAdvice = clientPaymentAdvice;\nitems[0].json.invoiceNumberArray = invoiceNumberArray;\nreturn items;"
       },
       "name": "Function to extract payment advice",
       "type": "n8n-nodes-base.function",
@@ -153,13 +175,13 @@
         "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_client_payment_advices",
         "jsonParameters": true,
         "options": {},
-        "bodyParametersJson": "={{$node[\"Function to extract payment advice\"].json[\"clientPaymentAdvice\"]}}"
+        "bodyParametersJson": "={{$node[\"Function to construct client advice obj\"].json[\"clientPaymentAdvice\"]}}"
       },
       "name": "Create client payment advice",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1080,
+        1460,
         260
       ],
       "credentials": {
@@ -168,6 +190,38 @@
           "name": "Mozart DMS Token"
         }
       }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_payment_advise?filter={\"invoice\":{\"id\":{\"_in\":\"{{$node[\"Function to extract payment advice\"].json[\"invoiceNumberArray\"]}}\"}}}",
+        "options": {}
+      },
+      "name": "Get payment to shakedeal record",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        260
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let paymentToShakedealRecord = $node[\"Get payment to shakedeal record\"].json[\"data\"];\nlet clientPaymentAdvice = {};\nlet paymentReferenceNumber = $node[\"Function to extract payment advice\"].json[\"paymentReferenceNumber\"];\nlet payment_number = $node[\"Function to extract payment advice\"].json[\"payment_number\"];\nlet totalPayable = $node[\"Function to extract payment advice\"].json[\"totalPayable\"];\nlet netReceived = $node[\"Function to extract payment advice\"].json[\"netReceived\"];\nlet payment_date = $node[\"Function to extract payment advice\"].json[\"payment_date\"];\nlet totalDeductions = $node[\"Function to extract payment advice\"].json[\"totalDeductions\"];\nlet invoiceBills = $node[\"Function to extract payment advice\"].json[\"invoice_bills\"];\nlet deductions = $node[\"Function to extract payment advice\"].json[\"deductions\"];\n\npaymentToShakedealRecord.forEach(function(payment,index){\n  invoiceBills[invoiceBills.findIndex(bill=>bill[\"invoice_number\"] ==payment[\"invoice\"])].payment_advice = payment.id;\n})\n\n//construct client payment advice obj\nclientPaymentAdvice.id = paymentReferenceNumber;\nclientPaymentAdvice.payment_number = payment_number;\nclientPaymentAdvice.net_payable_amount = totalPayable;\nclientPaymentAdvice.net_received_amount = netReceived;\nclientPaymentAdvice.payment_date = new Date(payment_date.trim().split(\".\").reverse().join(\"-\")).toISOString();\nclientPaymentAdvice.total_deductions = totalDeductions;\nclientPaymentAdvice.shakedeal_payments = invoiceBills;\nclientPaymentAdvice.shakedeal_deductions = deductions;\n//construct client payment advice obj\n\n\nitems[0].json.clientPaymentAdvice = clientPaymentAdvice\n\nreturn items;"
+      },
+      "name": "Function to construct client advice obj",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1220,
+        260
+      ]
     }
   ],
   "settings": {
@@ -180,5 +234,5 @@
     }
   },
   "tags": [],
-  "updatedAt": "2022-10-14T10:13:22.917Z"
+  "updatedAt": "2022-10-17T07:32:55.231Z"
 }
