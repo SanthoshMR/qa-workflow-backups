@@ -82,7 +82,7 @@
       "main": [
         [
           {
-            "node": "Send Email",
+            "node": "Get pr_advance payment",
             "type": "main",
             "index": 0
           }
@@ -94,6 +94,79 @@
         [
           {
             "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get pr_advance payment": {
+      "main": [
+        [
+          {
+            "node": "Function to create payment to vendors",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to create payment to vendors": {
+      "main": [
+        [
+          {
+            "node": "Create payment to vendors",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create payment to vendors": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to update advance payments": {
+      "main": [
+        [
+          {
+            "node": "Update the residual amounts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update the residual amounts": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Function to update advance payments",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Email",
             "type": "main",
             "index": 0
           }
@@ -156,6 +229,15 @@
             {
               "name": "accounts_email",
               "value": "=sairam.reddy@shakedeal.com"
+            }
+          ],
+          "number": [
+            {
+              "name": "max_percentage",
+              "value": 90
+            },
+            {
+              "name": "min_percentage"
             }
           ]
         },
@@ -237,7 +319,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"vpanel_dms_url\"]}}/items/sdv_vendor_pos/{{$node[\"Wait for shipment\"].json[\"body\"][\"payload\"][\"vendor_po_number\"]}}",
+        "url": "={{$node[\"Globals\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_vendor_pos/{{$node[\"Wait for shipment\"].json[\"body\"][\"payload\"][\"vendor_po_number\"]}}",
         "options": {}
       },
       "name": "Get the po number",
@@ -371,19 +453,162 @@
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 1,
       "position": [
-        2180,
-        420
+        3500,
+        440
       ],
+      "executeOnce": true,
       "credentials": {
         "smtp": {
           "id": "17",
           "name": "smtp(sai)creds"
         }
       }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_invoice_details",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "shipment",
+              "value": "={{$node[\"Create shipment in mozart\"].json[\"data\"][\"id\"]}}"
+            },
+            {
+              "name": "total_paid_amount",
+              "value": "={{$node[\"Function to create payment to vendors\"].json[\"total_paid_amount\"]}}"
+            },
+            {
+              "name": "total_percentage_paid",
+              "value": "={{$node[\"Function to create payment to vendors\"].json[\"percentage_paid\"]}}"
+            },
+            {
+              "name": "remaining_to_pay",
+              "value": "={{$node[\"Function to create payment to vendors\"].json[\"remaining_order_value\"]}}"
+            },
+            {
+              "name": "vendor_payment",
+              "value": "={{$node[\"Function to create payment to vendors\"].json[\"payment_status\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Create payment to vendors",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2480,
+        420
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_payments?filter={\"_and\": [{\"vendor_po_number\": {\"_eq\":\"{{$node[\"Get the po number\"].json[\"data\"][\"po_number\"]}}\"}},{\"vendor_payment_status\":{\"_eq\":true}},{\"residual_amount\":{\"_gt\":0}},{\"payment_type\":{\"_eq\":\"advance\"}}]}",
+        "options": {}
+      },
+      "name": "Get pr_advance payment",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2100,
+        420
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let advance_payments = $node[\"Get pr_advance payment\"].json.data;\nlet order_value = parseInt($node[\"Wait for shipment\"].json[\"body\"][\"payload\"][\"invoice_value\"]);\nlet remaining_order_value = order_value;\nlet update_residual_amount_obj = [];\nlet payment_status = \"\";\nlet max_percentage = $node[\"Globals\"].json[\"max_percentage\"];\nlet min_percentage = $node[\"Globals\"].json[\"min_percentage\"];\nif(advance_payments.length>0){\n  advance_payments.forEach(function(payment,index){\n    if(remaining_order_value>0){\n      let residual_amount = remaining_order_value>=payment.residual_amount?0:(payment.residual_amount-remaining_order_value);\n      remaining_order_value= payment.residual_amount>=remaining_order_value?0:remaining_order_value-payment.residual_amount;\n      update_residual_amount_obj[index] = {};\n      update_residual_amount_obj[index].id = payment.id;\n      update_residual_amount_obj[index].residual_amount = residual_amount\n    }\n  })\n}\nlet total_paid_amount = order_value - remaining_order_value;\nlet percentage_paid = (total_paid_amount*100)/order_value;\nif(percentage_paid>=max_percentage){\n  payment_status=\"paymentreleased\"\n}else if(percentage_paid>min_percentage && percentage_paid<90){\n  payment_status=\"partiallypaid\"\n}else payment_status=\"paymentpending\"\n\n\n\nitems[0].json.total_paid_amount = total_paid_amount;\nitems[0].json.advance_payments = advance_payments;\nitems[0].json.order_value = order_value;\nitems[0].json.remaining_order_value = remaining_order_value;\nitems[0].json.update_residual_amount_obj = update_residual_amount_obj;\nitems[0].json.percentage_paid = percentage_paid;\nitems[0].json.payment_status = payment_status;\nreturn items;"
+      },
+      "name": "Function to create payment to vendors",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        2280,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Function to update advance payments\"].json[\"url\"]}}/items/sdm_vendor_payments/{{$node[\"Function to update advance payments\"].json[\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "residual_amount",
+              "value": "={{$node[\"Function to update advance payments\"].json[\"residual_amount\"]}}"
+            },
+            {
+              "name": "vendor_invoice",
+              "value": "={{$node[\"Function to update advance payments\"].json[\"vendor_invoice\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update the residual amounts",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3160,
+        240
+      ],
+      "retryOnFail": true,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "const update_residual_amount_obj = $node[\"Function to create payment to vendors\"].json[\"update_residual_amount_obj\"]\n\nlet returnItems =[]\n\nupdate_residual_amount_obj.forEach(function(obj,index){  \n    returnItems.push({\n    json: {\n       id : obj.id,\n       residual_amount : obj.residual_amount,\n       url : $node[\"Globals\"].json[\"0\"][\"mozart_url\"],\n       vendor_invoice : $node[\"Create payment to vendors\"].json[\"data\"][\"id\"]\n    }\n  });\n  \n})\n\nreturn returnItems;"
+      },
+      "name": "Function to update advance payments",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        2920,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Function to create payment to vendors\"].json[\"advance_payments\"].length}}",
+              "operation": "larger"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        2680,
+        420
+      ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-09-14T07:15:41.182Z"
+  "updatedAt": "2022-10-18T12:10:13.964Z"
 }
