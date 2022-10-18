@@ -62,7 +62,7 @@
     },
     {
       "parameters": {
-        "functionCode": "function extractTableData(tableContent) {\n  const cheerio = require('cheerio');\n  const $ = cheerio.load(tableContent);\n  var data=[];\n  var headerData=[];  \n  var rowData = $(\"table tr\");   \n  for(var i = 0 ; i < rowData.length ; i++) { \n  \tlet dataObject={};    \n    let columnData = $(rowData[i]).children('td');  \n    for(var j = 0 ; j < columnData.length ; j++) { \n      if(i == 0){\n        headerData.push($(columnData[j]).text().replace(/[^a-zA-Z0-9]/g, \"\"));\n      }\n      else{\n        dataObject[headerData[j]]=$(columnData[j]).text();\n      }\n    }\n    if(i > 0){\n    \tdata.push(dataObject);\n    }\n  }\n  \n  return data;\n};\n\nvar htmlData=$node[\"Read HTML from Email\"].json[\"html\"];\nreturn extractTableData(htmlData);\n"
+        "functionCode": "function extractTableData(tableContent) {\n  const cheerio = require('cheerio');\n  const $ = cheerio.load(tableContent);\n  var formatedData={};\n  var data=[];\n  var headerData=[];  \n  var pono_slno=[];\n  var rowData = $(\"table tr\");   \n  for(var i = 0 ; i < rowData.length ; i++) { \n  \tlet dataObject={};    \n    let columnData = $(rowData[i]).children('td');  \n    for(var j = 0 ; j < columnData.length ; j++) { \n      if(i == 0){\n        headerData.push($(columnData[j]).text().replace(/[^a-zA-Z0-9]/g, \"\"));\n      }\n      else{        \n        dataObject[headerData[j]]=$(columnData[j]).text();        \n      }\n    }\n    if(i > 0){\n      pono_slno.push(dataObject[\"PONO\"]+\"_\"+dataObject[\"POSRNO\"]);\n    \tdata.push(dataObject);\n    }\n  }\n  formatedData[\"rejected\"] = data;\n  formatedData[\"pono_slno\"] = pono_slno;\n  return formatedData;\n};\n\nvar htmlData=$node[\"Read HTML from Email\"].json[\"html\"];\nvar rejectedData = extractTableData(htmlData);\n\nitems[0].json[0].rejectedItems = rejectedData;\nreturn items;\n"
       },
       "name": "Extract HTML Table Data",
       "type": "n8n-nodes-base.function",
@@ -96,7 +96,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_orders?fields=order_status,order_items.*,order_items.sdm_po_items_id.*&filter={\"order_items\":{\"sdm_po_items_id\":{\"id\":{\"_eq\":\"7100027443-7\"}}}}",
+        "url": "={{$node[\"Extract HTML Table Data\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_orders?fields=order_status,order_items.*,order_items.sdm_po_items_id.*&filter={\"order_items\":{\"sdm_po_items_id\":{\"id\":{\"_in\":\"{{$node[\"Extract HTML Table Data\"].json[\"0\"][\"rejectedItems\"]}}\"}}}}",
         "jsonParameters": true,
         "options": {}
       },
@@ -166,6 +166,16 @@
           "name": "SD Basic Auth"
         }
       }
+    },
+    {
+      "parameters": {},
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        440,
+        440
+      ]
     }
   ],
   "settings": {},
@@ -178,5 +188,5 @@
       "updatedAt": "2022-05-30T07:16:52.136Z"
     }
   ],
-  "updatedAt": "2022-10-17T10:19:29.039Z"
+  "updatedAt": "2022-10-18T07:46:15.858Z"
 }
