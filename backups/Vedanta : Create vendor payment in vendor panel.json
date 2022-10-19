@@ -1,0 +1,349 @@
+{
+  "active": false,
+  "connections": {
+    "Get vendor_payment_status": {
+      "main": [
+        [
+          {
+            "node": "Get url and token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get url and token": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Get vendor payment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get vendor payment": {
+      "main": [
+        [
+          {
+            "node": "Get the po id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the po id": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get the shipment id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NoOp": {
+      "main": [
+        [
+          {
+            "node": "Create vendor payment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the shipment id": {
+      "main": [
+        [
+          {
+            "node": "Create vendor payment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2022-10-19T10:00:21.945Z",
+  "id": "217",
+  "name": "Vedanta : Create vendor payment in vendor panel",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        40,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "create_vendor_payment",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "name": "Get vendor_payment_status",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        400
+      ],
+      "webhookId": "e85462e8-7fc0-454e-8dc6-7769368d12a7",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "=https://qan8n.shakedeal.com/webhook/get-url",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "client",
+              "value": "={{$node[\"Get vendor_payment_status\"].json[\"headers\"][\"client\"]}}"
+            },
+            {
+              "name": "env",
+              "value": "={{$node[\"Get vendor_payment_status\"].json[\"headers\"][\"x-sd-env\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Get url and token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        140,
+        400
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "vpanel_dms_url",
+              "value": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}"
+            },
+            {
+              "name": "mozart_dms_url",
+              "value": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}"
+            },
+            {
+              "name": "send_from_email",
+              "value": "=handyalasairam9177@gmail.com"
+            },
+            {
+              "name": "accounts_email",
+              "value": "=sairam.reddy@shakedeal.com"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        360,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_payments/{{$node[\"Get vendor_payment_status\"].json[\"body\"][\"keys\"][0]}}?fields=id,payment_amount,vendor_payment_status,vendor_po_number,payment_type,residual_amount,vendor_invoice.shipment.*,payment_utr,payment_description",
+        "options": {}
+      },
+      "name": "Get vendor payment",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        600,
+        400
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Get vendor payment\"].json[\"data\"][\"payment_type\"]}}",
+              "value2": "advance"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1180,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_vendor_pos?filter={\"po_number\":{\"_eq\":\"{{$node[\"Get vendor payment\"].json[\"data\"][\"vendor_po_number\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Get the po id",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        860,
+        400
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1520,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_vendor_payments",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "vendor_po_number",
+              "value": "={{$node[\"Get the po id\"].json[\"data\"][0][\"id\"]}}"
+            },
+            {
+              "name": "payment_utr",
+              "value": "={{$node[\"Get vendor payment\"].json[\"data\"][\"payment_utr\"]}}"
+            },
+            {
+              "name": "payment_amount",
+              "value": "={{$node[\"Get vendor payment\"].json[\"data\"][\"payment_amount\"]}}"
+            },
+            {
+              "name": "payment_description",
+              "value": "={{$node[\"Get vendor payment\"].json[\"data\"][\"payment_description\"]}}"
+            },
+            {
+              "name": "vendor_payment_status",
+              "value": "={{$node[\"Get vendor payment\"].json[\"data\"][\"vendor_payment_status\"]}}"
+            },
+            {
+              "name": "payment_type",
+              "value": "={{$node[\"Get vendor payment\"].json[\"data\"][\"payment_type\"]}}"
+            },
+            {
+              "name": "vendor_invoice",
+              "value": "={{$node[\"Get vendor payment\"].json[\"data\"][\"vendor_invoice\"]?$node[\"Get the shipment id\"].json[\"data\"][0][\"id\"]:null}}"
+            }
+          ]
+        }
+      },
+      "name": "Create vendor payment",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1940,
+        460
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_shipments?filter={\"invoice_number\":{\"_eq\":\"{{$node[\"Get vendor payment\"].json[\"data\"][\"vendor_invoice\"][\"shipment\"][\"invoice_number\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Get the shipment id",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1560,
+        620
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2022-10-19T12:11:52.637Z"
+}
