@@ -1,0 +1,117 @@
+{
+  "active": false,
+  "connections": {
+    "Start": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "createdAt": "2022-10-19T09:20:15.223Z",
+  "id": "216",
+  "name": "Test : SMS, WA",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://api.kaleyra.io/v1/HXIN1732535738IN/messages",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "from",
+              "value": "+917406700552"
+            },
+            {
+              "name": "to",
+              "value": "=919741551010"
+            },
+            {
+              "name": "type",
+              "value": "mediatemplate"
+            },
+            {
+              "name": "params",
+              "value": "=\"Chidanand\",\"OD1010\""
+            },
+            {
+              "name": "template_name",
+              "value": "=split_order_1"
+            },
+            {
+              "name": "channel",
+              "value": "whatsapp"
+            },
+            {
+              "name": "media_url",
+              "value": "="
+            },
+            {
+              "name": "callback_url",
+              "value": "https://qan8n.shakedeal.com/webhook/whatsappcallback"
+            }
+          ]
+        },
+        "headerParametersUi": {
+          "parameter": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "api-key",
+              "value": "A826baea1feaa6207057eb1f52f68fde8"
+            }
+          ]
+        },
+        "queryParametersUi": {
+          "parameter": [
+            {}
+          ]
+        }
+      },
+      "name": "Call Kaleyra",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        580,
+        140
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "from": "SHAKPE",
+        "to": "=919741551010",
+        "message": "=1234 is your OTP for account verification on ShakePe. The OTP is valid for 30 mins. Please do not share OTP with anyone.\nTeam ShakePe"
+      },
+      "name": "Msg91",
+      "type": "n8n-nodes-base.msg91",
+      "typeVersion": 1,
+      "position": [
+        580,
+        360
+      ],
+      "credentials": {
+        "msg91Api": {
+          "id": "59",
+          "name": "Msg91 Api account"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2022-10-19T09:54:03.600Z"
+}
