@@ -1,0 +1,178 @@
+{
+  "active": true,
+  "connections": {
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Get Reward Link Details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Reward Link Details": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Success Response",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Invalid Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2022-10-18T18:51:55.240Z",
+  "id": "215",
+  "name": "Campaign : Verify OTP",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        -500,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sp_reward_links?filter={\"_and\":[{\"id\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"id\"]}}\"}},{\"otp\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"otp\"]}}\"}}]}",
+        "options": {}
+      },
+      "name": "Get Reward Link Details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        -140,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "57",
+          "name": "Adani header auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "dms_url",
+              "value": "http://157.245.104.124:8056"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        -320,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "verifyotp",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -500,
+        300
+      ],
+      "webhookId": "772d76f3-ff28-41c1-9641-cb9673aebe26"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Get Reward Link Details\"].json[\"data\"].length > 0}}"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        60,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={   \"success\":true,   \"message\":\"OTP Verified\"}",
+        "options": {}
+      },
+      "name": "Success Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        280,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={   \"success\":false,   \"message\":\"OTP Invalid/Expired\"}",
+        "options": {}
+      },
+      "name": "Invalid Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        280,
+        420
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2022-10-19T07:59:18.342Z"
+}
