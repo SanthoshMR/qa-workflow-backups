@@ -1,0 +1,258 @@
+{
+  "active": true,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Verify Voucher Code Claim",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Get Voucher Code",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Existing Voucher Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify Voucher Code Claim": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Voucher Code": {
+      "main": [
+        [
+          {
+            "node": "Update Voucher Redeemed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Voucher Redeemed": {
+      "main": [
+        [
+          {
+            "node": "Send New Voucher Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Existing Voucher Code": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "createdAt": "2022-10-19T11:53:20.956Z",
+  "id": "218",
+  "name": "Campaign : Redeem Voucher",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        200,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "redeemvoucher",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        200,
+        340
+      ],
+      "webhookId": "f272ed7b-1e2d-4f26-a46f-e0e27b5e4cb5"
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "dms_url",
+              "value": "https://dmsqa.shakedeal.com"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        360,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Verify Voucher Code Claim\"].json[\"data\"].length == 0}}"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        680,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_gift_card_inventory?filter={\"order_id\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"id\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Verify Voucher Code Claim",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        520,
+        340
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "56",
+          "name": "Dmsqa creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_gift_card_inventory?filter={\"_and\":[{\"product_code\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"sku\"]}}\"}},{\"price\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"amount\"]}}\"}}]}&limit=1",
+        "options": {}
+      },
+      "name": "Get Voucher Code",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        900,
+        180
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "56",
+          "name": "Dmsqa creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_gift_card_inventory/{{$node[\"Get Voucher Code\"].json[\"data\"][0][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "order_id",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"id\"]}}"
+            },
+            {
+              "name": "gift_card",
+              "value": "true"
+            }
+          ]
+        }
+      },
+      "name": "Update Voucher Redeemed",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        180
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "56",
+          "name": "Dmsqa creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n   \"success\": true,\n   \"message\": \"Existing Voucher Successfully Fetched!\",    \n   \"voucher\": \"{{$node[\"Verify Voucher Code Claim\"].json[\"data\"][0][\"code\"]}}\",\n   \"pin\": \"{{$node[\"Verify Voucher Code Claim\"].json[\"data\"][0][\"pin\"]}}\"\n}",
+        "options": {}
+      },
+      "name": "Send Existing Voucher Code",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        900,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n   \"success\": true,\n   \"message\": \"Voucher Successfully Fetched!\",    \n   \"voucher\": \"{{$node[\"Update Voucher Redeemed\"].json[\"data\"][\"code\"]}}\",\n   \"pin\": \"{{$node[\"Update Voucher Redeemed\"].json[\"data\"][\"pin\"]}}\"\n}",
+        "options": {}
+      },
+      "name": "Send New Voucher Code",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        1280,
+        180
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2022-10-19T12:56:26.679Z"
+}
