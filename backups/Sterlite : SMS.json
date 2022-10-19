@@ -31,7 +31,7 @@
       "parameters": {
         "from": "SHAKDL",
         "to": "+919741551010",
-        "message": "Greetings from Sterlite Tech. Happy Diwali Here is your Amazon coupon : AGHBBH2JYYUII12NN worth 1000. Expiry is 18/10/2023. Click here for TC and Instructions https://t&c. Sent via ShakeDeal."
+        "message": "Greetings from Sterlite Tech (Happy Diwali). A small gift from our side, Here is your Amazon Gift Card : 12345678901234 worth 5000. Expiry is 19-10-2023. Click here for TC and Instructions https://termsandconditions. Sent via ShakeDeal."
       },
       "name": "Msg91",
       "type": "n8n-nodes-base.msg91",
@@ -51,5 +51,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-10-18T14:31:49.625Z"
+  "updatedAt": "2022-10-19T07:33:43.690Z"
 }
