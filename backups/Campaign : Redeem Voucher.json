@@ -73,11 +73,6 @@
           }
         ]
       ]
-    },
-    "Send Existing Voucher Code": {
-      "main": [
-        []
-      ]
     }
   },
   "createdAt": "2022-10-19T11:53:20.956Z",
@@ -172,7 +167,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_gift_card_inventory?filter={\"_and\":[{\"product_code\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"sku\"]}}\"}},{\"price\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"amount\"]}}\"}}]}&limit=1",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_gift_card_inventory?filter={\"_and\":[{\"product_code\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"sku\"]}}\"}}&limit=1",
         "options": {}
       },
       "name": "Get Voucher Code",
@@ -254,5 +249,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-10-19T12:56:26.679Z"
+  "updatedAt": "2022-10-20T14:36:39.724Z"
 }
