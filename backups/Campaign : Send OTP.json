@@ -377,7 +377,16 @@
         "httpMethod": "POST",
         "path": "sendotp",
         "responseMode": "responseNode",
-        "options": {}
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              }
+            ]
+          }
+        }
       },
       "name": "Webhook",
       "type": "n8n-nodes-base.webhook",
@@ -406,5 +415,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-10-19T09:12:11.017Z"
+  "updatedAt": "2022-10-20T13:13:05.334Z"
 }
