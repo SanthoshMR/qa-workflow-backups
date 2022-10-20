@@ -1,0 +1,77 @@
+{
+  "active": true,
+  "connections": {},
+  "createdAt": "2022-10-20T12:37:32.304Z",
+  "id": "221",
+  "name": "My workflow 8",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://campaigns.shakepe.com/items/sp_reward_links",
+        "options": {}
+      },
+      "name": "Verify Voucher Code Claim",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        620,
+        40
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "56",
+          "name": "Dmsqa creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://campaigns.shakepe.com/items/sp_reward_links?fields=reward_campaign.*,reward_campaign.brands.*,reward_campaign.brands.brand_id.*",
+        "options": {}
+      },
+      "name": "Get Reward Link Details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        480,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "57",
+          "name": "Adani header auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "path": "test",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        440,
+        440
+      ],
+      "webhookId": "7ceaf5ea-b5a2-4e15-89be-d1de7140e233"
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2022-10-20T13:49:55.215Z"
+}
