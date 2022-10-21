@@ -70,7 +70,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sp_reward_links?filter={\"_and\":[{\"id\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"id\"]}}\"}},{\"otp\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"otp\"]}}\"}}]}",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sp_reward_links?filter={\"_and\":[{\"id\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"id\"]}}\"}},{\"otp\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"otp\"]==\"\"?0:$node[\"Webhook\"].json[\"body\"][\"otp\"]}}\"}}]}",
         "options": {}
       },
       "name": "Get Reward Link Details",
@@ -174,5 +174,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-10-19T07:59:18.342Z"
+  "updatedAt": "2022-10-21T06:12:33.811Z"
 }
