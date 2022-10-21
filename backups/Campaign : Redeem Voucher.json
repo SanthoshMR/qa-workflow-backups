@@ -67,6 +67,17 @@
       "main": [
         [
           {
+            "node": "Update OTP",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update OTP": {
+      "main": [
+        [
+          {
             "node": "Send New Voucher Code",
             "type": "main",
             "index": 0
@@ -112,6 +123,10 @@
             {
               "name": "dms_url",
               "value": "https://dmsqa.shakedeal.com"
+            },
+            {
+              "name": "dms_campaign_url",
+              "value": "https://campaigns.shakepe.com"
             }
           ]
         },
@@ -167,7 +182,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_gift_card_inventory?filter={\"_and\":[{\"product_code\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"sku\"]}}\"}}&limit=1",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_gift_card_inventory?filter={\"_and\": [{\"gift_card\": {\"_eq\":false}},{\"product_code\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"sku\"]}}\"}},{\"validity\":{\"_gt\":\"{{new Date().toISOString()}}\"}}]}&limit=1",
         "options": {}
       },
       "name": "Get Voucher Code",
@@ -207,7 +222,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1100,
+        1060,
         180
       ],
       "credentials": {
@@ -220,7 +235,7 @@
     {
       "parameters": {
         "respondWith": "json",
-        "responseBody": "={\n   \"success\": true,\n   \"message\": \"Existing Voucher Successfully Fetched!\",    \n   \"voucher\": \"{{$node[\"Verify Voucher Code Claim\"].json[\"data\"][0][\"code\"]}}\",\n   \"pin\": \"{{$node[\"Verify Voucher Code Claim\"].json[\"data\"][0][\"pin\"]}}\"\n}",
+        "responseBody": "={\n   \"success\": true,\n   \"message\": \"Existing Voucher Successfully Fetched!\",    \n   \"amount\": \"{{$node[\"Verify Voucher Code Claim\"].json[\"data\"][0][\"price\"]}}\",\n   \"voucher\": \"{{$node[\"Verify Voucher Code Claim\"].json[\"data\"][0][\"code\"]}}\",\n   \"pin\": \"{{$node[\"Verify Voucher Code Claim\"].json[\"data\"][0][\"pin\"]}}\",\n   \"valid_till\": \"{{$node[\"Verify Voucher Code Claim\"].json[\"data\"][0][\"validity\"]}}\" \n}",
         "options": {}
       },
       "name": "Send Existing Voucher Code",
@@ -234,20 +249,49 @@
     {
       "parameters": {
         "respondWith": "json",
-        "responseBody": "={\n   \"success\": true,\n   \"message\": \"Voucher Successfully Fetched!\",    \n   \"voucher\": \"{{$node[\"Update Voucher Redeemed\"].json[\"data\"][\"code\"]}}\",\n   \"pin\": \"{{$node[\"Update Voucher Redeemed\"].json[\"data\"][\"pin\"]}}\"\n}",
+        "responseBody": "={\n   \"success\": true,\n\t\"amount\":\"{{$node[\"Update Voucher Redeemed\"].json[\"data\"][\"price\"]}}\",\n   \"message\": \"Voucher Successfully Fetched!\",    \n   \"voucher\": \"{{$node[\"Update Voucher Redeemed\"].json[\"data\"][\"code\"]}}\",\n   \"pin\": \"{{$node[\"Update Voucher Redeemed\"].json[\"data\"][\"pin\"]}}\",\n   \"valid_till\": \"{{$node[\"Update Voucher Redeemed\"].json[\"data\"][\"validity\"]}}\"\n}",
         "options": {}
       },
       "name": "Send New Voucher Code",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1,
       "position": [
-        1280,
+        1380,
         180
       ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"dms_campaign_url\"]}}/items/sp_reward_links/{{$node[\"Webhook\"].json[\"body\"][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "status",
+              "value": "=redeemed"
+            }
+          ]
+        }
+      },
+      "name": "Update OTP",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1220,
+        180
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "57",
+          "name": "Adani header auth"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-10-20T14:36:39.724Z"
+  "updatedAt": "2022-10-21T08:00:57.185Z"
 }
