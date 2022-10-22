@@ -81,7 +81,7 @@
       "main": [
         [
           {
-            "node": "Globals",
+            "node": "IF1",
             "type": "main",
             "index": 0
           }
@@ -149,6 +149,24 @@
           }
         ]
       ]
+    },
+    "IF1": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2022-10-18T17:54:34.299Z",
@@ -161,8 +179,8 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        -100,
-        320
+        -220,
+        140
       ]
     },
     {
@@ -365,11 +383,11 @@
     },
     {
       "parameters": {
-        "fromEmail": "Ascendum India- HR<hr-india@ascendum.com>",
+        "fromEmail": "={{$node[\"Get Reward Link Details\"].json[\"data\"][0][\"reward_campaign\"][\"email_from\"]}}",
         "toEmail": "={{$node[\"Get Reward Link Details\"].json[\"data\"][0][\"email\"]}}",
         "subject": "Diwali Voucher - OTP",
         "text": "=",
-        "html": "=Hello, <br /><br />\n\nThe OTP to redeem your Diwali Voucher is: <br /><br />\n<strong>{{$node[\"Update OTP\"].json[\"data\"][\"otp\"]}}</strong> <br /><br />\nThe OTP is valid for 5 mins. Please do not share OTP with anyone.<br /><br />\n\nRegards,<br />\nAscendum HR - India.<br />",
+        "html": "=Hello, <br /><br />\n\nThe OTP to redeem your Diwali Voucher is: <br /><br />\n<strong>{{$node[\"Update OTP\"].json[\"data\"][\"otp\"]}}</strong> <br /><br />\nThe OTP is valid for 5 mins. Please do not share OTP with anyone.<br /><br />\n\nRegards,<br />\n{{$node[\"Get Reward Link Details\"].json[\"data\"][0][\"reward_campaign\"][\"email_regards\"]}}<br />",
         "options": {}
       },
       "name": "Send Email",
@@ -389,7 +407,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sp_reward_links?filter={\"id\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"id\"]}}\"}}",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sp_reward_links?filter={\"id\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"id\"]}}\"}}&fields=*,reward_campaign.email_from,reward_campaign.email_regards",
         "options": {}
       },
       "name": "Get Reward Link Details",
@@ -408,6 +426,7 @@
     },
     {
       "parameters": {
+        "authentication": "basicAuth",
         "httpMethod": "POST",
         "path": "sendotp",
         "responseMode": "responseNode",
@@ -417,10 +436,16 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        -100,
-        540
+        -400,
+        560
       ],
-      "webhookId": "374a9525-9b9a-41e9-9b71-17d22418576b"
+      "webhookId": "374a9525-9b9a-41e9-9b71-17d22418576b",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "61",
+          "name": "Campaign Basic Auth"
+        }
+      }
     },
     {
       "parameters": {
@@ -476,6 +501,37 @@
         360,
         340
       ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Webhook\"].json[\"headers\"][\"x-real-ip\"]}}",
+              "value2": "=54.86.50.139"
+            }
+          ]
+        }
+      },
+      "name": "IF1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -180,
+        560
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {},
+      "name": "NoOp1",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        180,
+        820
+      ],
+      "disabled": true
     }
   ],
   "settings": {
@@ -483,5 +539,5 @@
   },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-10-20T17:14:38.102Z"
+  "updatedAt": "2022-10-22T12:50:00.929Z"
 }
