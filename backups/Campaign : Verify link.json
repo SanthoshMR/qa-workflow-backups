@@ -1,0 +1,234 @@
+{
+  "active": true,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "IF1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF1": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Get the link details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the link details": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Respond to valid link",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to invalid link",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2022-10-22T11:00:55.038Z",
+  "id": "222",
+  "name": "Campaign : Verify link",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "verify-link",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        420,
+        260
+      ],
+      "webhookId": "47a9d5f6-b343-42bc-a74f-7d07c002f7da",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "61",
+          "name": "Campaign Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "dms_url",
+              "value": "https://campaigns.shakepe.com"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        840,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Webhook\"].json[\"headers\"][\"x-real-ip\"]}}",
+              "value2": "=54.86.50.139"
+            }
+          ]
+        }
+      },
+      "name": "IF1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        600,
+        260
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        840,
+        420
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sp_reward_links?filter={\"_and\": [{\"end_date\": {\"_gte\":\"{{new Date().toISOString()}}\"}},{\"id\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"id\"]}}\"}}]}&fields=*.*,reward_campaign.*,reward_campaign.brands.*,reward_campaign.brands.brand_id.*",
+        "options": {}
+      },
+      "name": "Get the link details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        240
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "57",
+          "name": "Adani header auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Get the link details\"].json[\"data\"].length>0}}"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1320,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n\"success\":true,\n\"message\":\"Reward Link fetched!!\",\n\"data\":{\n    \"end_date\": \"{{$node[\"Get the link details\"].json[\"data\"][0][\"end_date\"]}}\", \n    \"value\": \"{{$node[\"Get the link details\"].json[\"data\"][0][\"value\"]}}\",\n    \"email\": \"{{$node[\"Get the link details\"].json[\"data\"][0][\"email\"]}}\",\n    \"phone\": \"{{$node[\"Get the link details\"].json[\"data\"][0][\"phone\"]}}\",\n    \"otp_mode\": \"{{$node[\"Get the link details\"].json[\"data\"][0][\"otp_mode\"]}}\", \n    \"status\": \"{{$node[\"Get the link details\"].json[\"data\"][0][\"status\"]}}\",\n    \"sku\": \"{{$node[\"Get the link details\"].json[\"data\"][0][\"sku\"]}}\",\n    \"reward_campaign\": {\n      \"image\": \"{{$node[\"Globals\"].json[\"dms_url\"]}}/assets/{{$node[\"Get the link details\"].json[\"data\"][0][\"reward_campaign\"][\"brands\"][0][\"brand_id\"][\"image\"]}}\",\n      \"campaign_type\": \"{{$node[\"Get the link details\"].json[\"data\"][0][\"reward_campaign\"][\"campaign_type\"]}}\"\n    } \n}\t\t\t\t\n}",
+        "options": {}
+      },
+      "name": "Respond to valid link",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        1600,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"success\": false,\n  \"message\": \"invalid link\"\n}",
+        "options": {}
+      },
+      "name": "Respond to invalid link",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        1600,
+        340
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2022-10-22T12:22:33.563Z"
+}
