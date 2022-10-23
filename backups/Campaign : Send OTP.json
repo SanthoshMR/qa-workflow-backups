@@ -507,8 +507,8 @@
         "conditions": {
           "string": [
             {
-              "value1": "={{$node[\"Webhook\"].json[\"headers\"][\"x-real-ip\"]}}",
-              "value2": "=54.86.50.139"
+              "value1": "={{$node[\"Webhook\"].json[\"headers\"][\"x-forwarded-server\"]}}",
+              "value2": "=b21b7dcab51f"
             }
           ]
         }
@@ -530,8 +530,7 @@
       "position": [
         180,
         820
-      ],
-      "disabled": true
+      ]
     }
   ],
   "settings": {
@@ -539,5 +538,5 @@
   },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-10-22T12:50:00.929Z"
+  "updatedAt": "2022-10-22T15:11:15.041Z"
 }
