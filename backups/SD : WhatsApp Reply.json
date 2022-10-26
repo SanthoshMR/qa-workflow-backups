@@ -1,6 +1,29 @@
 {
   "active": true,
-  "connections": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Send the reply to SD store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
   "createdAt": "2022-09-28T05:33:48.336Z",
   "id": "190",
   "name": "SD : WhatsApp Reply",
@@ -18,20 +41,87 @@
     {
       "parameters": {
         "path": "57fdd9b8-2636-4c8e-8aed-25776118c4ea",
+        "responseMode": "lastNode",
+        "responseData": "allEntries",
         "options": {}
       },
       "name": "Webhook",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        600,
-        160
+        420,
+        320
       ],
       "webhookId": "57fdd9b8-2636-4c8e-8aed-25776118c4ea"
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "hash",
+              "value": "=wfs%#hash"
+            },
+            {
+              "name": "sdStore_url",
+              "value": "=https://sdqa.shakedeal.com/index.php?dispatch=wfs_update.whatsapp_call_back"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        580,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"sdStore_url\"]}}",
+        "responseFormat": "string",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "body",
+              "value": "={{$node[\"Globals\"].json[\"query\"][\"body\"]}}"
+            },
+            {
+              "name": "from",
+              "value": "={{$node[\"Webhook\"].json[\"query\"][\"from\"]}}"
+            },
+            {
+              "name": "reply_to",
+              "value": "={{$node[\"Webhook\"].json[\"query\"][\"reply_to\"]}}"
+            },
+            {
+              "name": "text",
+              "value": "={{$node[\"Webhook\"].json[\"query\"][\"body\"]}}"
+            },
+            {
+              "name": "hash",
+              "value": "={{$node[\"Globals\"].json.hash}}"
+            }
+          ]
+        }
+      },
+      "name": "Send the reply to SD store",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        780,
+        320
+      ],
+      "alwaysOutputData": true,
+      "continueOnFail": true
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-09-28T06:49:46.336Z"
+  "updatedAt": "2022-10-26T10:44:22.748Z"
 }
