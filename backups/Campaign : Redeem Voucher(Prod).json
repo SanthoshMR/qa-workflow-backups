@@ -1,0 +1,426 @@
+{
+  "active": true,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "IF1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Get the not redeemed link",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Get Voucher Code",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Existing Voucher Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify Voucher Code Claim": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Voucher Code": {
+      "main": [
+        [
+          {
+            "node": "Update Voucher Redeemed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Voucher Redeemed": {
+      "main": [
+        [
+          {
+            "node": "Update OTP",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update OTP": {
+      "main": [
+        [
+          {
+            "node": "Send New Voucher Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF1": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the not redeemed link": {
+      "main": [
+        [
+          {
+            "node": "IF2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF2": {
+      "main": [
+        [
+          {
+            "node": "NoOp1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Verify Voucher Code Claim",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2022-10-27T10:54:25.331Z",
+  "id": "226",
+  "name": "Campaign : Redeem Voucher(Prod)",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        180,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "redeemvoucher",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        280,
+        240
+      ],
+      "webhookId": "f272ed7b-1e2d-4f26-a46f-e0e27b5e4cb5",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "61",
+          "name": "Campaign Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "dms_url",
+              "value": "https://dmsqa.shakedeal.com"
+            },
+            {
+              "name": "dms_campaign_url",
+              "value": "https://campaigns.shakepe.com"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        620,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Verify Voucher Code Claim\"].json[\"data\"].length == 0}}"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1360,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_gift_card_inventory?filter={\"order_id\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"id\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Verify Voucher Code Claim",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1180,
+        240
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "56",
+          "name": "Dmsqa creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_gift_card_inventory?filter={\"_and\": [{\"gift_card\": {\"_eq\":false}},{\"product_code\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"sku\"]}}\"}},{\"validity\":{\"_gt\":\"{{new Date().toISOString()}}\"}}]}&limit=1",
+        "options": {}
+      },
+      "name": "Get Voucher Code",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1600,
+        80
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "56",
+          "name": "Dmsqa creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_gift_card_inventory/{{$node[\"Get Voucher Code\"].json[\"data\"][0][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "order_id",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"id\"]}}"
+            },
+            {
+              "name": "gift_card",
+              "value": "true"
+            }
+          ]
+        }
+      },
+      "name": "Update Voucher Redeemed",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1760,
+        80
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "56",
+          "name": "Dmsqa creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"dms_campaign_url\"]}}/items/sp_reward_links/{{$node[\"Webhook\"].json[\"body\"][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "status",
+              "value": "=redeemed"
+            }
+          ]
+        }
+      },
+      "name": "Update OTP",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1920,
+        80
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "57",
+          "name": "Adani header auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Webhook\"].json[\"headers\"][\"x-forwarded-server\"]}}",
+              "value2": "=b21b7dcab51f"
+            }
+          ]
+        }
+      },
+      "name": "IF1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        440,
+        240
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        600,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_campaign_url\"]}}/items/sp_reward_links?filter={\"id\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"id\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Get the not redeemed link",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        800,
+        220
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "57",
+          "name": "Adani header auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Get the not redeemed link\"].json[\"data\"].length == 0}}"
+            }
+          ]
+        }
+      },
+      "name": "IF2",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        960,
+        220
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "NoOp1",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1180,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let responseData = [];\n\nresponseData.push({\n    json: {\n        \"success\": true,\n        \"amount\":$node[\"Update Voucher Redeemed\"].json[\"data\"][\"price\"],\n        \"message\": \"Voucher Successfully Fetched!\",    \n        \"voucher\": $node[\"Update Voucher Redeemed\"].json[\"data\"][\"code\"],\n        \"pin\": $node[\"Update Voucher Redeemed\"].json[\"data\"][\"pin\"],\n        \"valid_till\": $node[\"Update Voucher Redeemed\"].json[\"data\"][\"validity\"]\n    }\t\t\t\n});\n\nreturn responseData;"
+      },
+      "name": "Send New Voucher Code",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        2360,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let responseData = [];\n\nresponseData.push({\n    json: {\n        \"success\": true,\n        \"message\": \"Existing Voucher Successfully Fetched!\",    \n        \"amount\": $node[\"Verify Voucher Code Claim\"].json[\"data\"][0][\"price\"],\n        \"voucher\": $node[\"Verify Voucher Code Claim\"].json[\"data\"][0][\"code\"],\n        \"pin\": $node[\"Verify Voucher Code Claim\"].json[\"data\"][0][\"pin\"],\n        \"valid_till\": $node[\"Verify Voucher Code Claim\"].json[\"data\"][0][\"validity\"] \n    }\t\t\t\n});\n\nreturn responseData;"
+      },
+      "name": "Send Existing Voucher Code",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1580,
+        340
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2022-10-27T11:17:48.326Z"
+}
