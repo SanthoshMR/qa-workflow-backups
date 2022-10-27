@@ -1,0 +1,538 @@
+{
+  "active": true,
+  "connections": {
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Get Reward Link Details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Msg91",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Call Kaleyra",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Msg91": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Kaleyra": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Update OTP",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update OTP": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Reward Link Details": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "IF1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check OTP Valid": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NO Ops On Refresh",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "Check OTP Valid",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF1": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2022-10-27T10:47:11.521Z",
+  "id": "224",
+  "name": "Campaign : Send OTP(prod)",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        -300,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "dms_url",
+              "value": "http://157.245.104.124:8056"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        780,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{$node[\"Get Reward Link Details\"].json[\"data\"][0][\"otp_mode\"]}}",
+        "rules": {
+          "rules": [
+            {
+              "value2": "sms"
+            },
+            {
+              "value2": "email",
+              "output": 1
+            },
+            {
+              "value2": "whatsapp",
+              "output": 2
+            }
+          ]
+        }
+      },
+      "name": "Switch",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [
+        1620,
+        -40
+      ]
+    },
+    {
+      "parameters": {
+        "from": "SHAKDL",
+        "to": "=91{{$node[\"Get Reward Link Details\"].json[\"data\"][0][\"phone\"]}}",
+        "message": "={{$node[\"Update OTP\"].json[\"data\"][\"otp\"]}} is your OTP for account verification on ShakeDeal. The OTP is valid for 30 mins. Please do not share OTP with anyone.\nTeam ShakeDeal"
+      },
+      "name": "Msg91",
+      "type": "n8n-nodes-base.msg91",
+      "typeVersion": 1,
+      "position": [
+        1920,
+        -180
+      ],
+      "credentials": {
+        "msg91Api": {
+          "id": "59",
+          "name": "Msg91 Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://api.kaleyra.io/v1/HXIN1732535738IN/messages",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "from",
+              "value": "+917406700552"
+            },
+            {
+              "name": "to",
+              "value": "=91{{$node[\"Get Reward Link Details\"].json[\"data\"][0][\"phone\"]}}"
+            },
+            {
+              "name": "type",
+              "value": "mediatemplate"
+            },
+            {
+              "name": "params",
+              "value": "={{$node[\"Update OTP\"].json[\"data\"][\"otp\"]}}"
+            },
+            {
+              "name": "template_name",
+              "value": "=otp"
+            },
+            {
+              "name": "channel",
+              "value": "whatsapp"
+            },
+            {
+              "name": "media_url",
+              "value": "="
+            },
+            {
+              "name": "callback_url",
+              "value": "https://qan8n.shakedeal.com/webhook/whatsappcallback"
+            }
+          ]
+        },
+        "headerParametersUi": {
+          "parameter": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "api-key",
+              "value": "A826baea1feaa6207057eb1f52f68fde8"
+            }
+          ]
+        },
+        "queryParametersUi": {
+          "parameter": [
+            {}
+          ]
+        }
+      },
+      "name": "Call Kaleyra",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1920,
+        180
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Get Reward Link Details\"].json[\"data\"].length >0}}"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1400,
+        200
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1620,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sp_reward_links/{{$node[\"Get Reward Link Details\"].json[\"data\"][0][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "otp",
+              "value": "={{Math.floor(1000 + Math.random() * 9000)}}"
+            },
+            {
+              "name": "otp_last_updated",
+              "value": "={{new Date().toISOString()}}"
+            }
+          ]
+        }
+      },
+      "name": "Update OTP",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1440,
+        -40
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "57",
+          "name": "Adani header auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{$node[\"Get Reward Link Details\"].json[\"data\"][0][\"reward_campaign\"][\"email_from\"]}}",
+        "toEmail": "={{$node[\"Get Reward Link Details\"].json[\"data\"][0][\"email\"]}}",
+        "subject": "Diwali Voucher - OTP",
+        "text": "=",
+        "html": "=Hello, <br /><br />\n\nThe OTP to redeem your Diwali Voucher is: <br /><br />\n<strong>{{$node[\"Update OTP\"].json[\"data\"][\"otp\"]}}</strong> <br /><br />\nThe OTP is valid for 5 mins. Please do not share OTP with anyone.<br /><br />\n\nRegards,<br />\n{{$node[\"Get Reward Link Details\"].json[\"data\"][0][\"reward_campaign\"][\"email_regards\"]}}<br />",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        1920,
+        0
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "36",
+          "name": "SendGrid"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sp_reward_links?filter={\"id\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"id\"]}}\"}}&fields=*,reward_campaign.email_from,reward_campaign.email_regards",
+        "options": {}
+      },
+      "name": "Get Reward Link Details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        940,
+        340
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "57",
+          "name": "Adani header auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "sendotp",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        300,
+        360
+      ],
+      "webhookId": "374a9525-9b9a-41e9-9b71-17d22418576b",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "61",
+          "name": "Campaign Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{true}}",
+              "value2": "={{$node[\"Function\"].json[\"generateOtp\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Check OTP Valid",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1180,
+        340
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "NO Ops On Refresh",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1400,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let presentDate = new Date();\nlet lastDate = new Date($node[\"Get Reward Link Details\"].json[\"data\"][0][\"otp_last_updated\"]);\nlet diff = Math.abs((Math.round(((new Date() - new Date($node[\"Get Reward Link Details\"].json[\"data\"][0][\"otp_last_updated\"])) / 1000)/60)))-330;\nlet generateOtp = Math.abs((Math.round(((new Date() - new Date($node[\"Get Reward Link Details\"].json[\"data\"][0][\"otp_last_updated\"])) / 1000)/60))) > 5|| $node[\"Webhook\"].json[\"body\"][\"resend\"]\n\nitems[0].json.generateOtp = generateOtp;\nitems[0].json.presentDate = presentDate;\nitems[0].json.lastDate = lastDate;\nitems[0].json.diff = diff;\nreturn items;"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1060,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Webhook\"].json[\"headers\"][\"x-forwarded-server\"]}}",
+              "value2": "=b21b7dcab51f"
+            }
+          ]
+        }
+      },
+      "name": "IF1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        520,
+        360
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {},
+      "name": "NoOp1",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        880,
+        620
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let responseData = [];\n\nresponseData.push({\n    json: {\n      \"success\":true,\n      \"message\":\"OTP Sent Successfully\"\n    }\t\t\t\t\n});\n\nreturn responseData;"
+      },
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        2360,
+        40
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2022-10-27T11:12:11.207Z"
+}
