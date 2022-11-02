@@ -261,8 +261,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "10",
-          "name": "SD-Dms-Token"
+          "id": "56",
+          "name": "Dmsqa creds"
         }
       }
     },
@@ -355,8 +355,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "10",
-          "name": "SD-Dms-Token"
+          "id": "56",
+          "name": "Dmsqa creds"
         }
       }
     },
@@ -400,8 +400,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "10",
-          "name": "SD-Dms-Token"
+          "id": "56",
+          "name": "Dmsqa creds"
         }
       }
     },
@@ -479,7 +479,7 @@
       "typeVersion": 1,
       "position": [
         1860,
-        450
+        440
       ]
     },
     {
@@ -538,8 +538,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "10",
-          "name": "SD-Dms-Token"
+          "id": "56",
+          "name": "Dmsqa creds"
         }
       }
     },
@@ -576,5 +576,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-02-10T06:46:09.266Z"
+  "updatedAt": "2022-11-02T08:37:42.607Z"
 }
