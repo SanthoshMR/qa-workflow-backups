@@ -178,23 +178,23 @@
           "number": [
             {
               "name": "1st_attempt_delay",
-              "value": "=60"
-            },
-            {
-              "name": "2nd_attempt_delay",
-              "value": "=120"
-            },
-            {
-              "name": "3rd_attempt_delay",
               "value": "=180"
             },
             {
-              "name": "4th_attempt_delay",
+              "name": "2nd_attempt_delay",
               "value": "=240"
             },
             {
-              "name": "5th_attempt_delay",
+              "name": "3rd_attempt_delay",
               "value": "=300"
+            },
+            {
+              "name": "4th_attempt_delay",
+              "value": "=360"
+            },
+            {
+              "name": "5th_attempt_delay",
+              "value": "=420"
             },
             {
               "name": "attempts_made",
@@ -211,7 +211,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        470,
+        460,
         460
       ]
     },
@@ -275,8 +275,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "10",
-          "name": "SD-Dms-Token"
+          "id": "56",
+          "name": "Dmsqa creds"
         }
       }
     },
@@ -314,8 +314,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "10",
-          "name": "SD-Dms-Token"
+          "id": "56",
+          "name": "Dmsqa creds"
         }
       }
     },
@@ -343,8 +343,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "10",
-          "name": "SD-Dms-Token"
+          "id": "56",
+          "name": "Dmsqa creds"
         }
       }
     },
@@ -541,5 +541,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-05-30T07:00:51.672Z"
+  "updatedAt": "2022-11-02T08:52:37.069Z"
 }
