@@ -549,7 +549,8 @@
           "string": [
             {
               "value1": "={{$node[\"Get the order_status from sd_orders\"].json[\"data\"][\"order_status\"]}}",
-              "value2": "=G"
+              "operation": "notEqual",
+              "value2": "=OU"
             }
           ]
         }
@@ -576,5 +577,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-11-02T08:37:42.607Z"
+  "updatedAt": "2022-11-03T12:29:21.139Z"
 }
