@@ -306,6 +306,10 @@
             {
               "value2": "=G",
               "output": 1
+            },
+            {
+              "value2": "OU",
+              "output": 1
             }
           ]
         },
@@ -362,5 +366,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-11-02T08:38:22.657Z"
+  "updatedAt": "2022-11-03T12:30:36.947Z"
 }
