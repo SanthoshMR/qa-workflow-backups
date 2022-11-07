@@ -51,6 +51,17 @@
           }
         ]
       ]
+    },
+    "Call Kaleyra": {
+      "main": [
+        [
+          {
+            "node": "Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2022-10-11T09:47:27.008Z",
@@ -72,6 +83,7 @@
         "authentication": "basicAuth",
         "httpMethod": "POST",
         "path": "send-notification",
+        "responseMode": "lastNode",
         "options": {}
       },
       "name": "Webhook",
@@ -233,10 +245,22 @@
         640,
         180
       ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let responseData = [];\n\nresponseData.push({\n    json: {\n        \"success\": true\n    }\t\t\t\n});\n\nreturn responseData;\n"
+      },
+      "name": "Response",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1240,
+        200
+      ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-10-18T14:08:46.250Z"
+  "updatedAt": "2022-11-07T12:12:03.694Z"
 }
