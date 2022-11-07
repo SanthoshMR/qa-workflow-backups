@@ -1,0 +1,46 @@
+{
+  "active": true,
+  "connections": {},
+  "createdAt": "2022-11-07T13:15:05.518Z",
+  "id": "229",
+  "name": "Test cron",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "test-cron",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ],
+      "webhookId": "2872baea-5846-4089-9835-8bb7e1810fa0",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "64",
+          "name": "Test"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2022-11-07T13:15:42.693Z"
+}
