@@ -1,0 +1,70 @@
+{
+  "active": false,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2022-11-07T06:49:10.645Z",
+  "id": "228",
+  "name": "Vendor Partner Program : Select Best Vendor",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        -40,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "get-best-vendor",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        200
+      ],
+      "webhookId": "12f36981-8797-4a9e-8688-3c91d1e3c912"
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://zeusqa.shakedeal.com/items/sd_brand_vendor_mapping?filter={\"_and\":[{\"choose_a_brand\":{\"_eq\":\"1100\"}},{\"_or\":[{\"fixed\":{\"_eq\":\"500\"}},{\"_and\":[{\"from\":{\"_lte\":\"650\"}},{\"to\":{\"_gte\":\"650\"}}]}]}]}&sort=-discount_percentage&limit=1",
+        "options": {}
+      },
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        460,
+        200
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "10",
+          "name": "SD-Dms-Token"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2022-11-07T13:26:12.366Z"
+}
