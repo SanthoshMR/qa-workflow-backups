@@ -16,7 +16,7 @@
       "main": [
         [
           {
-            "node": "Get Orders ",
+            "node": "Create Rejections",
             "type": "main",
             "index": 0
           }
@@ -62,7 +62,7 @@
     },
     {
       "parameters": {
-        "functionCode": "function extractTableData(tableContent) {\n  const cheerio = require('cheerio');\n  const $ = cheerio.load(tableContent);\n  var formatedData={};\n  var data=[];\n  var headerData=[];  \n  var pono_slno=[];\n  var rowData = $(\"table tr\");   \n  for(var i = 0 ; i < rowData.length ; i++) { \n  \tlet dataObject={};    \n    let columnData = $(rowData[i]).children('td');  \n    for(var j = 0 ; j < columnData.length ; j++) { \n      if(i == 0){\n        headerData.push($(columnData[j]).text().replace(/[^a-zA-Z0-9]/g, \"\"));\n      }\n      else{        \n        dataObject[headerData[j]]=$(columnData[j]).text();        \n      }\n    }\n    if(i > 0){\n      pono_slno.push(dataObject[\"PONO\"]+\"_\"+dataObject[\"POSRNO\"]);\n    \tdata.push(dataObject);\n    }\n  }\n  formatedData[\"rejected\"] = data;\n  formatedData[\"pono_slno\"] = pono_slno;\n  return formatedData;\n};\n\nvar htmlData=$node[\"Read HTML from Email\"].json[\"html\"];\nvar rejectedData = extractTableData(htmlData);\n\nitems[0].json[0].rejectedItems = rejectedData;\nreturn items;\n"
+        "functionCode": "function extractTableData(tableContent) {\n  const cheerio = require('cheerio');\n  const $ = cheerio.load(tableContent);\n  var formatedData={};\n  var data=[];\n  var headerData=[];  \n  var pono_slno=[];\n  var rowData = $(\"table tr\");   \n  for(var i = 0 ; i < rowData.length ; i++) { \n  \tlet dataObject={};    \n    let columnData = $(rowData[i]).children('td');  \n    for(var j = 0 ; j < columnData.length ; j++) { \n      if(i == 0){\n        headerData.push($(columnData[j]).text().replace(/[^a-zA-Z0-9]/g, \"\"));\n      }\n      else{        \n        dataObject[headerData[j]]=$(columnData[j]).text();        \n      }\n    }\n    if(i > 0){\n      pono_slno.push(dataObject[\"PONO\"]+\"_\"+dataObject[\"POSRNO\"]);\n    \tdata.push(dataObject);\n    }\n  }\n  formatedData[\"rejected\"] = data;\n  formatedData[\"pono_slno\"] = pono_slno;\n  return formatedData;\n}\n\nvar htmlData=$node[\"Read HTML from Email\"].json[\"html\"];\nvar rejectedData = extractTableData(htmlData);\n\nitems[0].json[0].rejectedItems = rejectedData;\nreturn items;\n"
       },
       "name": "Extract HTML Table Data",
       "type": "n8n-nodes-base.function",
@@ -96,7 +96,8 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Extract HTML Table Data\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_orders?fields=order_status,order_items.*,order_items.sdm_po_items_id.*&filter={\"order_items\":{\"sdm_po_items_id\":{\"id\":{\"_in\":\"{{$node[\"Extract HTML Table Data\"].json[\"0\"][\"rejectedItems\"]}}\"}}}}",
+        "url": "={{$node[\"Extract HTML Table Data\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_orders?fields=order_status,order_items.*,order_items.sdm_po_items_id.*&filter={\"order_items\":{\"sdm_po_items_id\":{\"id\":{\"_in\":\"{{$node[\"Extract HTML Table Data\"].json[\"0\"][\"rejectedItems\"][\"pono_slno\"]}}\"}}}}",
+        "allowUnauthorizedCerts": true,
         "jsonParameters": true,
         "options": {}
       },
@@ -104,8 +105,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        -60,
-        220
+        -260,
+        0
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -121,6 +122,10 @@
             {
               "name": "dms_url",
               "value": "={{$node[\"Read HTML from Email\"].json[\"to\"][\"value\"][0][\"address\"] == \"sairam.shakedeal+vedanta@gmail.com\"?\"https://sdqa.mozart.shakedeal.com\":\"https://vedanta.mozart.shakedeal.com\"}}"
+            },
+            {
+              "name": "workflow_url",
+              "value": "={{$node[\"Read HTML from Email\"].json[\"to\"][\"value\"][0][\"address\"] == \"sairam.shakedeal+vedanta@gmail.com\"?\"https://qan8n.shakedeal.com\":\"https://athena.shakedeal.com\"}}"
             }
           ]
         },
@@ -138,7 +143,7 @@
       "parameters": {
         "authentication": "basicAuth",
         "requestMethod": "POST",
-        "url": "=https://qan8n.shakedeal.com/webhook/get-url",
+        "url": "={{$node[\"Globals\"].json[\"workflow_url\"]}}/webhook/get-url",
         "options": {},
         "bodyParametersUi": {
           "parameter": [
@@ -168,14 +173,28 @@
       }
     },
     {
-      "parameters": {},
-      "name": "Function",
-      "type": "n8n-nodes-base.function",
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Extract HTML Table Data\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_order_items_rejected",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Extract HTML Table Data\"].json[\"0\"][\"rejectedItems\"][\"rejected\"]}}"
+      },
+      "name": "Create Rejections",
+      "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        440,
-        440
-      ]
+        -40,
+        220
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
     }
   ],
   "settings": {},
@@ -188,5 +207,5 @@
       "updatedAt": "2022-05-30T07:16:52.136Z"
     }
   ],
-  "updatedAt": "2022-10-18T07:46:15.858Z"
+  "updatedAt": "2022-11-07T12:39:56.226Z"
 }
