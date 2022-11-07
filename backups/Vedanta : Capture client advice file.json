@@ -173,6 +173,7 @@
         "authentication": "headerAuth",
         "requestMethod": "POST",
         "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_client_payment_advices",
+        "allowUnauthorizedCerts": true,
         "jsonParameters": true,
         "options": {},
         "bodyParametersJson": "={{$node[\"Function to construct client advice obj\"].json[\"clientPaymentAdvice\"]}}"
@@ -195,6 +196,7 @@
       "parameters": {
         "authentication": "headerAuth",
         "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_payment_advise?filter={\"invoice\":{\"id\":{\"_in\":\"{{$node[\"Function to extract payment advice\"].json[\"invoiceNumberArray\"]}}\"}}}",
+        "allowUnauthorizedCerts": true,
         "options": {}
       },
       "name": "Get payment to shakedeal record",
@@ -234,5 +236,5 @@
     }
   },
   "tags": [],
-  "updatedAt": "2022-10-17T07:32:55.231Z"
+  "updatedAt": "2022-11-07T07:22:49.809Z"
 }
