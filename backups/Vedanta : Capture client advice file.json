@@ -38,7 +38,7 @@
       "main": [
         [
           {
-            "node": "Get url and token",
+            "node": "Move Binary Data",
             "type": "main",
             "index": 0
           }
@@ -61,6 +61,28 @@
         [
           {
             "node": "Create client payment advice",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Move Binary Data": {
+      "main": [
+        [
+          {
+            "node": "post the file to mozart",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "post the file to mozart": {
+      "main": [
+        [
+          {
+            "node": "Get url and token",
             "type": "main",
             "index": 0
           }
@@ -109,7 +131,11 @@
           "string": [
             {
               "name": "dms_url",
-              "value": "={{$node[\"Wait for PO Email\"].json[\"to\"][\"value\"][0][\"address\"] == \"sairam.shakedeal+vedanta@gmail.com\"?\"https://sdqa.mozart.shakedeal.com\":\"https://vedanta.mozart.shakedeal.com\"}}"
+              "value": "={{$node[\"Wait for PO Email\"].json[\"to\"][\"value\"][0][\"address\"] == \"sairam.shakedeal+vedantaqa@gmail.com\"?\"https://sdqa.mozart.shakedeal.com\":\"https://vedanta.mozart.shakedeal.com\"}}"
+            },
+            {
+              "name": "token",
+              "value": "={{$node[\"Wait for PO Email\"].json[\"to\"][\"value\"][0][\"address\"]==\"shakedeal.mozart+balco@shakedeal.com\"?\"d1b1178f-637a-4927-8c41-29f4a8219a95\":$node[\"Wait for PO Email\"].json[\"to\"][\"value\"][0][\"address\"]==\"sairam.shakedeal+vedanta@gmail.com\"?\"FcsMdcm7d6Whb-y8ATeBmN40tyzzBpyv\":$node[\"Wait for PO Email\"].json[\"to\"][\"value\"][0][\"address\"]==\"sairam.shakedeal+vedantaqa@gmail.com\"?\"FcsMdcm7d6Whb-y8ATeBmN40tyzzBpyv\":$node[\"Wait for PO Email\"].json[\"to\"][\"value\"][0][\"address\"]==\"sairam.shakedeal+mozartqa@gmail.com\"?\"oes-token-to-check-spec\":\"oes-token-to-check-spec\"}}"
             }
           ]
         },
@@ -215,7 +241,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let paymentToShakedealRecord = $node[\"Get payment to shakedeal record\"].json[\"data\"];\nlet clientPaymentAdvice = {};\nlet paymentReferenceNumber = $node[\"Function to extract payment advice\"].json[\"paymentReferenceNumber\"];\nlet payment_number = $node[\"Function to extract payment advice\"].json[\"payment_number\"];\nlet totalPayable = $node[\"Function to extract payment advice\"].json[\"totalPayable\"];\nlet netReceived = $node[\"Function to extract payment advice\"].json[\"netReceived\"];\nlet payment_date = $node[\"Function to extract payment advice\"].json[\"payment_date\"];\nlet totalDeductions = $node[\"Function to extract payment advice\"].json[\"totalDeductions\"];\nlet invoiceBills = $node[\"Function to extract payment advice\"].json[\"invoice_bills\"];\nlet deductions = $node[\"Function to extract payment advice\"].json[\"deductions\"];\n\npaymentToShakedealRecord.forEach(function(payment,index){\n  invoiceBills[invoiceBills.findIndex(bill=>bill[\"invoice_number\"] ==payment[\"invoice\"])].payment_advice = payment.id;\n})\n\n//construct client payment advice obj\nclientPaymentAdvice.id = paymentReferenceNumber;\nclientPaymentAdvice.payment_number = payment_number;\nclientPaymentAdvice.net_payable_amount = totalPayable;\nclientPaymentAdvice.net_received_amount = netReceived;\nclientPaymentAdvice.payment_date = new Date(payment_date.trim().split(\".\").reverse().join(\"-\")).toISOString();\nclientPaymentAdvice.total_deductions = totalDeductions;\nclientPaymentAdvice.shakedeal_payments = invoiceBills;\nclientPaymentAdvice.shakedeal_deductions = deductions;\n//construct client payment advice obj\n\n\nitems[0].json.clientPaymentAdvice = clientPaymentAdvice\n\nreturn items;"
+        "functionCode": "let paymentToShakedealRecord = $node[\"Get payment to shakedeal record\"].json[\"data\"];\nlet clientPaymentAdvice = {};\nlet paymentReferenceNumber = $node[\"Function to extract payment advice\"].json[\"paymentReferenceNumber\"];\nlet payment_number = $node[\"Function to extract payment advice\"].json[\"payment_number\"];\nlet totalPayable = $node[\"Function to extract payment advice\"].json[\"totalPayable\"];\nlet netReceived = $node[\"Function to extract payment advice\"].json[\"netReceived\"];\nlet payment_date = $node[\"Function to extract payment advice\"].json[\"payment_date\"];\nlet totalDeductions = $node[\"Function to extract payment advice\"].json[\"totalDeductions\"];\nlet invoiceBills = $node[\"Function to extract payment advice\"].json[\"invoice_bills\"];\nlet deductions = $node[\"Function to extract payment advice\"].json[\"deductions\"];\n\npaymentToShakedealRecord.forEach(function(payment,index){\n  invoiceBills[invoiceBills.findIndex(bill=>bill[\"invoice_number\"] ==payment[\"invoice\"])].payment_advice = payment.id;\n})\n\n//construct client payment advice obj\nclientPaymentAdvice.id = paymentReferenceNumber;\nclientPaymentAdvice.advice_file = $node[\"post the file to mozart\"].json[\"data\"][\"id\"]\nclientPaymentAdvice.payment_number = payment_number;\nclientPaymentAdvice.net_payable_amount = totalPayable;\nclientPaymentAdvice.net_received_amount = netReceived;\nclientPaymentAdvice.payment_date = new Date(payment_date.trim().split(\".\").reverse().join(\"-\")).toISOString();\nclientPaymentAdvice.total_deductions = totalDeductions;\nclientPaymentAdvice.shakedeal_payments = invoiceBills;\nclientPaymentAdvice.shakedeal_deductions = deductions;\n//construct client payment advice obj\n\n\nitems[0].json.clientPaymentAdvice = clientPaymentAdvice\n\nreturn items;"
       },
       "name": "Function to construct client advice obj",
       "type": "n8n-nodes-base.function",
@@ -224,6 +250,50 @@
         1220,
         260
       ]
+    },
+    {
+      "parameters": {
+        "setAllData": false,
+        "sourceKey": "=attachment_0",
+        "options": {
+          "keepSource": true,
+          "keepAsBase64": true
+        }
+      },
+      "name": "Move Binary Data",
+      "type": "n8n-nodes-base.moveBinaryData",
+      "typeVersion": 1,
+      "position": [
+        720,
+        60
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/files",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {
+          "bodyContentType": "multipart-form-data"
+        },
+        "sendBinaryData": true,
+        "binaryPropertyName": "=input_file:attachment_0"
+      },
+      "name": "post the file to mozart",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        900,
+        60
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "22",
+          "name": "Balcoqa-Dms-Token"
+        }
+      }
     }
   ],
   "settings": {
@@ -236,5 +306,5 @@
     }
   },
   "tags": [],
-  "updatedAt": "2022-11-07T07:22:49.809Z"
+  "updatedAt": "2022-11-08T11:19:47.485Z"
 }
