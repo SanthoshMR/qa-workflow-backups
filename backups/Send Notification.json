@@ -74,8 +74,8 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        140,
-        180
+        0,
+        -60
       ]
     },
     {
@@ -90,8 +90,8 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        340,
-        180
+        0,
+        160
       ],
       "webhookId": "6711f5d3-e36a-4de1-8e55-c55907748cfa",
       "credentials": {
@@ -121,8 +121,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        500,
-        180
+        160,
+        160
       ]
     },
     {
@@ -142,8 +142,8 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 1,
       "position": [
-        820,
-        180
+        480,
+        160
       ]
     },
     {
@@ -156,8 +156,8 @@
       "type": "n8n-nodes-base.msg91",
       "typeVersion": 1,
       "position": [
-        1040,
-        20
+        640,
+        -80
       ],
       "credentials": {
         "msg91Api": {
@@ -229,8 +229,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1060,
-        200
+        680,
+        160
       ],
       "alwaysOutputData": true
     },
@@ -242,8 +242,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        640,
-        180
+        300,
+        160
       ]
     },
     {
@@ -254,13 +254,13 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1240,
-        200
+        900,
+        160
       ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-11-07T12:12:03.694Z"
+  "updatedAt": "2022-11-08T14:29:35.466Z"
 }
