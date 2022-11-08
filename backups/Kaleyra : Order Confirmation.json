@@ -23,17 +23,6 @@
         ]
       ]
     },
-    "Post to DMS": {
-      "main": [
-        [
-          {
-            "node": "Call the kaleyra api",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "IF": {
       "main": [
         [
@@ -112,6 +101,50 @@
         [
           {
             "node": "Post to SD store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post to DMS": {
+      "main": [
+        [
+          {
+            "node": "Function to delay",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to delay": {
+      "main": [
+        [
+          {
+            "node": "Create Cron",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Cron": {
+      "main": [
+        [
+          {
+            "node": "Create  Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create  Log": {
+      "main": [
+        [
+          {
+            "node": "Call the kaleyra api",
             "type": "main",
             "index": 0
           }
@@ -420,7 +453,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1400,
+        1940,
         520
       ],
       "credentials": {
@@ -458,9 +491,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1220,
+        1740,
         520
-      ]
+      ],
+      "disabled": true
     },
     {
       "parameters": {
@@ -536,10 +570,65 @@
         1380,
         350
       ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let body = {\n  \"order_id\":$node[\"Wait for COD orders\"].json[\"body\"][\"order_detail\"][\"order_id\"],\n  \"mobile_number\":$node[\"Wait for COD orders\"].json[\"body\"][\"order_detail\"][\"customer\"][\"mobile_number\"],\n  \"name\":$node[\"Wait for COD orders\"].json[\"body\"][\"order_detail\"][\"customer\"][\"name\"]\n}\nconst delayer = (delayMs) => {\n  const timeZone = 'Asia/Kolkata';\n  const todayTs = new Date().getTime();\n  const toCallTs = todayTs + delayMs;\n\n  const toCallDateObj = new Date(new Date(toCallTs).toLocaleString('en', { timeZone }));\n\n  return {\n      timezone: timeZone,\n      hours: [\n        toCallDateObj.getHours()\n      ],\n      mdays: [\n        toCallDateObj.getDate()\n      ],\n      minutes: [\n        toCallDateObj.getMinutes()\n      ],\n      months: [\n        toCallDateObj.getMonth()+1\n      ],\n      wdays: [\n        -1\n      ]\n  }\n}\n\nlet cron_obj = {\n  \"job\": {\n    \"url\": \"https://qan8n.shakedeal.com/webhook/call-kaleyra\",\n    \"enabled\": \"true\",\n    \"saveResponses\": true,\n    \"auth\": {\n      \"enable\": true,\n      \"user\": \"kaleyra\",\n      \"password\": \"$h@kede@l@123\"\n    },\n    \"extendedData\": {\n      \"headers\": {\n        \"Content-Type\": \"application/json\"\n      },\n      \"body\": JSON.stringify(body)\n    },\n    \"requestMethod\": 1,\n    \"schedule\": delayer($node[\"Globals\"].json[\"1st_attempt_delay\"]*1000)\n  }\n}\n\nitems[0].json.cron_obj = cron_obj;\nreturn items;"
+      },
+      "name": "Function to delay",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1160,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PUT",
+        "url": "=https://api.cron-job.org/jobs",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Function to delay\"].json.cron_obj}}"
+      },
+      "name": "Create Cron",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1360,
+        560
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "65",
+          "name": "Cron job.org creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=Insert into Rest_API_Logs (order_id,job_id) values ({{$node[\"Wait for COD orders\"].json[\"body\"][\"order_detail\"][\"order_id\"]}},{{$node[\"Create Cron\"].json[\"jobId\"]}});",
+        "additionalFields": {}
+      },
+      "name": "Create  Log",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        1540,
+        560
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "1",
+          "name": "n8n - Postgres"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-11-02T08:52:37.069Z"
+  "updatedAt": "2022-11-08T14:43:50.840Z"
 }
