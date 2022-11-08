@@ -1,0 +1,95 @@
+{
+  "active": false,
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Create Log Table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2022-11-08T13:42:45.786Z",
+  "id": "230",
+  "name": "API : Create Log Table",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "Insert into Rest_API_Logs (order_id,job_id) values (121,777);",
+        "additionalFields": {}
+      },
+      "name": "Create  Log",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        760,
+        200
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "1",
+          "name": "n8n - Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select * from Rest_API_Logs;",
+        "additionalFields": {}
+      },
+      "name": "Display Log",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        220
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "1",
+          "name": "n8n - Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "CREATE TABLE Rest_API_Logs(\n   order_id TEXT PRIMARY KEY NOT NULL,\n   job_id TEXT NOT NULL\n);",
+        "additionalFields": {}
+      },
+      "name": "Create Log Table",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        420,
+        300
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "1",
+          "name": "n8n - Postgres"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2022-11-08T13:50:53.033Z"
+}
