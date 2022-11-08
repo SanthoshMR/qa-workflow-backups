@@ -62,7 +62,7 @@
     },
     {
       "parameters": {
-        "functionCode": "function extractTableData(tableContent) {\n  const cheerio = require('cheerio');\n  const $ = cheerio.load(tableContent);\n  var formatedData={};\n  var data=[];\n  var headerData=[];  \n  var pono_slno=[];\n  var rowData = $(\"table tr\");   \n  for(var i = 0 ; i < rowData.length ; i++) { \n  \tlet dataObject={};    \n    let columnData = $(rowData[i]).children('td');  \n    for(var j = 0 ; j < columnData.length ; j++) { \n      if(i == 0){\n        headerData.push($(columnData[j]).text().replace(/[^a-zA-Z0-9]/g, \"\"));\n      }\n      else{        \n        dataObject[headerData[j]]=$(columnData[j]).text();        \n      }\n    }\n    if(i > 0){\n      pono_slno.push(dataObject[\"PONO\"]+\"_\"+dataObject[\"POSRNO\"]);\n    \tdata.push(dataObject);\n    }\n  }\n  formatedData[\"rejected\"] = data;\n  formatedData[\"pono_slno\"] = pono_slno;\n  return formatedData;\n}\n\nvar htmlData=$node[\"Read HTML from Email\"].json[\"html\"];\nvar rejectedData = extractTableData(htmlData);\n\nitems[0].json[0].rejectedItems = rejectedData;\nreturn items;\n"
+        "functionCode": "function extractTableData(tableContent) {\n  const cheerio = require('cheerio');\n  const $ = cheerio.load(tableContent);\n  var formatedData={};\n  var data=[];\n  var headerData=[];  \n  var pono_slno=[];\n  var rowData = $(\"table tr\");   \n  for(var i = 0 ; i < rowData.length ; i++) { \n  \tlet dataObject={};    \n    let columnData = $(rowData[i]).children('td');  \n    for(var j = 0 ; j < columnData.length ; j++) { \n      if(i == 0){\n        headerData.push($(columnData[j]).text().replace(/[^a-zA-Z0-9]/g, \"\"));\n      }\n      else{        \n        dataObject[headerData[j]]=$(columnData[j]).text();        \n      }\n    }\n    if(i > 0){\n      pono_slno.push(dataObject[\"PONO\"]+\"_\"+dataObject[\"POSRNO\"]);\n    \tdata.push(dataObject);\n    }\n  }\n  formatedData[\"rejected\"] = data;\n  formatedData[\"pono_slno\"] = pono_slno;\n  return formatedData;\n}\n\nvar htmlData=$node[\"Read HTML from Email\"].json[\"html\"];\nvar rejectedData = extractTableData(htmlData);\n\n//start :: to change the key of column as per database column\nrejectedData['rejected'] = rejectedData['rejected'].map(item => {\n  return { po_no: item.PONO};\n});\n//End :: to change the key of column as per database column\n\nitems[0].json[0].rejectedItems = rejectedData;\nreturn items;\n"
       },
       "name": "Extract HTML Table Data",
       "type": "n8n-nodes-base.function",
@@ -207,5 +207,5 @@
       "updatedAt": "2022-05-30T07:16:52.136Z"
     }
   ],
-  "updatedAt": "2022-11-07T12:39:56.226Z"
+  "updatedAt": "2022-11-08T05:43:58.518Z"
 }
