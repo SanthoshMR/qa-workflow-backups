@@ -1,0 +1,189 @@
+{
+  "active": true,
+  "connections": {
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Call the kaleyra api",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait for cron": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call the kaleyra api": {
+      "main": [
+        [
+          {
+            "node": "Get Job ID on OrderID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Job ID on OrderID": {
+      "main": [
+        [
+          {
+            "node": "Delete Job From Rest API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2022-11-07T13:15:05.518Z",
+  "id": "229",
+  "name": "Global : Call Kaleyra",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "url": "=https://api-voice.kaleyra.com/v1/?api_key={{$node[\"Globals\"].json[\"apikey\"]}}&method=dial.click2call&caller={{$node[\"Wait for cron\"].json[\"body\"][\"mobile_number\"]}}&receiver=ivr:{{$node[\"Globals\"].json[\"ivr\"]}}&meta={\"orderid\":\"{{$node[\"Wait for cron\"].json[\"body\"][\"order_id\"]}}\",\"Name\":\"{{$node[\"Wait for cron\"].json[\"body\"][\"name\"]}}\"}&delay=0&retry=0&callback=https%3A%2F%2Fqan8n.shakedeal.com%2Fwebhook%2Fcall_back%3Ffrom%3D%7Bcaller%7D%26to%3D%7Breceiver%7D%26duration%3D%7Bduration%7D%26status%3D%7Bstatus2%7D%26order%3D{{$node[\"Wait for cron\"].json[\"body\"][\"order_id\"]}}",
+        "allowUnauthorizedCerts": true,
+        "options": {
+          "fullResponse": true
+        },
+        "headerParametersUi": {
+          "parameter": [
+            {
+              "name": "Authorization",
+              "value": "=Basic c2R3b3JrZmxvd3M6U0RXMHJrZmwwd3NAMTIz"
+            }
+          ]
+        },
+        "queryParametersUi": {
+          "parameter": [
+            {
+              "name": "format",
+              "value": "JSON"
+            }
+          ]
+        }
+      },
+      "name": "Call the kaleyra api",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        780,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "apikey",
+              "value": "=A6f1a72b6b3dc17f391582ec9f969898b"
+            },
+            {
+              "name": "ivr",
+              "value": "=129604"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        600,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "call-kaleyra",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "name": "Wait for cron",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        420,
+        300
+      ],
+      "webhookId": "2872baea-5846-4089-9835-8bb7e1810fa0",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "66",
+          "name": "Cron creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=select * from Rest_API_Logs where order_id=\"{{$node[\"Wait for cron\"].json[\"body\"][\"order_id\"]}}\";",
+        "additionalFields": {}
+      },
+      "name": "Get Job ID on OrderID",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        980,
+        300
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "1",
+          "name": "n8n - Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "DELETE",
+        "url": "=https://api.cron-job.org/jobs/",
+        "options": {}
+      },
+      "name": "Delete Job From Rest API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1160,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "65",
+          "name": "Header Auth account"
+        }
+      },
+      "disabled": true
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2022-11-08T14:37:10.060Z"
+}
