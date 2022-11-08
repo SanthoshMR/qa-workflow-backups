@@ -1,5 +1,5 @@
 {
-  "active": true,
+  "active": false,
   "connections": {
     "Webhook": {
       "main": [
@@ -11,10 +11,43 @@
           }
         ]
       ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Get Job ID on OrderID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Job ID on OrderID": {
+      "main": [
+        [
+          {
+            "node": "Delete Job From Rest API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
-  "createdAt": "2022-09-22T06:09:06.843Z",
-  "id": "187",
+  "createdAt": "2022-10-03T13:55:01.496Z",
+  "id": "196",
   "name": "SD :  WhatsApp Integration",
   "nodes": [
     {
@@ -23,8 +56,8 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        240,
-        300
+        -200,
+        240
       ]
     },
     {
@@ -86,8 +119,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        660,
-        300
+        120,
+        460
       ],
       "alwaysOutputData": true
     },
@@ -112,8 +145,8 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        480,
-        300
+        -60,
+        460
       ],
       "webhookId": "7e8461a3-2b7c-40af-8a0f-56adc090374a",
       "credentials": {
@@ -122,10 +155,70 @@
           "name": "SD Basic Auth"
         }
       }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        300,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=select * from Rest_API_Logs where order_id=;",
+        "additionalFields": {}
+      },
+      "name": "Get Job ID on OrderID",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        580,
+        360
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "1",
+          "name": "n8n - Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "DELETE",
+        "url": "=https://api.cron-job.org/jobs/:jobId",
+        "options": {}
+      },
+      "name": "Delete Job From Rest API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        780,
+        360
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "65",
+          "name": "Cron job.org creds"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-10-02T09:28:19.212Z"
+  "updatedAt": "2022-11-08T14:29:12.807Z"
 }
