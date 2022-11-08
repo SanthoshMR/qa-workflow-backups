@@ -56,7 +56,7 @@
       "main": [
         [
           {
-            "node": "Call the kaleyra api-voice",
+            "node": "Function to delay",
             "type": "main",
             "index": 0
           }
@@ -148,6 +148,28 @@
         [
           {
             "node": "Get the COD order details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to delay": {
+      "main": [
+        [
+          {
+            "node": "Create Cron",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Cron": {
+      "main": [
+        [
+          {
+            "node": "Call the kaleyra api-voice",
             "type": "main",
             "index": 0
           }
@@ -440,8 +462,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2060,
-        450
+        2480,
+        460
       ],
       "credentials": {
         "httpBasicAuth": {
@@ -478,9 +500,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1860,
-        440
-      ]
+        2280,
+        460
+      ],
+      "disabled": true
     },
     {
       "parameters": {
@@ -572,10 +595,45 @@
         740,
         270
       ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let body = {\n  \"order_id\":$node[\"Wait for call back\"].json[\"query\"][\"order\"],\n  \"mobile_number\":$node[\"Get the COD order details\"].json[\"data\"][\"mobile_number\"],\n  \"name\":$node[\"Get the COD order details\"].json[\"data\"][\"customer_name\"]\n}\nconst delayer = (delayMs) => {\n  const timeZone = 'Asia/Kolkata';\n  const todayTs = new Date().getTime();\n  const toCallTs = todayTs + delayMs;\n\n  const toCallDateObj = new Date(new Date(toCallTs).toLocaleString('en', { timeZone }));\n\n  return {\n      timeZone,\n      hours: [\n        toCallDateObj.getHours()\n      ],\n      mdays: [\n        toCallDateObj.getDate()\n      ],\n      minutes: [\n        toCallDateObj.getMinutes()\n      ],\n      months: [\n        toCallDateObj.getMonth()+1\n      ],\n      wdays: [\n        -1\n      ]\n  }\n}\n\nlet cron_obj = {\n  \"job\": {\n    \"url\": \"https://qan8n.shakedeal.com/webhook/call-kaleyra\",\n    \"enabled\": \"true\",\n    \"saveResponses\": true,\n    \"auth\": {\n      \"enable\": true,\n      \"user\": \"kaleyra\",\n      \"password\": \"$h@kede@l@123\"\n    },\n    \"extendedData\": {\n      \"headers\": {\n        \"Content-Type\": \"application/json\"\n      },\n      \"body\": JSON.stringify(body)\n    },\n    \"requestMethod\": 1,\n    \"schedule\": delayer($node[\"Construct for delay time\"].json[\"delay\"]*1000)\n  }\n}\n\nitems[0].json.cron_obj = cron_obj;\nreturn items;"
+      },
+      "name": "Function to delay",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1840,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PUT",
+        "url": "=https://api.cron-job.org/jobs",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Function to delay\"].json.cron_obj}}"
+      },
+      "name": "Create Cron",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2020,
+        460
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "65",
+          "name": "Cron job.org creds"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-11-03T12:29:21.139Z"
+  "updatedAt": "2022-11-08T14:29:01.289Z"
 }
