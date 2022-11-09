@@ -63,17 +63,6 @@
         ]
       ]
     },
-    "Call the kaleyra api": {
-      "main": [
-        [
-          {
-            "node": "Post json object to SD",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Manually call kaleyra api": {
       "main": [
         [
@@ -122,7 +111,7 @@
       "main": [
         [
           {
-            "node": "Create Cron",
+            "node": "Post json object to SD",
             "type": "main",
             "index": 0
           }
@@ -145,6 +134,17 @@
         [
           {
             "node": "Call the kaleyra api",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post json object to SD": {
+      "main": [
+        [
+          {
+            "node": "Create Cron",
             "type": "main",
             "index": 0
           }
@@ -215,7 +215,7 @@
             },
             {
               "name": "2nd_attempt_delay",
-              "value": "=240"
+              "value": "=360"
             },
             {
               "name": "3rd_attempt_delay",
@@ -453,8 +453,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1940,
-        520
+        1420,
+        560
       ],
       "credentials": {
         "httpBasicAuth": {
@@ -491,8 +491,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1740,
-        520
+        1960,
+        560
       ],
       "disabled": true
     },
@@ -596,7 +596,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1360,
+        1620,
         560
       ],
       "credentials": {
@@ -616,7 +616,7 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 1,
       "position": [
-        1540,
+        1800,
         560
       ],
       "credentials": {
@@ -630,5 +630,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-11-08T14:43:50.840Z"
+  "updatedAt": "2022-11-09T10:06:41.900Z"
 }
