@@ -20,6 +20,13 @@
             "type": "main",
             "index": 0
           }
+        ],
+        [
+          {
+            "node": "Response Data",
+            "type": "main",
+            "index": 0
+          }
         ]
       ]
     },
@@ -39,6 +46,17 @@
         [
           {
             "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete Job From Rest API": {
+      "main": [
+        [
+          {
+            "node": "Response Data",
             "type": "main",
             "index": 0
           }
@@ -119,7 +137,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        120,
+        -20,
         460
       ],
       "alwaysOutputData": true
@@ -145,7 +163,7 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        -60,
+        -200,
         460
       ],
       "webhookId": "7e8461a3-2b7c-40af-8a0f-56adc090374a",
@@ -161,7 +179,7 @@
         "conditions": {
           "boolean": [
             {
-              "value1": true,
+              "value1": "={{[\"confirmed_order_1\",\"cancelled_order_customer_1\",\"cancelled_order_customer_2_\",\"confirmed_order_2\"].includes($node[\"Webhook\"].json[\"body\"][\"template_name\"])}}",
               "value2": true
             }
           ]
@@ -171,22 +189,22 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        300,
+        140,
         460
       ]
     },
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "=select * from Rest_API_Logs where order_id=;",
+        "query": "=select * from Rest_API_Logs where order_id='{{$node[\"Webhook\"].json[\"body\"][\"order_id\"]}}';",
         "additionalFields": {}
       },
       "name": "Get Job ID on OrderID",
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 1,
       "position": [
-        580,
-        360
+        300,
+        280
       ],
       "credentials": {
         "postgres": {
@@ -199,26 +217,39 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "DELETE",
-        "url": "=https://api.cron-job.org/jobs/:jobId",
+        "url": "=https://api.cron-job.org/jobs/{{$node[\"Get Job ID on OrderID\"].json[\"job_id\"]}}",
         "options": {}
       },
       "name": "Delete Job From Rest API",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        780,
-        360
+        500,
+        280
       ],
       "credentials": {
         "httpHeaderAuth": {
           "id": "65",
           "name": "Cron job.org creds"
         }
-      }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "functionCode": "return $node[\"HTTP Request\"].json;"
+      },
+      "name": "Response Data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        680,
+        480
+      ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-11-08T14:29:12.807Z"
+  "updatedAt": "2022-11-09T12:59:56.493Z"
 }
