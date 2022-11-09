@@ -142,7 +142,7 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "=select * from Rest_API_Logs where order_id=\"{{$node[\"Wait for cron\"].json[\"body\"][\"order_id\"]}}\";",
+        "query": "=select * from Rest_API_Logs where order_id='{{$node[\"Wait for cron\"].json[\"body\"][\"order_id\"]}}';",
         "additionalFields": {}
       },
       "name": "Get Job ID on OrderID",
@@ -163,7 +163,7 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "DELETE",
-        "url": "=https://api.cron-job.org/jobs/",
+        "url": "=https://api.cron-job.org/jobs/{{$node[\"Get Job ID on OrderID\"].json[\"job_id\"]}}",
         "options": {}
       },
       "name": "Delete Job From Rest API",
@@ -176,14 +176,13 @@
       "credentials": {
         "httpHeaderAuth": {
           "id": "65",
-          "name": "Header Auth account"
+          "name": "Cron job.org creds"
         }
-      },
-      "disabled": true
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-11-08T14:37:10.060Z"
+  "updatedAt": "2022-11-09T12:22:02.501Z"
 }
