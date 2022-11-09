@@ -76,7 +76,7 @@
       "credentials": {
         "imap": {
           "id": "24",
-          "name": "Sample Gmail"
+          "name": "SD Ops Email"
         }
       }
     },
@@ -160,8 +160,11 @@
       ]
     }
   ],
-  "settings": {},
+  "settings": {
+    "saveExecutionProgress": "DEFAULT",
+    "saveManualExecutions": true
+  },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-09-20T11:35:16.929Z"
+  "updatedAt": "2022-11-09T11:56:23.289Z"
 }
