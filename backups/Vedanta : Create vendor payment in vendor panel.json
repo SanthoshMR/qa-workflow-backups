@@ -1,5 +1,5 @@
 {
-  "active": false,
+  "active": true,
   "connections": {
     "Get vendor_payment_status": {
       "main": [
@@ -345,5 +345,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-10-19T12:11:52.637Z"
+  "updatedAt": "2022-11-14T10:04:47.083Z"
 }
