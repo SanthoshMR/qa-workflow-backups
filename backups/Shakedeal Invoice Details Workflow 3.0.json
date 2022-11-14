@@ -560,7 +560,7 @@
         "bodyParametersUi": {
           "parameter": [
             {
-              "name": "invoice_number",
+              "name": "id",
               "value": "={{$node[\"Get Invoice Details\"].json[\"body\"][\"invoice_no\"]}}"
             },
             {
@@ -637,5 +637,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-11-11T12:04:51.386Z"
+  "updatedAt": "2022-11-14T09:11:40.651Z"
 }
