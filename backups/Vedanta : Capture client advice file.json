@@ -1,17 +1,6 @@
 {
   "active": false,
   "connections": {
-    "Wait for PO Email": {
-      "main": [
-        [
-          {
-            "node": "Globals",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Globals": {
       "main": [
         [
@@ -88,43 +77,23 @@
           }
         ]
       ]
+    },
+    "Wait for PO Email": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2022-10-13T06:58:54.805Z",
   "id": "210",
   "name": "Vedanta : Capture client advice file",
   "nodes": [
-    {
-      "parameters": {},
-      "name": "Start",
-      "type": "n8n-nodes-base.start",
-      "typeVersion": 1,
-      "position": [
-        -20,
-        140
-      ]
-    },
-    {
-      "parameters": {
-        "format": "resolved",
-        "options": {
-          "allowUnauthorizedCerts": true
-        }
-      },
-      "name": "Wait for PO Email",
-      "type": "n8n-nodes-base.emailReadImap",
-      "typeVersion": 1,
-      "position": [
-        240,
-        260
-      ],
-      "credentials": {
-        "imap": {
-          "id": "18",
-          "name": "Imap creds(sai)"
-        }
-      }
-    },
     {
       "parameters": {
         "values": {
@@ -294,6 +263,16 @@
           "name": "Balcoqa-Dms-Token"
         }
       }
+    },
+    {
+      "parameters": {},
+      "name": "Wait for PO Email",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        80,
+        260
+      ]
     }
   ],
   "settings": {
@@ -306,5 +285,5 @@
     }
   },
   "tags": [],
-  "updatedAt": "2022-11-08T11:19:47.485Z"
+  "updatedAt": "2022-11-15T10:04:38.287Z"
 }
