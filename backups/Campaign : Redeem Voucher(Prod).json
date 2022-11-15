@@ -180,7 +180,7 @@
             },
             {
               "name": "dms_campaign_url",
-              "value": "https://campaigns.shakepe.com"
+              "value": "https://campaignsqa.shakepe.com"
             }
           ]
         },
@@ -422,5 +422,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-10-28T11:36:04.540Z"
+  "updatedAt": "2022-11-15T13:11:33.070Z"
 }
