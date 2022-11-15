@@ -111,7 +111,7 @@
           "string": [
             {
               "name": "dms_url",
-              "value": "http://157.245.104.124:8056"
+              "value": "https://campaignsqa.shakepe.com"
             }
           ]
         },
@@ -225,5 +225,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-10-27T11:12:16.424Z"
+  "updatedAt": "2022-11-15T13:12:34.165Z"
 }
