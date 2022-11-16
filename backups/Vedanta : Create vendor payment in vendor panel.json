@@ -202,7 +202,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_payments/{{$node[\"Get vendor_payment_status\"].json[\"body\"][\"keys\"][0]}}?fields=id,payment_amount,vendor_payment_status,vendor_po_number,payment_type,residual_amount,vendor_invoice.shipment.*,payment_utr,payment_description",
+        "url": "={{$node[\"Globals\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_payments/{{$node[\"Get vendor_payment_status\"].json[\"body\"][\"keys\"][0]}}?fields=id,payment_amount,vendor_payment_status,vendor_po_number,payment_type,residual_amount,vendor_invoice.*,payment_utr,payment_description",
         "options": {}
       },
       "name": "Get vendor payment",
@@ -345,5 +345,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-11-14T10:04:47.083Z"
+  "updatedAt": "2022-11-16T12:20:43.329Z"
 }
