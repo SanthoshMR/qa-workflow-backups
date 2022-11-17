@@ -1,0 +1,216 @@
+{
+  "active": true,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Verify Redemtion Detials",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify Redemtion Detials": {
+      "main": [
+        [
+          {
+            "node": "Check Valid Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Valid Request": {
+      "main": [
+        [
+          {
+            "node": "Get Voucher Details",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send New Voucher1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Voucher Details": {
+      "main": [
+        [
+          {
+            "node": "Send Voucher Details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2022-11-17T04:43:28.534Z",
+  "id": "235",
+  "name": "Campaign - Get My Voucher Details",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "getmyvoucherDetails",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        320
+      ],
+      "webhookId": "1633ec49-64ca-4de9-81df-539755e055fb",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "61",
+          "name": "Campaign Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "dms_url",
+              "value": "https://dmsqa.shakedeal.com"
+            },
+            {
+              "name": "dms_campaign_url",
+              "value": "https://campaignsqa.shakepe.com"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        420,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_campaign_url\"]}}/items/sp_reward_redemptions?filter={\"_and\":[{\"reward_link\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"reward_link\"]}}\"}} , {\"sku\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"sku\"]}}\"}} ,   {\"redemption_id\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"redemption_id\"]}}\"}} ]}",
+        "options": {}
+      },
+      "name": "Verify Redemtion Detials",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        600,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "57",
+          "name": "Adani header auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Verify Redemtion Detials\"].json[\"data\"].length > 0}}"
+            }
+          ]
+        }
+      },
+      "name": "Check Valid Request",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        800,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let responseData = [];\n\nresponseData.push({\n    json: {\n        \"success\": false,\n        \"message\":\"Please Contact Administrator\"\n    }\t\t\t\n});\n\nreturn responseData;\n"
+      },
+      "name": "Send New Voucher1",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let responseData = [];\n\nresponseData.push({\n    json: {\n        \"success\": true,\n        \"amount\":$node[\"Get Voucher Details\"].json[\"data\"][0][\"price\"],\n        \"message\": \"Voucher Successfully Fetched!\",    \n        \"voucher\": $node[\"Get Voucher Details\"].json[\"data\"][0][\"code\"],\n        \"pin\": $node[\"Get Voucher Details\"].json[\"data\"][0][\"pin\"],\n        \"valid_till\": $node[\"Get Voucher Details\"].json[\"data\"][0][\"validity\"]\n    }\t\t\t\n});\n\nreturn responseData;\n"
+      },
+      "name": "Send Voucher Details",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1320,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_gift_card_inventory?filter={\"id\":{\"_eq\":{{$node[\"Webhook\"].json[\"body\"][\"redemption_id\"]}}}}&limit=1",
+        "options": {}
+      },
+      "name": "Get Voucher Details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1080,
+        160
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "56",
+          "name": "Dmsqa creds"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2022-11-17T07:24:48.331Z"
+}
