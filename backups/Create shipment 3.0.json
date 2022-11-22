@@ -148,7 +148,7 @@
       "main": [
         [
           {
-            "node": "Send Email",
+            "node": "IF1",
             "type": "main",
             "index": 0
           }
@@ -167,6 +167,79 @@
         [
           {
             "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the vendor payments id": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF1": {
+      "main": [
+        [
+          {
+            "node": "Create vendor payment residual amount record",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create vendor payment residual amount record": {
+      "main": [
+        [
+          {
+            "node": "Update residual amount",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NoOp": {
+      "main": [
+        [
+          {
+            "node": "Get the vendor payments id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update residual amount": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Get the vendor payments id",
             "type": "main",
             "index": 0
           }
@@ -605,10 +678,227 @@
         2680,
         420
       ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_vendor_payments?filter={\"_and\": [{\"vendor_po_number\": {\"po_number\":{\"_eq\":\"{{$node[\"Get the po number\"].json[\"data\"][\"po_number\"]}}\"}}},{\"vendor_invoice\":{\"_null\":true}}]}",
+        "options": {}
+      },
+      "name": "Get the vendor payments id",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        4020,
+        260
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_vendor_payments/{{$node[\"Get the vendor payments id\"].json[\"data\"][0][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "vendor_invoice",
+              "value": "={{$node[\"Wait for shipment\"].json[\"body\"][\"key\"]}}"
+            },
+            {
+              "name": "payment_amount",
+              "value": "={{$node[\"Get the vendor payments id\"].json[\"data\"][0][\"payment_amount\"]-$node[\"Update the residual amounts\"].json[\"data\"][\"residual_amount\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        4260,
+        260
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$node[\"Update the residual amounts\"].json[\"data\"][\"residual_amount\"]>0?true:false}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "IF1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        3360,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Function to update advance payments\"].json[\"url\"]}}/items/sdm_vendor_payments",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "parent_id",
+              "value": "={{$node[\"Function to update advance payments\"].json[\"id\"]}}"
+            },
+            {
+              "name": "payment_amount",
+              "value": "={{$node[\"Function to update advance payments\"].json[\"residual_amount\"]}}"
+            },
+            {
+              "name": "payment_description",
+              "value": "={{$node[\"Update the residual amounts\"].json[\"data\"][\"payment_description\"]}}"
+            },
+            {
+              "name": "payment_utr",
+              "value": "={{$node[\"Update the residual amounts\"].json[\"data\"][\"payment_utr\"]}}"
+            },
+            {
+              "name": "vendor_payment_status",
+              "value": "={{$node[\"Update the residual amounts\"].json[\"data\"][\"vendor_payment_status\"]}}"
+            },
+            {
+              "name": "vendor_po_number",
+              "value": "={{$node[\"Update the residual amounts\"].json[\"data\"][\"vendor_po_number\"]}}"
+            },
+            {
+              "name": "payment_type",
+              "value": "={{$node[\"Update the residual amounts\"].json[\"data\"][\"payment_type\"]}}"
+            },
+            {
+              "name": "residual_amount",
+              "value": "={{$node[\"Function to update advance payments\"].json[\"residual_amount\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Create vendor payment residual amount record",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3580,
+        -120
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Function to update advance payments\"].json[\"url\"]}}/items/sdm_vendor_payments/{{$node[\"Function to update advance payments\"].json[\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "residual_amount",
+              "value": "0"
+            }
+          ]
+        }
+      },
+      "name": "Update residual amount",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3880,
+        -120
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        3640,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_vendor_payments",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "vendor_po_number",
+              "value": "={{$node[\"Get the po number\"].json[\"data\"][\"id\"]}}"
+            },
+            {
+              "name": "payment_utr",
+              "value": "={{$node[\"Update the residual amounts\"].json[\"data\"][\"payment_utr\"]}}"
+            },
+            {
+              "name": "payment_amount",
+              "value": "={{$node[\"Function to update advance payments\"].json[\"residual_amount\"]}}"
+            },
+            {
+              "name": "payment_description",
+              "value": "={{$node[\"Update the residual amounts\"].json[\"data\"][\"payment_description\"]}}"
+            },
+            {
+              "name": "vendor_payment_status",
+              "value": "={{$node[\"Update the residual amounts\"].json[\"data\"][\"vendor_payment_status\"]}}"
+            },
+            {
+              "name": "payment_type",
+              "value": "={{$node[\"Update the residual amounts\"].json[\"data\"][\"payment_type\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "HTTP Request1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        4180,
+        -100
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-10-18T12:10:13.964Z"
+  "updatedAt": "2022-11-22T07:17:27.243Z"
 }
