@@ -104,7 +104,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let to_email = $node[\"Wait for PO Email\"].json[\"to\"][\"value\"][0][\"address\"];\nlet subject =  $node[\"Wait for PO Email\"].json[\"subject\"];\nlet workflow_id = 0;\nif(to_email == \"sairam.shakedeal+vedanta@gmail.com\"){\n  workflow_id = 179;\n}else if(to_email == \"sairam.shakedeal+payments@gmail.com\"){\n  workflow_id= 176;\n}else if(to_email == \"sairam.shakedeal+grn@gmail.com\"){\n  workflow_id= 205;\n}else if(subject.includes(\"RTGS/NEFT Payment Advise OP COMMERCE ONLINE PVT LTD\")){\n  workflow_id = 210\n}\n\nitems[0].json.to_email= to_email;\nitems[0].json.workflow_id = workflow_id;\nreturn items;"
+        "functionCode": "let to_email = $node[\"Wait for PO Email\"].json[\"to\"][\"value\"][0][\"address\"];\nlet subject =  $node[\"Wait for PO Email\"].json[\"subject\"];\nlet workflow_id = 0;\nif(to_email == \"sairam.shakedeal+vedanta@gmail.com\"){\n  workflow_id = 179;\n}else if(subject.includes(\"Your Invoice No.\")){\n  workflow_id= 176;\n}else if(to_email == \"sairam.shakedeal+grn@gmail.com\"){\n  workflow_id= 205;\n}else if(subject.includes(\"RTGS/NEFT Payment Advise OP COMMERCE ONLINE PVT LTD\")){\n  workflow_id = 210\n}\n\nitems[0].json.to_email= to_email;\nitems[0].json.workflow_id = workflow_id;\nreturn items;"
       },
       "name": "Get workflow id",
       "type": "n8n-nodes-base.function",
@@ -118,9 +118,9 @@
   "settings": {},
   "staticData": {
     "node:Wait for PO Email": {
-      "lastMessageUid": 1836
+      "lastMessageUid": 1869
     }
   },
   "tags": [],
-  "updatedAt": "2022-11-21T11:27:45.730Z"
+  "updatedAt": "2022-11-22T12:09:29.734Z"
 }
