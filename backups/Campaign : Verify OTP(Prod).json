@@ -88,7 +88,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sp_reward_links?filter={\"_and\":[{\"id\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"id\"]}}\"}},{\"otp\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"otp\"]==\"\"?0:$node[\"Webhook\"].json[\"body\"][\"otp\"]}}\"}} , {\"otp_last_updated\":{\"_gt\":\"{{new Date(new Date().getTime()-5*60*1000).toISOString()}}\"}} ]}",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sp_reward_links?filter={\"_and\":[{\"id\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"id\"]}}\"}},{\"otp\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"otp\"]==\"\"?0:$node[\"Webhook\"].json[\"body\"][\"otp\"]}}\"}} ,{\"_or\": [{\"otp_last_updated\":{\"_gt\":\"{{new Date(new Date().getTime()-5*60*1000).toISOString()}}\"}},{\"reward_campaign\":{\"campaign_type\":{\"_eq\":\"generic\"}}}]} ]}",
         "options": {}
       },
       "name": "Get Reward Link Details",
@@ -225,5 +225,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-11-17T13:25:00.076Z"
+  "updatedAt": "2022-11-25T10:36:30.158Z"
 }
