@@ -129,7 +129,7 @@
           "string": [
             {
               "name": "dmsUrl",
-              "value": "={{ $node[\"Receive Approval Response\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ? \"https://zeus.shakedeal.com\" : \"https://dmsqa.shakedeal.com\" }}"
+              "value": "={{ $node[\"Receive Approval Response\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ? \"https://zeus.shakedeal.com\" : \"https://zeusqa.shakedeal.com\" }}"
             },
             {
               "name": "workflowsFromEmail",
@@ -145,7 +145,7 @@
             },
             {
               "name": "dmsIP",
-              "value": "139.59.34.52"
+              "value": "64.227.182.75"
             },
             {
               "name": "crmWebhookUrl",
@@ -258,7 +258,7 @@
           "parameter": [
             {
               "name": "ref_number",
-              "value": "={{$node[\"Receive Approval Response\"].json[\"body\"][\"item\"][0]}}"
+              "value": "={{$node[\"Receive Approval Response\"].json[\"body\"][\"keys\"][0]}}"
             },
             {
               "name": "approval_status",
@@ -291,5 +291,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2021-07-28T06:57:18.929Z"
+  "updatedAt": "2022-11-28T12:00:06.100Z"
 }
