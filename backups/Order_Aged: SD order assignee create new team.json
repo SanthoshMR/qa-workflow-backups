@@ -140,7 +140,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let item_id = $node[\"Webhook\"].json[\"body\"][\"item\"]\nlet team_object={};\nteam_object.id= Array.isArray(item_id)?item_id[0]:item_id ;\nteam_object.name= $node[\"Webhook\"].json[\"body\"][\"payload\"][\"team_name\"];\nteam_object.status = $node[\"Webhook\"].json[\"body\"][\"action\"] === \"delete\"?\"0\":\"1\"\n\nitems[0].json.team_object = team_object\nreturn items;"
+        "functionCode": "let item_id = $node[\"Webhook\"].json[\"body\"][\"item\"]\nlet team_object={};\nteam_object.id= Array.isArray(item_id)?item_id[0]:item_id ;\nteam_object.name= $node[\"Webhook\"].json[\"body\"][\"payload\"][\"team_name\"];\nteam_object.status = $node[\"Webhook\"].json[\"body\"]['update_item'][\"action\"] === \"delete\"?\"0\":\"1\"\n\nitems[0].json.team_object = team_object\nreturn items;"
       },
       "name": "Function",
       "type": "n8n-nodes-base.function",
@@ -154,5 +154,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2021-07-27T13:20:48.655Z"
+  "updatedAt": "2022-11-28T10:27:39.847Z"
 }
