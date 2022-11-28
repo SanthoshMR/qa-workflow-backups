@@ -106,7 +106,7 @@
           "string": [
             {
               "name": "dmsUrl",
-              "value": "={{ $node[\"Receive Approval Request Data\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ? \"https://zeus.shakedeal.com\" : \"https://dmsqa.shakedeal.com\" }}"
+              "value": "={{ $node[\"Receive Approval Request Data\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ? \"https://zeus.shakedeal.com\" : \"https://zeusqa.shakedeal.com\" }}"
             },
             {
               "name": "workflowsFromEmail",
@@ -311,7 +311,7 @@
     {
       "parameters": {
         "fromEmail": "={{$node[\"Globals\"].json[\"workflowsFromEmail\"]}}",
-        "toEmail": "={{$node[\"Globals\"].json[\"approverGroupEmail\"]}}",
+        "toEmail": "={{$node[\"Globals\"].json[\"approverGroupEmail\"]}},anjali.jain@shakedeal.com",
         "subject": "Gift Voucher Ops: Credit Order for Approval",
         "html": "=<style id=\"stndz-style\"></style>\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1, shrink-to-fit=no\">\n<meta name=\"description\" content=\"\">\n<style type=\"text/css\">.tg  {border-collapse:collapse;border-spacing:0;margin:0px auto;}.tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;word-break:normal;}.tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}.tg .tg-1wig{font-weight:bold;text-align:left;vertical-align:top}.tg .tg-0lax{text-align:left;vertical-align:top}@media screen and (max-width: 767px) {.tg {width: auto !important;}.tg col {width: auto !important;}.tg-wrap {overflow-x: auto;-webkit-overflow-scrolling: touch;margin: auto 0px;}}</style>\n\n\n<!-- Bootstrap core CSS -->\n<link href=\"https://marketing.shakedeal.com/assets/templates/5fe306e5a4c97/css/bootstrap.min.css\" rel=\"stylesheet\">\n<link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons+Outlined\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons+Outlined\" rel=\"stylesheet\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u0\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/skin.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u1\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/content.inline.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u0\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/skin.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u1\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/content.inline.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u0\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/skin.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u1\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/content.inline.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u0\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/skin.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u1\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/content.inline.min.css\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons+Outlined\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons+Outlined\" rel=\"stylesheet\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u0\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/skin.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u1\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/content.inline.min.css\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/icon?family=Material+Icons+Outlined\" rel=\"stylesheet\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u0\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/skin.min.css\"><link rel=\"stylesheet\" type=\"text/css\" id=\"u1\" href=\"https://marketing.shakedeal.com/builder/iframe/tinymce/skins/ui/oxide-dark/content.inline.min.css\">\n<style id=\"stndz-style\"></style>\n\n<main role=\"main\">\n      <div class=\"py-5 bg-light\" id=\"mce_8\" style=\"position: relative;\" spellcheck=\"false\"><div class=\"container\" id=\"mce_12\" style=\"position: relative; text-align: center;\" spellcheck=\"false\"><!-- <div class=\"text-center mb-4\">\n            <div><img src=\"https://marketing.shakedeal.com/assets/templates/5ffea7e691f59/image/logo.png\" width=\"350px\" /></div>\n          </div> --> <img id=\"zW2lO\" builder-element=\"\" builder-draggable=\"\" class=\"image-after-change\" src=\"https://marketing.shakedeal.com/files/5fbe3d99407d6/SDLogoColorSmall.png\" style=\"width: 200px; height: 40px; margin: auto;\">\n<h2 class=\"mt-4 mb-4 autocomplete\" id=\"mce_12\" style=\"position: relative;\" spellcheck=\"false\">Gift Order Credit Approval Required</h2>\n<p><span style=\"font-size: 1.25rem; position: relative;\" class=\"autocomplete\" id=\"mce_0\" spellcheck=\"false\">A gifting order with credit terms: {{$json[\"credit_terms\"]}} and below details requires your approval. Please approve/reject this request here: <a href=\"{{$node[\"Globals\"].json[\"dmsUrl\"]}}/admin/collections/approval_request/{{$json[\"reference_number\"]}}\">View Approval Request</a></span></p>\n{{$json[\"approval_details\"]}}\n</main>",
         "options": {}
@@ -320,7 +320,7 @@
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 1,
       "position": [
-        1450,
+        1440,
         300
       ],
       "credentials": {
@@ -346,5 +346,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2021-07-29T05:30:49.682Z"
+  "updatedAt": "2022-11-28T11:17:25.370Z"
 }
