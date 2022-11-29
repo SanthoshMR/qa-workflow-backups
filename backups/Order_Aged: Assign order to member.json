@@ -452,8 +452,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "56",
-          "name": "Dmsqa creds"
+          "id": "10",
+          "name": "SD-Dms-Token"
         }
       }
     },
@@ -521,8 +521,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "56",
-          "name": "Dmsqa creds"
+          "id": "10",
+          "name": "SD-Dms-Token"
         }
       }
     },
@@ -607,8 +607,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "56",
-          "name": "Dmsqa creds"
+          "id": "10",
+          "name": "SD-Dms-Token"
         }
       }
     },
@@ -755,8 +755,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "56",
-          "name": "Dmsqa creds"
+          "id": "10",
+          "name": "SD-Dms-Token"
         }
       }
     },
@@ -818,7 +818,7 @@
           "string": [
             {
               "name": "dms_url",
-              "value": "=https://dmsqa.shakedeal.com"
+              "value": "=https://zeusqa.shakedeal.com"
             },
             {
               "name": "team1",
@@ -1096,8 +1096,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "56",
-          "name": "Dmsqa creds"
+          "id": "10",
+          "name": "SD-Dms-Token"
         }
       }
     },
@@ -1116,8 +1116,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "56",
-          "name": "Dmsqa creds"
+          "id": "10",
+          "name": "SD-Dms-Token"
         }
       }
     },
@@ -1160,8 +1160,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "56",
-          "name": "Dmsqa creds"
+          "id": "10",
+          "name": "SD-Dms-Token"
         }
       }
     },
@@ -1262,8 +1262,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "56",
-          "name": "Dmsqa creds"
+          "id": "10",
+          "name": "SD-Dms-Token"
         }
       }
     },
@@ -1323,8 +1323,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "56",
-          "name": "Dmsqa creds"
+          "id": "10",
+          "name": "SD-Dms-Token"
         }
       }
     },
@@ -1352,8 +1352,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "56",
-          "name": "Dmsqa creds"
+          "id": "10",
+          "name": "SD-Dms-Token"
         }
       }
     },
@@ -1384,8 +1384,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "56",
-          "name": "Dmsqa creds"
+          "id": "10",
+          "name": "SD-Dms-Token"
         }
       }
     },
@@ -1441,8 +1441,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "56",
-          "name": "Dmsqa creds"
+          "id": "10",
+          "name": "SD-Dms-Token"
         }
       }
     },
@@ -1478,8 +1478,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "56",
-          "name": "Dmsqa creds"
+          "id": "10",
+          "name": "SD-Dms-Token"
         }
       }
     },
@@ -1522,13 +1522,13 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        3130,
+        3120,
         600
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "56",
-          "name": "Dmsqa creds"
+          "id": "10",
+          "name": "SD-Dms-Token"
         }
       }
     },
@@ -1564,8 +1564,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "56",
-          "name": "Dmsqa creds"
+          "id": "10",
+          "name": "SD-Dms-Token"
         }
       }
     },
@@ -1584,8 +1584,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "56",
-          "name": "Dmsqa creds"
+          "id": "10",
+          "name": "SD-Dms-Token"
         }
       }
     },
@@ -1613,8 +1613,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "56",
-          "name": "Dmsqa creds"
+          "id": "10",
+          "name": "SD-Dms-Token"
         }
       },
       "continueOnFail": true
@@ -1634,8 +1634,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "56",
-          "name": "Dmsqa creds"
+          "id": "10",
+          "name": "SD-Dms-Token"
         }
       }
     },
@@ -1698,8 +1698,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "56",
-          "name": "Dmsqa creds"
+          "id": "10",
+          "name": "SD-Dms-Token"
         }
       }
     }
@@ -1707,5 +1707,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-10-12T10:08:10.946Z"
+  "updatedAt": "2022-11-29T09:46:51.049Z"
 }
