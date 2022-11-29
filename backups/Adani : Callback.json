@@ -45,7 +45,7 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "PATCH",
-        "url": "=http://157.245.104.124:8056/items/sp_whatsapp_history/{{$node[\"Webhook\"].json[\"query\"][\"id\"]}}",
+        "url": "=https://campaigns.shakepe.com/items/sp_whatsapp_history/{{$node[\"Webhook\"].json[\"query\"][\"id\"]}}",
         "options": {},
         "bodyParametersUi": {
           "parameter": [
@@ -74,5 +74,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-10-04T06:35:34.762Z"
+  "updatedAt": "2022-11-29T09:11:55.089Z"
 }
