@@ -162,7 +162,7 @@
       "main": [
         [
           {
-            "node": "create vendor",
+            "node": "Get the place of supply",
             "type": "main",
             "index": 0
           }
@@ -630,6 +630,17 @@
           }
         ]
       ]
+    },
+    "Get the place of supply": {
+      "main": [
+        [
+          {
+            "node": "create vendor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2022-09-13T07:22:36.657Z",
@@ -921,7 +932,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let contact_name=$node[\"Get po_details\"].json[\"data\"][\"vendor\"][\"vendor_company\"]\nlet tax_treatment = \"\";\nlet gst_treatment = \"\";\nlet contact_type = \"vendor\"; \nlet JSONString={\n  \"contact_name\":contact_name\n }\nif($node[\"Get po_details\"].json[\"data\"][\"vendor\"][\"gstin\"]){\n   tax_treatment = \"vat_registered\";\n   gst_treatment = \"business_gst\";\n }else {\n   tax_treatment = \"vat_not_registered\";\n   gst_treatment = \"business_none\";\n }\n let billing_address= {\n    \"address\": $node[\"Get po_details\"].json[\"data\"][\"vendor\"][\"vendor_address\"]\n}\n items[0].json.contact_type = contact_type;\n items[0].json.tax_treatment = tax_treatment;\n items[0].json.gst_treatment = gst_treatment;\n items[0].json.billing_address = billing_address;\n items[0].json.JSONString=JSONString;\nreturn items;"
+        "functionCode": "let contact_name=$node[\"Get po_details\"].json[\"data\"][0][\"vendor\"][\"vendor_company\"]\nlet tax_treatment = \"\";\nlet gst_treatment = \"\";\nlet contact_type = \"vendor\"; \nlet JSONString={\n  \"contact_name\":contact_name\n }\nif($node[\"Get po_details\"].json[\"data\"][0][\"vendor\"][\"gstin\"]){\n   tax_treatment = \"vat_registered\";\n   gst_treatment = \"business_gst\";\n }else {\n   tax_treatment = \"vat_not_registered\";\n   gst_treatment = \"business_none\";\n }\n let billing_address= {\n    \"address\": $node[\"Get po_details\"].json[\"data\"][0][\"vendor\"][\"vendor_address\"]\n}\n items[0].json.contact_type = contact_type;\n items[0].json.tax_treatment = tax_treatment;\n items[0].json.gst_treatment = gst_treatment;\n items[0].json.billing_address = billing_address;\n items[0].json.JSONString=JSONString;\nreturn items;"
       },
       "name": "Function to create vendor",
       "type": "n8n-nodes-base.function",
@@ -1989,10 +2000,30 @@
         -300,
         100
       ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_state_codes?filter={\"tin\":{\"_eq\":\"{{$node[\"Get po_details\"].json[\"data\"][0][\"vendor\"][\"gstin\"].trim().slice(0, 2)}}\"}}",
+        "options": {}
+      },
+      "name": "Get the place of supply",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1780,
+        -180
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "25",
+          "name": "Local Header Auth"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-11-08T09:06:56.967Z"
+  "updatedAt": "2022-11-29T09:09:14.493Z"
 }
