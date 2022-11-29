@@ -38,7 +38,7 @@
       "main": [
         [
           {
-            "node": "Success Response",
+            "node": "Update Token",
             "type": "main",
             "index": 0
           }
@@ -64,6 +64,17 @@
         [
           {
             "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Token": {
+      "main": [
+        [
+          {
+            "node": "Success Response",
             "type": "main",
             "index": 0
           }
@@ -199,14 +210,14 @@
     },
     {
       "parameters": {
-        "functionCode": "let responseData = [];\n\nresponseData.push({\n    json: {   \"success\":true,   \"message\":\"OTP Verified\"}\t\t\t\n});\n\nreturn responseData;"
+        "functionCode": "let responseData = [];\n\nresponseData.push({\n    json: {   \n        \"success\":true,   \n        \"message\":\"OTP Verified\",\n        \"token\":$node[\"Update Token\"].json[\"data\"][\"token\"],\n        \"token_last_updated\":$node[\"Update Token\"].json[\"data\"][\"token_last_updated\"]\n    }\t\t\t\n});\n\nreturn responseData;"
       },
       "name": "Success Response",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1580,
-        80
+        1620,
+        40
       ]
     },
     {
@@ -220,10 +231,43 @@
         1580,
         340
       ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sp_reward_links/{{$node[\"Get Reward Link Details\"].json[\"data\"][0][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "token",
+              "value": "={{Math.random().toString(36).substr(2)+Math.random().toString(36).substr(2);}}"
+            },
+            {
+              "name": "token_last_updated",
+              "value": "={{new Date().toISOString()}}"
+            }
+          ]
+        }
+      },
+      "name": "Update Token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1440,
+        40
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "57",
+          "name": "Adani header auth"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-11-25T10:36:30.158Z"
+  "updatedAt": "2022-11-29T11:36:08.701Z"
 }
