@@ -1,0 +1,247 @@
+{
+  "active": true,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Verify Redemtion Detials",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify Redemtion Detials": {
+      "main": [
+        [
+          {
+            "node": "Check Valid Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Valid Request": {
+      "main": [
+        [
+          {
+            "node": "Get Voucher Details",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send New Voucher1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Voucher Details": {
+      "main": [
+        [
+          {
+            "node": "Get All Available SKUs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get All Available SKUs": {
+      "main": [
+        [
+          {
+            "node": "Send Voucher Details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2022-11-29T09:22:37.533Z",
+  "id": "239",
+  "name": "Campaign : Get All My Voucher Details",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        160,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "getallmyvoucherDetails",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        160,
+        380
+      ],
+      "webhookId": "1633ec49-64ca-4de9-81df-539755e055fb",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "61",
+          "name": "Campaign Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "dms_url",
+              "value": "https://dmsqa.shakedeal.com"
+            },
+            {
+              "name": "dms_campaign_url",
+              "value": "https://campaignsqa.shakepe.com"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        340,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_campaign_url\"]}}/items/sp_reward_links?filter={\"_and\":[{\"id\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"id\"]}}\"}} , {\"token\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"token\"]}}\"}}  ]}",
+        "options": {}
+      },
+      "name": "Verify Redemtion Detials",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        520,
+        380
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "57",
+          "name": "Adani header auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Verify Redemtion Detials\"].json[\"data\"].length > 0}}"
+            }
+          ]
+        }
+      },
+      "name": "Check Valid Request",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        720,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let responseData = [];\n\nresponseData.push({\n    json: {\n        \"success\": false,\n        \"message\":\"Please Contact Administrator\"\n    }\t\t\t\n});\n\nreturn responseData;\n"
+      },
+      "name": "Send New Voucher1",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        920,
+        580
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let responseData = [];\n\nlet brands = $node[\"Get All Available SKUs\"].json[\"data\"];\nlet voucherData = $node[\"Get Voucher Details\"].json[\"data\"];\n\nvoucherData.forEach(function (data, index){     \n    responseData[index]={};\n    responseData[index].amount = data[\"price\"];           \n    responseData[index].voucher = data[\"code\"];\n    responseData[index].pin = data[\"pin\"];\n    responseData[index].valid_till = data[\"validity\"];\n    responseData[index].image = (brands.find(brand => brand.sku === data[\"product_code\"])).image;\n       \n});\n\nitems[0].json.voucherDetails={ \n    \"result\":responseData, \n    \"success\":true,\n    \"message\":\"Vouchers Fetched!\"\n};\n\nreturn items[0].json.voucherDetails;\n"
+      },
+      "name": "Send Voucher Details",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1440,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_gift_card_inventory?filter={\"_and\":[ {\"id\":{\"_in\":[{{$node[\"Verify Redemtion Detials\"].json[\"data\"][0][\"redemptions\"]}}]}} , {\"order_id\":{\"_eq\":\"{{$node[\"Verify Redemtion Detials\"].json[\"data\"][0][\"id\"]}}\"}}  ]}",
+        "options": {}
+      },
+      "name": "Get Voucher Details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        220
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "56",
+          "name": "Dmsqa creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_campaign_url\"]}}/items/sp_reward_skus?fields=sku,image",
+        "options": {}
+      },
+      "name": "Get All Available SKUs",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1220,
+        220
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "57",
+          "name": "Adani header auth"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2022-11-29T13:39:08.524Z"
+}
