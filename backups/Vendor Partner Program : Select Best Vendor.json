@@ -45,7 +45,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "=https://zeusqa.shakedeal.com/items/sd_brand_vendor_mapping?filter={\"_and\":[{\"choose_a_brand\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"choose_a_brand\"]}}\"}},{\"_or\":[{\"fixed\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"amount\"]}}\"}},{\"_and\":[{\"from\":{\"_lte\":\"{{$node[\"Webhook\"].json[\"body\"][\"amount\"]}}\"}},{\"to\":{\"_gte\":\"{{$node[\"Webhook\"].json[\"body\"][\"amount\"]}}\"}}]}]}]}&sort=-discount_percentage&limit=1",
+        "url": "=https://zeusqa.shakedeal.com/items/sd_brand_vendor_mapping?filter={\"_and\":[{\"choose_a_brand\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"choose_a_brand\"]}}\"}},{\"_or\":[{\"fixed\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"amount\"]}}\"}},{\"_and\":[{\"from\":{\"_lte\":\"{{$node[\"Webhook\"].json[\"body\"][\"amount\"]}}\"}},{\"to\":{\"_gte\":\"{{$node[\"Webhook\"].json[\"body\"][\"amount\"]}}\"}},{\"choose_a_vendor\":{\"status\":{\"_eq\":\"enabled\"}}}]}]}]}&sort=-discount_percentage&limit=1",
         "options": {}
       },
       "name": "HTTP Request",
@@ -66,5 +66,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-11-29T11:41:47.484Z"
+  "updatedAt": "2022-11-30T12:52:50.550Z"
 }
