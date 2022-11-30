@@ -2016,14 +2016,16 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "25",
-          "name": "Local Header Auth"
+          "id": "50",
+          "name": "Mozart DMS Token"
         }
       }
     }
   ],
-  "settings": {},
+  "settings": {
+    "saveExecutionProgress": true
+  },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-11-29T09:09:14.493Z"
+  "updatedAt": "2022-11-30T09:43:08.001Z"
 }
