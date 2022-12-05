@@ -1,0 +1,136 @@
+{
+  "active": false,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2022-12-02T10:31:57.914Z",
+  "id": "240",
+  "name": "Create Order",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "create-order",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ],
+      "webhookId": "a48350af-2711-4418-8cdd-37a4c6713439",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "=https://madmin.shakedeal.com/items/orders",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "id",
+              "value": "SD10001-test1"
+            },
+            {
+              "name": "net_price",
+              "value": "12"
+            },
+            {
+              "name": "gross_price",
+              "value": "12"
+            },
+            {
+              "name": "tax_value",
+              "value": "12"
+            },
+            {
+              "name": "p_segment",
+              "value": "1"
+            },
+            {
+              "name": "s_segment",
+              "value": "1"
+            },
+            {
+              "name": "t_segment"
+            },
+            {
+              "name": "f_segment"
+            },
+            {
+              "name": "order_status",
+              "value": "12"
+            },
+            {
+              "name": "order_date",
+              "value": "2022-09-01T00:00:00"
+            },
+            {
+              "name": "sku",
+              "value": "12"
+            },
+            {
+              "name": "asin",
+              "value": "12"
+            },
+            {
+              "name": "quantity",
+              "value": "12"
+            },
+            {
+              "name": "tax",
+              "value": "12"
+            }
+          ]
+        }
+      },
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        660,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "69",
+          "name": "madmin header auth"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2022-12-05T13:13:41.251Z"
+}
