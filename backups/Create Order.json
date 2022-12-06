@@ -1,5 +1,5 @@
 {
-  "active": false,
+  "active": true,
   "connections": {
     "Webhook": {
       "main": [
@@ -59,57 +59,51 @@
           "parameter": [
             {
               "name": "id",
-              "value": "SD10001-test1"
+              "value": "={{$node[\"Webhook\"].json[\"body\"][0][\"id\"]}}"
             },
             {
               "name": "net_price",
-              "value": "12"
+              "value": "={{$node[\"Webhook\"].json[\"body\"][0][\"net price\"]}}"
             },
             {
               "name": "gross_price",
-              "value": "12"
+              "value": "={{$node[\"Webhook\"].json[\"body\"][0][\"gross price\"]}}"
             },
             {
               "name": "tax_value",
-              "value": "12"
+              "value": "={{$node[\"Webhook\"].json[\"body\"][0][\"tax value\"]}}"
             },
             {
               "name": "p_segment",
-              "value": "1"
+              "value": "={{$node[\"Webhook\"].json[\"body\"][0][\"p segment\"]}}"
             },
             {
               "name": "s_segment",
-              "value": "1"
-            },
-            {
-              "name": "t_segment"
-            },
-            {
-              "name": "f_segment"
+              "value": "={{$node[\"Webhook\"].json[\"body\"][0][\"s segment\"]}}"
             },
             {
               "name": "order_status",
-              "value": "12"
+              "value": "={{$node[\"Webhook\"].json[\"body\"][0][\"order status\"]}}"
             },
             {
               "name": "order_date",
-              "value": "2022-09-01T00:00:00"
+              "value": "={{$node[\"Webhook\"].json[\"body\"][0][\"order date\"]}}"
             },
             {
               "name": "sku",
-              "value": "12"
+              "value": "={{$node[\"Webhook\"].json[\"body\"][0][\"sku\"]}}"
             },
             {
               "name": "asin",
-              "value": "12"
+              "value": "={{$node[\"Webhook\"].json[\"body\"][0][\"asin\"]}}"
             },
             {
               "name": "quantity",
-              "value": "12"
+              "value": "={{$node[\"Webhook\"].json[\"body\"][0][\"quantity\"]}}"
             },
             {
               "name": "tax",
-              "value": "12"
+              "value": "={{$node[\"Webhook\"].json[\"body\"][0][\"tax\"]}}"
             }
           ]
         }
@@ -132,5 +126,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-12-05T13:13:41.251Z"
+  "updatedAt": "2022-12-06T11:30:51.962Z"
 }
