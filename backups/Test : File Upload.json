@@ -1,0 +1,162 @@
+{
+  "active": false,
+  "connections": {
+    "File exists?": {
+      "main": [
+        [
+          {
+            "node": "Merge binary data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mock data": {
+      "main": [
+        [
+          {
+            "node": "File exists?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge binary data": {
+      "main": [
+        [
+          {
+            "node": "Compress files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Mock data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compress files": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2022-12-07T13:20:33.383Z",
+  "id": "245",
+  "name": "Test : File Upload",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        180,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json[\"url\"] }}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      },
+      "name": "File exists?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        440,
+        340
+      ],
+      "id": "c04d56e3-4fdf-4cc2-82e9-469ac2a475ed"
+    },
+    {
+      "parameters": {
+        "functionCode": "return [{\n  url: 'https://www.thomasmartens.eu/wp-content/uploads/2022/07/img01.jpg'\n}, {\n  url: 'https://www.thomasmartens.eu/wp-content/uploads/2022/07/img02.jpg'\n}, {\n  url: 'https://www.thomasmartens.eu/wp-content/uploads/2022/07/img03.jpg'\n}]"
+      },
+      "name": "Mock data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        200,
+        340
+      ],
+      "id": "779e6e08-0dd6-43c9-85a6-881f458298f2"
+    },
+    {
+      "parameters": {
+        "operation": "compress",
+        "binaryPropertyName": "={{ $json[\"binary_keys\"] }}",
+        "outputFormat": "zip",
+        "fileName": "data.zip"
+      },
+      "name": "Compress files",
+      "type": "n8n-nodes-base.compression",
+      "typeVersion": 1,
+      "position": [
+        880,
+        340
+      ],
+      "id": "b2adfec6-66c9-4f8d-b10a-687c04da081f"
+    },
+    {
+      "parameters": {
+        "functionCode": "let binaries = {}, binary_keys = [];\n\nfor([index, item] of items.entries()) {\n    binaries[`data_${index}`] = item.binary.data;\n    binary_keys.push(`data_${index}`);\n}\n\nreturn [{\n    json: {\n        binary_keys: binary_keys.join(',')\n    },\n    binary: binaries\n}];"
+      },
+      "name": "Merge binary data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        660,
+        340
+      ],
+      "id": "517f445a-1425-40a5-8d81-6fd45ba28277"
+    },
+    {
+      "parameters": {
+        "fromEmail": "admin@shakedeal.com",
+        "toEmail": "chidanand@shakedeal.com",
+        "subject": "Test",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        320
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "7",
+          "name": "AWS SES Creds"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2022-12-07T13:23:17.272Z"
+}
