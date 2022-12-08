@@ -16,7 +16,7 @@
       "main": [
         [
           {
-            "node": "Get vendor PO details",
+            "node": "Globals",
             "type": "main",
             "index": 0
           }
@@ -38,7 +38,7 @@
       "main": [
         [
           {
-            "node": "HTTP Request",
+            "node": "HTTP Request2",
             "type": "main",
             "index": 0
           }
@@ -49,17 +49,6 @@
       "main": [
         [
           {
-            "node": "HTTP Request1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Move Binary Data": {
-      "main": [
-        [
-          {
             "node": "Function1",
             "type": "main",
             "index": 0
@@ -67,11 +56,22 @@
         ]
       ]
     },
-    "Set": {
+    "Function1": {
       "main": [
         [
           {
-            "node": "Send Email",
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request2": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
             "type": "main",
             "index": 0
           }
@@ -82,7 +82,18 @@
       "main": [
         [
           {
-            "node": "Nextcloud",
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Get vendor PO details",
             "type": "main",
             "index": 0
           }
@@ -183,15 +194,16 @@
       "parameters": {
         "authentication": "headerAuth",
         "url": "={{$node[\"Function\"].json[\"dms_url\"]}}/assets/{{$node[\"Function\"].json[\"id\"]}}",
+        "allowUnauthorizedCerts": true,
         "responseFormat": "file",
-        "dataPropertyName": "={{$node[\"Function\"].json[\"index\"]}}",
+        "dataPropertyName": "=data",
         "options": {}
       },
       "name": "HTTP Request",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1240,
+        1520,
         220
       ],
       "credentials": {
@@ -199,12 +211,11 @@
           "id": "50",
           "name": "Mozart DMS Token"
         }
-      },
-      "disabled": true
+      }
     },
     {
       "parameters": {
-        "functionCode": "let responseData = [];\nlet upload_files = $node[\"Wait for approval\"].json[\"body\"][\"payload\"][\"upload_document\"][\"create\"];\n\nif(upload_files){\n    upload_files.forEach(function(upload_file,index){\n        responseData.push({\n            json: {\n                \"id\":upload_file.directus_files_id.id,\n                \"index\":\"data\"+index,\n                \"dms_url\":$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]\n            }\t\t\t\n        });\n    })\n}\n\n\nreturn responseData;"
+        "functionCode": "let responseData = [];\nlet upload_files = $node[\"Wait for approval\"].json[\"body\"][\"payload\"][\"upload_document\"][\"create\"];\nlet ids = [];\n\nif(upload_files){\n    upload_files.forEach(function(upload_file,index){\n        ids.push(upload_file.directus_files_id.id)\n        responseData.push({\n            json: {\n                \"id\":upload_file.directus_files_id.id,\n                \"index\":\"data\"+index,\n                \"dms_url\":$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]\n            }\t\t\t\n        });\n    })\n}\n\n\nreturn responseData;"
       },
       "name": "Function",
       "type": "n8n-nodes-base.function",
@@ -212,121 +223,107 @@
       "position": [
         1080,
         220
-      ],
-      "disabled": true
-    },
-    {
-      "parameters": {
-        "setAllData": false,
-        "sourceKey": "=data0",
-        "destinationKey": "=data {{$node[\"Function\"].json[\"index\"]}}",
-        "options": {
-          "keepSource": true,
-          "keepAsBase64": true
-        }
-      },
-      "name": "Move Binary Data",
-      "type": "n8n-nodes-base.moveBinaryData",
-      "typeVersion": 1,
-      "position": [
-        1560,
-        240
       ]
-    },
-    {
-      "parameters": {
-        "options": {}
-      },
-      "name": "Set",
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 1,
-      "position": [
-        1980,
-        120
-      ],
-      "executeOnce": true
     },
     {
       "parameters": {
         "fromEmail": "=handyalasairam9177@gmail.com",
         "toEmail": "=sairam.reddy@shakedeal.com",
         "html": "=<table class=\"x_-1420528032MsoNormalTable\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"371\" style=\"width: 279pt;border-collapse: collapse;\">\n<tbody>\n<tr>\n<td align=\"center\" style=\"border: 1px solid black;border-collapse: collapse\">1</td>\n<td style=\"border: 1px solid black;border-collapse: collapse\">Vedanta PO No.</td>\n<td style=\"border: 1px solid black;border-collapse: collapse\">PO100</td>\n</tr>\n</tbody>\n</table>",
-        "attachments": "data,data",
+        "attachments": "={{$node[\"Function1\"].json[\"binary_keys\"]}}",
         "options": {}
       },
       "name": "Send Email",
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 1,
       "position": [
-        2120,
-        80
+        2340,
+        240
       ],
       "credentials": {
         "smtp": {
           "id": "17",
           "name": "smtp(sai)creds"
         }
-      }
+      },
+      "disabled": true
     },
     {
       "parameters": {
-        "functionCode": "let returnItems = []\nlet invoice_obj ={\n  \"a\":\"a\",\n  \"b\":\"b\"\n}\nreturnItems.push({\njson:invoice_obj\n})\nreturn returnItems ;"
+        "functionCode": "let binaries = {}, binary_keys = [];\n\nfor([index, item] of items.entries()) {\n    item.binary.data.fileName = item.json.data.filename_download\n    binaries[`data_${index}.pdf`] = item.binary.data;\n    binary_keys.push(`data_${index}.pdf`);\n}\n\nreturn [{\n    json: {\n        binary_keys: binary_keys.join(',')\n    },\n    binary: binaries\n}];"
       },
       "name": "Function1",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1760,
-        120
+        1800,
+        220
       ]
     },
     {
       "parameters": {
-        "authentication": "basicAuth",
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Function\"].json[\"dms_url\"]}}/files/{{$node[\"Function\"].json[\"id\"]}}",
+        "options": {}
+      },
+      "name": "HTTP Request2",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1280,
+        220
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
         "requestMethod": "POST",
-        "url": "=https://qan8n.shakedeal.com/webhook-test/63309af3-b032-4f89-8df5-05cd7098d901",
-        "responseFormat": "file",
-        "jsonParameters": true,
-        "options": {},
-        "bodyParametersJson": "={{$node[\"Wait for approval\"].json[\"body\"][\"payload\"][\"upload_document\"][\"create\"]}}"
+        "options": {}
       },
       "name": "HTTP Request1",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1500,
-        60
+        2080,
+        220
       ],
       "credentials": {
-        "httpBasicAuth": {
-          "id": "2",
-          "name": "SD Basic Auth"
+        "httpHeaderAuth": {
+          "id": "10",
+          "name": "SD-Dms-Token"
         }
-      }
+      },
+      "disabled": true
     },
     {
       "parameters": {
-        "path": "/POs",
-        "binaryDataUpload": true,
-        "binaryPropertyName": "data0"
+        "values": {
+          "string": [
+            {
+              "name": "dms_url",
+              "value": "=https://zeusqa.shakedeal.com"
+            }
+          ]
+        },
+        "options": {}
       },
-      "name": "Nextcloud",
-      "type": "n8n-nodes-base.nextCloud",
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        1720,
-        60
-      ],
-      "credentials": {
-        "nextCloudApi": {
-          "id": "55",
-          "name": "Sairam nextcloud Creds"
-        }
-      }
+        940,
+        0
+      ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-12-07T13:01:51.127Z"
+  "updatedAt": "2022-12-08T09:42:31.465Z"
 }
