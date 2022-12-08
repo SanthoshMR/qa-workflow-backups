@@ -16,7 +16,7 @@
       "main": [
         [
           {
-            "node": "File exists?",
+            "node": "HTTP Request",
             "type": "main",
             "index": 0
           }
@@ -55,6 +55,17 @@
           }
         ]
       ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "File exists?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2022-12-07T13:20:33.383Z",
@@ -67,8 +78,8 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        180,
-        160
+        40,
+        140
       ]
     },
     {
@@ -93,13 +104,13 @@
     },
     {
       "parameters": {
-        "functionCode": "return [{\n  url: 'https://www.thomasmartens.eu/wp-content/uploads/2022/07/img01.jpg'\n}, {\n  url: 'https://www.thomasmartens.eu/wp-content/uploads/2022/07/img02.jpg'\n}, {\n  url: 'https://www.thomasmartens.eu/wp-content/uploads/2022/07/img03.jpg'\n}]"
+        "functionCode": "return [{\n  url: 'https://cdn.shakedeal.com/images/detailed/775/SDOBT0029700_2din-mk.png'\n}, {\n  url: 'https://cdn.shakedeal.com/images/thumbnails/250/250/detailed/750/SDIGO0003100_xzwe-a2.png'\n}, {\n  url: 'https://cdn.shakedeal.com/images/detailed/321/SDKRM0014800.png'\n}]"
       },
       "name": "Mock data",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        200,
+        80,
         340
       ],
       "id": "779e6e08-0dd6-43c9-85a6-881f458298f2"
@@ -138,6 +149,7 @@
         "fromEmail": "admin@shakedeal.com",
         "toEmail": "chidanand@shakedeal.com",
         "subject": "Test",
+        "attachments": "data",
         "options": {}
       },
       "name": "Send Email",
@@ -145,7 +157,7 @@
       "typeVersion": 1,
       "position": [
         1100,
-        320
+        340
       ],
       "credentials": {
         "smtp": {
@@ -153,10 +165,25 @@
           "name": "AWS SES Creds"
         }
       }
+    },
+    {
+      "parameters": {
+        "url": "={{$node[\"Mock data\"].json[\"url\"]}}",
+        "responseFormat": "file",
+        "options": {}
+      },
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        260,
+        340
+      ],
+      "alwaysOutputData": false
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-12-07T13:23:17.272Z"
+  "updatedAt": "2022-12-08T05:57:29.695Z"
 }
