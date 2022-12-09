@@ -912,6 +912,10 @@
             {
               "name": "email",
               "value": "={{$node[\"Get po_details\"].json[\"data\"][0][\"vendor\"][\"id\"].trim()}}"
+            },
+            {
+              "name": "gst_no",
+              "value": "={{$node[\"Get po_details\"].json[\"data\"][\"vendor\"][\"gstin\"]}}"
             }
           ]
         }
@@ -2027,5 +2031,5 @@
   },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-12-01T07:23:52.499Z"
+  "updatedAt": "2022-12-09T10:37:14.967Z"
 }
