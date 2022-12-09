@@ -173,7 +173,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_pos/{{$node[\"Wait for approval\"].json[\"body\"][\"payload\"][\"vendor_po_number\"]}}",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_pos/{{$node[\"Wait for approval\"].json[\"body\"][\"payload\"][\"vendor_po_number\"]}}?fields= *.*,vendor.*",
         "options": {}
       },
       "name": "Get vendor PO details",
@@ -250,7 +250,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let binaries = {}, binary_keys = [];\n\nfor([index, item] of items.entries()) {\n    item.binary.data.fileName = item.json.data.filename_download\n    binaries[`data_${index}.pdf`] = item.binary.data;\n    binary_keys.push(`data_${index}.pdf`);\n}\n\nreturn [{\n    json: {\n        binary_keys: binary_keys.join(',')\n    },\n    binary: binaries\n}];"
+        "functionCode": "let binaries = {}, binary_keys = [];\nlet po_data = $node[\"Get vendor PO details\"].json[\"data\"];\nlet approval_request ={};\napproval_request.vedanta_po_number = po_data.po_num;\napproval_request.vendor_po_number = po_data.id;\napproval_request.vendor_po_value = po_data.po_value;\napproval_request.vendor_name = po_data.\n\nfor([index, item] of items.entries()) {\n    item.binary.data.fileName = item.json.data.filename_download\n    binaries[`data_${index}.pdf`] = item.binary.data;\n    binary_keys.push(`data_${index}.pdf`);\n}\n\nreturn [{\n    json: {\n        binary_keys: binary_keys.join(',')\n    },\n    binary: binaries\n}];"
       },
       "name": "Function1",
       "type": "n8n-nodes-base.function",
@@ -284,6 +284,7 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sdm_approval_request",
         "options": {}
       },
       "name": "HTTP Request1",
@@ -298,11 +299,11 @@
           "id": "10",
           "name": "SD-Dms-Token"
         }
-      },
-      "disabled": true
+      }
     },
     {
       "parameters": {
+        "keepOnlySet": true,
         "values": {
           "string": [
             {
@@ -325,5 +326,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-12-08T09:42:31.465Z"
+  "updatedAt": "2022-12-09T07:20:57.045Z"
 }
