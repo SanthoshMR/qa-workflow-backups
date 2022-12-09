@@ -161,7 +161,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sp_reward_links?filter={\"_and\": [{\"end_date\": {\"_gte\":\"{{new Date().toISOString()}}\"}},{\"id\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"id\"]}}\"}} ]}&fields=*.*,reward_campaign.*,reward_campaign.brands.*,reward_campaign.brands.brand_id.*,reward_campaign.catalogue.sp_reward_sku_id.*,redemptions.sku.*",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sp_reward_links?filter={\"_and\": [{\"id\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"id\"]}}\"}} ]}&fields=*.*,reward_campaign.*,reward_campaign.brands.*,reward_campaign.brands.brand_id.*,reward_campaign.catalogue.sp_reward_sku_id.*,redemptions.sku.*",
         "options": {}
       },
       "name": "Get the link details",
@@ -184,7 +184,7 @@
           "boolean": [
             {
               "value1": true,
-              "value2": "={{$node[\"Get the link details\"].json[\"data\"].length>0}}"
+              "value2": "={{$node[\"Get the link details\"].json[\"data\"].length>0 && $node[\"Get the link details\"].json[\"data\"][0][\"end_date\"] > new Date().toISOString()}}"
             }
           ]
         }
@@ -211,7 +211,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let responseData = [];\n\nresponseData.push({\n    json: {\n        \"success\": false,\n        \"message\": \"invalid link\"\n    }\t\t\t\t\n});\n\nreturn responseData;"
+        "functionCode": "let responseData = [];\nlet isLinkExpired = false;\n\nif($node[\"Get the link details\"].json[\"data\"].length > 0){\n    isLinkExpired=$node[\"Get the link details\"].json[\"data\"][0][\"end_date\"] > new Date().toISOString() ? false : true;\n}\n\nresponseData.push({\n    json: {\n        \"success\": false,\n        \"message\": isLinkExpired ? \"Link Expired\" : \"Invalid Link\",\n        \"error_tag\":isLinkExpired ? \"LINK_EXPIRED\" : \"INVALID_LINK\"\n    }\t\t\t\t\n});\n\nreturn responseData;"
       },
       "name": "Respond to invalid link",
       "type": "n8n-nodes-base.function",
@@ -225,5 +225,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-12-06T13:02:36.138Z"
+  "updatedAt": "2022-12-09T05:57:14.819Z"
 }
