@@ -1,0 +1,231 @@
+{
+  "active": true,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request2": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2022-12-02T10:31:57.914Z",
+  "id": "240",
+  "name": "Create and update Order",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        -540,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "create-and-update-order",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -300,
+        200
+      ],
+      "webhookId": "a48350af-2711-4418-8cdd-37a4c6713439",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "=https://madmin.shakedeal.com/items/orders",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "id",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][0][\"id\"]}}"
+            },
+            {
+              "name": "net_price",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][0][\"net price\"]}}"
+            },
+            {
+              "name": "gross_price",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][0][\"gross price\"]}}"
+            },
+            {
+              "name": "tax_value",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][0][\"tax value\"]}}"
+            },
+            {
+              "name": "p_segment",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][0][\"p segment\"]}}"
+            },
+            {
+              "name": "s_segment",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][0][\"s segment\"]}}"
+            },
+            {
+              "name": "order_status",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][0][\"order status\"]}}"
+            },
+            {
+              "name": "order_date",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][0][\"order date\"]}}"
+            },
+            {
+              "name": "sku",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][0][\"sku\"]}}"
+            },
+            {
+              "name": "asin",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][0][\"asin\"]}}"
+            },
+            {
+              "name": "quantity",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][0][\"quantity\"]}}"
+            },
+            {
+              "name": "tax",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][0][\"tax\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "69",
+          "name": "madmin header auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$node[\"HTTP Request2\"].json[\"data\"].length>0}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        120,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "=https://madmin.shakedeal.com/items/orders/{{$node[\"Webhook\"].json[\"body\"][0][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "id",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][0][\"id\"]}}"
+            },
+            {
+              "name": "order_status",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][0][\"order_status\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "HTTP Request1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        460,
+        80
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "69",
+          "name": "madmin header auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://madmin.shakedeal.com/items/orders/?filter={\"id\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][0][\"id\"]}}\"}}",
+        "options": {}
+      },
+      "name": "HTTP Request2",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        200
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "69",
+          "name": "madmin header auth"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2022-12-12T13:02:45.570Z"
+}
