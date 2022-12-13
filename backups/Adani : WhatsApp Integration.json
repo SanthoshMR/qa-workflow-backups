@@ -96,7 +96,7 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "POST",
-        "url": "=http://157.245.104.124:8056/items/sp_whatsapp_history",
+        "url": "=https://campaignsqa.shakepe.com/items/sp_whatsapp_history",
         "options": {},
         "bodyParametersUi": {
           "parameter": [
@@ -212,7 +212,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "=http://157.245.104.124:8056/items/sp_wa_templates?filter={\"translations\":{\"sp_template_id\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"template_name\"]}}\"}}}&fields=translations.*,id",
+        "url": "=https://campaignsqa.shakepe.com/items/sp_wa_templates?filter={\"translations\":{\"sp_template_id\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"template_name\"]}}\"}}}&fields=translations.*,id",
         "options": {}
       },
       "name": "Get the template id",
@@ -232,7 +232,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "=http://157.245.104.124:8056/items/sp_partner_progress?filter={\"_and\": [{\"partner\": {\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"partner\"]}}\"}},{\"campaign\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"campaign\"]}}\"}}]}&limit=1",
+        "url": "=https://campaignsqa.shakepe.com/items/sp_partner_progress?filter={\"_and\": [{\"partner\": {\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"partner\"]}}\"}},{\"campaign\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"campaign\"]}}\"}}]}&limit=1",
         "options": {
           "fullResponse": false
         }
@@ -255,5 +255,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-10-15T11:10:57.095Z"
+  "updatedAt": "2022-12-13T11:41:02.813Z"
 }
