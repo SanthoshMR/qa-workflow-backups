@@ -27,62 +27,7 @@
       "main": [
         [
           {
-            "node": "Function",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Function": {
-      "main": [
-        [
-          {
-            "node": "HTTP Request2",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "HTTP Request": {
-      "main": [
-        [
-          {
-            "node": "Function1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Function1": {
-      "main": [
-        [
-          {
-            "node": "HTTP Request1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "HTTP Request2": {
-      "main": [
-        [
-          {
-            "node": "HTTP Request",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "HTTP Request1": {
-      "main": [
-        [
-          {
-            "node": "Send Email",
+            "node": "Function to split files",
             "type": "main",
             "index": 0
           }
@@ -94,6 +39,72 @@
         [
           {
             "node": "Get vendor PO details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email": {
+      "main": [
+        [
+          {
+            "node": "Send Email1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to split files": {
+      "main": [
+        [
+          {
+            "node": "Get the uploaded files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the uploaded files": {
+      "main": [
+        [
+          {
+            "node": "Get the uploaded assets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the uploaded assets": {
+      "main": [
+        [
+          {
+            "node": "Function to club the binay files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to club the binay files": {
+      "main": [
+        [
+          {
+            "node": "Create advance request in zues",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create advance request in zues": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
             "type": "main",
             "index": 0
           }
@@ -192,45 +203,11 @@
     },
     {
       "parameters": {
-        "authentication": "headerAuth",
-        "url": "={{$node[\"Function\"].json[\"dms_url\"]}}/assets/{{$node[\"Function\"].json[\"id\"]}}",
-        "allowUnauthorizedCerts": true,
-        "responseFormat": "file",
-        "dataPropertyName": "=data",
-        "options": {}
-      },
-      "name": "HTTP Request",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        1520,
-        220
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "50",
-          "name": "Mozart DMS Token"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "functionCode": "let responseData = [];\nlet upload_files = $node[\"Wait for approval\"].json[\"body\"][\"payload\"][\"upload_document\"][\"create\"];\nlet ids = [];\n\nif(upload_files){\n    upload_files.forEach(function(upload_file,index){\n        ids.push(upload_file.directus_files_id.id)\n        responseData.push({\n            json: {\n                \"id\":upload_file.directus_files_id.id,\n                \"index\":\"data\"+index,\n                \"dms_url\":$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]\n            }\t\t\t\n        });\n    })\n}\n\n\nreturn responseData;"
-      },
-      "name": "Function",
-      "type": "n8n-nodes-base.function",
-      "typeVersion": 1,
-      "position": [
-        1080,
-        220
-      ]
-    },
-    {
-      "parameters": {
         "fromEmail": "=handyalasairam9177@gmail.com",
         "toEmail": "=sairam.reddy@shakedeal.com",
-        "html": "=<table class=\"x_-1420528032MsoNormalTable\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"371\" style=\"width: 279pt;border-collapse: collapse;\">\n<tbody>\n<tr>\n<td align=\"center\" style=\"border: 1px solid black;border-collapse: collapse\">1</td>\n<td style=\"border: 1px solid black;border-collapse: collapse\">Vedanta PO No.</td>\n<td style=\"border: 1px solid black;border-collapse: collapse\">PO100</td>\n</tr>\n</tbody>\n</table>",
-        "attachments": "={{$node[\"Function1\"].json[\"binary_keys\"]}}",
+        "subject": "=Vedanta || Advance Payment Request is approved by Admin || Vendor PO #",
+        "html": "=<p>Approved || Advance Payment request for Vendor PO # PO-00925</p>\n<p>Kindly approve the advance payment for the vendor as per below details:</p>\n<table class=\"x_-1420528032MsoNormalTable\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"371\" style=\"width: 279pt;border-collapse: collapse;\">\n<tbody>\n<tr>\n<td align=\"center\" style=\"border: 1px solid black;border-collapse: collapse\">1</td>\n<td style=\"border: 1px solid black;border-collapse: collapse\">Vedanta PO No.</td>\n<td style=\"border: 1px solid black;border-collapse: collapse\">PO100</td>\n</tr>\n<tr>\n<td align=\"center\" style=\"border: 1px solid black;border-collapse: collapse\">2</td>\n<td style=\"border: 1px solid black;border-collapse: collapse\">Vendor PO No.</td>\n<td style=\"border: 1px solid black;border-collapse: collapse\">PO100</td>\n</tr>\n<tr>\n<td align=\"center\" style=\"border: 1px solid black;border-collapse: collapse\">3</td>\n<td style=\"border: 1px solid black;border-collapse: collapse\">Vendor Name</td>\n<td style=\"border: 1px solid black;border-collapse: collapse\">PO100</td>\n</tr>\n<tr>\n<td align=\"center\" style=\"border: 1px solid black;border-collapse: collapse\">4</td>\n<td style=\"border: 1px solid black;border-collapse: collapse\">Vendor PO Value</td>\n<td style=\"border: 1px solid black;border-collapse: collapse\">PO100</td>\n</tr>\n<tr>\n<td align=\"center\" style=\"border: 1px solid black;border-collapse: collapse\">5</td>\n<td style=\"border: 1px solid black;border-collapse: collapse\">PO Delivery Date</td>\n<td style=\"border: 1px solid black;border-collapse: collapse\">PO100</td>\n</tr>\n<tr>\n<td align=\"center\" style=\"border: 1px solid black;border-collapse: collapse\">6</td>\n<td style=\"border: 1px solid black;border-collapse: collapse\">Advance to be paid</td>\n<td style=\"border: 1px solid black;border-collapse: collapse\">PO100</td>\n</tr>\n<tr>\n<td align=\"center\" style=\"border: 1px solid black;border-collapse: collapse\">7</td>\n<td style=\"border: 1px solid black;border-collapse: collapse\">Reason for advance</td>\n<td style=\"border: 1px solid black;border-collapse: collapse\">PO100</td>\n</tr>\n<tr>\n<td align=\"center\" style=\"border: 1px solid black;border-collapse: collapse\">8</td>\n<td style=\"border: 1px solid black;border-collapse: collapse\">Residual Amount</td>\n<td style=\"border: 1px solid black;border-collapse: collapse\">PO100</td>\n</tr>\n<tr>\n<td align=\"center\" style=\"border: 1px solid black;border-collapse: collapse\">9</td>\n<td style=\"border: 1px solid black;border-collapse: collapse\">Already paid to vendor</td>\n<td style=\"border: 1px solid black;border-collapse: collapse\">PO100</td>\n</tr>\n<tr>\n<td align=\"center\" style=\"border: 1px solid black;border-collapse: collapse\">10</td>\n<td style=\"border: 1px solid black;border-collapse: collapse\">Approval Status</td>\n<td style=\"border: 1px solid black;border-collapse: collapse\">PO100</td>\n</tr>\n<tr>\n<td align=\"center\" style=\"border: 1px solid black;border-collapse: collapse\">11</td>\n<td style=\"border: 1px solid black;border-collapse: collapse\">PO Type</td>\n<td style=\"border: 1px solid black;border-collapse: collapse\">PO100</td>\n</tr>\n<tr>\n<td align=\"center\" style=\"border: 1px solid black;border-collapse: collapse\">12</td>\n<td style=\"border: 1px solid black;border-collapse: collapse\">Shipment Status</td>\n<td style=\"border: 1px solid black;border-collapse: collapse\">PO100</td>\n</tr>\n<tr>\n<td align=\"center\" style=\"border: 1px solid black;border-collapse: collapse\">13</td>\n<td style=\"border: 1px solid black;border-collapse: collapse\">Requested By</td>\n<td style=\"border: 1px solid black;border-collapse: collapse\">PO100</td>\n</tr>\n</tbody>\n</table>\n<p>Kindly check the details for payment request here :  <a href=\"https://zeusqa.shakedeal.com/admin/content/sdm_approval_request\">View Payment Request</a></p>",
+        "attachments": "={{$node[\"Function to club the binay files\"].json[\"binary_keys\"]}}",
         "options": {}
       },
       "name": "Send Email",
@@ -245,62 +222,7 @@
           "id": "17",
           "name": "smtp(sai)creds"
         }
-      },
-      "disabled": true
-    },
-    {
-      "parameters": {
-        "functionCode": "let binaries = {}, binary_keys = [];\nlet po_data = $node[\"Get vendor PO details\"].json[\"data\"];\nlet approved_payments = po_data.vendor_payments.filter(vp=>vp.approval_status==\"approved\");\nlet already_paid_to_vendor = approved_payments.reduce(function (result, item) {\n  return result + item.payment_amount;\n}, 0);\nlet approval_request ={};\napproval_request.vedanta_po_number = po_data.po_num;\napproval_request.vendor_po_number = po_data.id;\napproval_request.vendor_po_value = po_data.po_value;\napproval_request.vendor_name = po_data.vendor.vendor_name;\napproval_request.po_delivery_date =  po_data.po_deliver_date;\napproval_request.residual_amount = already_paid_to_vendor+$node[\"Wait for approval\"].json[\"body\"][\"payload\"][\"payment_amount\"];\napproval_request.already_paid_to_vendor = already_paid_to_vendor;\napproval_request.advance = \nfor([index, item] of items.entries()) {\n    item.binary.data.fileName = item.json.data.filename_download\n    binaries[`data_${index}.pdf`] = item.binary.data;\n    binary_keys.push(`data_${index}.pdf`);\n}\n\nreturn [{\n    json: {\n        binary_keys: binary_keys.join(','),\n        approval_request : approval_request\n    },\n    binary: binaries\n}];"
-      },
-      "name": "Function1",
-      "type": "n8n-nodes-base.function",
-      "typeVersion": 1,
-      "position": [
-        1800,
-        220
-      ]
-    },
-    {
-      "parameters": {
-        "authentication": "headerAuth",
-        "url": "={{$node[\"Function\"].json[\"dms_url\"]}}/files/{{$node[\"Function\"].json[\"id\"]}}",
-        "options": {}
-      },
-      "name": "HTTP Request2",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        1280,
-        220
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "50",
-          "name": "Mozart DMS Token"
-        }
       }
-    },
-    {
-      "parameters": {
-        "authentication": "headerAuth",
-        "requestMethod": "POST",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sdm_approval_request",
-        "options": {}
-      },
-      "name": "HTTP Request1",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        2080,
-        220
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "10",
-          "name": "SD-Dms-Token"
-        }
-      },
-      "disabled": true
     },
     {
       "parameters": {
@@ -322,10 +244,123 @@
         940,
         0
       ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "=Vinay.KumarN@vedanta.co.in",
+        "toEmail": "=santhosh@shakedeal.com,chidanand@shakedeal.com,handyalasairam9177@gmail.com",
+        "ccEmail": "=Vinay.KumarN@vedanta.co.in",
+        "subject": "Buyer test 1",
+        "options": {}
+      },
+      "name": "Send Email1",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        2780,
+        100
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "7",
+          "name": "AWS SES Creds"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "functionCode": "let responseData = [];\nlet upload_files = $node[\"Wait for approval\"].json[\"body\"][\"payload\"][\"upload_document\"][\"create\"];\nlet ids = [];\n\nif(upload_files){\n    upload_files.forEach(function(upload_file,index){\n        ids.push(upload_file.directus_files_id.id)\n        responseData.push({\n            json: {\n                \"id\":upload_file.directus_files_id.id,\n                \"index\":\"data\"+index,\n                \"dms_url\":$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]\n            }\t\t\t\n        });\n    })\n}\n\n\nreturn responseData;"
+      },
+      "name": "Function to split files",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Function to split files\"].json[\"dms_url\"]}}/files/{{$node[\"Function to split files\"].json[\"id\"]}}",
+        "options": {}
+      },
+      "name": "Get the uploaded files",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1320,
+        220
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Function to split files\"].json[\"dms_url\"]}}/assets/{{$node[\"Function to split files\"].json[\"id\"]}}",
+        "allowUnauthorizedCerts": true,
+        "responseFormat": "file",
+        "dataPropertyName": "=data",
+        "options": {}
+      },
+      "name": "Get the uploaded assets",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1520,
+        220
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let binaries = {}, binary_keys = [];\nlet po_data = $node[\"Get vendor PO details\"].json[\"data\"];\nlet approved_payments = po_data.vendor_payments.filter(vp=>vp.approval_status==\"approved\");\nlet already_paid_to_vendor = approved_payments.reduce(function (result, item) {\n  return result + item.payment_amount;\n}, 0);\nlet approval_request ={};\napproval_request.vedanta_po_number = po_data.po_num.id;\napproval_request.vendor_po_number = po_data.id;\napproval_request.vendor_po_value = po_data.po_value;\napproval_request.vendor_name = po_data.vendor.vendor_name;\napproval_request.po_delivery_date =  po_data.po_deliver_date;\napproval_request.residual_amount = already_paid_to_vendor+$node[\"Wait for approval\"].json[\"body\"][\"payload\"][\"payment_amount\"];\napproval_request.already_paid_to_vendor = already_paid_to_vendor;\napproval_request.advance = $node[\"Wait for approval\"].json[\"body\"][\"payload\"][\"payment_amount\"];\napproval_request.reason_for_advance = $node[\"Wait for approval\"].json[\"body\"][\"payload\"]['reason_for_advance'];\napproval_request.po_type = po_data.po_type;\napproval_request.shipment_status = $node[\"Wait for approval\"].json[\"body\"][\"payload\"].shipment_status;\napproval_request.key = $node[\"Wait for approval\"].json[\"body\"][\"key\"];\nfor([index, item] of items.entries()) {\n    item.binary.data.fileName = item.json.data.filename_download\n    binaries[`data_${index}.pdf`] = item.binary.data;\n    binary_keys.push(`data_${index}.pdf`);\n}\n\nreturn [{\n    json: {\n        binary_keys: binary_keys.join(','),\n        approval_request : approval_request\n    },\n    binary: binaries\n}];"
+      },
+      "name": "Function to club the binay files",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1800,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sdm_approval_request",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Function to club the binay files\"].json[\"approval_request\"]}}"
+      },
+      "name": "Create advance request in zues",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2080,
+        220
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "10",
+          "name": "SD-Dms-Token"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-12-12T09:41:41.110Z"
+  "updatedAt": "2022-12-13T10:16:41.677Z"
 }
