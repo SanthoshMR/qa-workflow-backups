@@ -564,6 +564,10 @@
             {
               "name": "vendor_payment",
               "value": "={{$node[\"Function to create payment to vendors\"].json[\"payment_status\"]}}"
+            },
+            {
+              "name": "payable_amount",
+              "value": "={{$node[\"Wait for shipment\"].json[\"body\"][\"payload\"][\"invoice_value\"]}}"
             }
           ]
         }
@@ -900,5 +904,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-11-22T07:17:27.243Z"
+  "updatedAt": "2022-12-13T13:06:34.943Z"
 }
