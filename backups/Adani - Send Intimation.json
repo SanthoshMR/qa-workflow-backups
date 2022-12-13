@@ -102,7 +102,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "=http://157.245.104.124:8056/items/sp_campaigns?fields=*.*.*&filter={\"id\":{\"_in\":\"{{$node[\"sendintimationhook\"].json[\"body\"][\"payload\"][\"keys\"]}}\"}}",
+        "url": "=https://campaignsqa.shakepe.com/items/sp_campaigns?fields=*.*.*&filter={\"id\":{\"_in\":\"{{$node[\"sendintimationhook\"].json[\"body\"][\"payload\"][\"keys\"]}}\"}}",
         "options": {}
       },
       "name": "getpartners",
@@ -231,7 +231,7 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "POST",
-        "url": "=http://157.245.104.124:8056/items/sp_partner_progress",
+        "url": "=https://campaignsqa.shakepe.com/items/sp_partner_progress",
         "options": {},
         "bodyParametersUi": {
           "parameter": [
@@ -279,5 +279,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-10-15T11:08:46.117Z"
+  "updatedAt": "2022-12-13T11:38:29.934Z"
 }
