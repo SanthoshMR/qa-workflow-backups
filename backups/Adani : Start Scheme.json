@@ -68,7 +68,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "=http://157.245.104.124:8056/items/sp_campaigns?fields=*.*.*&filter={\"id\":{\"_in\":\"{{$node[\"sendintimationhook\"].json[\"body\"][\"payload\"][\"keys\"]}}\"}}",
+        "url": "=https://campaignsqa.shakepe.com/items/sp_campaigns?fields=*.*.*&filter={\"id\":{\"_in\":\"{{$node[\"sendintimationhook\"].json[\"body\"][\"payload\"][\"keys\"]}}\"}}",
         "options": {}
       },
       "name": "getpartners",
@@ -150,5 +150,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-10-04T06:52:08.274Z"
+  "updatedAt": "2022-12-13T11:41:33.303Z"
 }
