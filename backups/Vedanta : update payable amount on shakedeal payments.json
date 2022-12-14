@@ -1,0 +1,233 @@
+{
+  "active": true,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get url and token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get url and token": {
+      "main": [
+        [
+          {
+            "node": "Get shakedeal payments",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get shakedeal payments": {
+      "main": [
+        [
+          {
+            "node": "Get order invoice",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get order invoice": {
+      "main": [
+        [
+          {
+            "node": "Get vendor invoice details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get vendor invoice details": {
+      "main": [
+        [
+          {
+            "node": "Function for vendor invoice update obj",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function for vendor invoice update obj": {
+      "main": [
+        [
+          {
+            "node": "Update vendor invoice details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2022-12-14T05:22:27.753Z",
+  "id": "247",
+  "name": "Vedanta : update payable amount on shakedeal payments",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "update_vendor_payments",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        440,
+        300
+      ],
+      "webhookId": "3f89c5a0-2d18-42ce-ba86-e85fcaa03471"
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "=https://qan8n.shakedeal.com/webhook/get-url",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "client",
+              "value": "={{$node[\"Webhook\"].json[\"headers\"][\"client\"]}}"
+            },
+            {
+              "name": "env",
+              "value": "={{$node[\"Webhook\"].json[\"headers\"][\"x-sd-env\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Get url and token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        680,
+        300
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_payments_to_shakedeal/{{$node[\"Webhook\"].json[\"body\"][\"keys\"][0]}}?fields= *.*",
+        "options": {}
+      },
+      "name": "Get shakedeal payments",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        960,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_order_invoices?filter={\"id\":{\"_eq\":\"{{$node[\"Get shakedeal payments\"].json[\"data\"][\"invoice_number\"]}}\"}}&fields=*.*.*",
+        "options": {}
+      },
+      "name": "Get order invoice",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1260,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_invoice_details?filter={\"shipment\":{\"_eq\":\"{{$node[\"Get order invoice\"].json[\"data\"][0][\"order\"][\"shipment\"][\"id\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Get vendor invoice details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1520,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_invoice_details/{{$node[\"Get vendor invoice details\"].json[\"data\"][0][\"id\"]}}",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Function for vendor invoice update obj\"].json[\"updateObj\"]}}"
+      },
+      "name": "Update vendor invoice details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2080,
+        280
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let vendorPayments = $node[\"Get vendor invoice details\"].json[\"data\"][0][\"vendor_payments\"];\nlet payableAmount = $node[\"Get shakedeal payments\"].json[\"data\"][\"payment_paid\"];\nlet invoiceDetails = $node[\"Get vendor invoice details\"].json[\"data\"][0];\nlet updateObj = {};\nif(invoiceDetails.total_paid_amount>0){\n  // let releasedVendorPayments = vendorPayments.filter(payment=>payment.vendor_payment_status);\n  // let paidAmount = releasedVendorPayments.reduce(function (result, item) {\n  //   return result + item.payment_amount;\n  // }, 0);\n  updateObj.payable_amount = payableAmount;\n  updateObj.remaining_to_pay = payableAmount - invoiceDetails.remaining_to_pay\n  updateObj.total_percentage_paid = (invoiceDetails.total_paid_amount/payableAmount)*100;\n}else{\n  updateObj.payable_amount = payableAmount;\n  updateObj.remaining_to_pay = payableAmount;\n}\n\nitems[0].json.updateObj = updateObj\nreturn items;"
+      },
+      "name": "Function for vendor invoice update obj",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1740,
+        300
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2022-12-14T11:27:36.708Z"
+}
