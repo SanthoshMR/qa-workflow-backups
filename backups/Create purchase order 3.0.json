@@ -562,18 +562,7 @@
       "main": [
         [
           {
-            "node": "Construct obj for sending mail",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Construct obj for sending mail": {
-      "main": [
-        [
-          {
-            "node": "Send email to vendor",
+            "node": "Get the PO pdf",
             "type": "main",
             "index": 0
           }
@@ -636,6 +625,17 @@
         [
           {
             "node": "create vendor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the PO pdf": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
             "type": "main",
             "index": 0
           }
@@ -1898,46 +1898,6 @@
     },
     {
       "parameters": {
-        "authentication": "headerAuth",
-        "requestMethod": "POST",
-        "url": "=https://books.zoho.com/api/v3/purchaseorders/{{$node[\"create po\"].json[\"purchaseorder\"][\"purchaseorder_id\"]}}/email?organization_id=685685414",
-        "allowUnauthorizedCerts": true,
-        "jsonParameters": true,
-        "options": {
-          "bodyContentType": "json"
-        },
-        "bodyParametersJson": "={{$node[\"Construct obj for sending mail\"].json.mail_obj}}"
-      },
-      "name": "Send email to vendor",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        8360,
-        120
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "29",
-          "name": "zoho books creds"
-        }
-      },
-      "disabled": true
-    },
-    {
-      "parameters": {
-        "functionCode": " let po_number = $node[\"create po\"].json[\"purchaseorder\"][\"purchaseorder_number\"];\nlet po_date = $node[\"create po\"].json[\"purchaseorder\"][\"date\"];\n let po_total = $node[\"create po\"].json[\"purchaseorder\"][\"total\"];\nlet from_address_id = \"1763031000051671212\";\ncc_mail_ids = [\"sairam.reddy@shakedeal.com\"]\nlet vendor_name = $node[\"Get po_details\"].json[\"data\"][\"vendor\"][\"vendor_name\"];\n//let subject = `Purchase Order from Opcommerce Online Private Limited (PO #: ${po_number})`;\n//let subject = `Purchase Order from Opcommerce Online Private Limited (PO #: SDPO)`;\n//let to_mail_ids = [$node[\"Get po_details\"].json[\"data\"][\"vendor\"][\"vendor_email\"]];\nlet to_mail_ids = [\"sairam.reddy@shakedeal.com\"];\nlet body = `Dear ${vendor_name}, <br><br>The purchase order ${po_number} is attached with this email. <br><br>An overview of the purchase order is available below: <br> ----------------------------------------------------------------------------------------<br><h2>Purchase Order&nbsp;# :&nbsp;${po_number}</h2><br> ----------------------------------------------------------------------------------------<br><b>&nbsp;Order Date &nbsp; &nbsp;&nbsp;&nbsp;: &nbsp;<span>${po_date}</span></b><br><b>&nbsp;Amount &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; : &nbsp;&nbsp;₹${po_total}(in INR)</b><br>----------------------------------------------------------------------------------------<br><br><br>Please go through it and confirm the order. We look forward to working with you again<br><br><br><br>Regards<br><br>Zillium Inc<br><Opcommerce Online Private Limited><br>`\n\nlet mail_obj = {};\nmail_obj.from_address_id = from_address_id;\nmail_obj.cc_mail_ids = mail_obj;\n//mail_obj.subject = subject;\nmail_obj.to_mail_ids= to_mail_ids;\nmail_obj.body = body;\n\nitems[0].json.mail_obj = mail_obj;\n\nreturn items;"
-      },
-      "name": "Construct obj for sending mail",
-      "type": "n8n-nodes-base.function",
-      "typeVersion": 1,
-      "position": [
-        8140,
-        100
-      ],
-      "disabled": true
-    },
-    {
-      "parameters": {
         "conditions": {
           "string": [
             {
@@ -2024,6 +1984,50 @@
           "name": "Mozart DMS Token"
         }
       }
+    },
+    {
+      "parameters": {
+        "fromEmail": "handyalsairam9177@gmail.com",
+        "toEmail": "sairam.reddy@shakedeal.com",
+        "subject": "=Purchase Order from Opcommerce Online Pvt. Ltd. for Vedanta (Purchase Order #: {{$node[\"create po\"].json[\"purchaseorder\"][\"purchaseorder_number\"]}})",
+        "html": "=<body contenteditable=\"true\" data-gramm=\"false\" data-bp-ignore-extension=\"true\" data-bp-node=\"true\" data-zwproofread-id=\"07869084066985512\" spellcheck=\"false\" class=\"ze_body\" data-enableshortcuts=\"true\"><div><br></div><div><br></div><p style=\"color: rgb(0, 0, 0); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 13.3333px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; margin: 0px;\" class=\"\"><span style=\"font-family: Calibri, sans-serif;\" class=\"x_751338333font\"><span style=\"font-size: 11pt; margin: 0px;\" class=\"x_751338333size\">Dear Sir/ Madam,</span></span><br></p><p style=\"color: rgb(0, 0, 0); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 13.3333px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; margin: 0px;\" class=\"\"><span style=\"font-family: Calibri, sans-serif;\" class=\"x_751338333font\"><span style=\"font-size: 11pt; margin: 0px;\" class=\"x_751338333size\">&nbsp;</span></span><br></p><p style=\"color: rgb(0, 0, 0); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 13.3333px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; margin: 0px;\" class=\"\"><span style=\"font-family: Calibri, sans-serif;\" class=\"x_751338333font\"><span style=\"font-size: 11pt; margin: 0px;\" class=\"x_751338333size\"><span style=\"color: rgb(23, 43, 77); font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, Oxygen, Ubuntu, &quot;Fira Sans&quot;, &quot;Droid Sans&quot;, &quot;Helvetica Neue&quot;, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: -0.08px; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: pre-wrap; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;\">Please find attached herewith Purchase order for supply of mentioned material to our Client M/s Vedanta, ARES-D Plant. Request you to kindly go through the attached PO and provide your confirmation on price, terms, conditions, and delivery timeline by accepting the same.</span></span></span><br></p><p style=\"color: rgb(0, 0, 0); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 13.3333px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; margin: 0px;\" class=\"\"><span style=\"font-family: Calibri, sans-serif;\" class=\"x_751338333font\"><span style=\"font-size: 11pt; margin: 0px;\" class=\"x_751338333size\">&nbsp;</span></span><br></p><p style=\"color: rgb(0, 0, 0); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 13.3333px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; margin: 0px;\" class=\"\"><span style=\"font-family: Calibri, sans-serif;\" class=\"x_751338333font\"><span style=\"font-size: 11pt; margin: 0px;\" class=\"x_751338333size\"><span style=\"color: rgb(23, 43, 77); font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, Oxygen, Ubuntu, &quot;Fira Sans&quot;, &quot;Droid Sans&quot;, &quot;Helvetica Neue&quot;, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: -0.08px; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: pre-wrap; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;\">You will be contacted by our representative (POC Name - Sai-D, POC Email - email-D) from Operations team for co-ordination w.r.t material delivery, invoice provision and other assistance related to this supply.</span></span></span><br></p><p style=\"color: rgb(0, 0, 0); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 13.3333px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; margin: 0px;\" class=\"\"><span style=\"font-family: Calibri, sans-serif;\" class=\"x_751338333font\"><span style=\"font-size: 11pt; margin: 0px;\" class=\"x_751338333size\">&nbsp;</span></span><br></p><p style=\"color: rgb(0, 0, 0); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 13.3333px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; margin: 0px;\" class=\"\"><span style=\"font-family: Calibri, sans-serif;\" class=\"x_751338333font\"><span style=\"font-size: 11pt; margin: 0px;\" class=\"x_751338333size\"><span>&nbsp;</span></span></span><br></p><p style=\"color: rgb(0, 0, 0); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 13.3333px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; margin: 0px;\" class=\"\"><span style=\"font-family: Calibri, sans-serif;\" class=\"x_751338333font\"><span style=\"font-size: 11pt; margin: 0px;\" class=\"x_751338333size\"><span style=\"color: black;\" class=\"x_751338333colour\"><span style=\"font-size: 12pt;\" class=\"x_751338333size\">Best Regards</span></span></span></span><br></p><div>sai-D</div><div><span style=\"font-family: Calibri, sans-serif;\" class=\"x_751338333font\"><span style=\"font-size: 11pt; margin: 0px;\" class=\"x_751338333size\">Mob: +91-8999967150-D</span></span><br></div><p style=\"color: rgb(0, 0, 0); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 13.3333px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; margin: 0px;\" class=\"\"><span style=\"font-family: Calibri, sans-serif;\" class=\"x_751338333font\"><span style=\"font-size: 11pt; margin: 0px;\" class=\"x_751338333size\"><span style=\"color: black;\" class=\"x_751338333colour\"><span style=\"font-size: 12pt;\" class=\"x_751338333size\">&nbsp;</span></span></span></span><br></p><p style=\"color: rgb(0, 0, 0); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 13.3333px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; margin: 0px;\" class=\"\"><span style=\"font-family: Calibri, sans-serif;\" class=\"x_751338333font\"><span style=\"font-size: 11pt; margin: 0px;\" class=\"x_751338333size\"><span style=\"color: black;\" class=\"x_751338333colour\"><span style=\"font-size: 12pt;\" class=\"x_751338333size\"><img style=\"cursor: pointer; width: 1.125in;\" src=\"https://zmdownload-accl.zoho.com/zm/ImageDisplay?na=7285392000000008002&amp;nmsgId=1671018518220100004&amp;f=2.png&amp;mode=inline&amp;cid=image001.png@01D90315.10E797F0&amp;\" height=\"74\" width=\"1.125in\"></span></span></span></span><br></p><p style=\"color: rgb(0, 0, 0); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 13.3333px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; margin: 0px;\" class=\"\"><span style=\"font-family: Calibri, sans-serif;\" class=\"x_751338333font\"><span style=\"font-size: 11pt; margin: 0px;\" class=\"x_751338333size\"><span style=\"background-color: white;\" class=\"x_751338333highlight\"><span style=\"color: black;\" class=\"x_751338333colour\"><span style=\"font-family: Verdana, sans-serif;\" class=\"x_751338333font\"><span style=\"font-size: 10pt; background-size: initial;\" class=\"x_751338333size\"><a style=\"color: rgb(5, 99, 193); cursor: pointer; text-decoration: underline;\" target=\"_blank\" href=\"http://shakedeal.com/\"><span style=\"color: rgb(89, 143, 222);\" class=\"x_751338333colour\">http://shakedeal.com/</span></a></span></span></span></span></span></span><br></p><p style=\"color: rgb(0, 0, 0); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 13.3333px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; margin: 0px;\" class=\"\"><span style=\"font-family: Calibri, sans-serif;\" class=\"x_751338333font\"><span style=\"font-size: 11pt; margin: 0px;\" class=\"x_751338333size\"><span style=\"background-color: white;\" class=\"x_751338333highlight\"><span style=\"color: black;\" class=\"x_751338333colour\"><span style=\"font-family: Verdana, sans-serif;\" class=\"x_751338333font\"><span style=\"font-size: 10pt; background-size: initial;\" class=\"x_751338333size\">OP COMMERCE ONLINE PVT LTD&nbsp;</span></span></span></span></span></span><br></p><p style=\"color: rgb(0, 0, 0); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 13.3333px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; margin: 0px;\" class=\"\"><span style=\"font-family: Calibri, sans-serif;\" class=\"x_751338333font\"><span style=\"font-size: 11pt; margin: 0px;\" class=\"x_751338333size\"><span style=\"color: black;\" class=\"x_751338333colour\"><span style=\"font-size: 12pt;\" class=\"x_751338333size\">DEDICATED PURCHASING PARTNER FOR:</span></span></span></span><br></p><p style=\"color: rgb(0, 0, 0); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 13.3333px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; margin: 0px;\" class=\"\"><span style=\"font-family: Calibri, sans-serif;\" class=\"x_751338333font\"><span style=\"font-size: 11pt; margin: 0px;\" class=\"x_751338333size\"><span style=\"color: black;\" class=\"x_751338333colour\"><span style=\"font-size: 12pt;\" class=\"x_751338333size\"><img style=\"cursor: pointer; width: 2.6736in;\" src=\"https://zmdownload-accl.zoho.com/zm/ImageDisplay?na=7285392000000008002&amp;nmsgId=1671018518220100004&amp;f=3.png&amp;mode=inline&amp;cid=image002.png@01D90315.10E797F0&amp;\" height=\"63\" width=\"2.6736in\" border=\"0\"></span></span></span></span><br></p><div><span style=\"font-family: Calibri, sans-serif;\" class=\"x_751338333font\"><span style=\"font-size: 11pt; margin: 0px;\" class=\"x_751338333size\"><span style=\"color: black;\" class=\"x_751338333colour\"><span style=\"font-size: 12pt;\" class=\"x_751338333size\">​</span></span></span></span><br></div><p style=\"margin: 0.75rem 0px 0px; padding: 0px; font-size: 16px; line-height: 1.714; font-weight: 400; letter-spacing: -0.005em; color: rgb(23, 43, 77); font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, Oxygen, Ubuntu, &quot;Fira Sans&quot;, &quot;Droid Sans&quot;, &quot;Helvetica Neue&quot;, sans-serif; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: pre-wrap; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;\" data-renderer-start-pos=\"1980\"><b>Terms and conditions</b><br></p><ul style=\"margin: 10px 0px 0px; padding: 0px 0px 0px 24px; box-sizing: border-box; list-style-type: disc; display: flow-root; color: rgb(23, 43, 77); font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, Oxygen, Ubuntu, &quot;Fira Sans&quot;, &quot;Droid Sans&quot;, &quot;Helvetica Neue&quot;, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: pre-wrap; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;\" data-indent-level=\"1\" class=\"ak-ul\"><li><p style=\"margin: 0px; padding: 0px; font-size: 1em; line-height: 1.714; font-weight: normal; letter-spacing: -0.005em;\" data-renderer-start-pos=\"2004\">In rare instances, if you have any concerns with respect to this, please reach out to us immediately.<br></p></li><li style=\"margin-top: 4px;\"><p style=\"margin: 0px; padding: 0px; font-size: 1em; line-height: 1.714; font-weight: normal; letter-spacing: -0.005em;\" data-renderer-start-pos=\"2109\">We must be notified 24 hours before dispatch in order to generate ASN and Tax invoices, which are required for goods receipt and without which materials will not be allowed inside the Material gate by security. For order dispatch related queries E-mail to: <a style=\"color: var(--ds-link, #0052CC); text-decoration: none;\" class=\"css-tgpl01\" data-renderer-mark=\"true\" title=\"mailto:vedantaiob.ops@shakedeal.com\" href=\"mailto:vedantaiob.ops@shakedeal.com\" target=\"_blank\">vedantaiob.ops@shakedeal.com</a><br></p></li><li style=\"margin-top: 4px;\"><p style=\"margin: 0px; padding: 0px; font-size: 1em; line-height: 1.714; font-weight: normal; letter-spacing: -0.005em;\" data-renderer-start-pos=\"2398\">Consignment should go only with OP commerce invoice.<br></p></li><li style=\"margin-top: 4px;\"><p style=\"margin: 0px; padding: 0px; font-size: 1em; line-height: 1.714; font-weight: normal; letter-spacing: -0.005em;\" data-renderer-start-pos=\"2454\">For all other Terms and Conditions please refer our attached Purchase Order.<br></p></li></ul><div><span style=\"font-family: Calibri, sans-serif;\" class=\"x_751338333font\"><span style=\"font-size: 11pt; margin: 0px;\" class=\"x_751338333size\"><span style=\"color: black;\" class=\"x_751338333colour\"><span style=\"font-size: 12pt;\" class=\"x_751338333size\">​</span></span></span></span><br></div><div><br></div></body>",
+        "attachments": "data",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        8420,
+        100
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "17",
+          "name": "smtp(sai)creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/assets/{{$node[\"Upload PO in mozart\"].json[\"data\"][\"id\"]}}",
+        "responseFormat": "file",
+        "options": {}
+      },
+      "name": "Get the PO pdf",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        8200,
+        100
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
     }
   ],
   "settings": {
@@ -2031,5 +2035,5 @@
   },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-12-12T09:42:03.157Z"
+  "updatedAt": "2022-12-14T12:34:53.588Z"
 }
