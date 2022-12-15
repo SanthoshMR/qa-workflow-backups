@@ -147,7 +147,7 @@
       "main": [
         [
           {
-            "node": "Get Value of Vocher Code",
+            "node": "Verify Token Valid",
             "type": "main",
             "index": 0
           }
@@ -155,6 +155,24 @@
         [
           {
             "node": "Invalid Link Or Expired",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify Token Valid": {
+      "main": [
+        [
+          {
+            "node": "Get Value of Vocher Code",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Token Expired",
             "type": "main",
             "index": 0
           }
@@ -263,8 +281,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1300,
-        -300
+        1320,
+        -580
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -296,8 +314,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1680,
-        -480
+        1700,
+        -760
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -314,8 +332,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        2240,
-        -480
+        2260,
+        -760
       ]
     },
     {
@@ -348,8 +366,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        940,
-        -40
+        920,
+        -320
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -377,8 +395,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        1140,
-        -40
+        1160,
+        -320
       ]
     },
     {
@@ -396,8 +414,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        1480,
-        -300
+        1500,
+        -580
       ]
     },
     {
@@ -427,8 +445,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2040,
-        -480
+        2060,
+        -760
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -445,8 +463,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1680,
-        -160
+        1700,
+        -440
       ]
     },
     {
@@ -468,8 +486,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1860,
-        -480
+        1880,
+        -760
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -486,8 +504,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1320,
-        180
+        1340,
+        -100
       ]
     },
     {
@@ -520,10 +538,41 @@
         740,
         160
       ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Verify Link\"].json[\"data\"][0][\"token_last_updated\"] >= new Date(new Date().getTime()-5*60*1000).toISOString()}}"
+            }
+          ]
+        }
+      },
+      "name": "Verify Token Valid",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        880,
+        -40
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let responseData = [];\n\nresponseData.push({\n    json: {\n        \"success\": false,\n        \"message\":\"Link Expired\",\n        \"error_tag\":\"LINK_EXPIRED\"\n    }\t\t\t\n});\n\nreturn responseData;\n"
+      },
+      "name": "Token Expired",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1320,
+        140
+      ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-12-09T06:32:12.841Z"
+  "updatedAt": "2022-12-15T07:10:31.279Z"
 }
