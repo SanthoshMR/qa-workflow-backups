@@ -38,14 +38,14 @@
       "main": [
         [
           {
-            "node": "Get Voucher Details",
+            "node": "Verify Token Valid",
             "type": "main",
             "index": 0
           }
         ],
         [
           {
-            "node": "Send New Voucher1",
+            "node": "Invalid Request",
             "type": "main",
             "index": 0
           }
@@ -73,6 +73,24 @@
           }
         ]
       ]
+    },
+    "Verify Token Valid": {
+      "main": [
+        [
+          {
+            "node": "Get Voucher Details",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Token Expired",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2022-11-29T09:22:37.533Z",
@@ -85,8 +103,8 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        160,
-        180
+        40,
+        140
       ]
     },
     {
@@ -101,8 +119,8 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        160,
-        380
+        40,
+        340
       ],
       "webhookId": "1633ec49-64ca-4de9-81df-539755e055fb",
       "credentials": {
@@ -132,8 +150,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        340,
-        380
+        220,
+        340
       ]
     },
     {
@@ -146,8 +164,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        520,
-        380
+        400,
+        340
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -171,20 +189,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        720,
-        380
-      ]
-    },
-    {
-      "parameters": {
-        "functionCode": "let responseData = [];\n\nresponseData.push({\n    json: {\n        \"success\": false,\n        \"message\":\"Please Contact Administrator\"\n    }\t\t\t\n});\n\nreturn responseData;\n"
-      },
-      "name": "Send New Voucher1",
-      "type": "n8n-nodes-base.function",
-      "typeVersion": 1,
-      "position": [
-        920,
-        580
+        600,
+        340
       ]
     },
     {
@@ -195,8 +201,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1440,
-        220
+        1520,
+        40
       ]
     },
     {
@@ -209,8 +215,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1000,
-        220
+        1080,
+        40
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -229,8 +235,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1220,
-        220
+        1300,
+        40
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -238,10 +244,53 @@
           "name": "Adani header auth"
         }
       }
+    },
+    {
+      "parameters": {
+        "functionCode": "let responseData = [];\n\nresponseData.push({\n    json: {\n        \"success\": false,\n        \"message\":\"Please Contact Administrator\"\n    }\t\t\t\n});\n\nreturn responseData;\n"
+      },
+      "name": "Invalid Request",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        800,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Verify Redemtion Detials\"].json[\"data\"][0][\"token_last_updated\"] >= new Date(new Date().getTime()-5*60*1000).toISOString()}}"
+            }
+          ]
+        }
+      },
+      "name": "Verify Token Valid",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        800,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let responseData = [];\n\nresponseData.push({\n    json: {\n        \"success\": false,\n        \"message\":\"Link Expired\",\n        \"error_tag\":\"LINK_EXPIRED\"\n    }\t\t\t\n});\n\nreturn responseData;\n"
+      },
+      "name": "Token Expired",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        280
+      ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-11-29T13:39:08.524Z"
+  "updatedAt": "2022-12-15T07:05:46.759Z"
 }
