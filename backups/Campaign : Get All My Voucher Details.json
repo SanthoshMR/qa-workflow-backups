@@ -208,7 +208,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_gift_card_inventory?filter={\"_and\":[ {\"id\":{\"_in\":[{{$node[\"Verify Redemtion Detials\"].json[\"data\"][0][\"redemptions\"]}}]}} , {\"order_id\":{\"_eq\":\"{{$node[\"Verify Redemtion Detials\"].json[\"data\"][0][\"id\"]}}\"}}  ]}",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_gift_card_inventory?filter={\"_and\":[ {\"id\":{\"_in\":[{{$node[\"Verify Redemtion Detials\"].json[\"data\"][0][\"redemptions\"].length>0?$node[\"Verify Redemtion Detials\"].json[\"data\"][0][\"redemptions\"]:0}}]}} , {\"order_id\":{\"_eq\":\"{{$node[\"Verify Redemtion Detials\"].json[\"data\"][0][\"id\"]}}\"}} ]}",
         "options": {}
       },
       "name": "Get Voucher Details",
@@ -292,5 +292,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-12-15T07:05:46.759Z"
+  "updatedAt": "2022-12-16T07:15:45.860Z"
 }
