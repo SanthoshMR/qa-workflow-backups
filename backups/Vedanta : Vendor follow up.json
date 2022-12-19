@@ -74,7 +74,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_po_items?filter={\"delivery_date\":{\"_lt\":\"$NOW(1 month)\"}}&limit=20&fields=*.*.*,shipments.*&sort=-date_created",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_po_items?filter={\"delivery_date\":{\"_lt\":\"$NOW(1 month)\"}}&limit=1&fields=*.*.*,shipments.*&sort=-date_created",
         "options": {}
       },
       "name": "HTTP Request",
@@ -95,5 +95,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-12-15T12:31:25.692Z"
+  "updatedAt": "2022-12-19T09:25:49.794Z"
 }
