@@ -74,15 +74,15 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_po_items?filter={\"delivery_date\":{\"_lt\":\"$NOW(1 month)\"}}&limit=1&fields=*.*.*,shipments.*&sort=-date_created",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_po_items?filter={\"_or\":[{\"delivery_date\":{\"_lt\":\"$NOW(1 month)\"}},{\"delivery_date\":{\"_lt\":\"$NOW()\"}}]}&limit=20&sort=-date_created&fields=vendor_po.po_date,vendor_po.id,product.id,product.description,requested_qty,vendor_po.vendor.id,vendor_po.po_value,delivery_date,plant.delivery_address,vendor_po.shipments.orders.order_items.*,vendor_po.shipments.shipment_status,id,ordered_qty",
         "options": {}
       },
       "name": "HTTP Request",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        960,
-        180
+        820,
+        300
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -95,5 +95,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-12-19T09:25:49.794Z"
+  "updatedAt": "2022-12-20T12:52:24.961Z"
 }
