@@ -66,6 +66,35 @@
           }
         ]
       ]
+    },
+    "Update vendor invoice details": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2022-12-14T05:22:27.753Z",
@@ -173,7 +202,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_invoice_details?filter={\"shipment\":{\"_eq\":\"{{$node[\"Get order invoice\"].json[\"data\"][0][\"order\"][\"shipment\"][\"id\"]}}\"}}",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_invoice_details?filter={\"shipment\":{\"_eq\":\"{{$node[\"Get order invoice\"].json[\"data\"][0][\"order\"][\"shipment\"][\"id\"]}}\"}}&fields=*.*.*.*",
         "options": {}
       },
       "name": "Get vendor invoice details",
@@ -204,7 +233,7 @@
       "typeVersion": 1,
       "position": [
         2080,
-        280
+        300
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -215,7 +244,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let vendorPayments = $node[\"Get vendor invoice details\"].json[\"data\"][0][\"vendor_payments\"];\nlet payableAmount = $node[\"Get shakedeal payments\"].json[\"data\"][\"payment_paid\"];\nlet invoiceDetails = $node[\"Get vendor invoice details\"].json[\"data\"][0];\nlet updateObj = {};\nif(invoiceDetails.total_paid_amount>0){\n  // let releasedVendorPayments = vendorPayments.filter(payment=>payment.vendor_payment_status);\n  // let paidAmount = releasedVendorPayments.reduce(function (result, item) {\n  //   return result + item.payment_amount;\n  // }, 0);\n  updateObj.payable_amount = payableAmount;\n  updateObj.remaining_to_pay = payableAmount - invoiceDetails.remaining_to_pay\n  updateObj.total_percentage_paid = (invoiceDetails.total_paid_amount/payableAmount)*100;\n}else{\n  updateObj.payable_amount = payableAmount;\n  updateObj.remaining_to_pay = payableAmount;\n}\n\nitems[0].json.updateObj = updateObj\nreturn items;"
+        "functionCode": "let vendorPayments = $node[\"Get vendor invoice details\"].json[\"data\"][0][\"vendor_payments\"];\nlet payableAmount = $node[\"Get shakedeal payments\"].json[\"data\"][\"payment_paid\"];\nlet invoiceDetails = $node[\"Get vendor invoice details\"].json[\"data\"][0];\n// let id = $node[\"Get vendor invoice details\"].json[\"data\"][0][\"id\"];\n// let url = `https://zeusqa.shakedeal.com/admin/content/sdm_approval_request/${id}`\nlet updateObj = {};\nif(invoiceDetails.total_paid_amount>0){\n  // let releasedVendorPayments = vendorPayments.filter(payment=>payment.vendor_payment_status);\n  // let paidAmount = releasedVendorPayments.reduce(function (result, item) {\n  //   return result + item.payment_amount;\n  // }, 0);\n  updateObj.payable_amount = payableAmount;\n  updateObj.remaining_to_pay = payableAmount - invoiceDetails.total_paid_amount\n  updateObj.total_percentage_paid = (invoiceDetails.total_paid_amount/payableAmount)*100;\n}else{\n  updateObj.payable_amount = payableAmount;\n  updateObj.remaining_to_pay = payableAmount;\n}\n\nitems[0].json.updateObj = updateObj\nreturn items;"
       },
       "name": "Function for vendor invoice update obj",
       "type": "n8n-nodes-base.function",
@@ -224,10 +253,62 @@
         1740,
         300
       ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "=handyalasairam9177@gmail.com",
+        "toEmail": "=shakedeal.web@gmail.com",
+        "subject": "=Alert! Extra payment made against the Invoice # {{$node[\"Get vendor invoice details\"].json[\"data\"][0][\"shipment\"][\"invoice_number\"]}}",
+        "html": "=<p>Extra payment made against the Invoice # {{$node[\"Get vendor invoice details\"].json[\"data\"][0][\"shipment\"][\"invoice_number\"]}} </p>\n<table class=\"x_-1420528032MsoNormalTable\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"371\" style=\"width: 279pt;border-collapse: collapse;\">\n<tbody>\n<tr>\n<td align=\"center\" style=\"border: 1px solid black;border-collapse: collapse\">1</td>\n<td style=\"border: 1px solid black;border-collapse: collapse\">Vendor PO No.</td>\n<td style=\"border: 1px solid black;border-collapse: collapse\">{{$node[\"Get vendor invoice details\"].json[\"data\"][0][\"shipment\"][\"vendor_po_num\"][\"id\"]}}</td>\n</tr>\n<tr>\n<td align=\"center\" style=\"border: 1px solid black;border-collapse: collapse\">2</td>\n<td style=\"border: 1px solid black;border-collapse: collapse\">Vendor Name</td>\n<td style=\"border: 1px solid black;border-collapse: collapse\">{{$node[\"Get vendor invoice details\"].json[\"data\"][0][\"shipment\"][\"vendor_po_num\"][\"vendor\"][\"vendor_name\"]}}</td>\n</tr>\n<tr>\n<td align=\"center\" style=\"border: 1px solid black;border-collapse: collapse\">3</td>\n<td style=\"border: 1px solid black;border-collapse: collapse\">Vendor PO Value</td>\n<td style=\"border: 1px solid black;border-collapse: collapse\">{{$node[\"Get vendor invoice details\"].json[\"data\"][0][\"shipment\"][\"vendor_po_num\"][\"po_value\"]}}</td>\n</tr>\n<tr>\n<td align=\"center\" style=\"border: 1px solid black;border-collapse: collapse\">4</td>\n<td style=\"border: 1px solid black;border-collapse: collapse\">Invoice #</td>\n<td style=\"border: 1px solid black;border-collapse: collapse\">{{$node[\"Get vendor invoice details\"].json[\"data\"][0][\"shipment\"][\"invoice_number\"]}}</td>\n</tr>\n<tr>\n<td align=\"center\" style=\"border: 1px solid black;border-collapse: collapse\">5</td>\n<td style=\"border: 1px solid black;border-collapse: collapse\">Invoice Value</td>\n<td style=\"border: 1px solid black;border-collapse: collapse\">{{$node[\"Get vendor invoice details\"].json[\"data\"][0][\"shipment\"][\"invoice_value\"]}}</td>\n</tr>\n<tr>\n<td align=\"center\" style=\"border: 1px solid black;border-collapse: collapse\">6</td>\n<td style=\"border: 1px solid black;border-collapse: collapse\">Payable Amount</td>\n<td style=\"border: 1px solid black;border-collapse: collapse\">{{$node[\"Get vendor invoice details\"].json[\"data\"][0][\"payable_amount\"]}}</td>\n</tr>\n<tr>\n<td align=\"center\" style=\"border: 1px solid black;border-collapse: collapse\">7</td>\n<td style=\"border: 1px solid black;border-collapse: collapse\">Total Amount Paid</td>\n<td style=\"border: 1px solid black;border-collapse: collapse\">{{$node[\"Get vendor invoice details\"].json[\"data\"][0][\"total_paid_amount\"]}}</td>\n</tr>\n<tr>\n<td align=\"center\" style=\"border: 1px solid black;border-collapse: collapse\">8</td>\n<td style=\"border: 1px solid black;border-collapse: collapse\">Excess Amount Paid</td>\n<td style=\"border: 1px solid black;border-collapse: collapse\">{{Math.abs($node[\"Get vendor invoice details\"].json[\"data\"][0][\"remaining_to_pay\"])}}</td>\n</tr>\n<tr>\n<td align=\"center\" style=\"border: 1px solid black;border-collapse: collapse\">9</td>\n<td style=\"border: 1px solid black;border-collapse: collapse\">Total Percentage Paid</td>\n<td style=\"border: 1px solid black;border-collapse: collapse\">{{$node[\"Get vendor invoice details\"].json[\"data\"][0][\"total_percentage_paid\"]}}</td>\n</tr>\n</tbody>\n</table>\n<p>Kindly make a note of the extra paid amount to the vendor against that invoice and manage it in further transactions.</p>",
+        "attachments": "={{$node[\"Function to club the binay files\"].json[\"binary_keys\"]}}",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        2600,
+        120
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "17",
+          "name": "smtp(sai)creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$node[\"Update vendor invoice details\"].json[\"data\"][\"total_percentage_paid\"]>0}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        2280,
+        300
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        2640,
+        400
+      ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-12-14T11:27:36.708Z"
+  "updatedAt": "2022-12-20T09:19:18.597Z"
 }
