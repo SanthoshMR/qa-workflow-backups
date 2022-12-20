@@ -46,7 +46,7 @@
     {
       "parameters": {
         "fromEmail": "tendulkumar01@gmail.com",
-        "toEmail": "tendul.kumar@shakedeal.com",
+        "toEmail": "=tendul.kumar@shakedeal.com",
         "subject": "test",
         "text": "The employee details has been created succesfully",
         "html": "<table>\n  <tr>\n    <th>S No</th>\n    <th>Name</th>\n    <th>Contact No</th>\n    <th>Email Id</th>\n    <th>Designation</th>\n    <th>Reporting Manager</th>\n  </tr>\n  <tr>\n  \t<td></td>\n    <td>{{trigger.payload.employee_first_name}} {{trigger.payload.employee_last_name}}</td>\n    <td>{{trigger.payload.phone_number}}</td>\n    <td>{{trigger.payload.email_id}}</td>\n    <td>{{trigger.payload.Designation}}</td>\n    <td>{{trigger.payload.reporting_manager}}</td>\n  </tr>\n  <table>",
@@ -56,7 +56,7 @@
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 1,
       "position": [
-        680,
+        660,
         300
       ],
       "credentials": {
@@ -78,7 +78,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        480,
+        440,
         300
       ],
       "credentials": {
@@ -100,7 +100,7 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        300,
+        220,
         300
       ],
       "webhookId": "474971da-ee75-48e1-b463-a0e830d000a5",
@@ -115,5 +115,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-12-19T06:16:16.241Z"
+  "updatedAt": "2022-12-20T10:04:00.838Z"
 }
