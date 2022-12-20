@@ -769,7 +769,7 @@
             },
             {
               "name": "payment_amount",
-              "value": "={{$node[\"Function to update advance payments\"].json[\"residual_amount\"]}}"
+              "value": "={{$node[\"IF1\"].json[\"data\"][\"residual_amount\"]}}"
             },
             {
               "name": "payment_description",
@@ -904,5 +904,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-12-13T13:06:34.943Z"
+  "updatedAt": "2022-12-20T11:54:00.612Z"
 }
