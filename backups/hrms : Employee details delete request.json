@@ -11,6 +11,17 @@
           }
         ]
       ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2022-12-20T10:04:25.032Z",
@@ -53,7 +64,7 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "POST",
-        "url": "=https://dmsqa.shakedeal.com/admin/content/hrms_employee_deletion_request/{{$node[\"Webhook\"].json[\"body\"][\"employee_id\"]}}",
+        "url": "=https://dmsqa.shakedeal.com/items/hrms_employee_deletion_request?sort=-id&item=1",
         "options": {}
       },
       "name": "HTTP Request",
@@ -72,6 +83,10 @@
     },
     {
       "parameters": {
+        "fromEmail": "tendulkumar01@gmail.com",
+        "toEmail": "tendul.kumar@shakedeal.com",
+        "subject": "test",
+        "text": "test",
         "options": {}
       },
       "name": "Send Email",
@@ -81,11 +96,16 @@
         900,
         300
       ],
-      "disabled": true
+      "credentials": {
+        "smtp": {
+          "id": "71",
+          "name": "SMTP account HRMS employee details"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-12-20T10:24:36.699Z"
+  "updatedAt": "2022-12-21T11:29:09.225Z"
 }
