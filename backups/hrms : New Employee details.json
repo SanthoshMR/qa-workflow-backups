@@ -1,11 +1,6 @@
 {
   "active": false,
   "connections": {
-    "Start": {
-      "main": [
-        []
-      ]
-    },
     "HTTP Request": {
       "main": [
         [
@@ -115,5 +110,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-12-20T10:04:00.838Z"
+  "updatedAt": "2022-12-21T10:03:11.226Z"
 }
