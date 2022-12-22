@@ -358,7 +358,7 @@
           "parameter": [
             {
               "name": "otp",
-              "value": "={{Math.floor(1000 + Math.random() * 9000)}}"
+              "value": "={{[\"JnWnCGq9SWYPTdVA\", \"Reward-Automation\"].includes($node[\"Get Reward Link Details\"].json[\"data\"][0][\"id\"])?1000:Math.floor(1000 + Math.random() * 9000)}}"
             },
             {
               "name": "otp_last_updated",
@@ -478,7 +478,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let presentDate = new Date();\nlet lastDate = new Date($node[\"Get Reward Link Details\"].json[\"data\"][0][\"otp_last_updated\"]);\nlet diff = Math.abs((Math.round(((new Date() - new Date($node[\"Get Reward Link Details\"].json[\"data\"][0][\"otp_last_updated\"])) / 1000)/60)))-330;\nlet generateOtp = Math.abs((Math.round(((new Date() - new Date($node[\"Get Reward Link Details\"].json[\"data\"][0][\"otp_last_updated\"])) / 1000)/60))) > 5|| $node[\"Webhook\"].json[\"body\"][\"resend\"]\n\nitems[0].json.generateOtp = generateOtp;\nitems[0].json.presentDate = presentDate;\nitems[0].json.lastDate = lastDate;\nitems[0].json.diff = diff;\nreturn items;"
+        "functionCode": "let presentDate = new Date();\nlet lastDate = new Date($node[\"Get Reward Link Details\"].json[\"data\"][0][\"otp_last_updated\"]);\nlet diff = Math.abs((Math.round(((new Date() - new Date($node[\"Get Reward Link Details\"].json[\"data\"][0][\"otp_last_updated\"])) / 1000)/60)))-330;\nlet generateOtp = Math.abs((Math.round(((new Date() - new Date($node[\"Get Reward Link Details\"].json[\"data\"][0][\"otp_last_updated\"])) / 1000)/60))) > 5|| $node[\"Webhook\"].json[\"body\"][\"resend\"]\n\n\n\nitems[0].json.generateOtp = generateOtp;\nitems[0].json.presentDate = presentDate;\nitems[0].json.lastDate = lastDate;\nitems[0].json.diff = diff;\nreturn items;"
       },
       "name": "Function",
       "type": "n8n-nodes-base.function",
@@ -534,5 +534,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-11-15T13:13:02.702Z"
+  "updatedAt": "2022-12-22T10:16:22.692Z"
 }
