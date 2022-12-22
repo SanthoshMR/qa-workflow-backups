@@ -178,6 +178,29 @@
           }
         ]
       ]
+    },
+    "Get Voucher from VPP API": {
+      "main": [
+        [
+          {
+            "node": "IF VPP API Gave a Voucher",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF VPP API Gave a Voucher": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Inventory Not Available",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2022-10-27T10:54:25.331Z",
@@ -190,7 +213,7 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        120,
+        -20,
         -260
       ]
     },
@@ -206,7 +229,7 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        0,
+        -140,
         180
       ],
       "webhookId": "f272ed7b-1e2d-4f26-a46f-e0e27b5e4cb5",
@@ -237,7 +260,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        340,
+        200,
         160
       ]
     },
@@ -256,7 +279,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        160,
+        20,
         180
       ],
       "disabled": true
@@ -267,7 +290,7 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        320,
+        180,
         500
       ]
     },
@@ -281,7 +304,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1320,
+        1180,
         -580
       ],
       "credentials": {
@@ -314,7 +337,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1700,
+        1680,
         -760
       ],
       "credentials": {
@@ -332,8 +355,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        2260,
-        -760
+        2380,
+        -560
       ]
     },
     {
@@ -346,7 +369,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        540,
+        400,
         160
       ],
       "credentials": {
@@ -366,7 +389,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        920,
+        780,
         -320
       ],
       "credentials": {
@@ -395,7 +418,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        1160,
+        1020,
         -320
       ]
     },
@@ -414,7 +437,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        1500,
+        1360,
         -580
       ]
     },
@@ -445,8 +468,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2060,
-        -760
+        2180,
+        -560
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -463,8 +486,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1700,
-        -440
+        2020,
+        -340
       ]
     },
     {
@@ -486,8 +509,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1880,
-        -760
+        2000,
+        -560
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -504,7 +527,7 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1340,
+        1200,
         -100
       ]
     },
@@ -516,7 +539,7 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        920,
+        780,
         380
       ]
     },
@@ -535,7 +558,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        740,
+        600,
         160
       ]
     },
@@ -554,7 +577,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        880,
+        740,
         -40
       ]
     },
@@ -566,13 +589,57 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1320,
+        1180,
         140
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "https://zeusqa.shakedeal.com/sd-vouchers/get",
+        "jsonParameters": true,
+        "options": {
+          "bodyContentType": "json"
+        },
+        "bodyParametersJson": "=[\n\t{\n\t  \"sku\": \"{{$node[\"Webhook\"].json[\"body\"][\"sku\"]}}\",\n\t  \"qty\": 1,\n\t  \"amt\": {{$node[\"Get Value of Vocher Code\"].json[\"data\"][0][\"value\"]*1}}\n\t}\n]"
+      },
+      "name": "Get Voucher from VPP API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1420,
+        -360
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "75",
+          "name": "Vendor Partner Program Zeus QA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$node[\"Get Voucher from VPP API\"].json[0][\"success\"]}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "IF VPP API Gave a Voucher",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1680,
+        -200
       ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-12-15T07:10:31.279Z"
+  "updatedAt": "2022-12-22T09:43:03.867Z"
 }
