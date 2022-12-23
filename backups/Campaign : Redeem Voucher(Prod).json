@@ -114,7 +114,7 @@
         ],
         [
           {
-            "node": "Inventory Not Available",
+            "node": "Get Voucher from VPP API",
             "type": "main",
             "index": 0
           }
@@ -192,7 +192,13 @@
     },
     "IF VPP API Gave a Voucher": {
       "main": [
-        [],
+        [
+          {
+            "node": "Update Voucher Redeemed",
+            "type": "main",
+            "index": 0
+          }
+        ],
         [
           {
             "node": "Inventory Not Available",
@@ -246,7 +252,7 @@
           "string": [
             {
               "name": "dms_url",
-              "value": "https://dmsqa.shakedeal.com"
+              "value": "https://zeusqa.shakedeal.com"
             },
             {
               "name": "dms_campaign_url",
@@ -309,8 +315,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "56",
-          "name": "Dmsqa creds"
+          "id": "75",
+          "name": "Vendor Partner Program Zeus QA"
         }
       }
     },
@@ -318,7 +324,7 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "PATCH",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_gift_card_inventory/{{$node[\"Get Voucher Code\"].json[\"data\"][0][\"id\"]}}",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_gift_card_inventory/{{$node[\"Get Voucher Code\"].json[\"data\"][0]?$node[\"Get Voucher Code\"].json[\"data\"][0][\"id\"]:$node[\"Get Voucher from VPP API\"].json[0][\"keys\"][0]}}",
         "options": {},
         "bodyParametersUi": {
           "parameter": [
@@ -337,26 +343,26 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1680,
-        -760
+        1900,
+        -600
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "56",
-          "name": "Dmsqa creds"
+          "id": "75",
+          "name": "Vendor Partner Program Zeus QA"
         }
       }
     },
     {
       "parameters": {
-        "functionCode": "let responseData = [];\n\nresponseData.push({\n    json: {\n        \"success\": true,\n        \"amount\":$node[\"Update Voucher Redeemed\"].json[\"data\"][\"price\"],\n        \"message\": \"Voucher Successfully Fetched!\",    \n        \"voucher\": $node[\"Update Voucher Redeemed\"].json[\"data\"][\"code\"],\n        \"pin\": $node[\"Update Voucher Redeemed\"].json[\"data\"][\"pin\"],\n        \"valid_till\": $node[\"Update Voucher Redeemed\"].json[\"data\"][\"validity\"]\n    }\t\t\t\n});\n\nreturn responseData;\n"
+        "functionCode": "let responseData = [];\n\nresponseData.push({\n    json: {\n        \"success\": true,\n        \"amount\":$node[\"Update Voucher Redeemed\"].json[\"data\"][\"price\"],\n        \"message\": \"Voucher Successfully Fetched!\",    \n        \"voucher\": $node[\"Update Voucher Redeemed\"].json[\"data\"][\"code\"],\n        \"pin\": $node[\"Update Voucher Redeemed\"].json[\"data\"][\"pin\"],\n        \"valid_till\": $node[\"Update Voucher Redeemed\"].json[\"data\"][\"validity\"]\n    }\t\t\t\n});\n\n\nreturn responseData;\n"
       },
       "name": "Send New Voucher",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        2380,
-        -560
+        2480,
+        -600
       ]
     },
     {
@@ -451,7 +457,7 @@
           "parameter": [
             {
               "name": "redemption_id",
-              "value": "={{$node[\"Get Voucher Code\"].json[\"data\"][0][\"id\"]}}"
+              "value": "={{$node[\"Get Voucher Code\"].json[\"data\"][0]?$node[\"Get Voucher Code\"].json[\"data\"][0][\"id\"]:$node[\"Get Voucher from VPP API\"].json[0][\"keys\"][0]}}"
             },
             {
               "name": "sku",
@@ -468,8 +474,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2180,
-        -560
+        2280,
+        -600
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -486,8 +492,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        2020,
-        -340
+        1900,
+        -260
       ]
     },
     {
@@ -509,8 +515,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2000,
-        -560
+        2100,
+        -600
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -527,8 +533,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1200,
-        -100
+        1280,
+        -140
       ]
     },
     {
@@ -597,18 +603,18 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "POST",
-        "url": "https://zeusqa.shakedeal.com/sd-vouchers/get",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/vpp/get-vouchers",
         "jsonParameters": true,
         "options": {
           "bodyContentType": "json"
         },
-        "bodyParametersJson": "=[\n\t{\n\t  \"sku\": \"{{$node[\"Webhook\"].json[\"body\"][\"sku\"]}}\",\n\t  \"qty\": 1,\n\t  \"amt\": {{$node[\"Get Value of Vocher Code\"].json[\"data\"][0][\"value\"]*1}}\n\t}\n]"
+        "bodyParametersJson": "={\n\t\"required_vouchers\": [\n         {\n           \"sku\": \"{{$node[\"Webhook\"].json[\"body\"][\"sku\"]}}\",\n           \"qty\": 1,\n           \"amt\": {{$node[\"Get Value of Vocher Code\"].json[\"data\"][0][\"value\"]*1}}\n          }\n     ],\n\t \"options\": {\n\t \t\"redeemed\": false\n\t }\n}"
       },
       "name": "Get Voucher from VPP API",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1420,
+        1560,
         -360
       ],
       "credentials": {
@@ -633,13 +639,13 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        1680,
-        -200
+        1720,
+        -360
       ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-12-22T09:43:03.867Z"
+  "updatedAt": "2022-12-23T11:49:24.993Z"
 }
