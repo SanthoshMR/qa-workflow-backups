@@ -136,7 +136,7 @@
           "string": [
             {
               "name": "dms_url",
-              "value": "https://dmsqa.shakedeal.com"
+              "value": "https://zeusqa.shakedeal.com"
             },
             {
               "name": "dms_campaign_url",
@@ -220,8 +220,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "56",
-          "name": "Dmsqa creds"
+          "id": "75",
+          "name": "Vendor Partner Program Zeus QA"
         }
       }
     },
@@ -292,5 +292,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-12-16T07:15:45.860Z"
+  "updatedAt": "2022-12-23T10:27:59.864Z"
 }
