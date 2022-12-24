@@ -38,7 +38,7 @@
       "main": [
         [
           {
-            "node": "IF",
+            "node": "Check for gift card amount",
             "type": "main",
             "index": 0
           }
@@ -147,6 +147,17 @@
           }
         ]
       ]
+    },
+    "Check for gift card amount": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2022-06-08T09:59:06.769Z",
@@ -170,7 +181,7 @@
           "string": [
             {
               "name": "dms_url",
-              "value": "={{$node[\"Wait for order\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ?\"https://zeus.shakedeal.com\":\"https://dmsqa.shakedeal.com\"}}"
+              "value": "={{$node[\"Wait for order\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ?\"https://zeus.shakedeal.com\":\"https://zeusqa.shakedeal.com\"}}"
             }
           ]
         },
@@ -227,13 +238,13 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        880,
-        300
+        780,
+        500
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "56",
-          "name": "Dmsqa creds"
+          "id": "75",
+          "name": "Vendor Partner Program Zeus QA"
         }
       }
     },
@@ -322,8 +333,8 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        1800,
-        180
+        1780,
+        300
       ]
     },
     {
@@ -341,8 +352,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "56",
-          "name": "Dmsqa creds"
+          "id": "75",
+          "name": "Vendor Partner Program Zeus QA"
         }
       }
     },
@@ -386,8 +397,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1640,
-        780
+        1660,
+        700
       ]
     },
     {
@@ -399,14 +410,14 @@
         "options": {
           "bodyContentType": "json"
         },
-        "bodyParametersJson": "={\n\t\"required_vouchers\": [\n         {\n           \"sku\": {{$node[\"Wait for order\"].json[\"body\"][\"product_code\"]}},\n           \"qty\": {{$node[\"Wait for order\"].json[\"body\"][\"quantity\"]}},\n           \"amt\": {{$node[\"Get Value of Vocher Code\"].json[\"data\"][0][\"value\"]*1}}\n          }\n     ],\n\t \"options\": {\n\t \t\"redeemed\": false\n\t }\n}"
+        "bodyParametersJson": "={\n\t\"required_vouchers\": [\n         {\n           \"sku\": \"{{$node[\"Wait for order\"].json[\"body\"][\"product_code\"]}}\",\n           \"qty\": {{$node[\"Wait for order\"].json[\"body\"][\"quantity\"]}},\n           \"amt\": {{$node[\"Check for gift card amount\"].json[\"data\"][0][\"price\"]*1}}\n          }\n     ],\n\t \"options\": {\n\t \t\"redeemed\": false\n\t }\n}"
       },
       "name": "Get Voucher from VPP API",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1240,
-        580
+        1260,
+        500
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -430,9 +441,29 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        1460,
-        580
+        1480,
+        500
       ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_gift_card_inventory?filter={\"_and\": [{\"product_code\":{\"_eq\":\"{{$node[\"Wait for order\"].json[\"body\"][\"product_code\"]}}\"}}]}&sort=date_created&limit=1",
+        "options": {}
+      },
+      "name": "Check for gift card amount",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        960,
+        500
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "75",
+          "name": "Vendor Partner Program Zeus QA"
+        }
+      }
     }
   ],
   "settings": {},
@@ -445,5 +476,5 @@
       "updatedAt": "2022-06-27T13:07:10.771Z"
     }
   ],
-  "updatedAt": "2022-12-23T12:16:56.341Z"
+  "updatedAt": "2022-12-23T16:23:58.104Z"
 }
