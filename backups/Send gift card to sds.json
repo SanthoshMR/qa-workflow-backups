@@ -38,7 +38,7 @@
       "main": [
         [
           {
-            "node": "Check for gift card amount",
+            "node": "IF",
             "type": "main",
             "index": 0
           }
@@ -56,7 +56,7 @@
         ],
         [
           {
-            "node": "Get Voucher from VPP API",
+            "node": "Check for gift card amount",
             "type": "main",
             "index": 0
           }
@@ -75,17 +75,6 @@
       ]
     },
     "Update the order_id and status ": {
-      "main": [
-        [
-          {
-            "node": "Function for sending gift card to sds",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "NoOp": {
       "main": [
         [
           {
@@ -129,19 +118,7 @@
       "main": [
         [
           {
-            "node": "IF VPP API Gave a Voucher",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "IF VPP API Gave a Voucher": {
-      "main": [
-        [],
-        [
-          {
-            "node": "Inventory Not Available",
+            "node": "send gift card to sds",
             "type": "main",
             "index": 0
           }
@@ -152,7 +129,7 @@
       "main": [
         [
           {
-            "node": "IF",
+            "node": "Get Voucher from VPP API",
             "type": "main",
             "index": 0
           }
@@ -238,8 +215,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        780,
-        500
+        940,
+        300
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -268,7 +245,7 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        2000,
+        1760,
         100
       ]
     },
@@ -288,7 +265,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        1060,
+        1140,
         300
       ]
     },
@@ -300,7 +277,7 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1160,
+        1340,
         100
       ]
     },
@@ -317,25 +294,15 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1480,
+        1560,
         100
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "56",
-          "name": "Dmsqa creds"
+          "id": "75",
+          "name": "Vendor Partner Program Zeus QA"
         }
       }
-    },
-    {
-      "parameters": {},
-      "name": "NoOp",
-      "type": "n8n-nodes-base.noOp",
-      "typeVersion": 1,
-      "position": [
-        1780,
-        300
-      ]
     },
     {
       "parameters": {
@@ -385,20 +352,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        520,
-        20
-      ]
-    },
-    {
-      "parameters": {
-        "functionCode": "let responseData = [];\n\nresponseData.push({\n    json: {\n        \"success\": false,\n        \"message\": \"Please contact Adminisrator\"\n    }\t\t\t\n});\n\nreturn responseData;\n"
-      },
-      "name": "Inventory Not Available",
-      "type": "n8n-nodes-base.function",
-      "typeVersion": 1,
-      "position": [
-        1660,
-        700
+        700,
+        120
       ]
     },
     {
@@ -410,13 +365,13 @@
         "options": {
           "bodyContentType": "json"
         },
-        "bodyParametersJson": "={\n\t\"required_vouchers\": [\n         {\n           \"sku\": \"{{$node[\"Wait for order\"].json[\"body\"][\"product_code\"]}}\",\n           \"qty\": {{$node[\"Wait for order\"].json[\"body\"][\"quantity\"]}},\n           \"amt\": {{$node[\"Check for gift card amount\"].json[\"data\"][0][\"price\"]*1}}\n          }\n     ],\n\t \"options\": {\n\t \t\"redeemed\": false\n\t }\n}"
+        "bodyParametersJson": "={\n\t\"required_vouchers\": [\n         {\n           \"sku\": \"{{$node[\"Wait for order\"].json[\"body\"][\"product_code\"]}}\",\n           \"qty\": {{$node[\"Wait for order\"].json[\"body\"][\"quantity\"]}},\n           \"amt\": {{$node[\"Check for gift card amount\"].json[\"data\"][0]?$node[\"Check for gift card amount\"].json[\"data\"][0][\"amount\"]*1:null}}\n          }\n     ],\n\t \"options\": {\n\t \t\"redeemed\": true,\n\t \t\"order_id\": {{$node[\"Wait for order\"].json[\"body\"][\"order_id\"]?$node[\"Wait for order\"].json[\"body\"][\"order_id\"]+\"\":null}}\n\t }\n}"
       },
       "name": "Get Voucher from VPP API",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1260,
+        1560,
         500
       ],
       "credentials": {
@@ -428,34 +383,15 @@
     },
     {
       "parameters": {
-        "conditions": {
-          "boolean": [
-            {
-              "value1": "={{$node[\"Get Voucher from VPP API\"].json[0][\"success\"]}}",
-              "value2": true
-            }
-          ]
-        }
-      },
-      "name": "IF VPP API Gave a Voucher",
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 1,
-      "position": [
-        1480,
-        500
-      ]
-    },
-    {
-      "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_gift_card_inventory?filter={\"_and\": [{\"product_code\":{\"_eq\":\"{{$node[\"Wait for order\"].json[\"body\"][\"product_code\"]}}\"}}]}&sort=date_created&limit=1",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_brand_sku_mapping?filter={\"_and\": [{\"sku\":{\"_eq\":\"{{$node[\"Wait for order\"].json[\"body\"][\"product_code\"]}}\"}}]}",
         "options": {}
       },
       "name": "Check for gift card amount",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        960,
+        1340,
         500
       ],
       "credentials": {
@@ -464,6 +400,18 @@
           "name": "Vendor Partner Program Zeus QA"
         }
       }
+    },
+    {
+      "parameters": {
+        "functionCode": "let gift_card = [];\nconst isSuccess = $node[\"Get Voucher from VPP API\"].json[0][\"success\"];\nconst vouchers = $node[\"Get Voucher from VPP API\"].json;\nconst amount = $node[\"Check for gift card amount\"].json[\"data\"][0][\"amount\"]*1;\nconst productCode = $node[\"Wait for order\"].json[\"body\"][\"product_code\"];\n\nif(isSuccess){\n  vouchers.forEach((obj,index)=>{\n    gift_card[index]={};\n    gift_card[index].cardNumber = obj.code;\n    gift_card[index].validity = obj.expiry;\n    gift_card[index].cardPin = obj.pin;\n    gift_card[index].amount = amount\n    gift_card[index].sku = productCode;\n  })\n}\n\nitems[0].json.cards = gift_card;\nreturn items;"
+      },
+      "name": "send gift card to sds",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1780,
+        500
+      ]
     }
   ],
   "settings": {},
@@ -476,5 +424,5 @@
       "updatedAt": "2022-06-27T13:07:10.771Z"
     }
   ],
-  "updatedAt": "2022-12-23T16:23:58.104Z"
+  "updatedAt": "2022-12-26T10:54:12.886Z"
 }
