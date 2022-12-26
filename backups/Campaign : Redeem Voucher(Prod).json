@@ -194,7 +194,7 @@
       "main": [
         [
           {
-            "node": "Update Voucher Redeemed",
+            "node": "Update Balance",
             "type": "main",
             "index": 0
           }
@@ -343,7 +343,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1900,
+        1660,
         -600
       ],
       "credentials": {
@@ -355,13 +355,13 @@
     },
     {
       "parameters": {
-        "functionCode": "let responseData = [];\n\nresponseData.push({\n    json: {\n        \"success\": true,\n        \"amount\":$node[\"Update Voucher Redeemed\"].json[\"data\"][\"price\"],\n        \"message\": \"Voucher Successfully Fetched!\",    \n        \"voucher\": $node[\"Update Voucher Redeemed\"].json[\"data\"][\"code\"],\n        \"pin\": $node[\"Update Voucher Redeemed\"].json[\"data\"][\"pin\"],\n        \"valid_till\": $node[\"Update Voucher Redeemed\"].json[\"data\"][\"validity\"]\n    }\t\t\t\n});\n\n\nreturn responseData;\n"
+        "functionCode": "let responseData = [];\n\nif($node[\"Get Voucher Code\"].json[\"data\"].length >0) {\n    responseData.push({\n        json: {\n            \"success\": true,\n            \"amount\":$node[\"Update Voucher Redeemed\"].json[\"data\"][\"price\"],\n            \"message\": \"Voucher Successfully Fetched!\",    \n            \"voucher\": $node[\"Update Voucher Redeemed\"].json[\"data\"][\"code\"],\n            \"pin\": $node[\"Update Voucher Redeemed\"].json[\"data\"][\"pin\"],\n            \"valid_till\": $node[\"Update Voucher Redeemed\"].json[\"data\"][\"validity\"]\n        }\t\t\t\n    });\n} else {\n    responseData.push({\n    json: {\n        \"success\": true,\n        \"amount\":$node[\"Get Value of Vocher Code\"].json[\"data\"][0][\"value\"]*1,\n        \"message\": \"Voucher Successfully Fetched!\",    \n        \"voucher\": $node[\"Get Voucher from VPP API\"].json[0][\"response\"][0][\"code\"],\n        \"pin\": $node[\"Get Voucher from VPP API\"].json[0][\"response\"][0][\"pin\"],\n        \"valid_till\": $node[\"Get Voucher from VPP API\"].json[0][\"response\"][0][\"expiry\"]\n    }\t\t\t\n});\n}\n\n\n\nreturn responseData;\n"
       },
       "name": "Send New Voucher",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        2480,
+        2300,
         -600
       ]
     },
@@ -474,7 +474,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2280,
+        2120,
         -600
       ],
       "credentials": {
@@ -515,7 +515,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2100,
+        1920,
         -600
       ],
       "credentials": {
@@ -595,8 +595,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1180,
-        140
+        1000,
+        160
       ]
     },
     {
@@ -608,7 +608,7 @@
         "options": {
           "bodyContentType": "json"
         },
-        "bodyParametersJson": "={\n\t\"required_vouchers\": [\n         {\n           \"sku\": \"{{$node[\"Webhook\"].json[\"body\"][\"sku\"]}}\",\n           \"qty\": 1,\n           \"amt\": {{$node[\"Get Value of Vocher Code\"].json[\"data\"][0][\"value\"]*1}}\n          }\n     ],\n\t \"options\": {\n\t \t\"redeemed\": false\n\t }\n}"
+        "bodyParametersJson": "={\n\t\"required_vouchers\": [\n         {\n           \"sku\": \"{{$node[\"Webhook\"].json[\"body\"][\"sku\"]}}\",\n           \"qty\": 1,\n           \"amt\": {{$node[\"Get Value of Vocher Code\"].json[\"data\"][0][\"value\"]*1}}\n          }\n     ],\n\t \"options\": {\n\t \t\"redeemed\": true,\n        \"order_id\":\"{{$node[\"Webhook\"].json[\"body\"][\"id\"]}}\" \n\t }\n}"
       },
       "name": "Get Voucher from VPP API",
       "type": "n8n-nodes-base.httpRequest",
@@ -647,5 +647,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-12-23T11:49:24.993Z"
+  "updatedAt": "2022-12-26T12:08:23.779Z"
 }
