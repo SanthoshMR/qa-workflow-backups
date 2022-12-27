@@ -513,7 +513,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"vpanel_url\"]}}/items/sdv_orders?filter={\"order_id\":{\"_eq\":\"{{$node[\"Globals\"].json[\"order_id\"]}}\"}}",
+        "url": "={{$node[\"Globals\"].json[\"vpanel_url\"]}}/items/sdv_orders?filter={\"order_id\":{\"_eq\":\"{{$node[\"Get po_number\"].json[\"data\"][\"order_id\"]}}\"}}",
         "options": {}
       },
       "name": "Get the order id from vpanel",
@@ -554,8 +554,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "51",
+          "name": "VendorPanel DMS Token"
         }
       }
     },
@@ -602,5 +602,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-09-28T10:11:55.767Z"
+  "updatedAt": "2022-12-27T10:11:16.698Z"
 }
