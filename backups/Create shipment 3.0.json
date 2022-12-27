@@ -773,11 +773,11 @@
             },
             {
               "name": "payment_description",
-              "value": "={{$node[\"Update the residual amounts\"].json[\"data\"][\"payment_description\"]}}"
+              "value": "={{$node[\"IF1\"].json[\"data\"][\"payment_description\"]}}"
             },
             {
               "name": "payment_utr",
-              "value": "={{$node[\"Update the residual amounts\"].json[\"data\"][\"payment_utr\"]}}"
+              "value": "={{$node[\"IF1\"].json[\"data\"][\"payment_utr\"]}}"
             },
             {
               "name": "vendor_payment_status",
@@ -865,15 +865,15 @@
             },
             {
               "name": "payment_utr",
-              "value": "={{$node[\"Update the residual amounts\"].json[\"data\"][\"payment_utr\"]}}"
+              "value": "={{$node[\"IF1\"].json[\"data\"][\"payment_utr\"]}}"
             },
             {
               "name": "payment_amount",
-              "value": "={{$node[\"Function to update advance payments\"].json[\"residual_amount\"]}}"
+              "value": "={{$node[\"IF1\"].json[\"data\"][\"residual_amount\"]}}"
             },
             {
               "name": "payment_description",
-              "value": "={{$node[\"Update the residual amounts\"].json[\"data\"][\"payment_description\"]}}"
+              "value": "={{$node[\"IF1\"].json[\"data\"][\"payment_description\"]}}"
             },
             {
               "name": "vendor_payment_status",
@@ -904,5 +904,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-12-20T11:54:00.612Z"
+  "updatedAt": "2022-12-27T11:12:26.179Z"
 }
