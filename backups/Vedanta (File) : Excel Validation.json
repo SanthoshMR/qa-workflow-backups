@@ -1,0 +1,293 @@
+{
+  "active": false,
+  "connections": {
+    "Nextcloud": {
+      "main": [
+        [
+          {
+            "node": "Get All Sheet Name",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Spreadsheet File": {
+      "main": [
+        [
+          {
+            "node": "Validate Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Data": {
+      "main": [
+        [
+          {
+            "node": "Update Error Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Cloud Files": {
+      "main": [
+        [
+          {
+            "node": "Combine Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Data in PO Files": {
+      "main": [
+        [
+          {
+            "node": "Nextcloud",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Combine Items": {
+      "main": [
+        [
+          {
+            "node": "Create Data in PO Files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Global": {
+      "main": [
+        [
+          {
+            "node": "Get Cloud Files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Global",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get All Sheet Name": {
+      "main": [
+        [
+          {
+            "node": "Spreadsheet File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-01-02T09:52:03.823Z",
+  "id": "252",
+  "name": "Vedanta (File) : Excel Validation",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        360,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "path": "=Test/{{$node[\"Combine Items\"].json[\"excelData\"][0][\"file_name\"]}}"
+      },
+      "name": "Nextcloud",
+      "type": "n8n-nodes-base.nextCloud",
+      "typeVersion": 1,
+      "position": [
+        360,
+        540
+      ],
+      "credentials": {
+        "nextCloudApi": {
+          "id": "43",
+          "name": "SD Cloud"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "binaryPropertyName": "=data",
+        "options": {
+          "sheetName": "={{$node[\"Get All Sheet Name\"].json[\"name\"]}}"
+        }
+      },
+      "name": "Spreadsheet File",
+      "type": "n8n-nodes-base.spreadsheetFile",
+      "typeVersion": 1,
+      "position": [
+        720,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let errorData=[];\n\n const poColumns = {\n   \"deliveryDate\":\"Delivery Date\"\n };\n\nitems.forEach((item, index) => { \n  let errorMsgPO=\"\";\n  let rowCount=0;\n\n  if(!item.json[poColumns.deliveryDate]){\n    errorMsgPO = errorMsgPO + \" Delivery Date required \" + item.json[\"Sr no.\"] + \", \" ;    \n  }\n  if(!item.json[\"Material Code\"] || item.json[\"Material Code\"].length < 10){\n    errorMsgPO = errorMsgPO + \" Material Code Should be 10 digit \" + item.json[\"Sr no.\"] + \", \" ;    \n  }\n  if(!item.json[\"UOM\"] ){\n    errorMsgPO = errorMsgPO + \" UOM required \" + item.json[\"Sr no.\"] + \", \" ;    \n  }\n  if(!item.json[\"Total value \"] ){\n    errorMsgPO = errorMsgPO + \" Total value  required \" + item.json[\"Sr no.\"] + \", \" ;    \n  }\n  if(!item.json[\"GST Identification Number (GSTIN)\"] ){\n    errorMsgPO = errorMsgPO + \" GST  required \" + item.json[\"Sr no.\"] + \", \" ;    \n  }\n  if(!item.json[\"Order type\"] ){\n    errorMsgPO = errorMsgPO + \"Order type  required \" + item.json[\"Sr no.\"] + \", \" ;    \n  }\n  if(!item.json[\"Vendor email \"] ){\n    errorMsgPO = errorMsgPO + \" Vendor email  required \" + item.json[\"Sr no.\"] + \", \" ;    \n  }\n\n  \n\n  let errorindex = errorData.findIndex( element => {\n      if (element[\"po\"] === item.json[\"PO Number\"].toString().trim()) {\n        return true;\n      }\n  });\n\n  if(errorindex==-1){\n    errorData.push({\"po\":item.json[\"PO Number\"].toString().trim(),\"error\":errorMsgPO,\"rowCount\":1});\n  }\n  else{\n     errorData[errorindex][\"error\"]=errorData[errorindex][\"error\"]+errorMsgPO;\n     errorData[errorindex][\"rowCount\"]=errorData[errorindex][\"rowCount\"]+1;\n  }\n  \n});\n\nreturn errorData;"
+      },
+      "name": "Validate Data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        900,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "operation": "list",
+        "path": "Test/"
+      },
+      "name": "Get Cloud Files",
+      "type": "n8n-nodes-base.nextCloud",
+      "typeVersion": 1,
+      "position": [
+        720,
+        340
+      ],
+      "credentials": {
+        "nextCloudApi": {
+          "id": "43",
+          "name": "SD Cloud"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Global\"].json[\"vedanta_mozart_url\"]}}items/cloud_po_files",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Combine Items\"].json[\"poData\"]}}"
+      },
+      "name": "Create Data in PO Files",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1080,
+        340
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "28",
+          "name": "Vedanta DMS PROD Credentials"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "functionCode": "// return items;\nlet poFiles=[];\nlet excelFiles=[];\nitems.forEach((item) => {\n    const fullPath = item.json[\"path\"].split(\"/\");\n    const fileName = fullPath[fullPath.length - 1]\n    poFiles.push({\"file_name\":decodeURI(fileName),\"file_size\":item.json[\"contentLength\"]});\n    if(decodeURI(fileName).includes(\".xlsx\")){\n        excelFiles.push({\"file_name\":decodeURI(fileName)});\n    }\n});\n\nreturn [{\n     json: {\n         poData: poFiles,\n         excelData:excelFiles\n    }\n}];"
+      },
+      "name": "Combine Items",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        900,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "vedanta_mozart_url",
+              "value": "https://vedanta.mozart.shakedeal.com/"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Global",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        540,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "=https://vedanta.mozart.shakedeal.com/items/PO_Upload/{{$node[\"Validate Data\"].json[\"po\"]}}",
+        "allowUnauthorizedCerts": true,
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "error",
+              "value": "={{$node[\"Validate Data\"].json[\"error\"]}}"
+            },
+            {
+              "name": "total_rows",
+              "value": "={{$node[\"Validate Data\"].json[\"rowCount\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update Error Data",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1080,
+        540
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "28",
+          "name": "Vedanta DMS PROD Credentials"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "functionCode": "let binaries = {};\nconst { read: xlsxRead } = require('xlsx'); \nconst data = items[0].binary.data; \nworkbook = xlsxRead(data.data); \nbinaries[\"data\"] = data;\nreturn workbook.SheetNames.map((s) => { return { json: { name: s, } ,binary : binaries} });"
+      },
+      "name": "Get All Sheet Name",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        540,
+        540
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-01-02T13:41:36.338Z"
+}
