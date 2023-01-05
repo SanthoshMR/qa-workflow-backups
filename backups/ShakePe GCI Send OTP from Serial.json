@@ -1,0 +1,426 @@
+{
+  "active": true,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Get Details From Serial",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Msg91": {
+      "main": [
+        [
+          {
+            "node": "Respond Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update OTP": {
+      "main": [
+        [
+          {
+            "node": "Msg91",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "IF Request Already Placed",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond Failure",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Details From Serial": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "Check OTP Valid",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check OTP Valid": {
+      "main": [
+        [
+          {
+            "node": "Update OTP",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "OTP Sent Already",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Request Already Placed": {
+      "main": [
+        [
+          {
+            "node": "Respond Request Already Placed",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "If Serial is Assigned",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If Serial is Assigned": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Response Failure: Serial Unassigned",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-01-05T07:56:47.486Z",
+  "id": "253",
+  "name": "ShakePe GCI Send OTP from Serial",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        120,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "shakepe/send-otp-for-serial",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        220,
+        280
+      ],
+      "webhookId": "010f1317-1e79-42b5-9e4c-f8c6a7d75362",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "76",
+          "name": "ShakePe Credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "dms_url",
+              "value": "https://zeusqa.shakedeal.com"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        420,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sp_card_inventory/{{$node[\"Webhook\"].json[\"body\"][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "otp",
+              "value": "={{Math.floor(1000 + Math.random() * 9000)}}"
+            },
+            {
+              "name": "otp_last_updated",
+              "value": "={{new Date().toISOString()}}"
+            }
+          ]
+        }
+      },
+      "name": "Update OTP",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2060,
+        80
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "77",
+          "name": "ShakePe GCI - Zeus QA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "from": "SHAKDL",
+        "to": "=91{{$node[\"Update OTP\"].json[\"data\"][\"mobile_number\"]}}",
+        "message": "={{$node[\"Update OTP\"].json[\"data\"][\"otp\"]}} is your OTP for account verification on ShakeDeal. The OTP is valid for 30 mins. Please do not share OTP with anyone.\nTeam ShakeDeal"
+      },
+      "name": "Msg91",
+      "type": "n8n-nodes-base.msg91",
+      "typeVersion": 1,
+      "position": [
+        2260,
+        80
+      ],
+      "credentials": {
+        "msg91Api": {
+          "id": "59",
+          "name": "Msg91 Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$node[\"Get Details From Serial\"].json[\"data\"].length>0}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        780,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let responseData = [];\n\nresponseData.push({\n    json: {\n      \"success\":true,\n      \"message\":\"OTP Sent Successfully\"\n    }\t\t\t\t\n});\n\nreturn responseData;"
+      },
+      "name": "Respond Success",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        2460,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let responseData = [];\n\nresponseData.push({\n    json: {\n      \"success\":false,\n      \"message\":\"Invalid Serial / Server Error\"\n    }\t\t\t\t\n});\n\nreturn responseData;"
+      },
+      "name": "Respond Failure",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1020,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sp_card_inventory?filter={\"serial_number\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"id\"]}}\"}}&fields=mobile_number,status",
+        "options": {}
+      },
+      "name": "Get Details From Serial",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        600,
+        280
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "77",
+          "name": "ShakePe GCI - Zeus QA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let isOTPGenerationNeeded = Math.abs((Math.round(((new Date() - new Date($node[\"Get Details From Serial\"].json[\"data\"][0][\"otp_last_updated\"])) / 1000)/60))) > 5|| $node[\"Webhook\"].json[\"body\"][\"resend\"]\n\nitems[0].json.isOTPGenerationNeeded = isOTPGenerationNeeded;\n\nreturn items;"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1560,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{true}}",
+              "value2": "={{$node[\"Function\"].json[\"isOTPGenerationNeeded\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Check OTP Valid",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1780,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let responseData = [];\n\nresponseData.push({\n    json: {\n      \"success\":false,\n      \"message\":\"OTP Already Sent, Please try after 5 Minutes\"\n    }\t\t\t\t\n});\n\nreturn responseData;"
+      },
+      "name": "OTP Sent Already",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1980,
+        360
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Get Details From Serial\"].json[\"data\"][0]['status']}}",
+              "value2": "RequestForActivation"
+            }
+          ]
+        }
+      },
+      "name": "IF Request Already Placed",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1020,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let responseData = [];\n\nresponseData.push({\n    json: {\n      \"success\":false,\n      \"message\":\"Request Already Placed\"\n    }\t\t\t\t\n});\n\nreturn responseData;"
+      },
+      "name": "Respond Request Already Placed",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1180,
+        -120
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Get Details From Serial\"].json[\"data\"][0]['status']}}",
+              "value2": "Assigned"
+            }
+          ]
+        }
+      },
+      "name": "If Serial is Assigned",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1260,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let responseData = [];\n\nresponseData.push({\n    json: {\n      \"success\":false,\n      \"message\":\"Cannot place request as Serial is Not Assigned\"\n    }\t\t\t\t\n});\n\nreturn responseData;"
+      },
+      "name": "Response Failure: Serial Unassigned",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1420,
+        420
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-01-05T12:12:02.819Z"
+}
