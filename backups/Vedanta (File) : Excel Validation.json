@@ -1,6 +1,17 @@
 {
   "active": false,
   "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Global",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "Nextcloud": {
       "main": [
         [
@@ -27,7 +38,7 @@
       "main": [
         [
           {
-            "node": "Update Error Data",
+            "node": "Create PO Data1",
             "type": "main",
             "index": 0
           }
@@ -45,22 +56,11 @@
         ]
       ]
     },
-    "Create Data in PO Files": {
-      "main": [
-        [
-          {
-            "node": "Nextcloud",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Combine Items": {
       "main": [
         [
           {
-            "node": "Create Data in PO Files",
+            "node": "Nextcloud",
             "type": "main",
             "index": 0
           }
@@ -78,22 +78,84 @@
         ]
       ]
     },
-    "Start": {
+    "Get All Sheet Name": {
       "main": [
         [
           {
-            "node": "Global",
+            "node": "Spreadsheet File",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Get All Sheet Name": {
+    "IF": {
       "main": [
         [
           {
-            "node": "Spreadsheet File",
+            "node": "Increment Record Count",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get PDF File": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Combine Data For Mozart Upload": {
+      "main": [
+        [
+          {
+            "node": "Check Record Exist",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Record Exist": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Increment Record Count": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create PO Data1": {
+      "main": [
+        [
+          {
+            "node": "Combine Data For Mozart Upload",
             "type": "main",
             "index": 0
           }
@@ -124,8 +186,8 @@
       "type": "n8n-nodes-base.nextCloud",
       "typeVersion": 1,
       "position": [
-        360,
-        540
+        1060,
+        340
       ],
       "credentials": {
         "nextCloudApi": {
@@ -145,20 +207,20 @@
       "type": "n8n-nodes-base.spreadsheetFile",
       "typeVersion": 1,
       "position": [
-        720,
-        540
+        340,
+        660
       ]
     },
     {
       "parameters": {
-        "functionCode": "let formatedData=[];\nlet poItems=[];\nlet errorData=[];\n\nconst poColumns = {\n  \"deliveryDate\":[\"Delivery Date\"],\n  \"orderType\":[\"Order type\"],\n  \"poNumber\":[\"PO Number\"],\n  \"poDate\":[\"PO Date\"],\n  \"srNo\":[\"Sr no.\"],\n  \"materialCode\":[\"Material Code\"],\n  \"vendorName\":[\"Vendor Name\"],\n  \"vendorCode\":[\"Vendor code\"],\n  \"vendorEmail\":[\"Vendor email\"],\n  \"vendorContact\":[\"Vendor contact\"],\n  \"hsn\":[\"HSN/SAC\"],\n  \"uom\":[\"UOM\"],\n  \"plant\":[\"Plant\"],\n  \"gst\":[\"GST Identification Number (GSTIN)\"],\n  \"itemPrice\":[\"Item Price\"],\n  \"itemDescription\":[\"Item Desc\"],\n  \"qtyOrdered\":[\"Qty ordered\"],\n  \"excludingGst\":[\"Value (Excluding GST)\"],\n  \"itemTaxPercentage\":[\"Item Tax %\"],\n  \"itemTaxAmount\":[\"Item Tax Amount\"],  \n  \"totalValue\":[\"Total value\"],  \n  \"paymentTerms\":[\"Payment Terms Label\"],\n  \"deliverToCustomer\":[\"Deliver To Customer\"],\n  \"longDescription\":[\"Long Description\"]\n};\n\nitems.forEach((item, index) => { \n  let formatedObject={};\n  let entries = Object.entries(item.json)\n  entries.map( ([key, val] = entry) => {\n    if(key.includes(poColumns.deliveryDate)){\n      formatedObject.deliveryDate=val;\n    }\n    if(key.includes(poColumns.orderType)){\n      formatedObject.orderType=val.toString();\n    }\n    if(key.includes(poColumns.poNumber)){\n      formatedObject.poNumber=val.toString();\n    }\n    if(key.includes(poColumns.poDate)){\n      formatedObject.poDate=val.toString();\n    }\n    if(key.includes(poColumns.srNo)){\n      formatedObject.srNo=val.toString();\n    }\n    if(key.includes(poColumns.materialCode)){\n      formatedObject.materialCode=val.toString();\n    }\n    if(key.includes(poColumns.vendorName)){\n      formatedObject.vendorName=val.toString();\n    }\n    if(key.includes(poColumns.vendorCode)){\n      formatedObject.vendorCode=val.toString();\n    }\n    if(key.includes(poColumns.vendorEmail)){\n      formatedObject.vendorEmail=val.toString();\n    }\n    if(key.includes(poColumns.vendorContact)){\n      formatedObject.vendorContact=val.toString();\n    }\n    if(key.includes(poColumns.hsn)){\n      formatedObject.hsn=val.toString();\n    }\n    if(key.includes(poColumns.uom)){\n      formatedObject.uom=val.toString();\n    }\n    if(key.includes(poColumns.plant)){\n      formatedObject.plant=val.toString();\n    }\n    if(key.includes(poColumns.gst)){\n      formatedObject.gst=val.toString();\n    }\n    if(key.includes(poColumns.itemPrice)){\n      formatedObject.itemPrice=val.toString();\n    }\n    if(key.includes(poColumns.itemDescription)){\n      formatedObject.itemDescription=val.toString();\n    }\n    if(key.includes(poColumns.qtyOrdered)){\n      formatedObject.qtyOrdered=val.toString();\n    }\n    if(key.includes(poColumns.excludingGst)){\n      formatedObject.excludingGst=val.toString();\n    }\n    if(key.includes(poColumns.itemTaxPercentage)){\n      formatedObject.itemTaxPercentage=val.toString();\n    }\n    if(key.includes(poColumns.itemTaxAmount)){\n      formatedObject.itemTaxAmount=val.toString();\n    }\n    if(key.includes(poColumns.totalValue)){\n      formatedObject.totalValue=val.toString();\n    }\n    if(key.includes(poColumns.paymentTerms)){\n      formatedObject.paymentTerms=val.toString();\n    }\n    if(key.includes(poColumns.deliverToCustomer)){\n      formatedObject.deliverToCustomer=val.toString();\n    }\n    if(key.includes(poColumns.longDescription)){\n      formatedObject.longDescription=val.toString();\n    }\n  });  \n  formatedData.push(formatedObject);\n});\n\nformatedData.forEach((item, index) => { \n  let errorMsgPO=\"\";\n  let rowCount=0;\n\n  let entries = Object.entries(item)\n  entries.map( ([key, val] = entry) => {\n    \n    if(key.includes(poColumns.deliveryDate) && !val){\n      errorMsgPO = errorMsgPO + \" Delivery Date required \" + val + \", \" ;    \n    }\n    if(key.includes(poColumns.orderType) && !val && !(val==\"\" || val==\"\")){\n      errorMsgPO = errorMsgPO + \" Order Type required \" + val + \", \" ;    \n    }\n     if(key.includes(poColumns.poNumber) && !val){\n      errorMsgPO = errorMsgPO + \" PO Number required \" + val + \", \" ;    \n    }\n    if(key.includes(poColumns.poDate) && !val){\n      errorMsgPO = errorMsgPO + \" PO Date required \" + val + \", \" ;    \n    }\n     if(key.includes(poColumns.srNo) && !val){\n      errorMsgPO = errorMsgPO + \" SR NO required \" + val + \", \" ;    \n    }\n    if(key.includes(poColumns.materialCode) && !val & val.length < 10){\n      errorMsgPO = errorMsgPO + \" Material Code required \" + val + \", \" ;    \n    }\n     if(key.includes(poColumns.vendorName) && !val){\n      errorMsgPO = errorMsgPO + \" Vendor Name required \" + val + \", \" ;    \n    }\n    if(key.includes(poColumns.vendorCode) && !val){\n      errorMsgPO = errorMsgPO + \" Vendor Code required \" + val + \", \" ;    \n    }\n     if(key.includes(poColumns.vendorEmail) && !val){\n      errorMsgPO = errorMsgPO + \" Vendor Email required \" + val + \", \" ;    \n    }\n    if(key.includes(poColumns.vendorContact) && !val){\n      errorMsgPO = errorMsgPO + \" Vendor Contact required \" + val + \", \" ;    \n    }\n     if(key.includes(poColumns.hsn) && !val){\n      errorMsgPO = errorMsgPO + \" HSN required \" + val + \", \" ;    \n    }\n    if(key.includes(poColumns.uom) && !val){\n      errorMsgPO = errorMsgPO + \" UOM required \" + val + \", \" ;    \n    }\n     if(key.includes(poColumns.plant) && !val){\n      errorMsgPO = errorMsgPO + \" Plant required \" + val + \", \" ;    \n    }\n    if(key.includes(poColumns.gst) && !val){\n      errorMsgPO = errorMsgPO + \" GST required \" + val + \", \" ;    \n    }\n     if(key.includes(poColumns.itemPrice) && !val){\n      errorMsgPO = errorMsgPO + \" Item Price required \" + val + \", \" ;    \n    }\n    if(key.includes(poColumns.itemDescription) && !val){\n      errorMsgPO = errorMsgPO + \" Item Description required \" + val + \", \" ;    \n    }\n     if(key.includes(poColumns.qtyOrdered) && !val){\n      errorMsgPO = errorMsgPO + \" QTY Ordered required \" + val + \", \" ;    \n    }\n    if(key.includes(poColumns.excludingGst) && !val){\n      errorMsgPO = errorMsgPO + \" Excluding GST required \" + val + \", \" ;    \n    }\n     if(key.includes(poColumns.itemTaxPercentage) && !val){\n      errorMsgPO = errorMsgPO + \"Item Tax Percentage required \" + val + \", \" ;    \n    }\n    if(key.includes(poColumns.itemTaxAmount) && !val){\n      errorMsgPO = errorMsgPO + \" Item Tax Amount required \" + val + \", \" ;    \n    }\n     if(key.includes(poColumns.totalValue) && !val){\n      errorMsgPO = errorMsgPO + \" Total Value required \" + val + \", \" ;    \n    }\n    if(key.includes(poColumns.paymentTerms) && !val){\n      errorMsgPO = errorMsgPO + \" Payment Terms required \" + val + \", \" ;    \n    }\n    if(key.includes(poColumns.deliverToCustomer) && !val){\n      errorMsgPO = errorMsgPO + \" Delivery To Customer required \" + val + \", \" ;    \n    }\n    if(key.includes(poColumns.longDescription) && !val){\n      errorMsgPO = errorMsgPO + \" Long Description required \" + val + \", \" ;    \n    }     \n\n  });\n    \n\n  let errorindex = errorData.findIndex( element => {\n      if (element[\"po\"] === item.poNumber.toString().trim()) {\n        return true;\n      }\n  });\n  \n  if(errorindex==-1){\n    poItems=[];\n    poItems.push(item);\n    errorData.push({\"po\":item.poNumber.toString().trim(),\"error\":errorMsgPO,\"rowCount\":1,\"poItems\":poItems});\n  }\n  else{\n     errorData[errorindex][\"error\"]=errorData[errorindex][\"error\"]+errorMsgPO;\n     errorData[errorindex][\"rowCount\"]=errorData[errorindex][\"rowCount\"]+1;\n     poItems.push(item);\n     errorData[errorindex][\"poItems\"]=poItems;\n  }\n  \n});\n\nreturn errorData;"
+        "functionCode": "let formatedData=[];\nlet poItems=[];\nlet errorData=[];\nlet filesData = $node[\"Combine Items\"].json.poData\n\nconst poColumns = {\n  \"deliveryDate\":[\"Delivery Date\"],\n  \"orderType\":[\"Order type\"],\n  \"poNumber\":[\"PO Number\"],\n  \"poDate\":[\"PO Date\"],\n  \"srNo\":[\"Sr no.\"],\n  \"materialCode\":[\"Material Code\"],\n  \"vendorName\":[\"Vendor Name\"],\n  \"vendorCode\":[\"Vendor code\"],\n  \"vendorEmail\":[\"Vendor email\"],\n  \"vendorContact\":[\"Vendor contact\"],\n  \"hsn\":[\"HSN/SAC\"],\n  \"uom\":[\"UOM\"],\n  \"plant\":[\"Plant\"],\n  \"gst\":[\"GST Identification Number (GSTIN)\"],\n  \"itemPrice\":[\"Item Price\"],\n  \"itemDescription\":[\"Item Desc\"],\n  \"qtyOrdered\":[\"Qty ordered\"],\n  \"excludingGst\":[\"Value (Excluding GST)\"],\n  \"itemTaxPercentage\":[\"Item Tax %\"],\n  \"itemTaxAmount\":[\"Item Tax Amount\"],  \n  \"totalValue\":[\"Total value\"],  \n  \"paymentTerms\":[\"Payment Terms Label\"],\n  \"deliverToCustomer\":[\"Deliver To Customer\"],\n  \"longDescription\":[\"Long Description\"]\n};\n\n//Formatting\nitems.forEach((item, index) => { \n  let formatedObject={};\n  let entries = Object.entries(item.json)\n  entries.map( ([key, val] = entry) => {\n    if(key.includes(poColumns.deliveryDate)){\n      formatedObject.deliveryDate=val;\n    }\n    if(key.includes(poColumns.orderType)){\n      formatedObject.orderType=val.toString();\n    }\n    if(key.includes(poColumns.poNumber)){\n      formatedObject.poNumber=val.toString();\n    }\n    if(key.includes(poColumns.poDate)){\n      formatedObject.poDate=val.toString();\n    }\n    if(key.includes(poColumns.srNo)){\n      formatedObject.srNo=val.toString();\n    }\n    if(key.includes(poColumns.materialCode)){\n      formatedObject.materialCode=val.toString();\n    }\n    if(key.includes(poColumns.vendorName)){\n      formatedObject.vendorName=val.toString();\n    }\n    if(key.includes(poColumns.vendorCode)){\n      formatedObject.vendorCode=val.toString();\n    }\n    if(key.includes(poColumns.vendorEmail)){\n      formatedObject.vendorEmail=val.toString();\n    }\n    if(key.includes(poColumns.vendorContact)){\n      formatedObject.vendorContact=val.toString();\n    }\n    if(key.includes(poColumns.hsn)){\n      formatedObject.hsn=val.toString();\n    }\n    if(key.includes(poColumns.uom)){\n      formatedObject.uom=val.toString();\n    }\n    if(key.includes(poColumns.plant)){\n      formatedObject.plant=val.toString();\n    }\n    if(key.includes(poColumns.gst)){\n      formatedObject.gst=val.toString();\n    }\n    if(key.includes(poColumns.itemPrice)){\n      formatedObject.itemPrice=val.toString();\n    }\n    if(key.includes(poColumns.itemDescription)){\n      formatedObject.itemDescription=val.toString();\n    }\n    if(key.includes(poColumns.qtyOrdered)){\n      formatedObject.qtyOrdered=val.toString();\n    }\n    if(key.includes(poColumns.excludingGst)){\n      formatedObject.excludingGst=val.toString();\n    }\n    if(key.includes(poColumns.itemTaxPercentage)){\n      formatedObject.itemTaxPercentage=val.toString();\n    }\n    if(key.includes(poColumns.itemTaxAmount)){\n      formatedObject.itemTaxAmount=val.toString();\n    }\n    if(key.includes(poColumns.totalValue)){\n      formatedObject.totalValue=val.toString();\n    }\n    if(key.includes(poColumns.paymentTerms)){\n      formatedObject.paymentTerms=val.toString();\n    }\n    if(key.includes(poColumns.deliverToCustomer)){\n      formatedObject.deliverToCustomer=val.toString();\n    }\n    if(key.includes(poColumns.longDescription)){\n      formatedObject.longDescription=val.toString();\n    }\n  });  \n  formatedData.push(formatedObject);\n});\n\n//validating Data\nformatedData.forEach((item, index) => { \n  let errorMsgPO=\"\";\n  let rowCount=0;\n\n  let entries = Object.entries(item)\n  entries.map( ([key, val] = entry) => {\n    \n    if(key.includes(poColumns.deliveryDate) && !val){\n      errorMsgPO = errorMsgPO + \" Delivery Date required \" + val + \", \" ;    \n    }\n    if(key.includes(poColumns.orderType) && !val && !(val==\"\" || val==\"\")){\n      errorMsgPO = errorMsgPO + \" Order Type required \" + val + \", \" ;    \n    }\n     if(key.includes(poColumns.poNumber) && !val){\n      errorMsgPO = errorMsgPO + \" PO Number required \" + val + \", \" ;    \n    }\n    if(key.includes(poColumns.poDate) && !val){\n      errorMsgPO = errorMsgPO + \" PO Date required \" + val + \", \" ;    \n    }\n     if(key.includes(poColumns.srNo) && !val){\n      errorMsgPO = errorMsgPO + \" SR NO required \" + val + \", \" ;    \n    }\n    if(key.includes(poColumns.materialCode) && !val & val.length < 10){\n      errorMsgPO = errorMsgPO + \" Material Code required \" + val + \", \" ;    \n    }\n     if(key.includes(poColumns.vendorName) && !val){\n      errorMsgPO = errorMsgPO + \" Vendor Name required \" + val + \", \" ;    \n    }\n    if(key.includes(poColumns.vendorCode) && !val){\n      errorMsgPO = errorMsgPO + \" Vendor Code required \" + val + \", \" ;    \n    }\n     if(key.includes(poColumns.vendorEmail) && !val){\n      errorMsgPO = errorMsgPO + \" Vendor Email required \" + val + \", \" ;    \n    }\n    if(key.includes(poColumns.vendorContact) && !val){\n      errorMsgPO = errorMsgPO + \" Vendor Contact required \" + val + \", \" ;    \n    }\n     if(key.includes(poColumns.hsn) && !val){\n      errorMsgPO = errorMsgPO + \" HSN required \" + val + \", \" ;    \n    }\n    if(key.includes(poColumns.uom) && !val){\n      errorMsgPO = errorMsgPO + \" UOM required \" + val + \", \" ;    \n    }\n     if(key.includes(poColumns.plant) && !val){\n      errorMsgPO = errorMsgPO + \" Plant required \" + val + \", \" ;    \n    }\n    if(key.includes(poColumns.gst) && !val){\n      errorMsgPO = errorMsgPO + \" GST required \" + val + \", \" ;    \n    }\n     if(key.includes(poColumns.itemPrice) && !val){\n      errorMsgPO = errorMsgPO + \" Item Price required \" + val + \", \" ;    \n    }\n    if(key.includes(poColumns.itemDescription) && !val){\n      errorMsgPO = errorMsgPO + \" Item Description required \" + val + \", \" ;    \n    }\n     if(key.includes(poColumns.qtyOrdered) && !val){\n      errorMsgPO = errorMsgPO + \" QTY Ordered required \" + val + \", \" ;    \n    }\n    if(key.includes(poColumns.excludingGst) && !val){\n      errorMsgPO = errorMsgPO + \" Excluding GST required \" + val + \", \" ;    \n    }\n     if(key.includes(poColumns.itemTaxPercentage) && !val){\n      errorMsgPO = errorMsgPO + \"Item Tax Percentage required \" + val + \", \" ;    \n    }\n    if(key.includes(poColumns.itemTaxAmount) && !val){\n      errorMsgPO = errorMsgPO + \" Item Tax Amount required \" + val + \", \" ;    \n    }\n     if(key.includes(poColumns.totalValue) && !val){\n      errorMsgPO = errorMsgPO + \" Total Value required \" + val + \", \" ;    \n    }\n    if(key.includes(poColumns.paymentTerms) && !val){\n      errorMsgPO = errorMsgPO + \" Payment Terms required \" + val + \", \" ;    \n    }\n    if(key.includes(poColumns.deliverToCustomer) && !val){\n      errorMsgPO = errorMsgPO + \" Delivery To Customer required \" + val + \", \" ;    \n    }\n    if(key.includes(poColumns.longDescription) && !val){\n      errorMsgPO = errorMsgPO + \" Long Description required \" + val + \", \" ;    \n    }     \n\n  });\n    \n\n  let errorindex = errorData.findIndex( element => {\n      if (element[\"po\"] === item.poNumber.toString().trim()) {\n        return true;\n      }\n  });\n  \n  if(errorindex==-1){\n    poItems=[];\n    let fileName = filesData.filter(fd=>fd.file_name.includes(item.poNumber.toString().trim()))[0].file_name;\n    poItems.push(item);\n    errorData.push({\"po\":item.poNumber.toString().trim(),\"fileName\":fileName !=\"\"?fileName:\"dummypdf\",\"error\":errorMsgPO,\"rowCount\":1,\"poItems\":poItems});\n  }\n  else{\n     errorData[errorindex][\"error\"]=errorData[errorindex][\"error\"]+errorMsgPO;\n     errorData[errorindex][\"rowCount\"]=errorData[errorindex][\"rowCount\"]+1;\n     poItems.push(item);\n     errorData[errorindex][\"poItems\"]=poItems;\n  }\n  \n});\n\nreturn errorData;"
       },
       "name": "Validate Data",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        900,
-        540
+        520,
+        660
       ]
     },
     {
@@ -171,7 +233,7 @@
       "type": "n8n-nodes-base.nextCloud",
       "typeVersion": 1,
       "position": [
-        720,
+        700,
         340
       ],
       "credentials": {
@@ -183,38 +245,13 @@
     },
     {
       "parameters": {
-        "authentication": "headerAuth",
-        "requestMethod": "POST",
-        "url": "={{$node[\"Global\"].json[\"vedanta_mozart_url\"]}}items/cloud_po_files",
-        "allowUnauthorizedCerts": true,
-        "jsonParameters": true,
-        "options": {},
-        "bodyParametersJson": "={{$node[\"Combine Items\"].json[\"poData\"]}}"
-      },
-      "name": "Create Data in PO Files",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        1080,
-        340
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "28",
-          "name": "Vedanta DMS PROD Credentials"
-        }
-      },
-      "disabled": true
-    },
-    {
-      "parameters": {
         "functionCode": "// return items;\nlet poFiles=[];\nlet excelFiles=[];\nitems.forEach((item) => {\n    const fullPath = item.json[\"path\"].split(\"/\");\n    const fileName = fullPath[fullPath.length - 1]\n    poFiles.push({\"file_name\":decodeURI(fileName),\"file_size\":item.json[\"contentLength\"]});\n    if(decodeURI(fileName).includes(\".xlsx\")){\n        excelFiles.push({\"file_name\":decodeURI(fileName)});\n    }\n});\n\nreturn [{\n     json: {\n         poData: poFiles,\n         excelData:excelFiles\n    }\n}];"
       },
       "name": "Combine Items",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        900,
+        880,
         340
       ]
     },
@@ -234,15 +271,155 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        540,
+        520,
         340
       ]
     },
     {
       "parameters": {
+        "functionCode": "let vedantaUrl = $node[\"Global\"].json[\"vedanta_mozart_url\"];\nlet binaries = {};\nconst { read: xlsxRead } = require('xlsx'); \nconst data = items[0].binary.data; \nworkbook = xlsxRead(data.data); \nbinaries[\"data\"] = data;\nreturn workbook.SheetNames.map((s) => { return { json: { name: s, dmsUrl : vedantaUrl} ,binary : binaries} });"
+      },
+      "name": "Get All Sheet Name",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1240,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Check Record Exist\"].json[\"iteration\"] < $node[\"Check Record Exist\"].json[\"poCount\"] }}"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1240,
+        660
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "path": "=Test/{{$node[\"Validate Data\"].json[\"fileName\"]}}"
+      },
+      "name": "Get PDF File",
+      "type": "n8n-nodes-base.nextCloud",
+      "typeVersion": 1,
+      "position": [
+        1600,
+        280
+      ],
+      "credentials": {
+        "nextCloudApi": {
+          "id": "43",
+          "name": "SD Cloud"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "fromEmail": "chidanand@shakedeal.com",
+        "toEmail": "chidanand@shakedeal.com",
+        "subject": "={{$node[\"Validate Data\"].json[\"po\"]}}",
+        "attachments": "data",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        1720,
+        480
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "21",
+          "name": "AWS SDStore"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "functionCode": "let poData=[];\nitems.forEach((item) => {  \n    poData.push({\"file_name\":item.json.data.po_num,\"file_size\":item.json.data.file_name,\"error\":item.json.data.error});    \n});\n\nreturn [{\n     json: {\n         poData: poData,\n    }\n}];"
+      },
+      "name": "Combine Data For Mozart Upload",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        880,
+        660
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "number": [
+            {
+              "name": "iteration"
+            },
+            {
+              "name": "poCount",
+              "value": "={{$node[\"Combine Data For Mozart Upload\"].json[\"poData\"].length}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Check Record Exist",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1060,
+        660
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "number": [
+            {
+              "name": "iteration",
+              "value": "={{$node[\"Check Record Exist\"].json[\"iteration\"]+1}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Increment Record Count",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1500,
+        440
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1480,
+        820
+      ]
+    },
+    {
+      "parameters": {
         "authentication": "headerAuth",
-        "requestMethod": "PATCH",
-        "url": "=https://vedanta.mozart.shakedeal.com/items/PO_Upload/{{$node[\"Validate Data\"].json[\"po\"]}}",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Get All Sheet Name\"].json[\"dmsUrl\"]}}items/sdm_excel_pos",
         "allowUnauthorizedCerts": true,
         "options": {},
         "bodyParametersUi": {
@@ -254,40 +431,39 @@
             {
               "name": "total_rows",
               "value": "={{$node[\"Validate Data\"].json[\"rowCount\"]}}"
+            },
+            {
+              "name": "po_num",
+              "value": "={{$node[\"Validate Data\"].json[\"po\"]}}"
+            },
+            {
+              "name": "po_details",
+              "value": "={{$node[\"Validate Data\"].json[\"poItems\"]}}"
+            },
+            {
+              "name": "file_name",
+              "value": "={{$node[\"Validate Data\"].json[\"fileName\"]}}"
             }
           ]
         }
       },
-      "name": "Update Error Data",
+      "name": "Create PO Data1",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1080,
-        540
+        700,
+        660
       ],
       "credentials": {
         "httpHeaderAuth": {
           "id": "28",
           "name": "Vedanta DMS PROD Credentials"
         }
-      },
-      "disabled": true
-    },
-    {
-      "parameters": {
-        "functionCode": "let binaries = {};\nconst { read: xlsxRead } = require('xlsx'); \nconst data = items[0].binary.data; \nworkbook = xlsxRead(data.data); \nbinaries[\"data\"] = data;\nreturn workbook.SheetNames.map((s) => { return { json: { name: s, } ,binary : binaries} });"
-      },
-      "name": "Get All Sheet Name",
-      "type": "n8n-nodes-base.function",
-      "typeVersion": 1,
-      "position": [
-        540,
-        540
-      ]
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-01-03T10:22:26.563Z"
+  "updatedAt": "2023-01-05T07:13:21.163Z"
 }
