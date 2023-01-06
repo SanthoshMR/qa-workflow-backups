@@ -1,0 +1,132 @@
+{
+  "active": true,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Get Details From Serial",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Details From Serial": {
+      "main": [
+        [
+          {
+            "node": "Respond Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-01-06T12:27:29.422Z",
+  "id": "255",
+  "name": "ShakePe GCI Get Mobile Number",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        -120,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "shakepe/get-phn-for-serial",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -20,
+        180
+      ],
+      "webhookId": "010f1317-1e79-42b5-9e4c-f8c6a7d75362",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "76",
+          "name": "ShakePe Credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "dms_url",
+              "value": "https://zeusqa.shakedeal.com"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        180,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sp_card_inventory?filter={\"serial_number\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"id\"]}}\"}}&fields=mobile_number",
+        "options": {}
+      },
+      "name": "Get Details From Serial",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        360,
+        180
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "77",
+          "name": "ShakePe GCI - Zeus QA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let responseData = [];\n\nconst { mobile_number } = $node[\"Get Details From Serial\"].json[\"data\"][0];\n\nresponseData.push({\n    json: {\n      \"success\":true,\n      \"message\":\"Mobile Number Fetched\",\n      \"mobile_number\": mobile_number\n    }\t\t\t\t\n});\n\nreturn responseData;"
+      },
+      "name": "Respond Success",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        580,
+        180
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-01-06T13:20:33.018Z"
+}
