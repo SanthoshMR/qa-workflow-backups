@@ -38,7 +38,7 @@
       "main": [
         [
           {
-            "node": "Update OTP",
+            "node": "Update Status",
             "type": "main",
             "index": 0
           }
@@ -52,7 +52,36 @@
         ]
       ]
     },
-    "Update OTP": {
+    "Update Status": {
+      "main": [
+        [
+          {
+            "node": "IF MOBILE NUMBER UPDATE REQUIRED",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF MOBILE NUMBER UPDATE REQUIRED": {
+      "main": [
+        [
+          {
+            "node": "Update Mobile Number",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Mobile Number": {
       "main": [
         [
           {
@@ -169,7 +198,19 @@
       "typeVersion": 1,
       "position": [
         1180,
-        200
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let responseData = [];\n\nresponseData.push({\n    json: {\n      \"success\":true,\n      \"message\":\"Request Placed Successfully\"\n    }\t\t\t\t\n});\n\nreturn responseData;"
+      },
+      "name": "Respond Success",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1880,
+        -160
       ]
     },
     {
@@ -187,12 +228,12 @@
           ]
         }
       },
-      "name": "Update OTP",
+      "name": "Update Status",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1180,
-        -80
+        1140,
+        -180
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -203,19 +244,55 @@
     },
     {
       "parameters": {
-        "functionCode": "let responseData = [];\n\nresponseData.push({\n    json: {\n      \"success\":true,\n      \"message\":\"Request Placed Successfully\"\n    }\t\t\t\t\n});\n\nreturn responseData;"
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sp_card_inventory/{{$node[\"Webhook\"].json[\"body\"][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "mobile_number",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"mobile_number\"]}}"
+            }
+          ]
+        }
       },
-      "name": "Respond Success",
-      "type": "n8n-nodes-base.function",
+      "name": "Update Mobile Number",
+      "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1420,
-        -80
+        1620,
+        -360
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "77",
+          "name": "ShakePe GCI - Zeus QA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{!!$node[\"Webhook\"].json[\"body\"][\"mobile_number\"]}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "IF MOBILE NUMBER UPDATE REQUIRED",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1400,
+        -180
       ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-01-05T11:13:41.541Z"
+  "updatedAt": "2023-01-06T13:35:21.459Z"
 }
