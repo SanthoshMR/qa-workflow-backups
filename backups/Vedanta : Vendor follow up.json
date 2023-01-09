@@ -16,7 +16,29 @@
       "main": [
         [
           {
-            "node": "HTTP Request",
+            "node": "Postgres",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "Set",
             "type": "main",
             "index": 0
           }
@@ -69,31 +91,63 @@
           "id": "2",
           "name": "SD Basic Auth"
         }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=select v.id as email,vpo.id as SDPO,i.id,vpo.po_date,oi.quantity as order_quantity,i.product,s.shipment_status,p.product_name,i.requested_qty,i.ordered_qty,s.id as sid,s.shipment_status,oi.sdm_po_items_id,vpo.po_status,delivery_date,(delivery_date -now()) as due from sdm_po_items i\njoin sdm_vendor_pos vpo on vpo.id = i.vendor_po\nand delivery_date < NOW() + INTERVAL '1 Month'\nand vpo.po_status not in('complete','canclelled','payment_pending')\nleft join sdm_shipments s on s.vendor_po_num = vpo.id \nleft join sdm_orders o on o.shipment = s.id\nleft join sdm_order_items oi on oi.sdm_orders_id = o.id \nand oi.sdm_po_items_id = i.id\njoin sdm_vendors v on v.id = vpo.vendor\njoin sdm_products p on p.id = i.product\nwhere shipment_status in ('open','awaiting_irn','awaiting_asn') or shipment_status is null",
+        "additionalFields": {}
+      },
+      "name": "Postgres",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        740,
+        300
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "78",
+          "name": "Vedanta postgres qa"
+        }
       }
     },
     {
       "parameters": {
-        "authentication": "headerAuth",
-        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_po_items?filter={\"_or\":[{\"delivery_date\":{\"_lt\":\"$NOW(1 month)\"}},{\"delivery_date\":{\"_lt\":\"$NOW()\"}}]}&limit=20&sort=-date_created&fields=vendor_po.po_date,vendor_po.id,product.id,product.description,requested_qty,vendor_po.vendor.id,vendor_po.po_value,delivery_date,plant.delivery_address,vendor_po.shipments.orders.order_items.*,vendor_po.shipments.shipment_status,id,ordered_qty",
-        "options": {}
+        "functionCode": "let followUpData =[]\nitems.forEach((item,index)=>{\n    let ordered_qty = item.json.ordered_qty?item.json.ordered_qty:0\n    followUpData[index]={};\n    followUpData[index].qty = item.json.shipment_status?(item.json.requested_qty - ordered_qty) + item.json.order_quantity:item.json.requested_qty\n})\n\nreturn [{\n     json: {\n         followUpData: followUpData,\n    }\n}];"
       },
-      "name": "HTTP Request",
-      "type": "n8n-nodes-base.httpRequest",
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        820,
+        1000,
         300
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "50",
-          "name": "Mozart DMS Token"
-        }
-      }
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "value": "="
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1300,
+        240
+      ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-12-20T12:52:24.961Z"
+  "updatedAt": "2023-01-09T12:16:35.718Z"
 }
