@@ -95,7 +95,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sp_card_inventory?filter={\"serial_number\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"id\"]}}\"}}&fields=mobile_number",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sp_card_inventory?filter={\"serial_number\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"id\"]}}\"}}&fields=mobile_number,status",
         "options": {}
       },
       "name": "Get Details From Serial",
@@ -114,7 +114,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let responseData = [];\n\nconst cardDataArr = $node[\"Get Details From Serial\"].json[\"data\"];\n\nif(cardDataArr.length) {\n  const { mobile_number, status } = cardDataArr[0];\n  let success = false;\n  let message = \"\";\n\n  switch(status) {\n    case \"NotAssigned\": {  \n      success = false;\n      message = \"Card Not yet assigned\";\n      break;\n    };\n    case \"Assigned\": {  \n      success = true;\n      message = \"Mobile number retireved!!\";      \n      break;\n    };\n    case \"RequestForActivation\": {    \n      success = false;\n      message = \"Already requested for activation\";      \n      break;\n    };\n    case \"Activated\": {  \n      success = false;\n      message = \"Already Activated\"; \n      break;\n    };\n    case \"Blocked\": {  \n      success = false;\n      message = \"Kindly contact the support\"; \n      break;\n    };\n    default:  {  \n      success = true;\n      message = \"Mobile number retireved!!\"; \n      break;\n    };\n  }\n\n  responseData.push({\n      json: {\n        success,\n        message,\n        mobile_number\n      }\t\t\t\t\n  });\n} else {\n  responseData.push({\n      json: {\n        \"success\":false,\n        \"message\":\"Invalid Serial Number\",\n        \"mobile_number\": null\n      }\t\t\t\t\n  });\n}\n\nreturn responseData;"
+        "functionCode": "let responseData = [];\n\nconst cardDataArr = $node[\"Get Details From Serial\"].json[\"data\"];\n\nif(cardDataArr.length) {\n  const { mobile_number, status } = cardDataArr[0];\n  let success = false;\n  let message = \"\";\n\n  switch(status) {\n    case \"NotAssigned\": {  \n      success = false;\n      message = \"Card not yet assigned\";\n      break;\n    };\n    case \"Assigned\": {  \n      success = true;\n      message = \"Mobile number retireved!!\";      \n      break;\n    };\n    case \"RequestForActivation\": {    \n      success = false;\n      message = \"We have already received your request. Your card will be activated shortly.\";      \n      break;\n    };\n    case \"Activated\": {  \n      success = false;\n      message = \"Your card is already activated and ready to use.\"; \n      break;\n    };\n    case \"Blocked\": {  \n      success = false;\n      message = \"Your card is temporarily blocked. Please contact ShakePe support at: support@shakepe.com\"; \n      break;\n    };\n    default:  {  \n      success = true;\n      message = \"Mobile number retireved!!\"; \n      break;\n    };\n  }\n\n  responseData.push({\n      json: {\n        success,\n        message,\n        mobile_number\n      }\t\t\t\t\n  });\n} else {\n  responseData.push({\n      json: {\n        \"success\":false,\n        \"message\":\"Invalid Serial Number\",\n        \"mobile_number\": null\n      }\t\t\t\t\n  });\n}\n\nreturn responseData;"
       },
       "name": "Respond Success",
       "type": "n8n-nodes-base.function",
@@ -128,5 +128,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-01-09T12:36:02.349Z"
+  "updatedAt": "2023-01-10T06:49:31.674Z"
 }
