@@ -191,7 +191,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let responseData = [];\n\nresponseData.push({\n    json: {\n      \"success\":false,\n      \"message\":\"Failure in Placing Request: Invalid Serial / OTP\"\n    }\t\t\t\t\n});\n\nreturn responseData;"
+        "functionCode": "let responseData = [];\n\nresponseData.push({\n    json: {\n      \"success\":false,\n      \"message\":\"Invalid OTP\"\n    }\t\t\t\t\n});\n\nreturn responseData;"
       },
       "name": "Respond Failure",
       "type": "n8n-nodes-base.function",
@@ -294,5 +294,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-01-06T13:35:21.459Z"
+  "updatedAt": "2023-01-10T12:14:46.640Z"
 }
