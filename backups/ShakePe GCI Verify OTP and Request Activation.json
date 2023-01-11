@@ -38,7 +38,7 @@
       "main": [
         [
           {
-            "node": "Update Status",
+            "node": "OTP Expiry Check",
             "type": "main",
             "index": 0
           }
@@ -86,6 +86,24 @@
         [
           {
             "node": "Respond Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OTP Expiry Check": {
+      "main": [
+        [
+          {
+            "node": "Update Status",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond Failure1",
             "type": "main",
             "index": 0
           }
@@ -153,7 +171,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sp_card_inventory?filter={\"_and\":[{\"serial_number\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"id\"]}}\"}},{\"otp\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"otp\"]}}\"}}]}&fields=mobile_number",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sp_card_inventory?filter={\"_and\":[{\"serial_number\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"id\"]}}\"}},{\"otp\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"otp\"]}}\"}}]}&fields=mobile_number,otp,otp_last_updated",
         "options": {}
       },
       "name": "Get Details From Serial",
@@ -209,8 +227,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1880,
-        -160
+        2060,
+        -180
       ]
     },
     {
@@ -232,8 +250,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1140,
-        -180
+        1360,
+        -200
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -261,8 +279,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1620,
-        -360
+        1800,
+        -380
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -286,13 +304,45 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        1400,
-        -180
+        1580,
+        -200
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let responseData = [];\n\nresponseData.push({\n    json: {\n      \"success\":false,\n      \"message\":\"OTP Expired\"\n    }\t\t\t\t\n});\n\nreturn responseData;"
+      },
+      "name": "Respond Failure1",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{ ( new Date().getTime() - new Date($node[\"Get Details From Serial\"].json[\"data\"][0][\"otp_last_updated\"]).getTime() )/(60*1000) }}",
+              "operation": "smallerEqual",
+              "value2": 30
+            }
+          ]
+        }
+      },
+      "name": "OTP Expiry Check",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1140,
+        -60
       ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-01-10T12:14:46.640Z"
+  "updatedAt": "2023-01-11T07:02:11.054Z"
 }
