@@ -344,6 +344,28 @@
           }
         ]
       ]
+    },
+    "ACC Informed that shakedeal invoice is available by WFS": {
+      "main": [
+        [
+          {
+            "node": "Function to update po items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to update po items": {
+      "main": [
+        [
+          {
+            "node": "Update ordered qty in po items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2022-09-13T12:35:48.131Z",
@@ -750,7 +772,7 @@
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 1,
       "position": [
-        5700,
+        5780,
         320
       ],
       "credentials": {
@@ -1098,10 +1120,51 @@
         280
       ],
       "executeOnce": true
+    },
+    {
+      "parameters": {
+        "functionCode": "let orderItems = $node[\"Get the po_details\"].json[\"data\"][\"order_items\"];\nlet product_details = $node[\"Get the po_details\"].json[\"data\"][\"shipment\"][\"vendor_po_num\"].po_items;\nlet updatedItems = [];\nlet returnItems = [];\n\norderItems.forEach(function(item,index){\n  let product = product_details.filter(product=>product.id == item.sdm_po_items_id);\n  updatedItems.push({\n    json: {\n       id:item.sdm_po_items_id,\n       qty:(product.ordered_qty?product.ordered_qty:0)+item.quantity,\n    }\n  })\n})\n\n\n\nreturn updatedItems;"
+      },
+      "name": "Function to update po items",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        6120,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sdm_po_items/{{$node[\"Function to update po items\"].json[\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "ordered_qty",
+              "value": "={{$node[\"Function to update po items\"].json[\"qty\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update ordered qty in po items",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        6360,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-12-15T06:03:47.063Z"
+  "updatedAt": "2023-01-11T13:07:46.444Z"
 }
