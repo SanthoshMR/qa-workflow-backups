@@ -1123,7 +1123,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let orderItems = $node[\"Get the po_details\"].json[\"data\"][\"order_items\"];\nlet product_details = $node[\"Get the po_details\"].json[\"data\"][\"shipment\"][\"vendor_po_num\"].po_items;\nlet updatedItems = [];\nlet returnItems = [];\n\norderItems.forEach(function(item,index){\n  let product = product_details.filter(product=>product.id == item.sdm_po_items_id);\n  updatedItems.push({\n    json: {\n       id:item.sdm_po_items_id,\n       qty:(product.ordered_qty?product.ordered_qty:0)+item.quantity,\n    }\n  })\n})\n\n\n\nreturn updatedItems;"
+        "functionCode": "let orderItems = $node[\"Get the po_details\"].json[\"data\"][\"order_items\"];\nlet product_details = $node[\"Get the po_details\"].json[\"data\"][\"shipment\"][\"vendor_po_num\"].po_items;\nlet updatedItems = [];\nlet returnItems = [];\n\norderItems.forEach(function(item,index){\n  let product = product_details.filter(product=>product.id == item.sdm_po_items_id);\n  updatedItems.push({\n    json: {\n       id:item.sdm_po_items_id,\n       qty:(product[0].ordered_qty?product[0].ordered_qty:0)+item.quantity,\n    }\n  })\n})\n\n\n\nreturn updatedItems;"
       },
       "name": "Function to update po items",
       "type": "n8n-nodes-base.function",
@@ -1166,5 +1166,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-01-11T13:07:46.444Z"
+  "updatedAt": "2023-01-16T06:07:10.890Z"
 }
