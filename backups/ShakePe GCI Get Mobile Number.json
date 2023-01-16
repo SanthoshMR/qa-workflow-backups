@@ -16,14 +16,14 @@
       "main": [
         [
           {
-            "node": "Get Details From Serial",
+            "node": "Get Details From Reference",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Get Details From Serial": {
+    "Get Details From Reference": {
       "main": [
         [
           {
@@ -94,11 +94,23 @@
     },
     {
       "parameters": {
+        "functionCode": "let responseData = [];\n\nconst cardDataArr = $node[\"Get Details From Reference\"].json[\"data\"];\n\nif(cardDataArr.length) {\n  const { mobile_number, status } = cardDataArr[0];\n  let success = false;\n  let danger = false;\n  let message = \"\";\n\n  switch(status) {\n    case \"NotAssigned\": {  \n      success = false;\n      danger = true;\n      message = \"Card not yet assigned\";\n      break;\n    };\n    case \"Assigned\": {  \n      success = true;\n      message = \"Mobile number retireved!!\";      \n      break;\n    };\n    case \"RequestForActivation\": {    \n      success = false;\n      danger = true;\n      message = \"We have already received your request. Your card will be activated shortly.\";      \n      break;\n    };\n    case \"Activated\": {  \n      success = false;\n      message = \"Your card is already activated and ready to use.\"; \n      break;\n    };\n    case \"Blocked\": {  \n      success = false;\n      danger = true;\n      message = \"Your card is temporarily blocked. Please contact ShakePe support at: <a href='mailto:support@shakepe.com'><u>support@shakepe.com</u></a>\"; \n      break;\n    };\n    default:  {  \n      success = true;\n      message = \"Mobile number retireved!!\"; \n      break;\n    };\n  }\n\n  responseData.push({\n      json: {\n        success,\n        message,\n        mobile_number,\n        danger\n      }\t\t\t\t\n  });\n} else {\n  responseData.push({\n      json: {\n        \"success\":false,\n        \"message\":\"Error Occurred, please try after sometime.\",\n        \"mobile_number\": null,\n        danger: true\n      }\t\t\t\t\n  });\n}\n\nreturn responseData;"
+      },
+      "name": "Respond Success",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        580,
+        180
+      ]
+    },
+    {
+      "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sp_card_inventory?filter={\"serial_number\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"id\"]}}\"}}&fields=mobile_number,status",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sp_card_inventory?filter={\"reference_number\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"id\"]}}\"}}&fields=mobile_number,status",
         "options": {}
       },
-      "name": "Get Details From Serial",
+      "name": "Get Details From Reference",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
@@ -111,22 +123,10 @@
           "name": "ShakePe GCI - Zeus QA"
         }
       }
-    },
-    {
-      "parameters": {
-        "functionCode": "let responseData = [];\n\nconst cardDataArr = $node[\"Get Details From Serial\"].json[\"data\"];\n\nif(cardDataArr.length) {\n  const { mobile_number, status } = cardDataArr[0];\n  let success = false;\n  let danger = false;\n  let message = \"\";\n\n  switch(status) {\n    case \"NotAssigned\": {  \n      success = false;\n      danger = true;\n      message = \"Card not yet assigned\";\n      break;\n    };\n    case \"Assigned\": {  \n      success = true;\n      message = \"Mobile number retireved!!\";      \n      break;\n    };\n    case \"RequestForActivation\": {    \n      success = false;\n      danger = true;\n      message = \"We have already received your request. Your card will be activated shortly.\";      \n      break;\n    };\n    case \"Activated\": {  \n      success = false;\n      message = \"Your card is already activated and ready to use.\"; \n      break;\n    };\n    case \"Blocked\": {  \n      success = false;\n      danger = true;\n      message = \"Your card is temporarily blocked. Please contact ShakePe support at: <a href='mailto:support@shakepe.com'><u>support@shakepe.com</u></a>\"; \n      break;\n    };\n    default:  {  \n      success = true;\n      message = \"Mobile number retireved!!\"; \n      break;\n    };\n  }\n\n  responseData.push({\n      json: {\n        success,\n        message,\n        mobile_number,\n        danger\n      }\t\t\t\t\n  });\n} else {\n  responseData.push({\n      json: {\n        \"success\":false,\n        \"message\":\"Error Occurred, please try after sometime.\",\n        \"mobile_number\": null,\n        danger: true\n      }\t\t\t\t\n  });\n}\n\nreturn responseData;"
-      },
-      "name": "Respond Success",
-      "type": "n8n-nodes-base.function",
-      "typeVersion": 1,
-      "position": [
-        580,
-        180
-      ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-01-11T11:35:29.172Z"
+  "updatedAt": "2023-01-16T06:29:29.467Z"
 }
