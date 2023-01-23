@@ -403,7 +403,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let gift_card = [];\nconst isSuccess = $node[\"Get Voucher from VPP API\"].json[0][\"success\"];\nconst vouchers = $node[\"Get Voucher from VPP API\"].json;\nconst amount = $node[\"Check for gift card amount\"].json[\"data\"][0][\"amount\"]*1;\nconst productCode = $node[\"Wait for order\"].json[\"body\"][\"product_code\"];\n\nif(isSuccess){\n  vouchers.forEach((obj,index)=>{\n    gift_card[index]={};\n    gift_card[index].cardNumber = obj.code;\n    gift_card[index].validity = obj.expiry;\n    gift_card[index].cardPin = obj.pin;\n    gift_card[index].amount = amount\n    gift_card[index].sku = productCode;\n  })\n}\n\nitems[0].json.cards = gift_card;\nreturn items;"
+        "functionCode": "let gift_card = [];\nconst isSuccess = $node[\"Get Voucher from VPP API\"].json[0][\"success\"];\nconst vouchers = $node[\"Get Voucher from VPP API\"].json[0][\"response\"];\nconst amount = $node[\"Check for gift card amount\"].json[\"data\"][0][\"amount\"]*1;\nconst productCode = $node[\"Wait for order\"].json[\"body\"][\"product_code\"];\n\nif(isSuccess){\n  vouchers.forEach((obj,index)=>{\n    gift_card[index]={};\n    gift_card[index].cardNumber = obj.code;\n    gift_card[index].validity = obj.expiry;\n    gift_card[index].cardPin = obj.pin;\n    gift_card[index].amount = amount\n    gift_card[index].sku = productCode;\n  });\n}\n\nitems[0].json[0].cards = gift_card;\nreturn items[0].json;\n\n// items[0].json.cards = gift_card;\n// return items;"
       },
       "name": "send gift card to sds",
       "type": "n8n-nodes-base.function",
@@ -424,5 +424,5 @@
       "updatedAt": "2022-06-27T13:07:10.771Z"
     }
   ],
-  "updatedAt": "2022-12-26T10:54:12.886Z"
+  "updatedAt": "2023-01-23T12:34:22.737Z"
 }
