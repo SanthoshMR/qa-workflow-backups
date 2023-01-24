@@ -201,7 +201,7 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "PATCH",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sp_card_inventory/{{$node[\"Get Details From Reference\"].json[\"data\"][0][\"\"]}}",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sp_card_inventory/{{$node[\"Get Details From Reference\"].json[\"data\"][0][\"sd_serial_number\"]}}",
         "options": {},
         "bodyParametersUi": {
           "parameter": [
@@ -382,7 +382,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sp_card_inventory?filter={\"reference_number\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"id\"]}}\"}}&fields=mobile_number,status,serial_number,otp_last_updated",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sp_card_inventory?filter={\"reference_number\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"id\"]}}\"}}&fields=mobile_number,status,serial_number,otp_last_updated,sd_serial_number",
         "options": {}
       },
       "name": "Get Details From Reference",
@@ -405,7 +405,7 @@
           "string": [
             {
               "value1": "={{$node[\"Get Details From Reference\"].json[\"data\"][0]['status']}}",
-              "value2": "Assigned"
+              "value2": "AssignedToUser"
             }
           ]
         }
@@ -422,5 +422,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-01-16T06:52:24.505Z"
+  "updatedAt": "2023-01-24T08:59:16.360Z"
 }
