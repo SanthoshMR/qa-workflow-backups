@@ -1,5 +1,5 @@
 {
-  "active": false,
+  "active": true,
   "connections": {
     "Wait for PO Email": {
       "main": [
@@ -118,9 +118,9 @@
   "settings": {},
   "staticData": {
     "node:Wait for PO Email": {
-      "lastMessageUid": 1934
+      "lastMessageUid": 2378
     }
   },
   "tags": [],
-  "updatedAt": "2023-01-04T13:20:28.291Z"
+  "updatedAt": "2023-01-25T09:07:13.199Z"
 }
