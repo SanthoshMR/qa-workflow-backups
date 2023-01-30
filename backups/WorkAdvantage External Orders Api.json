@@ -1,0 +1,78 @@
+{
+  "active": true,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-01-30T09:39:30.365Z",
+  "id": "257",
+  "name": "WorkAdvantage External Orders Api",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "path": "workadvantage/placeorder",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        380,
+        460
+      ],
+      "webhookId": "66630073-804c-4b54-a498-fc4c64fe05f1",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "79",
+          "name": "sp campaigns"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://secure.workadvantage.in/external_order_place?type=Web&quantity=1&billing_name=Test%20User&billing_email=test@gmail.com&contact=9999999999&postal_code=110018&city=New%20Delhi&address_line1=5/20%20Subhash%20Nagar&state=Delhi&country=India&reference_id=1234&sku_id=U2589426",
+        "options": {},
+        "headerParametersUi": {
+          "parameter": [
+            {
+              "name": "Authorization",
+              "value": "nU7HiA93QBXqdslO8mFWfvbavyuLFldByb-5N9zamG0"
+            }
+          ]
+        }
+      },
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        600,
+        460
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-01-30T09:55:28.555Z"
+}
