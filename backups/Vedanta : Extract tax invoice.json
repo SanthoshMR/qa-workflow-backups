@@ -1,0 +1,507 @@
+{
+  "active": false,
+  "connections": {
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IMAP Email": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Move Binary Data": {
+      "main": [
+        [
+          {
+            "node": "post the file to mozart",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "Move Binary Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "post the file to mozart": {
+      "main": [
+        [
+          {
+            "node": "Get the deduction",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the deduction": {
+      "main": [
+        [
+          {
+            "node": "Get the shakedeal payment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "create deductions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the shakedeal payment": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "IF1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create deductions": {
+      "main": [
+        [
+          {
+            "node": "IF1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF1": {
+      "main": [
+        [
+          {
+            "node": "Get payment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get payment": {
+      "main": [
+        [
+          {
+            "node": "Calculate payment Made",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculate payment Made": {
+      "main": [
+        [
+          {
+            "node": "Update payment made",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-02-01T06:27:33.857Z",
+  "id": "258",
+  "name": "Vedanta : Extract tax invoice",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        -60,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://sdqa.mozart.shakedeal.com/assets/13edf6ff-1e09-4bf7-a1d2-ca54e1fcb6f3",
+        "allowUnauthorizedCerts": true,
+        "responseFormat": "file",
+        "options": {}
+      },
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "functionCode": "const pdf = require('pdf-parse');\nlet tax_invoice_no = \"\"\nlet billing_doc_no = \"\"\nlet invoice_no = \"\";\nlet tax_name = \"\";\nlet taxDescriptionFound = false\nlet taxDescription = \"\"\nlet totalValue = \"\"\n\nfunction render_page(pageData) {\n  //check documents https://mozilla.github.io/pdf.js/\n  let render_options = {\n    //replaces all occurrences of whitespace with standard spaces (0x20). The default value is `false`.\n    normalizeWhitespace: false,\n    //do not attempt to combine same line TextItem's. The default value is `false`.\n    disableCombineTextItems: false,\n  };\n\n  return pageData.getTextContent(render_options).then(function (textContent) {\n    let lastY,\n      text = \"\";\n    for (let item of textContent.items) {\n      text += `\\n${item.str}`;\n    }\n    return text;\n  });\n}\n\nlet options = {\n  pagerender: render_page,\n  max: 200,\n};\n\nconst binaryData = Buffer.from(items[0].binary[\"attachment_\" + 0].data, \"base64\");\nlet content = await pdf(binaryData, options);\nconst contentSubString =  content.text.substring(0,content.text.indexOf(\"Terms & Condition\"));\nlet contentSubStringArray = contentSubString.split(\"\\n\");\nlet removeEmptyString = contentSubStringArray.filter((str) => str.trim() !== '')\nfor(i=0;i<removeEmptyString.length;i++){\n  if(removeEmptyString[i].includes(\"Tax Invoice No\")){\n    tax_invoice_no = removeEmptyString[i+1].trim();\n  }else if(removeEmptyString[i].includes(\"Billing Doc. No\")){\n    billing_doc_no = removeEmptyString[i+1].trim()\n  }else if(removeEmptyString[i].includes(\"Invoice No\")){\n    invoice_no = removeEmptyString[i+1].trim()\n  }else if(removeEmptyString[i].includes(\"Sr.No\")){\n    tax_name = removeEmptyString[i+8].trim()\n  }else if(removeEmptyString[i].includes(\"IGST\")){\n    taxDescriptionFound = true\n  }else if(taxDescriptionFound){\n    \n    if(removeEmptyString[i].includes(\"%\")){\n      taxDescriptionFound = false\n    }else{\n       taxDescription = taxDescription + removeEmptyString[i];\n    }\n   \n  }else if(removeEmptyString[i].includes(\"TOTAL\")){\n    totalValue = removeEmptyString[i+1].trim()\n  }\n}\n\n\nitems[0].json.tax_invoice_no= tax_invoice_no\nitems[0].json.id= billing_doc_no.trim()\nitems[0].json.invoice_number= invoice_no\nitems[0].json.name= tax_name\nitems[0].json.detail= `${billing_doc_no} - ${tax_invoice_no}(${taxDescription.trim()})`\nitems[0].json.deduction_amount= totalValue.includes(\",\")?parseFloat(totalValue.split(\",\").join(\"\")):parseFloat(totalValue);\nitems[0].json.removeEmptyString = removeEmptyString\n\nreturn items;"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        740,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "format": "resolved",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "name": "IMAP Email",
+      "type": "n8n-nodes-base.emailReadImap",
+      "typeVersion": 1,
+      "position": [
+        220,
+        300
+      ],
+      "credentials": {
+        "imap": {
+          "id": "18",
+          "name": "Imap creds(sai)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "setAllData": false,
+        "sourceKey": "=attachment_0",
+        "options": {
+          "keepSource": true,
+          "keepAsBase64": true
+        }
+      },
+      "name": "Move Binary Data",
+      "type": "n8n-nodes-base.moveBinaryData",
+      "typeVersion": 1,
+      "position": [
+        980,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "=https://sdqa.mozart.shakedeal.com/files",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {
+          "bodyContentType": "multipart-form-data"
+        },
+        "sendBinaryData": true,
+        "binaryPropertyName": "=input_file:attachment_0"
+      },
+      "name": "post the file to mozart",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1220,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "=https://sdqa.mozart.shakedeal.com/items/sdm_shakedeal_deductions",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "id",
+              "value": "={{$node[\"Function\"].json[\"id\"]}}"
+            },
+            {
+              "name": "name",
+              "value": "={{$node[\"Function\"].json[\"name\"]}}"
+            },
+            {
+              "name": "detail",
+              "value": "={{$node[\"Function\"].json[\"detail\"]}}"
+            },
+            {
+              "name": "deduction_amount",
+              "value": "={{$node[\"Function\"].json[\"deduction_amount\"]}}"
+            },
+            {
+              "name": "document",
+              "value": "={{$node[\"post the file to mozart\"].json[\"data\"][\"id\"]}}"
+            },
+            {
+              "name": "invoice_number",
+              "value": "={{$node[\"Function\"].json[\"invoice_number\"]}}"
+            },
+            {
+              "name": "shakedeal_payment",
+              "value": "={{$node[\"Get the shakedeal payment\"].json[\"data\"].length>0?$node[\"Get the shakedeal payment\"].json[\"data\"][0][\"id\"]:null}}"
+            },
+            {
+              "name": "client_payment_advice",
+              "value": "={{$node[\"Get the shakedeal payment\"].json[\"data\"].length>0?$node[\"Get the shakedeal payment\"].json[\"data\"][0][\"client_advice\"]:null}}"
+            }
+          ]
+        }
+      },
+      "name": "create deductions",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2080,
+        460
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Get the deduction\"].json[\"data\"].length>0?true:false}}"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1840,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://sdqa.mozart.shakedeal.com/items/sdm_shakedeal_deductions?filter={\"id\":{\"_eq\":\"{{$node[\"Function\"].json[\"id\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Get the deduction",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1420,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "=https://sdqa.mozart.shakedeal.com/items/sdm_shakedeal_deductions/{{$node[\"Get the deduction\"].json[\"data\"][0][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "invoice_number",
+              "value": "={{$node[\"Function\"].json[\"invoice_number\"]}}"
+            },
+            {
+              "name": "shakedeal_payment",
+              "value": "={{$node[\"Get the shakedeal payment\"].json[\"data\"].length>0?$node[\"Get the shakedeal payment\"].json[\"data\"][0][\"id\"]:null}}"
+            },
+            {
+              "name": "client_payment_advice",
+              "value": "={{$node[\"Get the shakedeal payment\"].json[\"data\"].length>0?$node[\"Get the shakedeal payment\"].json[\"data\"][0][\"client_advice\"]:null}}"
+            }
+          ]
+        }
+      },
+      "name": "HTTP Request1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2080,
+        160
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://sdqa.mozart.shakedeal.com/items/sdm_payments_to_shakedeal?filter={\"invoice_number\":{\"_eq\":\"{{$node[\"Function\"].json[\"invoice_number\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Get the shakedeal payment",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1620,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Get the shakedeal payment\"].json[\"data\"].length>0?true:false}}"
+            }
+          ]
+        }
+      },
+      "name": "IF1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        2500,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://sdqa.mozart.shakedeal.com/items/sdm_payments_to_shakedeal?filter={\"invoice_number\":{\"_eq\":\"{{$node[\"Function\"].json[\"invoice_number\"]}}\"}}&fields=*.*",
+        "options": {}
+      },
+      "name": "Get payment",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2740,
+        120
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let shakedealDeductions = $node[\"Get payment\"].json[\"data\"][0][\"shakedeal_deductions\"];\nlet paymentAmount = $node[\"Get payment\"].json[\"data\"][0][\"payment_paid\"];\nlet totalDeductionAmount = 0\nshakedealDeductions.forEach(function(deduction,index){\n  totalDeductionAmount = totalDeductionAmount+deduction.deduction_amount\n})\n\nitems[0].json.paymentMade = paymentAmount - totalDeductionAmount\nreturn items;"
+      },
+      "name": "Calculate payment Made",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        3000,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "=https://sdqa.mozart.shakedeal.com/items/sdm_payments_to_shakedeal/{{$node[\"Get payment\"].json[\"data\"][0][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "payment_paid",
+              "value": "={{$node[\"Calculate payment Made\"].json.paymentMade}}"
+            }
+          ]
+        }
+      },
+      "name": "Update payment made",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3300,
+        120
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-02-01T13:00:13.530Z"
+}
