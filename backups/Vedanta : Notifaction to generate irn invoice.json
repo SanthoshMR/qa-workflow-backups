@@ -1,16 +1,77 @@
 {
   "active": true,
   "connections": {
-    "Start": {
-      "main": [
-        []
-      ]
-    },
     "Webhook": {
       "main": [
         [
           {
             "node": "Get url and token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get url and token": {
+      "main": [
+        [
+          {
+            "node": "Get the order",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the order": {
+      "main": [
+        [
+          {
+            "node": "Function to split files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to split files": {
+      "main": [
+        [
+          {
+            "node": "Get the uploaded files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the uploaded files": {
+      "main": [
+        [
+          {
+            "node": "Get the uploaded assets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the uploaded assets": {
+      "main": [
+        [
+          {
+            "node": "Function to club the binay files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to club the binay files": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
             "type": "main",
             "index": 0
           }
@@ -79,10 +140,120 @@
           "name": "SD Basic Auth"
         }
       }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_orders?filter={\"order_id\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"order_id\"]}}\"}}&fields=order_id,shipment.*,shipment.vendor_po_num.po_num.id,shipment.vendor_po_num.po_num.po_file,shipment.vendor_po_num.id",
+        "options": {}
+      },
+      "name": "Get the order",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        980,
+        260
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let responseData = [];\nlet order_data = $node[\"Get the order\"].json[\"data\"][0]\nlet files = [];\nfiles.push(order_data.shipment.vendor_invoice,order_data.shipment.vendor_po_num.po_num.po_file)\n\nif(files){\n    files.forEach(function(upload_file,index){\n        responseData.push({\n            json: {\n                \"id\":upload_file,\n                \"index\":\"data\"+index,\n                \"dms_url\":$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]\n            }\t\t\t\n        });\n    })\n}\n\n\nreturn responseData;"
+      },
+      "name": "Function to split files",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1220,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Function to split files\"].json[\"dms_url\"]}}/files/{{$node[\"Function to split files\"].json[\"id\"]}}",
+        "options": {}
+      },
+      "name": "Get the uploaded files",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1460,
+        260
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Function to split files\"].json[\"dms_url\"]}}/assets/{{$node[\"Function to split files\"].json[\"id\"]}}",
+        "allowUnauthorizedCerts": true,
+        "responseFormat": "file",
+        "dataPropertyName": "=data",
+        "options": {}
+      },
+      "name": "Get the uploaded assets",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1660,
+        260
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let binaries = {}, binary_keys = [],uploadDocument = [],extension = [];\nlet vedantaPoNumnber = $node[\"Get the order\"].json[\"data\"][0][\"shipment\"][\"vendor_po_num\"][\"po_num\"][\"id\"];\nlet vendorPoNumber =  $node[\"Get the order\"].json[\"data\"][0][\"shipment\"][\"vendor_po_num\"][\"id\"];\nlet sdInvoiceNumber = $node[\"Webhook\"].json[\"body\"][\"invoice_number\"];\nlet orderId = $node[\"Webhook\"].json[\"body\"][\"order_id\"];\nlet orderValue = $node[\"Webhook\"].json[\"body\"][\"order_value\"];\nlet vendorInvoiceNumber = $node[\"Get the order\"].json[\"data\"][0][\"shipment\"][\"invoice_number\"];\nlet borderStyle = \"border: 1px solid black;border-collapse: collapse\"\n\nfor([index, item] of items.entries()) {\n    let extension = item.json.data.filename_disk.split(\".\")[1]\n    item.binary.data.fileName = extension == \"pdf\"?item.json.data.filename_download:item.json.data.filename_disk\n    binaries[`data_${index}.${extension}`] = item.binary.data;\n    binary_keys.push(`data_${index}.${extension}`);\n    uploadDocument.push(`input_file${index}:data_${index}.${extension}`);\n}\nlet tableHtml = `<table  style=\"color:#000000;width: auto;border: 1px solid black;border-collapse: collapse;\">`+\n    `<tr style='${borderStyle}'>`+\n    `<td style='${borderStyle}'>Vedanta PO</td>`+\n    `<td style='${borderStyle}'>${vedantaPoNumnber}</td>`+\n    `</tr>`+\n     `<tr style='${borderStyle}'>`+\n    `<td style='${borderStyle}'>Vendor PO</td>`+\n    `<td style='${borderStyle}'>${vendorPoNumber}</td>`+\n    `</tr>`+\n    `<tr style='${borderStyle}'>`+\n    `<td style='${borderStyle}'>SD Invoice Number</td>`+\n    `<td style='${borderStyle}'>${sdInvoiceNumber}</td>`+\n    `</tr>`+\n    `<tr style='${borderStyle}'>`+\n    `<td style='${borderStyle}'>Order ID</td>`+\n    `<td style='${borderStyle}'>${orderId}</td>`+\n    `</tr>`+\n    `<tr style='${borderStyle}'>`+\n    `<td style='${borderStyle}'>Order Value</td>`+\n    `<td style='${borderStyle}'>${orderValue}</td>`+\n    `</tr>`+\n    `<tr style='${borderStyle}'>`+\n    `<td style='${borderStyle}'>Vendor Invoice Number</td>`+\n    `<td style='${borderStyle}'>${vendorInvoiceNumber}</td>`+\n    `</tr>`+\n    `</table>`;\n\nreturn [{\n    json: {\n        binary_keys: binary_keys.join(','),\n        uploadDocument : uploadDocument.join(','),\n        tableHtml : tableHtml\n    },\n    binary: binaries\n}];"
+      },
+      "name": "Function to club the binay files",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1900,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "=handyalasairam9177@gmail.com",
+        "toEmail": "=sairam.reddy@shakedeal.com",
+        "subject": "=Action needed : Generate IRN for invoice #{{$node[\"Webhook\"].json[\"body\"][\"sd_invoice_number\"]}}",
+        "html": "=<p>Please generate IRN invoice for the Invoice # INV12039 which is punched against Order # {{$node[\"Webhook\"].json[\"body\"][\"order_id\"]}}</p>\n{{$node[\"Function to club the binay files\"].json[\"tableHtml\"]}}\n<br>\n<br>\n<p>Once it is generated please mandatorily upload digitally signed IRN invoice in folder which is shared by Tech team.</p>",
+        "attachments": "={{$node[\"Function to club the binay files\"].json[\"binary_keys\"]}}",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        2120,
+        260
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "17",
+          "name": "smtp(sai)creds"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-02-01T13:41:44.668Z"
+  "updatedAt": "2023-02-02T10:30:23.341Z"
 }
