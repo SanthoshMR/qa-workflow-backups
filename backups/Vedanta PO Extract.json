@@ -63,7 +63,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "=https://sdqa.mozart.shakedeal.com/assets/1be0dab8-fbd7-49f3-9257-1c8b0f6c23f8",
+        "url": "=https://sdqa.mozart.shakedeal.com/assets/ee035df6-b477-4867-927d-cbdac3f73ba0",
         "allowUnauthorizedCerts": true,
         "responseFormat": "file",
         "options": {}
@@ -132,5 +132,5 @@
   },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-01-25T07:11:25.997Z"
+  "updatedAt": "2023-02-02T06:03:15.331Z"
 }
