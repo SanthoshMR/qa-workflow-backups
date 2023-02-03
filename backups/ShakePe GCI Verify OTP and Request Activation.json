@@ -171,7 +171,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sp_card_inventory?filter={\"_and\":[{\"reference_number\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"id\"]}}\"}},{\"otp\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"otp\"]}}\"}}]}&fields=mobile_number,otp,otp_last_updated,sd_serial_number",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sp_card_inventory?filter={\"_and\":[{\"reference_number\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"id\"]}}\"}},{\"otp\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"otp\"]}}\"}}]}&fields=mobile_number,otp,otp_last_updated,sd_serial_number,customer_name",
         "options": {}
       },
       "name": "Get Details From Serial",
@@ -221,7 +221,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let responseData = [];\n\nresponseData.push({\n    json: {\n      \"success\":true,\n      \"message\":\"Request Placed Successfully\"\n    }\t\t\t\t\n});\n\nreturn responseData;"
+        "functionCode": "let responseData = [];\nlet customerName = $node[\"Get Details From Serial\"].json[\"data\"][0][\"customer_name\"];\n\nif(!customerName) customerName = \"Card User\";\n\nresponseData.push({\n    json: {\n      \"success\":true,\n      \"customer_name\": customerName,\n      \"message\":\"Request Placed Successfully\"\n    }\t\t\t\t\n});\n\nreturn responseData;"
       },
       "name": "Respond Success",
       "type": "n8n-nodes-base.function",
@@ -344,5 +344,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-01-24T09:03:14.770Z"
+  "updatedAt": "2023-02-03T06:32:16.269Z"
 }
