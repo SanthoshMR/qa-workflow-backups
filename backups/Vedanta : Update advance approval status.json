@@ -60,7 +60,7 @@
       "main": [
         [
           {
-            "node": "Send approve mail to accounts team",
+            "node": "Function to split files",
             "type": "main",
             "index": 0
           }
@@ -79,6 +79,50 @@
         [
           {
             "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to split files": {
+      "main": [
+        [
+          {
+            "node": "Get the uploaded files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the uploaded files": {
+      "main": [
+        [
+          {
+            "node": "Get the uploaded assets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the uploaded assets": {
+      "main": [
+        [
+          {
+            "node": "Function to club the binay files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to club the binay files": {
+      "main": [
+        [
+          {
+            "node": "Send approve mail to accounts team",
             "type": "main",
             "index": 0
           }
@@ -202,8 +246,8 @@
               "value": "={{$node[\"Get the advance approval data from zues\"].json[\"data\"][\"approval_status\"]}}"
             },
             {
-              "name": "declined_reason",
-              "value": "={{$node[\"Get the advance approval data from zues\"].json[\"data\"][\"declined_reason\"]}}"
+              "name": "comments",
+              "value": "={{$node[\"Get the advance approval data from zues\"].json[\"data\"][\"comments\"]}}"
             }
           ]
         }
@@ -237,8 +281,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        1800,
-        280
+        1820,
+        240
       ]
     },
     {
@@ -266,8 +310,8 @@
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 1,
       "position": [
-        1960,
-        120
+        2880,
+        100
       ],
       "credentials": {
         "smtp": {
@@ -298,10 +342,77 @@
           "name": "smtp(sai)creds"
         }
       }
+    },
+    {
+      "parameters": {
+        "functionCode": "let responseData = [];\nlet files = [];\nfiles.push($node[\"Function\"].json[\"data\"][\"proforma_invoice\"],$node[\"Function\"].json[\"data\"][\"cancelled_cheque\"]);\n\nif(files){\n    files.forEach(function(upload_file,index){\n        responseData.push({\n            json: {\n                \"id\":upload_file,\n                \"index\":\"data\"+index,\n                \"dms_url\":$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]\n            }\t\t\t\n        });\n    })\n}\n\nreturn responseData;"
+      },
+      "name": "Function to split files",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        2000,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Function to split files\"].json[\"dms_url\"]}}/files/{{$node[\"Function to split files\"].json[\"id\"]}}",
+        "options": {}
+      },
+      "name": "Get the uploaded files",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2180,
+        100
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Function to split files\"].json[\"dms_url\"]}}/assets/{{$node[\"Function to split files\"].json[\"id\"]}}",
+        "allowUnauthorizedCerts": true,
+        "responseFormat": "file",
+        "dataPropertyName": "=data",
+        "options": {}
+      },
+      "name": "Get the uploaded assets",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2380,
+        100
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let binaries = {}, binary_keys = [],uploadDocument = [],extension = [];\n\n\nfor([index, item] of items.entries()) {\n     let extension = item.json.data.filename_disk.split(\".\")[1]\n    item.binary.data.fileName = extension == \"pdf\"?item.json.data.filename_download:item.json.data.filename_disk\n    binaries[`data_${index}.${extension}`] = item.binary.data;\n    binary_keys.push(`data_${index}.${extension}`);\n    uploadDocument.push(`input_file${index}:data_${index}.${extension}`);\n}\n\nreturn [{\n    json: {\n        binary_keys: binary_keys.join(','),\n        uploadDocument : uploadDocument.join(','),\n    },\n    binary: binaries\n}];"
+      },
+      "name": "Function to club the binay files",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        2640,
+        100
+      ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-01-25T12:05:57.512Z"
+  "updatedAt": "2023-02-03T07:13:14.827Z"
 }
