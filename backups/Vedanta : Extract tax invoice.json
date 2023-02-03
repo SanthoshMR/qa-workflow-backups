@@ -1,5 +1,5 @@
 {
-  "active": false,
+  "active": true,
   "connections": {
     "HTTP Request": {
       "main": [
@@ -501,7 +501,11 @@
     }
   ],
   "settings": {},
-  "staticData": null,
+  "staticData": {
+    "node:IMAP Email": {
+      "lastMessageUid": 2395
+    }
+  },
   "tags": [],
-  "updatedAt": "2023-02-01T13:00:13.530Z"
+  "updatedAt": "2023-02-02T06:09:47.470Z"
 }
