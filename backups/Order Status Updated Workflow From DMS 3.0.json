@@ -38,7 +38,7 @@
       "main": [
         [
           {
-            "node": "IF2",
+            "node": "Get po_number",
             "type": "main",
             "index": 0
           }
@@ -181,35 +181,6 @@
         [
           {
             "node": "Get url and token",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "IF2": {
-      "main": [
-        [
-          {
-            "node": "HTTP Request",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Get po_number",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "HTTP Request": {
-      "main": [
-        [
-          {
-            "node": "Get po_number",
             "type": "main",
             "index": 0
           }
@@ -371,8 +342,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        -200,
-        260
+        -20,
+        280
       ]
     },
     {
@@ -626,58 +597,10 @@
         -540,
         260
       ]
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "boolean": [
-            {
-              "value1": true,
-              "value2": "={{$node[\"Receive the order_status\"].json[\"body\"][\"payload\"][\"order_status\"] == \"processed\"?true:false}}"
-            }
-          ]
-        }
-      },
-      "name": "IF2",
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 1,
-      "position": [
-        0,
-        260
-      ]
-    },
-    {
-      "parameters": {
-        "authentication": "basicAuth",
-        "requestMethod": "POST",
-        "url": "=https://qan8n.shakedeal.com/webhook/send-irn-generate-notification",
-        "options": {},
-        "bodyParametersUi": {
-          "parameter": [
-            {
-              "name": "key",
-              "value": "={{$node[\"Receive the order_status\"].json[\"body\"][\"keys\"][0]}}"
-            }
-          ]
-        }
-      },
-      "name": "HTTP Request",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        260,
-        100
-      ],
-      "credentials": {
-        "httpBasicAuth": {
-          "id": "2",
-          "name": "SD Basic Auth"
-        }
-      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-02-01T13:39:39.460Z"
+  "updatedAt": "2023-02-02T11:55:24.159Z"
 }
