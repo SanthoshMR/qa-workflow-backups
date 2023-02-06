@@ -137,6 +137,17 @@
           }
         ]
       ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Update proforma invoice and cancelled cheque in zues",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2022-12-05T07:13:51.079Z",
@@ -387,7 +398,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let binaries = {}, binary_keys = [],uploadDocument = [],extension = [];\nlet id = $node[\"Create advance request in zues\"].json[\"data\"][\"id\"];\nlet url = `https://zeusqa.shakedeal.com/admin/content/sdm_approval_request/${id}`\n\nfor([index, item] of items.entries()) {\n    item.binary.data.fileName = item.json.data.filename_download\n    let extension = item.json.data.type==\"image/png\"?\"png\":\"pdf\"\n    binaries[`data_${index}.${extension}`] = item.binary.data;\n    binary_keys.push(`data_${index}.${extension}`);\n    uploadDocument.push(`input_file${index}:data_${index}.${extension}`);\n}\n\nreturn [{\n    json: {\n        binary_keys: binary_keys.join(','),\n        uploadDocument : uploadDocument.join(','),\n        url:url\n    },\n    binary: binaries\n}];"
+        "functionCode": "let binaries = {}, binary_keys = [],uploadDocument = [],extension = [];\nlet id = $node[\"Create advance request in zues\"].json[\"data\"][\"id\"];\nlet url = `https://zeusqa.shakedeal.com/admin/content/sdm_approval_request/${id}`\nlet cancelledChequeId = $node[\"Wait for approval\"].json[\"body\"][\"payload\"][\"cancelled_cheque\"];\nlet proformaInvoiceId = $node[\"Wait for approval\"].json[\"body\"][\"payload\"][\"proforma_invoice\"]\n\nfor([index, item] of items.entries()) {\n    let fileName = item.json.data.id == cancelledChequeId?`${item.json.data.filename_download}(cancelled cheque)`: item.json.data.id == proformaInvoiceId?`${item.json.data.filename_download}(proforma invoice)`:item.json.data.filename_download\n    item.binary.data.fileName = fileName\n    let extension = item.json.data.type==\"image/png\"?\"png\":\"pdf\"\n    binaries[`data_${index}.${extension}`] = item.binary.data;\n    binary_keys.push(`data_${index}.${extension}`);\n    uploadDocument.push(`input_file${index}:data_${index}.${extension}`);\n}\n\nreturn [{\n    json: {\n        binary_keys: binary_keys.join(','),\n        uploadDocument : uploadDocument.join(','),\n        url:url\n    },\n    binary: binaries\n}];"
       },
       "name": "Function to club the binay files",
       "type": "n8n-nodes-base.function",
@@ -449,7 +460,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let uploaded_data = $node[\"post the file to dms\"].json.data;\nlet requets_id = $node[\"Create advance request in zues\"].json[\"data\"][\"id\"]\nlet approval_request_files_obj = [];\nif(Array.isArray(uploaded_data)){\n  uploaded_data.forEach(function(data,index){\n  approval_request_files_obj[index] = {}\n  approval_request_files_obj[index].directus_files_id = data.id;\n  approval_request_files_obj[index].sdm_approval_request_id = requets_id\n})\n}else{\n  approval_request_files_obj[0] = {}\n  approval_request_files_obj[0].directus_files_id = uploaded_data.id;\n  approval_request_files_obj[0].sdm_approval_request_id = requets_id\n}\n\n\nitems[0].json.approval_request_files_obj = approval_request_files_obj;\nreturn items;"
+        "functionCode": "let uploaded_data = $node[\"post the file to dms\"].json.data;\nlet requets_id = $node[\"Create advance request in zues\"].json[\"data\"][\"id\"]\nlet approval_request_files_obj = [];\nlet additionalDocumentsData = uploaded_data.filter(data=>!data.filename_download.includes(\"proforma invoice\") || !data.filename_download.includes(\"cancelled cheque\") )\nlet dataIndex = 0\nlet proformaIndexId = \"\";\nlet cancelledChequeId = \"\"\nif(Array.isArray(uploaded_data)){\n  uploaded_data.forEach(function(data,index){\n    if(data.filename_download.includes(\"proforma\")){\n      proformaIndexId = data.id\n    } else if(data.filename_download.includes(\"cancelled\")){\n      cancelledChequeId = data.id\n    }else{\n      approval_request_files_obj[dataIndex] = {}\n      approval_request_files_obj[dataIndex].directus_files_id = data.id;\n      approval_request_files_obj[dataIndex].sdm_approval_request_id = requets_id\n      dataIndex++;\n    }\n})\n}\nelse{\n  approval_request_files_obj[0] = {}\n  approval_request_files_obj[0].directus_files_id = uploaded_data.id;\n  approval_request_files_obj[0].sdm_approval_request_id = requets_id\n}\n\n\nitems[0].json.proformaIndexId= proformaIndexId;\nitems[0].json.cancelledChequeId= cancelledChequeId;\nitems[0].json.approval_request_files_obj = approval_request_files_obj;\nreturn items;"
       },
       "name": "Function to update files in zues",
       "type": "n8n-nodes-base.function",
@@ -458,10 +469,43 @@
         2880,
         400
       ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sdm_approval_request/{{$node[\"Create advance request in zues\"].json[\"data\"][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "proforma_invoice",
+              "value": "={{$node[\"Function to update files in zues\"].json[\"proformaIndexId\"]}}"
+            },
+            {
+              "name": "cancelled_cheque",
+              "value": "={{$node[\"Function to update files in zues\"].json[\"cancelledChequeId\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update proforma invoice and cancelled cheque in zues",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3320,
+        400
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "10",
+          "name": "SD-Dms-Token"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-02-03T06:28:36.620Z"
+  "updatedAt": "2023-02-06T10:08:27.310Z"
 }
