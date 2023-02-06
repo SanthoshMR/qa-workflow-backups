@@ -60,7 +60,7 @@
       "main": [
         [
           {
-            "node": "NoOp",
+            "node": "Update residual amount",
             "type": "main",
             "index": 0
           }
@@ -74,7 +74,7 @@
         ]
       ]
     },
-    "NoOp": {
+    "Get the shipment id": {
       "main": [
         [
           {
@@ -85,7 +85,7 @@
         ]
       ]
     },
-    "Get the shipment id": {
+    "Update residual amount": {
       "main": [
         [
           {
@@ -202,7 +202,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_payments/{{$node[\"Get vendor_payment_status\"].json[\"body\"][\"keys\"][0]}}?fields=id,payment_amount,vendor_payment_status,vendor_po_number,payment_type,residual_amount,vendor_invoice.*,payment_utr,payment_description,vendor_invoice.shipment.*",
+        "url": "={{$node[\"Globals\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_payments/{{$node[\"Get vendor_payment_status\"].json[\"body\"][\"keys\"][0]}}?fields=id,payment_amount,vendor_payment_status,vendor_po_number,payment_type,residual_amount,actual_paid_amount,vendor_invoice.*,payment_utr,payment_description,vendor_invoice.shipment.*",
         "options": {}
       },
       "name": "Get vendor payment",
@@ -259,16 +259,6 @@
       }
     },
     {
-      "parameters": {},
-      "name": "NoOp",
-      "type": "n8n-nodes-base.noOp",
-      "typeVersion": 1,
-      "position": [
-        1520,
-        280
-      ]
-    },
-    {
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "POST",
@@ -286,7 +276,7 @@
             },
             {
               "name": "payment_amount",
-              "value": "={{$node[\"Get vendor payment\"].json[\"data\"][\"payment_amount\"]}}"
+              "value": "={{$node[\"Get vendor payment\"].json[\"data\"][\"actual_paid_amount\"]}}"
             },
             {
               "name": "payment_description",
@@ -340,10 +330,39 @@
           "name": "VendorPanel DMS Token"
         }
       }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_payments/{{$node[\"Get vendor_payment_status\"].json[\"body\"][\"keys\"][0]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "residual_amount",
+              "value": "={{$node[\"Get vendor payment\"].json[\"data\"][\"actual_paid_amount\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update residual amount",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1520,
+        160
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-11-21T07:18:51.587Z"
+  "updatedAt": "2023-02-06T12:31:52.078Z"
 }
