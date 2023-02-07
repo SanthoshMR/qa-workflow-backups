@@ -268,7 +268,7 @@
       "main": [
         [
           {
-            "node": "create po",
+            "node": "Check for PO",
             "type": "main",
             "index": 0
           }
@@ -647,6 +647,57 @@
         [
           {
             "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF2": {
+      "main": [
+        [
+          {
+            "node": "Update the purchase order number",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for PO": {
+      "main": [
+        [
+          {
+            "node": "IF2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update the purchase order number": {
+      "main": [
+        [
+          {
+            "node": "create po",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NoOp5": {
+      "main": [
+        [
+          {
+            "node": "create po",
             "type": "main",
             "index": 0
           }
@@ -1225,8 +1276,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        3740,
-        40
+        5020,
+        60
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -1330,8 +1381,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        3560,
-        40
+        4760,
+        60
       ],
       "alwaysOutputData": true,
       "credentials": {
@@ -1353,8 +1404,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        4100,
-        40
+        5380,
+        60
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -1380,8 +1431,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        4460,
-        -100
+        5740,
+        -80
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -1403,8 +1454,8 @@
       "type": "n8n-nodes-base.moveBinaryData",
       "typeVersion": 1,
       "position": [
-        4280,
-        40
+        5560,
+        60
       ]
     },
     {
@@ -1417,8 +1468,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        5000,
-        40
+        6420,
+        60
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -1442,8 +1493,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        5160,
-        40
+        6580,
+        60
       ]
     },
     {
@@ -1479,7 +1530,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        5220,
+        6620,
         -240
       ],
       "credentials": {
@@ -1524,7 +1575,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        5800,
+        7200,
         -240
       ],
       "credentials": {
@@ -1540,7 +1591,7 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        5420,
+        6820,
         260
       ]
     },
@@ -1552,7 +1603,7 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        5680,
+        7080,
         80
       ]
     },
@@ -1566,7 +1617,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        5980,
+        7380,
         80
       ],
       "credentials": {
@@ -1584,7 +1635,7 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        6240,
+        7640,
         80
       ]
     },
@@ -1603,7 +1654,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        6480,
+        7880,
         80
       ]
     },
@@ -1623,7 +1674,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        6740,
+        8140,
         -100
       ],
       "credentials": {
@@ -1639,7 +1690,7 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        6740,
+        8140,
         260
       ]
     },
@@ -1682,7 +1733,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        7180,
+        8580,
         100
       ],
       "credentials": {
@@ -1705,7 +1756,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        7680,
+        9080,
         100
       ],
       "credentials": {
@@ -1723,7 +1774,7 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        7420,
+        8820,
         100
       ]
     },
@@ -1746,8 +1797,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        3920,
-        40
+        5200,
+        60
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -1794,8 +1845,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        4440,
-        220
+        5720,
+        240
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -1823,8 +1874,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        4820,
-        40
+        6100,
+        60
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -1841,8 +1892,8 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 1,
       "position": [
-        4640,
-        40
+        5920,
+        60
       ]
     },
     {
@@ -1897,7 +1948,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        7920,
+        9320,
         100
       ],
       "credentials": {
@@ -1922,7 +1973,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        5420,
+        6820,
         -240
       ]
     },
@@ -1936,7 +1987,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        5600,
+        7000,
         -420
       ],
       "credentials": {
@@ -1952,7 +2003,7 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        5600,
+        7000,
         -200
       ]
     },
@@ -2015,7 +2066,7 @@
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 1,
       "position": [
-        8640,
+        10040,
         100
       ],
       "credentials": {
@@ -2036,7 +2087,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        8200,
+        9600,
         100
       ],
       "credentials": {
@@ -2054,8 +2105,97 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        8400,
+        9800,
         100
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Check for PO\"].json[\"purchaseorders\"].length>0?true:false}}"
+            }
+          ]
+        }
+      },
+      "name": "IF2",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        3900,
+        40
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://books.zoho.com/api/v3/purchaseorders?organization_id=685685414",
+        "allowUnauthorizedCerts": true,
+        "options": {},
+        "queryParametersUi": {
+          "parameter": [
+            {
+              "name": "purchaseorder_number",
+              "value": "={{$node[\"Function to create po\"].json[\"purchaseorder_number\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Check for PO",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3600,
+        40
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "29",
+          "name": "zoho books creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PUT",
+        "url": "=https://books.zoho.com/api/v3/purchaseorders/{{$node[\"Check for PO\"].json[\"purchaseorders\"][0][\"purchaseorder_id\"]}}?organization_id=685685414",
+        "options": {
+          "bodyContentType": "json"
+        },
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "purchaseorder_number",
+              "value": "={{$node[\"Function to create po\"].json[\"purchaseorder_number\"]+\"/old\"}}"
+            }
+          ]
+        }
+      },
+      "name": "Update the purchase order number",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        4280,
+        -260
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "29",
+          "name": "zoho books creds"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "name": "NoOp5",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        4280,
+        320
       ]
     }
   ],
@@ -2064,5 +2204,5 @@
   },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-02-06T12:43:36.384Z"
+  "updatedAt": "2023-02-07T07:14:56.912Z"
 }
