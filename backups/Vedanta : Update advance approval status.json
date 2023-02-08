@@ -216,7 +216,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sdm_approval_request/{{$node[\"Webhook\"].json[\"body\"][\"keys\"][0]}}",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sdm_approval_request/{{$node[\"Webhook\"].json[\"body\"][\"keys\"][0]}}?fields= *.*,vendor.*",
         "options": {}
       },
       "name": "Get the advance approval data from zues",
@@ -237,7 +237,7 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "PATCH",
-        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_payments/{{$node[\"Get the advance approval data from zues\"].json[\"data\"][\"key\"]}}",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_payments/{{$node[\"Get the advance approval data from zues\"].json[\"data\"][\"key\"]}}?fields= *.*",
         "options": {},
         "bodyParametersUi": {
           "parameter": [
@@ -345,7 +345,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let responseData = [];\nlet files = [];\nfiles.push($node[\"Function\"].json[\"data\"][\"proforma_invoice\"],$node[\"Function\"].json[\"data\"][\"cancelled_cheque\"]);\n\nif(files){\n    files.forEach(function(upload_file,index){\n        responseData.push({\n            json: {\n                \"id\":upload_file,\n                \"index\":\"data\"+index,\n                \"dms_url\":$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]\n            }\t\t\t\n        });\n    })\n}\n\nreturn responseData;"
+        "functionCode": "let responseData = [];\nlet files = [];\nfiles.push($node[\"Function\"].json[\"data\"][\"proforma_invoice\"][\"id\"],$node[\"Function\"].json[\"data\"][\"cancelled_cheque\"][\"id\"]);\nlet uploadedDocument = $node[\"Update the approval status in mozart\"].json[\"data\"][\"upload_document\"];\nif(uploadedDocument){\n    uploadedDocument.forEach(function(file,index){\n        files.push(file.directus_files_id)\n    })\n}\nif(files){\n    files.forEach(function(upload_file,index){\n        responseData.push({\n            json: {\n                \"id\":upload_file,\n                \"index\":\"data\"+index,\n                \"dms_url\":$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]\n            }\t\t\t\n        });\n    })\n}\n\nreturn responseData;"
       },
       "name": "Function to split files",
       "type": "n8n-nodes-base.function",
@@ -414,5 +414,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-02-06T06:44:18.427Z"
+  "updatedAt": "2023-02-08T12:27:37.505Z"
 }
