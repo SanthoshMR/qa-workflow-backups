@@ -89,7 +89,7 @@
         ],
         [
           {
-            "node": "NoOp",
+            "node": "Create vendor payment on residual amount",
             "type": "main",
             "index": 0
           }
@@ -297,18 +297,53 @@
       ]
     },
     {
-      "parameters": {},
-      "name": "NoOp",
-      "type": "n8n-nodes-base.noOp",
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_payments",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "vendor_po_number",
+              "value": "={{$node[\"Get order invoice\"].json[\"data\"][0][\"order\"][\"shipment\"][\"vendor_po_num\"]}}"
+            },
+            {
+              "name": "vendor_invoice",
+              "value": "={{$node[\"Get vendor invoice details\"].json[\"data\"][0][\"id\"]}}"
+            },
+            {
+              "name": "payment_amount",
+              "value": "={{$node[\"Update vendor invoice details\"].json[\"data\"][\"remaining_to_pay\"]}}"
+            },
+            {
+              "name": "payment_type",
+              "value": "=invoice"
+            },
+            {
+              "name": "actual_paid_amount",
+              "value": "={{$node[\"Update vendor invoice details\"].json[\"data\"][\"remaining_to_pay\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Create vendor payment on residual amount",
+      "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
         2640,
-        400
-      ]
+        380
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-02-09T12:50:15.017Z"
+  "updatedAt": "2023-02-10T06:02:18.663Z"
 }
