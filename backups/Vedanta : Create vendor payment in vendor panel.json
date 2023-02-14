@@ -67,7 +67,7 @@
         ],
         [
           {
-            "node": "Get the shipment id",
+            "node": "IF1",
             "type": "main",
             "index": 0
           }
@@ -90,6 +90,46 @@
         [
           {
             "node": "Create vendor payment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF1": {
+      "main": [
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create vendor payment in mozart",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NoOp": {
+      "main": [
+        [
+          {
+            "node": "Get the shipment id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create vendor payment in mozart": {
+      "main": [
+        [
+          {
+            "node": "Get the shipment id",
             "type": "main",
             "index": 0
           }
@@ -301,8 +341,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1940,
-        460
+        2380,
+        440
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -321,7 +361,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1560,
+        2080,
         620
       ],
       "credentials": {
@@ -359,10 +399,85 @@
           "name": "Mozart DMS Token"
         }
       }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Get vendor payment\"].json[\"data\"][\"payment_paid_to_vendor\"] == \"fully_paid\"?true:false}}"
+            }
+          ]
+        },
+        "combineOperation": "any"
+      },
+      "name": "IF1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1480,
+        600
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1800,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_payments",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "vendor_po_number",
+              "value": "={{$node[\"Get vendor payment\"].json[\"data\"][\"vendor_po_number\"]}}"
+            },
+            {
+              "name": "vendor_invoice",
+              "value": "={{$node[\"Get vendor payment\"].json[\"data\"][\"vendor_invoice\"][\"id\"]}}"
+            },
+            {
+              "name": "payment_amount",
+              "value": "={{$node[\"Get vendor payment\"].json[\"data\"][\"vendor_invoice\"][\"remaining_to_pay\"]}}"
+            },
+            {
+              "name": "payment_type",
+              "value": "=invoice"
+            },
+            {
+              "name": "actual_paid_amount",
+              "value": "={{$node[\"Get vendor payment\"].json[\"data\"][\"vendor_invoice\"][\"remaining_to_pay\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Create vendor payment in mozart",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1800,
+        720
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-02-06T12:31:52.078Z"
+  "updatedAt": "2023-02-14T10:17:10.670Z"
 }
