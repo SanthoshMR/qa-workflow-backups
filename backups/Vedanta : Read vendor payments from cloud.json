@@ -1,0 +1,296 @@
+{
+  "active": false,
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Get url and token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Cloud Files": {
+      "main": [
+        [
+          {
+            "node": "Combine Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Combine Items": {
+      "main": [
+        [
+          {
+            "node": "Nextcloud",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nextcloud": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "Spreadsheet File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get url and token": {
+      "main": [
+        [
+          {
+            "node": "Get Cloud Files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Spreadsheet File": {
+      "main": [
+        [
+          {
+            "node": "update vendor payment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "update vendor payment": {
+      "main": [
+        [
+          {
+            "node": "Move All Files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-02-13T10:10:15.557Z",
+  "id": "262",
+  "name": "Vedanta : Read vendor payments from cloud",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        -300,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "operation": "list",
+        "path": "Vendor-payments/"
+      },
+      "name": "Get Cloud Files",
+      "type": "n8n-nodes-base.nextCloud",
+      "typeVersion": 1,
+      "position": [
+        160,
+        340
+      ],
+      "credentials": {
+        "nextCloudApi": {
+          "id": "43",
+          "name": "SD Cloud"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "path": "=Vendor-payments/{{$node[\"Combine Items\"].json[\"excelData\"][0][\"file_name\"]}}"
+      },
+      "name": "Nextcloud",
+      "type": "n8n-nodes-base.nextCloud",
+      "typeVersion": 1,
+      "position": [
+        600,
+        340
+      ],
+      "credentials": {
+        "nextCloudApi": {
+          "id": "43",
+          "name": "SD Cloud"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "// return items;\nlet poFiles=[];\nlet excelFiles=[];\nitems.forEach((item) => {\n    const fullPath = item.json[\"path\"].split(\"/\");\n    const fileName = fullPath[fullPath.length - 1]\n    if(decodeURI(fileName).includes(\".csv\")){\n        excelFiles.push({\"file_name\":decodeURI(fileName)});\n    }\n});\n\nreturn [{\n     json: {\n         excelData:excelFiles\n    }\n}];"
+      },
+      "name": "Combine Items",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        380,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let binaries = {};\nconst { read: xlsxRead } = require('xlsx'); \nconst data = items[0].binary.data; \nworkbook = xlsxRead(data.data); \nbinaries[\"data\"] = workbook;\n\nitems[0].json.binaries= binaries\nreturn items;"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        780,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "binaryPropertyName": "=data",
+        "options": {
+          "sheetName": "={{$node[\"Function\"].json[\"binaries\"][\"data\"][\"SheetNames\"][0]}}"
+        }
+      },
+      "name": "Spreadsheet File",
+      "type": "n8n-nodes-base.spreadsheetFile",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "=https://qan8n.shakedeal.com/webhook/get-url",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "client",
+              "value": "=vedanta"
+            },
+            {
+              "name": "env",
+              "value": "=qa"
+            }
+          ]
+        }
+      },
+      "name": "Get url and token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        -40,
+        320
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_payments/{{$node[\"Spreadsheet File\"].json[\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "actual_paid_amount",
+              "value": "={{$node[\"Spreadsheet File\"].json[\"actual_paid_amount\"]}}"
+            },
+            {
+              "name": "vendor_payment_status",
+              "value": "={{$node[\"Spreadsheet File\"].json[\"vendor_payment_status\"]}}"
+            },
+            {
+              "name": "payment_utr",
+              "value": "={{$node[\"Spreadsheet File\"].json[\"payment_utr\"]}}"
+            },
+            {
+              "name": "payment_description",
+              "value": "={{$node[\"Spreadsheet File\"].json[\"payment_description\"]}}"
+            },
+            {
+              "name": "tax_deducted",
+              "value": "={{$node[\"Spreadsheet File\"].json[\"tax_deducted\"]}}"
+            },
+            {
+              "name": "any_deductions",
+              "value": "={{$node[\"Spreadsheet File\"].json[\"any_deductions\"]}}"
+            },
+            {
+              "name": "payment_paid_to_vendor",
+              "value": "={{$node[\"Spreadsheet File\"].json[\"payment_paid_to_vendor\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "update vendor payment",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1300,
+        340
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "move",
+        "path": "=Vendor-payments/{{$node[\"Combine Items\"].json[\"excelData\"][0][\"file_name\"]}}",
+        "toPath": "=Vedanta-Old-Uploaded-PO/{{$node[\"Combine Items\"].json[\"excelData\"][0][\"file_name\"]}}"
+      },
+      "name": "Move All Files",
+      "type": "n8n-nodes-base.nextCloud",
+      "typeVersion": 1,
+      "position": [
+        1540,
+        340
+      ],
+      "credentials": {
+        "nextCloudApi": {
+          "id": "43",
+          "name": "SD Cloud"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-02-14T10:19:31.675Z"
+}
