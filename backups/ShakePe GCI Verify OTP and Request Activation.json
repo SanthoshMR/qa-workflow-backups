@@ -74,7 +74,7 @@
         ],
         [
           {
-            "node": "Respond Success",
+            "node": "Send Email",
             "type": "main",
             "index": 0
           }
@@ -85,7 +85,7 @@
       "main": [
         [
           {
-            "node": "Respond Success",
+            "node": "Send Email",
             "type": "main",
             "index": 0
           }
@@ -104,6 +104,17 @@
         [
           {
             "node": "Respond Failure1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email": {
+      "main": [
+        [
+          {
+            "node": "Respond Success",
             "type": "main",
             "index": 0
           }
@@ -132,6 +143,14 @@
             {
               "name": "dms_url",
               "value": "https://zeusqa.shakedeal.com"
+            },
+            {
+              "name": "from_email",
+              "value": "admin@shakepe.com"
+            },
+            {
+              "name": "to_email",
+              "value": "shakedeal.web@gmail.com"
             }
           ]
         },
@@ -171,7 +190,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sp_card_inventory?filter={\"_and\":[{\"reference_number\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"id\"]}}\"}},{\"otp\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"otp\"]}}\"}}]}&fields=mobile_number,otp,otp_last_updated,sd_serial_number,customer_name",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sp_card_inventory?filter={\"_and\":[{\"reference_number\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"id\"]}}\"}},{\"otp\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"otp\"]}}\"}}]}&fields=mobile_number,otp,otp_last_updated,sd_serial_number,customer_name,reference_number",
         "options": {}
       },
       "name": "Get Details From Serial",
@@ -227,7 +246,7 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        2060,
+        2440,
         -180
       ]
     },
@@ -279,8 +298,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1800,
-        -380
+        1920,
+        -340
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -304,7 +323,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        1580,
+        1680,
         -200
       ]
     },
@@ -339,10 +358,33 @@
         1140,
         -60
       ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{$node[\"Globals\"].json[\"from_email\"]}}",
+        "toEmail": "={{$node[\"Globals\"].json[\"to_email\"]}}",
+        "subject": "ShakePe - Card Activation Request",
+        "text": "=",
+        "html": "=<div><h3><u><strong>ShakePe - Request for Card Activation</strong></u></h3></div>\n<div>A Request for Card Activation has been placed.</div>\n<br />\n<div><strong>Reference Number</strong> : <span>{{$node[\"Get Details From Serial\"].json[\"data\"][0][\"reference_number\"]}}</span></div>\n<div><strong>Phone Number</strong> : <span>{{$node[\"Get Details From Serial\"].json[\"data\"][0][\"mobile_number\"]}}</span></div>",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        2200,
+        -180
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "36",
+          "name": "SendGrid"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-02-03T06:32:16.269Z"
+  "updatedAt": "2023-02-14T10:00:19.669Z"
 }
