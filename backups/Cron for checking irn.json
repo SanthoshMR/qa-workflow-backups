@@ -137,7 +137,7 @@
           "string": [
             {
               "name": "dms_url",
-              "value": "=https://dmsqa.shakedeal.com"
+              "value": "=https://zeusqa.shakedeal.com"
             }
           ]
         },
@@ -166,8 +166,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "56",
-          "name": "Dmsqa creds"
+          "id": "10",
+          "name": "SD-Dms-Token"
         }
       }
     },
@@ -280,8 +280,8 @@
       "waitBetweenTries": 3000,
       "credentials": {
         "httpHeaderAuth": {
-          "id": "56",
-          "name": "Dmsqa creds"
+          "id": "10",
+          "name": "SD-Dms-Token"
         }
       },
       "continueOnFail": true
@@ -347,5 +347,5 @@
       "updatedAt": "2022-04-25T07:09:37.693Z"
     }
   ],
-  "updatedAt": "2022-09-28T08:36:28.098Z"
+  "updatedAt": "2023-02-15T07:15:03.331Z"
 }
