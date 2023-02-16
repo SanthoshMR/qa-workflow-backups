@@ -186,6 +186,13 @@
               "value1": true,
               "value2": "={{$node[\"Get the link details\"].json[\"data\"].length>0 && $node[\"Get the link details\"].json[\"data\"][0][\"end_date\"] > new Date().toISOString()}}"
             }
+          ],
+          "string": [
+            {
+              "value1": "={{$node[\"Get the link details\"].json[\"data\"][0][\"reward_campaign\"][\"status\"]}}",
+              "operation": "notEqual",
+              "value2": "suspended"
+            }
           ]
         }
       },
@@ -225,5 +232,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-12-09T05:57:14.819Z"
+  "updatedAt": "2023-02-16T13:10:41.341Z"
 }
