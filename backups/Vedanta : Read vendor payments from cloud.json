@@ -1,15 +1,9 @@
 {
-  "active": false,
+  "active": true,
   "connections": {
     "Start": {
       "main": [
-        [
-          {
-            "node": "Get url and token",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Get Cloud Files": {
@@ -88,6 +82,17 @@
           }
         ]
       ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get url and token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2023-02-13T10:10:15.557Z",
@@ -100,22 +105,22 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        -300,
-        320
+        -220,
+        60
       ]
     },
     {
       "parameters": {
         "resource": "folder",
         "operation": "list",
-        "path": "Vendor-payments/"
+        "path": "Vendor-payments-qa/"
       },
       "name": "Get Cloud Files",
       "type": "n8n-nodes-base.nextCloud",
       "typeVersion": 1,
       "position": [
-        160,
-        340
+        180,
+        320
       ],
       "credentials": {
         "nextCloudApi": {
@@ -127,7 +132,7 @@
     {
       "parameters": {
         "operation": "download",
-        "path": "=Vendor-payments/{{$node[\"Combine Items\"].json[\"excelData\"][0][\"file_name\"]}}"
+        "path": "=Vendor-payments-qa/{{$node[\"Combine Items\"].json[\"excelData\"][0][\"file_name\"]}}"
       },
       "name": "Nextcloud",
       "type": "n8n-nodes-base.nextCloud",
@@ -271,8 +276,8 @@
     {
       "parameters": {
         "operation": "move",
-        "path": "=Vendor-payments/{{$node[\"Combine Items\"].json[\"excelData\"][0][\"file_name\"]}}",
-        "toPath": "=Vedanta-Old-Uploaded-PO/{{$node[\"Combine Items\"].json[\"excelData\"][0][\"file_name\"]}}"
+        "path": "=Vendor-payments-qa/{{$node[\"Combine Items\"].json[\"excelData\"][0][\"file_name\"]}}",
+        "toPath": "=Vedanta-old-payments-qa/{{$node[\"Combine Items\"].json[\"excelData\"][0][\"file_name\"]}}"
       },
       "name": "Move All Files",
       "type": "n8n-nodes-base.nextCloud",
@@ -281,16 +286,32 @@
         1540,
         340
       ],
+      "executeOnce": true,
       "credentials": {
         "nextCloudApi": {
           "id": "43",
           "name": "SD Cloud"
         }
       }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "vendor-payment-cloud-qa",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -260,
+        320
+      ],
+      "webhookId": "cb60ae7e-2706-4f5f-b252-cea276383106"
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-02-15T13:07:02.738Z"
+  "updatedAt": "2023-02-16T10:02:21.332Z"
 }
