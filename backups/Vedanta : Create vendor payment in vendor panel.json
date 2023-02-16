@@ -67,7 +67,7 @@
         ],
         [
           {
-            "node": "IF1",
+            "node": "Function",
             "type": "main",
             "index": 0
           }
@@ -135,6 +135,28 @@
           }
         ]
       ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "Update vendor payments",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update vendor payments": {
+      "main": [
+        [
+          {
+            "node": "IF1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2022-10-19T10:00:21.945Z",
@@ -163,8 +185,8 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        -80,
-        400
+        -560,
+        380
       ],
       "webhookId": "e85462e8-7fc0-454e-8dc6-7769368d12a7",
       "credentials": {
@@ -197,8 +219,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        140,
-        400
+        -340,
+        380
       ],
       "credentials": {
         "httpBasicAuth": {
@@ -235,22 +257,22 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        360,
-        400
+        -120,
+        380
       ]
     },
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_payments/{{$node[\"Get vendor_payment_status\"].json[\"body\"][\"keys\"][0]}}?fields=id,payment_amount,vendor_payment_status,vendor_po_number,payment_type,residual_amount,actual_paid_amount,vendor_invoice.*,payment_utr,payment_description,vendor_invoice.shipment.*",
+        "url": "={{$node[\"Globals\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_payments/{{$node[\"Get vendor_payment_status\"].json[\"body\"][\"keys\"][0]}}?fields=id,payment_amount,vendor_payment_status,vendor_po_number,payment_type,residual_amount,actual_paid_amount,payment_paid_to_vendor,vendor_invoice.*,payment_utr,payment_description,vendor_invoice.shipment.*,vendor_invoice.vendor_payments.*",
         "options": {}
       },
       "name": "Get vendor payment",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        600,
-        400
+        120,
+        380
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -274,7 +296,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        1180,
+        740,
         400
       ]
     },
@@ -288,8 +310,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        860,
-        400
+        380,
+        380
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -407,10 +429,13 @@
             {
               "value1": true,
               "value2": "={{$node[\"Get vendor payment\"].json[\"data\"][\"payment_paid_to_vendor\"] == \"fully_paid\"?true:false}}"
+            },
+            {
+              "value1": true,
+              "value2": "={{$node[\"Update vendor payments\"].json[\"data\"][\"remaining_to_pay\"]<=0?true:false}}"
             }
           ]
-        },
-        "combineOperation": "any"
+        }
       },
       "name": "IF1",
       "type": "n8n-nodes-base.if",
@@ -448,7 +473,7 @@
             },
             {
               "name": "payment_amount",
-              "value": "={{$node[\"Get vendor payment\"].json[\"data\"][\"vendor_invoice\"][\"remaining_to_pay\"]}}"
+              "value": "={{$node[\"Update vendor payments\"].json[\"data\"][\"remaining_to_pay\"]}}"
             },
             {
               "name": "payment_type",
@@ -456,7 +481,7 @@
             },
             {
               "name": "actual_paid_amount",
-              "value": "={{$node[\"Get vendor payment\"].json[\"data\"][\"vendor_invoice\"][\"remaining_to_pay\"]}}"
+              "value": "={{$node[\"Update vendor payments\"].json[\"data\"][\"remaining_to_pay\"]}}"
             }
           ]
         }
@@ -474,10 +499,45 @@
           "name": "Mozart DMS Token"
         }
       }
+    },
+    {
+      "parameters": {
+        "functionCode": "let vendorPayments = $node[\"Get vendor payment\"].json[\"data\"][\"vendor_invoice\"][\"vendor_payments\"];\nlet payableAmount = $node[\"Get vendor payment\"].json[\"data\"][\"vendor_invoice\"].payable_amount\nlet paidVendorPayments = vendorPayments.filter(payment=>payment.vendor_payment_status )\nlet updateItem = {}\nconst sumOfPayment = paidVendorPayments.reduce(\n  (accumulator, payment) => accumulator + parseFloat(payment.actual_paid_amount),\n  0\n);\n\nlet totalPaidAmount = sumOfPayment;\nlet remainingToPay = parseFloat(payableAmount) - totalPaidAmount;\nlet totalPercentagePaid = (totalPaidAmount/payableAmount)*100;\nlet vendor_payment = \"paymentpending\"\nif(totalPercentagePaid >= 90){\n  vendor_payment = \"paymentreleased\"\n}else if(totalPercentagePaid<90 && totalPercentagePaid > 0){\n  vendor_payment = \"partiallypaid\"\n}\n\nupdateItem.total_paid_amount = totalPaidAmount;\nupdateItem.remaining_to_pay = remainingToPay;\nupdateItem.total_percentage_paid = totalPercentagePaid;\nupdateItem.vendor_payment = vendor_payment\n\nitems[0].json.paidVendorPayments= paidVendorPayments;\nitems[0].json.sumOfPayment= sumOfPayment;\nitems[0].json.updateItem= updateItem;\n\nreturn items;"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        960,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_invoice_details/{{$node[\"Get vendor payment\"].json[\"data\"][\"vendor_invoice\"][\"id\"]}}",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Function\"].json[\"updateItem\"]}}"
+      },
+      "name": "Update vendor payments",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1220,
+        600
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-02-14T10:17:10.670Z"
+  "updatedAt": "2023-02-16T13:05:05.838Z"
 }
