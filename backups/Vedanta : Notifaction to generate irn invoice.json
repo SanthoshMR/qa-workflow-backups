@@ -231,7 +231,7 @@
     {
       "parameters": {
         "fromEmail": "=handyalasairam9177@gmail.com",
-        "toEmail": "=bijan.krishna@shakedeal.com",
+        "toEmail": "=shakedeal.web@gmail.com",
         "subject": "=Action needed : Generate IRN for invoice #{{$node[\"Webhook\"].json[\"body\"][\"invoice_number\"]}}",
         "html": "=<p>Please generate IRN invoice for the Invoice # INV12039 which is punched against Order # {{$node[\"Webhook\"].json[\"body\"][\"order_id\"]}}</p>\n{{$node[\"Function to club the binay files\"].json[\"tableHtml\"]}}\n<br>\n<br>\n<p>Once it is generated please mandatorily upload digitally signed IRN invoice in folder which is shared by Tech team.</p>",
         "attachments": "={{$node[\"Function to club the binay files\"].json[\"binary_keys\"]}}",
@@ -255,5 +255,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-02-03T11:59:37.656Z"
+  "updatedAt": "2023-02-17T06:50:34.289Z"
 }
