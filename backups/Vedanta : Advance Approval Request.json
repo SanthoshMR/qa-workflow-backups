@@ -27,7 +27,7 @@
       "main": [
         [
           {
-            "node": "Function to create approval obj",
+            "node": "Update actual paid amount",
             "type": "main",
             "index": 0
           }
@@ -143,6 +143,17 @@
         [
           {
             "node": "Update proforma invoice and cancelled cheque in zues",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update actual paid amount": {
+      "main": [
+        [
+          {
+            "node": "Function to create approval obj",
             "type": "main",
             "index": 0
           }
@@ -502,10 +513,39 @@
           "name": "SD-Dms-Token"
         }
       }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_payments/{{$node[\"Wait for approval\"].json[\"body\"][\"key\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "actual_paid_amount",
+              "value": "={{$node[\"Wait for approval\"].json[\"body\"][\"payload\"][\"payment_amount\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update actual paid amount",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1320,
+        -180
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-02-15T06:17:14.701Z"
+  "updatedAt": "2023-02-17T11:20:22.160Z"
 }
