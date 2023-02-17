@@ -38,7 +38,7 @@
       "main": [
         [
           {
-            "node": "Update the approval status in mozart",
+            "node": "IF1",
             "type": "main",
             "index": 0
           }
@@ -123,6 +123,24 @@
         [
           {
             "node": "Send approve mail to accounts team",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF1": {
+      "main": [
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update the approval status in mozart",
             "type": "main",
             "index": 0
           }
@@ -409,10 +427,39 @@
         2640,
         100
       ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Get the advance approval data from zues\"].json[\"data\"][\"approval_status\"] == \"pending\"?true:false}}"
+            }
+          ]
+        }
+      },
+      "name": "IF1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        40
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1860,
+        -140
+      ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-02-08T12:27:37.505Z"
+  "updatedAt": "2023-02-17T10:13:18.490Z"
 }
