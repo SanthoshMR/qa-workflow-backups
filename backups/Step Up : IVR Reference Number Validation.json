@@ -1,0 +1,213 @@
+{
+  "active": true,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Global",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Webhook": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Call Webhook Send OTP",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Webhook Send OTP": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Global": {
+      "main": [
+        [
+          {
+            "node": "Call Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-02-17T07:36:36.619Z",
+  "id": "265",
+  "name": "Step Up : IVR Reference Number Validation",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        -780,
+        -20
+      ]
+    },
+    {
+      "parameters": {
+        "path": "validatereferencenumber",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -900,
+        160
+      ],
+      "webhookId": "43c75623-116a-45b8-a595-72dab08a6d51"
+    },
+    {
+      "parameters": {
+        "respondWith": "noData",
+        "options": {
+          "responseCode": "={{$node[\"Call Webhook\"].json[\"success\"]?200:302}}"
+        }
+      },
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        220,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Global\"].json[\"WorkFlowURL\"]}}shakepe/get-phn-for-serial",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "id",
+              "value": "={{$node[\"Webhook\"].json[\"query\"][\"digits\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Call Webhook",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        -460,
+        160
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "76",
+          "name": "ShakePe Credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Call Webhook\"].json[\"success\"] && $node[\"Call Webhook\"].json[\"mobile_number\"]!==null}}"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -280,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Global\"].json[\"WorkFlowURL\"]}}shakepe/send-otp-for-serial",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "id",
+              "value": "={{$node[\"Webhook\"].json[\"query\"][\"digits\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Call Webhook Send OTP",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        -20,
+        -20
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "76",
+          "name": "ShakePe Credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "WorkFlowURL",
+              "value": "https://qan8n.shakedeal.com/webhook/"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Global",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        -680,
+        160
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-02-20T12:55:15.669Z"
+}
