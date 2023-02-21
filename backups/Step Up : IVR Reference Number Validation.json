@@ -12,40 +12,11 @@
         ]
       ]
     },
-    "Call Webhook": {
-      "main": [
-        [
-          {
-            "node": "IF",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "IF": {
-      "main": [
-        [
-          {
-            "node": "Call Webhook Send OTP",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Respond to Webhook",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Call Webhook Send OTP": {
       "main": [
         [
           {
-            "node": "Respond to Webhook",
+            "node": "NoOp",
             "type": "main",
             "index": 0
           }
@@ -56,7 +27,58 @@
       "main": [
         [
           {
-            "node": "Call Webhook",
+            "node": "Call Webhook Serial Number Verify",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Data": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Mobile Number Exist": {
+      "main": [
+        [
+          {
+            "node": "Call Webhook Send OTP",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Webhook Serial Number Verify": {
+      "main": [
+        [
+          {
+            "node": "Validate Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to Webhook": {
+      "main": [
+        [
+          {
+            "node": "Check Mobile Number Exist",
             "type": "main",
             "index": 0
           }
@@ -74,21 +96,20 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        -780,
+        -1040,
         -20
       ]
     },
     {
       "parameters": {
         "path": "validatereferencenumber",
-        "responseMode": "responseNode",
         "options": {}
       },
       "name": "Webhook",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        -900,
+        -1040,
         160
       ],
       "webhookId": "43c75623-116a-45b8-a595-72dab08a6d51"
@@ -97,62 +118,14 @@
       "parameters": {
         "respondWith": "noData",
         "options": {
-          "responseCode": "={{$node[\"Call Webhook\"].json[\"success\"]?200:302}}"
+          "responseCode": "={{$node[\"Validate Data\"].json[\"resposecode\"]}}"
         }
       },
       "name": "Respond to Webhook",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1,
       "position": [
-        220,
-        160
-      ]
-    },
-    {
-      "parameters": {
-        "authentication": "basicAuth",
-        "requestMethod": "POST",
-        "url": "={{$node[\"Global\"].json[\"WorkFlowURL\"]}}shakepe/get-phn-for-serial",
-        "options": {},
-        "bodyParametersUi": {
-          "parameter": [
-            {
-              "name": "id",
-              "value": "={{$node[\"Webhook\"].json[\"query\"][\"digits\"]}}"
-            }
-          ]
-        }
-      },
-      "name": "Call Webhook",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        -460,
-        160
-      ],
-      "credentials": {
-        "httpBasicAuth": {
-          "id": "76",
-          "name": "ShakePe Credential"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "boolean": [
-            {
-              "value1": true,
-              "value2": "={{$node[\"Call Webhook\"].json[\"success\"] && $node[\"Call Webhook\"].json[\"mobile_number\"]!==null}}"
-            }
-          ]
-        }
-      },
-      "name": "IF",
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 1,
-      "position": [
-        -280,
+        -400,
         160
       ]
     },
@@ -166,7 +139,7 @@
           "parameter": [
             {
               "name": "id",
-              "value": "={{$node[\"Webhook\"].json[\"query\"][\"digits\"]}}"
+              "value": "={{$node[\"Webhook\"].json[\"query\"][\"digits\"].replaceAll('\"','')}}"
             }
           ]
         }
@@ -175,8 +148,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        -20,
-        -20
+        40,
+        0
       ],
       "credentials": {
         "httpBasicAuth": {
@@ -201,13 +174,83 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        -680,
+        -880,
         160
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "item.message=\"\";\nif($node[\"Call Webhook Serial Number Verify\"].json[\"success\"]){\n  if($node[\"Call Webhook Serial Number Verify\"].json[\"mobile_number\"]){\n    item.resposecode=200;\n  }\n  else{\n    item.resposecode=302;\n    item.message=\"notregisteredenumber\";\n  }\n}\nelse{\n  item.resposecode=302;\n  item.message=\"incorrectcardnumber\";\n}\n\nreturn item;"
+      },
+      "name": "Validate Data",
+      "type": "n8n-nodes-base.functionItem",
+      "typeVersion": 1,
+      "position": [
+        -560,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Validate Data\"].json[\"resposecode\"]==200}}"
+            }
+          ]
+        }
+      },
+      "name": "Check Mobile Number Exist",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -200,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Global\"].json[\"WorkFlowURL\"]}}shakepe/get-phn-for-serial",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "id",
+              "value": "={{$node[\"Webhook\"].json[\"query\"][\"digits\"].replaceAll('\"','')}}"
+            }
+          ]
+        }
+      },
+      "name": "Call Webhook Serial Number Verify",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        -720,
+        160
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "76",
+          "name": "ShakePe Credential"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        280,
+        180
       ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-02-20T12:55:15.669Z"
+  "updatedAt": "2023-02-21T10:33:08.249Z"
 }
