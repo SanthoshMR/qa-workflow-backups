@@ -794,6 +794,10 @@
             {
               "name": "residual_amount",
               "value": "={{$node[\"Function to update advance payments\"].json[\"residual_amount\"]}}"
+            },
+            {
+              "name": "cancelled_cheque",
+              "value": "={{$node[\"IF1\"].json[\"data\"][\"cancelled_cheque\"]}}"
             }
           ]
         }
@@ -904,5 +908,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-12-27T11:12:26.179Z"
+  "updatedAt": "2023-02-21T10:18:17.625Z"
 }
