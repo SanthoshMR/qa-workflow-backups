@@ -435,7 +435,8 @@
               "value2": "={{$node[\"Update vendor payments\"].json[\"data\"][\"remaining_to_pay\"]<=0?true:false}}"
             }
           ]
-        }
+        },
+        "combineOperation": "any"
       },
       "name": "IF1",
       "type": "n8n-nodes-base.if",
@@ -539,5 +540,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-02-16T13:05:05.838Z"
+  "updatedAt": "2023-02-21T12:01:51.286Z"
 }
