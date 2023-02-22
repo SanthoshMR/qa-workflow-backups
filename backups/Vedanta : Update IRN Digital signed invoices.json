@@ -79,11 +79,6 @@
         ]
       ]
     },
-    "Update IRN in mozart": {
-      "main": [
-        []
-      ]
-    },
     "Get url and token": {
       "main": [
         [
@@ -111,6 +106,17 @@
         [
           {
             "node": "Get the order from vpanel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update IRN in mozart": {
+      "main": [
+        [
+          {
+            "node": "Move All Files",
             "type": "main",
             "index": 0
           }
@@ -384,10 +390,31 @@
         1180,
         560
       ]
+    },
+    {
+      "parameters": {
+        "operation": "move",
+        "path": "=IRN-digitally-signed/{{$node[\"Nextcloud\"].json[\"data\"][0][\"id\"]+\".PDF\"}}",
+        "toPath": "=IRN-old-digitally-signed/{{$node[\"Nextcloud\"].json[\"data\"][0][\"id\"]+\".PDF\"}}"
+      },
+      "name": "Move All Files",
+      "type": "n8n-nodes-base.nextCloud",
+      "typeVersion": 1,
+      "position": [
+        2000,
+        200
+      ],
+      "executeOnce": false,
+      "credentials": {
+        "nextCloudApi": {
+          "id": "43",
+          "name": "SD Cloud"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-02-02T12:57:10.090Z"
+  "updatedAt": "2023-02-22T09:27:11.105Z"
 }
