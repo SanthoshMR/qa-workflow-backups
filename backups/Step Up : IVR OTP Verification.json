@@ -63,7 +63,7 @@
           "parameter": [
             {
               "name": "id",
-              "value": "={{$node[\"Webhook\"].json[\"query\"][\"digits\"]}}"
+              "value": "={{$node[\"Webhook\"].json[\"query\"][\"digits\"].replaceAll('\"','')}}"
             }
           ]
         }
@@ -101,5 +101,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-02-20T06:52:33.482Z"
+  "updatedAt": "2023-02-22T09:19:53.383Z"
 }
