@@ -5,18 +5,40 @@
       "main": [
         [
           {
-            "node": "Call Webhook",
+            "node": "Globals",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Call Webhook": {
+    "Display Log": {
+      "main": [
+        [
+          {
+            "node": "Check Reference Number",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Reference Number": {
       "main": [
         [
           {
             "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Display Log",
             "type": "main",
             "index": 0
           }
@@ -34,8 +56,8 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        260,
-        0
+        -200,
+        -100
       ]
     },
     {
@@ -48,58 +70,89 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        260,
-        160
+        -420,
+        60
       ],
       "webhookId": "43c75623-116a-45b8-a595-72dab08a6d51"
     },
     {
       "parameters": {
-        "authentication": "basicAuth",
-        "requestMethod": "POST",
-        "url": "https://qan8n.shakedeal.com/webhook/shakepe/send-otp-for-serial",
-        "options": {},
-        "bodyParametersUi": {
-          "parameter": [
-            {
-              "name": "id",
-              "value": "={{$node[\"Webhook\"].json[\"query\"][\"digits\"].replaceAll('\"','')}}"
-            }
-          ]
-        }
-      },
-      "name": "Call Webhook",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        460,
-        160
-      ],
-      "credentials": {
-        "httpBasicAuth": {
-          "id": "76",
-          "name": "ShakePe Credential"
-        }
-      }
-    },
-    {
-      "parameters": {
         "respondWith": "noData",
         "options": {
-          "responseCode": "={{$node[\"Call Webhook\"].json[\"success\"]?200:302}}"
+          "responseCode": "={{$node[\"Check Reference Number\"].json[\"data\"].length > 0 ? 200 : 302}}"
         }
       },
       "name": "Respond to Webhook",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1,
       "position": [
-        640,
-        160
+        280,
+        60
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=select * from ivr_exotel where id='{{$node[\"Webhook\"].json[\"query\"][\"CallSid\"]}}'",
+        "additionalFields": {}
+      },
+      "name": "Display Log",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        -100,
+        60
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "1",
+          "name": "n8n - Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sp_card_inventory?filter={\"_and\":[{\"reference_number\":{\"_eq\":\"{{$node[\"Display Log\"].json[\"reference_number\"]}}\"}},{\"otp\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"query\"][\"digits\"].replaceAll('\"','')}}\"}}]}&fields=mobile_number,status",
+        "options": {}
+      },
+      "name": "Check Reference Number",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        80,
+        60
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "77",
+          "name": "ShakePe GCI - Zeus QA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "dms_url",
+              "value": "https://zeusqa.shakedeal.com"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        -260,
+        60
       ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-02-22T09:19:53.383Z"
+  "updatedAt": "2023-02-23T07:40:29.456Z"
 }
