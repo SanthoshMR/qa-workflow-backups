@@ -5,7 +5,7 @@
       "main": [
         [
           {
-            "node": "Global",
+            "node": "Globals",
             "type": "main",
             "index": 0
           }
@@ -16,18 +16,7 @@
       "main": [
         [
           {
-            "node": "NoOp",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Global": {
-      "main": [
-        [
-          {
-            "node": "Call Webhook Serial Number Verify",
+            "node": "Create  Log",
             "type": "main",
             "index": 0
           }
@@ -56,18 +45,7 @@
         ],
         [
           {
-            "node": "NoOp",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Call Webhook Serial Number Verify": {
-      "main": [
-        [
-          {
-            "node": "Validate Data",
+            "node": "Create  Log",
             "type": "main",
             "index": 0
           }
@@ -79,6 +57,28 @@
         [
           {
             "node": "Check Mobile Number Exist",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Reference Number": {
+      "main": [
+        [
+          {
+            "node": "Validate Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Check Reference Number",
             "type": "main",
             "index": 0
           }
@@ -96,27 +96,29 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        -1040,
-        -20
+        -1000,
+        -40
       ]
     },
     {
       "parameters": {
         "path": "validatereferencenumber",
+        "responseMode": "responseNode",
         "options": {}
       },
       "name": "Webhook",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        -1040,
-        160
+        -1000,
+        120
       ],
       "webhookId": "43c75623-116a-45b8-a595-72dab08a6d51"
     },
     {
       "parameters": {
-        "respondWith": "noData",
+        "respondWith": "text",
+        "responseBody": "={\"select\":\"{{$node[\"Validate Data\"].json[\"message\"]}}\"}",
         "options": {
           "responseCode": "={{$node[\"Validate Data\"].json[\"resposecode\"]}}"
         }
@@ -125,15 +127,15 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1,
       "position": [
-        -400,
-        160
+        -360,
+        120
       ]
     },
     {
       "parameters": {
         "authentication": "basicAuth",
         "requestMethod": "POST",
-        "url": "={{$node[\"Global\"].json[\"WorkFlowURL\"]}}shakepe/send-otp-for-serial",
+        "url": "={{$node[\"Globals\"].json[\"WorkFlowURL\"]}}shakepe/send-otp-for-serial",
         "options": {},
         "bodyParametersUi": {
           "parameter": [
@@ -148,8 +150,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        40,
-        0
+        0,
+        -40
       ],
       "credentials": {
         "httpBasicAuth": {
@@ -160,34 +162,14 @@
     },
     {
       "parameters": {
-        "values": {
-          "string": [
-            {
-              "name": "WorkFlowURL",
-              "value": "https://qan8n.shakedeal.com/webhook/"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "name": "Global",
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 1,
-      "position": [
-        -880,
-        160
-      ]
-    },
-    {
-      "parameters": {
-        "functionCode": "item.message=\"\";\nif($node[\"Call Webhook Serial Number Verify\"].json[\"success\"]){\n  if($node[\"Call Webhook Serial Number Verify\"].json[\"mobile_number\"]){\n    item.resposecode=200;\n  }\n  else{\n    item.resposecode=302;\n    item.message=\"notregisteredenumber\";\n  }\n}\nelse{\n  item.resposecode=302;\n  item.message=\"incorrectcardnumber\";\n}\n\nreturn item;"
+        "functionCode": "item.message=\"\";\nif($node[\"Check Reference Number\"].json[\"data\"].length > 0){\n  if($node[\"Check Reference Number\"].json[\"data\"][0][\"mobile_number\"]){\n    item.resposecode=200;\n  }\n  else{\n    item.resposecode=302;\n    item.message=\"notregisteredenumber\";\n  }\n}\nelse{\n  item.resposecode=302;\n  item.message=\"incorrectcardnumber\";\n}\n\nreturn item;"
       },
       "name": "Validate Data",
       "type": "n8n-nodes-base.functionItem",
       "typeVersion": 1,
       "position": [
-        -560,
-        160
+        -520,
+        120
       ]
     },
     {
@@ -205,52 +187,78 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        -200,
-        160
+        -180,
+        120
       ]
     },
     {
       "parameters": {
-        "authentication": "basicAuth",
-        "requestMethod": "POST",
-        "url": "={{$node[\"Global\"].json[\"WorkFlowURL\"]}}shakepe/get-phn-for-serial",
-        "options": {},
-        "bodyParametersUi": {
-          "parameter": [
-            {
-              "name": "id",
-              "value": "={{$node[\"Webhook\"].json[\"query\"][\"digits\"].replaceAll('\"','')}}"
-            }
-          ]
+        "operation": "executeQuery",
+        "query": "=Insert into ivr_exotel (id,reference_number) values ('{{$node[\"Webhook\"].json[\"query\"][\"CallSid\"]}}','{{$node[\"Webhook\"].json[\"query\"][\"digits\"].replaceAll('\"','')}}');",
+        "additionalFields": {}
+      },
+      "name": "Create  Log",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        200,
+        140
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "1",
+          "name": "n8n - Postgres"
         }
       },
-      "name": "Call Webhook Serial Number Verify",
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sp_card_inventory?filter={\"reference_number\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"query\"][\"digits\"].replaceAll('\"','')}}\"}}&fields=mobile_number,status",
+        "options": {}
+      },
+      "name": "Check Reference Number",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        -720,
-        160
+        -680,
+        120
       ],
       "credentials": {
-        "httpBasicAuth": {
-          "id": "76",
-          "name": "ShakePe Credential"
+        "httpHeaderAuth": {
+          "id": "77",
+          "name": "ShakePe GCI - Zeus QA"
         }
       }
     },
     {
-      "parameters": {},
-      "name": "NoOp",
-      "type": "n8n-nodes-base.noOp",
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "WorkFlowURL",
+              "value": "https://qan8n.shakedeal.com/webhook/"
+            },
+            {
+              "name": "dms_url",
+              "value": "https://zeusqa.shakedeal.com"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        280,
-        180
+        -840,
+        120
       ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-02-21T10:33:08.249Z"
+  "updatedAt": "2023-02-23T06:57:48.466Z"
 }
