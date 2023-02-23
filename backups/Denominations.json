@@ -1,0 +1,47 @@
+{
+  "active": false,
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-02-23T13:04:10.816Z",
+  "id": "269",
+  "name": "Denominations",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let budget = 100;\nlet denominations = [ 5, 10,45];\nlet n = 10;\nlet denominationsCountArray = [];\nlet first = true\nlet denominationsCount = {};\nlet partDenomination = n/denominations.length;\nlet amount = 0\n\nfor (let j = 0; j < denominations.length; j++) {\n  \nlet denomination = denominations[j];\n//let maxCount = Math.floor(partBudget / denomination);\nlet count = first &&  partDenomination%1 != 0 ? Math.ceil(partDenomination):Math.floor(partDenomination);\ndenominationsCount[denomination] = count\n//partBudget -= maxCount * denomination;\nfirst = false\namount = amount+denominations[j] * count\n}\n\ndenominationsCountArray.push(denominationsCount);\n\nitems[0].json.amount = amount\nitems[0].json.denominationsCountArray = denominationsCountArray\nreturn items;"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        520,
+        200
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-02-23T13:04:31.112Z"
+}
