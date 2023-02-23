@@ -1,0 +1,95 @@
+{
+  "active": false,
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Create Log Table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-02-22T15:54:54.607Z",
+  "id": "268",
+  "name": "Table : IVR Exotel",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "CREATE TABLE ivr_exotel(\n   id TEXT PRIMARY KEY NOT NULL,\n   reference_number TEXT NOT NULL\n);",
+        "additionalFields": {}
+      },
+      "name": "Create Log Table",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        440,
+        300
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "1",
+          "name": "n8n - Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select * from ivr_exotel;",
+        "additionalFields": {}
+      },
+      "name": "Display Log",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        640,
+        160
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "1",
+          "name": "n8n - Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "Insert into ivr_exotel (id,reference_number) values ('dddd','fff');",
+        "additionalFields": {}
+      },
+      "name": "Create  Log",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        880,
+        160
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "1",
+          "name": "n8n - Postgres"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-02-22T15:58:29.648Z"
+}
