@@ -29,7 +29,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let budget = 100;\nlet denominations = [ 5, 10,45];\nlet n = 10;\nlet denominationsCountArray = [];\nlet first = true\nlet denominationsCount = {};\nlet partDenomination = n/denominations.length;\nlet amount = 0\n\nfor (let j = 0; j < denominations.length; j++) {\n  \nlet denomination = denominations[j];\n//let maxCount = Math.floor(partBudget / denomination);\nlet count = first &&  partDenomination%1 != 0 ? Math.ceil(partDenomination):Math.floor(partDenomination);\ndenominationsCount[denomination] = count\n//partBudget -= maxCount * denomination;\nfirst = false\namount = amount+denominations[j] * count\n}\n\ndenominationsCountArray.push(denominationsCount);\n\nitems[0].json.amount = amount\nitems[0].json.denominationsCountArray = denominationsCountArray\nreturn items;"
+        "functionCode": "function findCoinCombinations(coins, target) {\n  let result = [];\n\n  function permute(coins, currentSum, currentPerm) {\n    if (currentSum === target) {\n      result.push(currentPerm);\n      \n      return;\n    }\n\n    if (currentSum > target) {\n      result.push(currentPerm)\n      return;\n    }\n\n    for (let i = 0; i < coins.length; i++) {\n      permute(coins.slice(i), currentSum + coins[i], [...currentPerm, coins[i]]);\n    }\n  }\n\n  permute(coins, 0, []);\n  return result;\n}\n\nconst denominations = [500,200,100,50];\nconst totalSum = 770;\nconst linkLength = 100\n\nconst permutations = findCoinCombinations(denominations, totalSum);\nconst result = permutations.filter(permutation => permutation.length == linkLength);\nlet r2 = []\nlet r3 = []\nresult.forEach((denomination) => {\n  \t\n    const r1 = denominations.every(item => denomination.includes(item))\n    if(r1){\n      \n      r3.push(denomination)\n    }\n  });\n\n\n\n\n r3.forEach((denomination,index) => {\n    r2[index] = {}\n  \tconst sum = denomination.reduce((partialSum, a) => partialSum + a, 0);\n    r2[index].arrayObj = denomination\n    r2[index].sum = sum\n    //r2.push(sum)\n    \n  });\nconst nearestObj = r2.reduce((prev, curr) => {\n  // Check if current object's age is closer to the target age than the previous object's age\n  if (Math.abs(curr.sum - totalSum) < Math.abs(prev.age - totalSum)) {\n    return curr;\n  } else {\n    return prev;\n  }\n});\n\nitems[0].json.nearestObj= nearestObj;\n//items[0].json.r2= r2;\n//items[0].json.filteredPermutations= result;\nreturn items\n"
       },
       "name": "Function",
       "type": "n8n-nodes-base.function",
@@ -43,5 +43,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-02-23T13:04:31.112Z"
+  "updatedAt": "2023-02-24T12:29:10.504Z"
 }
