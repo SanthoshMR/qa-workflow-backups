@@ -365,7 +365,7 @@
         "toEmail": "={{$node[\"Globals\"].json[\"to_email\"]}}",
         "subject": "ShakePe - Card Activation Request",
         "text": "=",
-        "html": "=<div><h3><u><strong>ShakePe - Request for Card Activation</strong></u></h3></div>\n<div>A Request for Card Activation has been placed.</div>\n<br />\n<div><strong>Reference Number</strong> : <span>{{$node[\"Get Details From Serial\"].json[\"data\"][0][\"reference_number\"]}}</span></div>\n<div><strong>Phone Number</strong> : <span>{{$node[\"Get Details From Serial\"].json[\"data\"][0][\"mobile_number\"]}}</span></div>",
+        "html": "=<div><h3><u><strong>ShakePe - Request for Card Activation</strong></u></h3></div>\n<div>A Request for Card Activation has been placed.</div>\n<br />\n<div><strong>Reference Number</strong> : <span>{{$node[\"Get Details From Serial\"].json[\"data\"][0][\"reference_number\"]}}</span></div>\n<div><strong>Phone Number</strong> : <span>{{!!$node[\"Webhook\"].json[\"body\"][\"mobile_number\"]?$node[\"Webhook\"].json[\"body\"][\"mobile_number\"]:$node[\"Get Details From Serial\"].json[\"data\"][0][\"reference_number\"]}}</span></div>\n<div><strong>Amount</strong> : <span>{{$node[\"Get Details From Serial\"].json[\"data\"][0][\"amount\"]}}</span></div>",
         "options": {}
       },
       "name": "Send Email",
@@ -386,5 +386,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-02-14T10:00:19.669Z"
+  "updatedAt": "2023-02-27T10:02:31.891Z"
 }
