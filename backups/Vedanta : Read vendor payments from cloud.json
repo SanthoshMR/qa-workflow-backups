@@ -1,11 +1,6 @@
 {
   "active": true,
   "connections": {
-    "Start": {
-      "main": [
-        []
-      ]
-    },
     "Get Cloud Files": {
       "main": [
         [
@@ -255,6 +250,10 @@
             {
               "name": "payment_paid_to_vendor",
               "value": "={{$node[\"Spreadsheet File\"].json[\"payment_paid_to_vendor\"]}}"
+            },
+            {
+              "name": "remarks",
+              "value": "={{$node[\"Spreadsheet File\"].json[\"remarks\"]}}"
             }
           ]
         }
@@ -313,5 +312,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-02-16T10:02:21.332Z"
+  "updatedAt": "2023-02-28T11:40:54.246Z"
 }
