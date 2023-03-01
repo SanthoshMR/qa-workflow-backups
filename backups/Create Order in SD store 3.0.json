@@ -34,17 +34,6 @@
         ]
       ]
     },
-    "Function for creating order details object": {
-      "main": [
-        [
-          {
-            "node": "Create order in SD store",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Get contact details based on plant": {
       "main": [
         [
@@ -366,6 +355,35 @@
           }
         ]
       ]
+    },
+    "Function for creating order details object": {
+      "main": [
+        [
+          {
+            "node": "IF1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF1": {
+      "main": [
+        [
+          {
+            "node": "Send Email1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create order in SD store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2022-09-13T12:35:48.131Z",
@@ -378,7 +396,7 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        240,
+        60,
         300
       ]
     },
@@ -393,7 +411,7 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        440,
+        240,
         300
       ],
       "webhookId": "1551211b-b856-41c1-ab75-dcebbf03ce9d",
@@ -414,7 +432,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1000,
+        800,
         300
       ],
       "credentials": {
@@ -486,19 +504,19 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        820,
+        620,
         300
       ]
     },
     {
       "parameters": {
-        "functionCode": "let order_obj = {};\nlet user_details = {};\nlet order_details = $node[\"Get the po_details\"].json[\"data\"][\"order_items\"];\nlet product_details = $node[\"Get the po_details\"].json[\"data\"][\"shipment\"][\"vendor_po_num\"].po_items;\nlet order_total = 0;\nlet sub_total = 0;\nlet products = [];\nlet firstname = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"company_name\"];\nlet lastname = \"\";\nlet vendor_id = $node[\"Get the po_details\"].json[\"data\"][\"shipment\"][\"vendor_po_num\"][\"vendor\"];\nlet mozart_payment_terms = $node[\"Get the po_details\"].json[\"data\"][\"shipment\"][\"vendor_po_num\"][\"payment_terms\"];\nlet sd_payment_terms = \"\";\nif(mozart_payment_terms == 0){\n    sd_payment_terms = \"Advance\"\n}else if(mozart_payment_terms == 7){\n    sd_payment_terms = \"7 Days Credit\"\n}else if(mozart_payment_terms == 15){\n    sd_payment_terms = \"15 Days Credit\"\n}else if(mozart_payment_terms == 30){\n    sd_payment_terms = \"30 Days Credit\"\n}\n\n//function to get the round value with precision\nfunction round(value, precision) {\n    var multiplier = Math.pow(10, precision || 0);\n    return Math.ceil(value * multiplier) / multiplier;\n}\n\norder_details.forEach(function(product,index){\n    let matched_product = product_details.filter(obj=>product.sdm_po_items_id == obj.id);\n    let product_price = matched_product[0].unit_price*product.quantity + (matched_product[0].unit_price*product.quantity*matched_product[0].tax_percentage)/100;\n    order_total = order_total+ product_price;\n    sub_total = sub_total + matched_product[0].unit_price*product.quantity;\n    products[index]={};\n    products[index].product = matched_product[0].product.product_name;\n    products[index].productsku = matched_product[0].product.id;\n    //products[index].hsn_code = product.sd_mozart_vendor_product_mapping_id.product.hsn;\n    products[index].hsn_code = matched_product[0].hsn\n    products[index].tax_ids = \"\";\n    //products[index].price = product_price;\n    products[index].price = (matched_product[0].unit_price*matched_product[0].tax_percentage/100)+parseFloat(matched_product[0].unit_price);\n    //products[index].pri = matched_product[0].rate;\n    //products[index].rate_value = matched_product[0].tax_percentage.toString();\n    products[index].rate_value = \"18.000\";\n    products[index].pricecalculation = \"on\";\n    products[index].amount = product.quantity.toString();\n    products[index].status=\"D\";\n    products[index].main_category = \"3622\";\n    products[index].tax_ids = \"13\"\n    products[index].uom = matched_product[0].uom\n    //update the order details obj to update the order details in order\n    product.rate = matched_product[0].unit_price;\n    product.product_total = product_price;\n    product.tax_value = matched_product[0].tax_percentage;\n    product.sub_total = matched_product[0].unit_price*product.quantity;\n    product.plant = $node[\"Get the po_details\"].json[\"data\"][\"shipment\"][\"vendor_po_num\"][\"po_items\"][0][\"plant\"];\n    //product.sd_mozart_vendor_product_mapping_id.vendor = vendor_id;\n}); \nuser_details.b_firstname = firstname;\nuser_details.b_lastname = lastname;\nuser_details.b_phone = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"mobile\"];\nuser_details.b_state = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"destination_of_supply\"];\n//user_details.b_zipcode = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"delivery_address\"][\"zip_code\"];\nuser_details.b_address = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"delivery_address\"];\n// user_details.b_address_2 = \"\";\n// user_details.b_city = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"delivery_address\"][\"city\"];\nuser_details.b_country = \"IN\"\nuser_details.email = $node[\"Get the po_details\"].json[\"data\"][\"shipment\"][\"vendor_po_num\"][\"po_num\"][\"issuer_name\"][\"user\"][\"email\"];\nuser_details.cname = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"company_name\"];\nuser_details.company_name = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"company_name\"];\n user_details.passwrod = $node[\"Globals\"].json[\"password\"];\nuser_details.s_firstname = firstname;\nuser_details.s_lastname = lastname;\nuser_details.s_phone = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"mobile\"];\nuser_details.s_state = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"destination_of_supply\"];\n// user_details.s_zipcode = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"delivery_address\"][\"zip_code\"];\nuser_details.s_address = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"delivery_address\"];\n// user_details.s_address_2 = \"\";\n//user_details.s_city = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"delivery_address\"][\"city\"];\nuser_details.s_country = \"IN\";\n\norder_obj.buyer_gsttin = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"gst\"]\norder_obj.hash = $node[\"Globals\"].json[\"hash\"];\norder_obj.company_id = $node[\"Globals\"].json[\"company_id\"];\norder_obj.custom_order = $node[\"Globals\"].json[\"custom_order\"];\norder_obj.invoice_no = $node[\"Get the po_details\"].json[\"data\"][\"shipment\"][\"invoice_number\"];\norder_obj.purchase_order_no = $node[\"Get the po_details\"].json[\"data\"][\"shipment\"][\"vendor_po_num\"][\"po_num\"][\"id\"];\norder_obj.invoice_date = new Date().toISOString().slice(0, 10);\norder_obj.start_date = '';\n//order_obj.buyer_gsttin =  $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"delivery_address\"][\"gstin\"]\norder_obj.po_date =  $node[\"Get the po_details\"].json[\"data\"][\"shipment\"][\"vendor_po_num\"][\"po_num\"][\"po_date\"]\norder_obj.sales_person = $node[\"Get the po_details\"].json[\"data\"][\"shipment\"][\"vendor_po_num\"][\"po_num\"][\"shakedeal_poc_details\"][\"email\"]\norder_obj.reference_number = $node[\"Wait for order\"].json[\"body\"][\"key\"]+Math.floor(1000+Math.random() * 9000);\norder_obj.user_data = user_details;\norder_obj.ship_to_another = \"1\";\norder_obj.payment_id = \"12\";\n//order_obj.payment_terms= $node[\"Get the po_details\"].json[\"data\"][\"shipment\"][\"vendor_po_num\"][\"payment_terms\"];\norder_obj.payment_terms = sd_payment_terms;\norder_obj.shipping_cost = \"\";\n//order_obj.advance_amount = round(order_total,1).toFixed(2).toString();\norder_obj.advance_amount =mozart_payment_terms==0?round(order_total,1).toFixed(2).toString():\"0\";\norder_obj.custom_order_type = $node[\"Get the po_details\"].json[\"data\"][\"shipment\"][\"vendor_po_num\"][\"po_num\"][\"po_type\"] == \"routing\"?\"1\":\"2\"\norder_obj.custom_client_type = \"2\"\norder_obj.product_data = products;\norder_obj.ajax_subtotal = sub_total.toString();\norder_obj.ajax_total = order_total.toString();\norder_obj.security_hash = $node[\"Globals\"].json[\"security_hash\"];\norder_obj.dispatch = $node[\"Globals\"].json[\"dispatch\"];\n\n\nitems[0].json.order_obj = order_obj;\n\nitems[0].json.updated_order_details_obj =  order_details;\nreturn items;"
+        "functionCode": "let order_obj = {};\nlet user_details = {};\nlet order_details = $node[\"Get the po_details\"].json[\"data\"][\"order_items\"];\nlet product_details = $node[\"Get the po_details\"].json[\"data\"][\"shipment\"][\"vendor_po_num\"].po_items;\nlet order_total = 0;\nlet sub_total = 0;\nlet products = [];\nlet firstname = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"company_name\"];\nlet lastname = \"\";\nlet vendor_id = $node[\"Get the po_details\"].json[\"data\"][\"shipment\"][\"vendor_po_num\"][\"vendor\"];\nlet mozart_payment_terms = $node[\"Get the po_details\"].json[\"data\"][\"shipment\"][\"vendor_po_num\"][\"payment_terms\"];\nlet sd_payment_terms = \"\";\nif(mozart_payment_terms == 0){\n    sd_payment_terms = \"Advance\"\n}else if(mozart_payment_terms == 7){\n    sd_payment_terms = \"7 Days Credit\"\n}else if(mozart_payment_terms == 15){\n    sd_payment_terms = \"15 Days Credit\"\n}else if(mozart_payment_terms == 30){\n    sd_payment_terms = \"30 Days Credit\"\n}\n\nlet issuesFlag = false;\nlet issue = \"\"\nlet missingProductData = [];\nlet a= \"\"\n\n//function to get the round value with precision\nfunction round(value, precision) {\n    var multiplier = Math.pow(10, precision || 0);\n    return Math.ceil(value * multiplier) / multiplier;\n}\n\norder_details.forEach(function(product,index){\n    let matched_product = product_details.filter(obj=>product.sdm_po_items_id == obj.id);\n    let product_price = matched_product[0].unit_price*product.quantity + (matched_product[0].unit_price*product.quantity*matched_product[0].tax_percentage)/100;\n    order_total = order_total+ product_price;\n    sub_total = sub_total + matched_product[0].unit_price*product.quantity;\n    if(!matched_product[0].product.product_name || !matched_product[0].hsn){\n        issuesFlag = true\n        issue = !matched_product[0].product.product_name?\"Product names are missing\":\"HSN Codes are missing\"\n        let productObj = {}\n        productObj.productName = matched_product[0].product.product_name;\n        productObj.sku = matched_product[0].product.id;\n        productObj.hsn = matched_product[0].hsn\n        missingProductData.push(productObj)\n    }\n    products[index]={};\n    products[index].product = matched_product[0].product.product_name;\n    products[index].productsku = matched_product[0].product.id;\n    //products[index].hsn_code = product.sd_mozart_vendor_product_mapping_id.product.hsn;\n    products[index].hsn_code = matched_product[0].hsn\n    products[index].tax_ids = \"\";\n    //products[index].price = product_price;\n    products[index].price = (matched_product[0].unit_price*matched_product[0].tax_percentage/100)+parseFloat(matched_product[0].unit_price);\n    //products[index].pri = matched_product[0].rate;\n    //products[index].rate_value = matched_product[0].tax_percentage.toString();\n    products[index].rate_value = \"18.000\";\n    products[index].pricecalculation = \"on\";\n    products[index].amount = product.quantity.toString();\n    products[index].status=\"D\";\n    products[index].main_category = \"3622\";\n    products[index].tax_ids = \"13\"\n    products[index].uom = matched_product[0].uom\n    //update the order details obj to update the order details in order\n    product.rate = matched_product[0].unit_price;\n    product.product_total = product_price;\n    product.tax_value = matched_product[0].tax_percentage;\n    product.sub_total = matched_product[0].unit_price*product.quantity;\n    product.plant = $node[\"Get the po_details\"].json[\"data\"][\"shipment\"][\"vendor_po_num\"][\"po_items\"][0][\"plant\"];\n    //product.sd_mozart_vendor_product_mapping_id.vendor = vendor_id;\n}); \nuser_details.b_firstname = firstname;\nuser_details.b_lastname = lastname;\nuser_details.b_phone = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"mobile\"];\nuser_details.b_state = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"destination_of_supply\"];\n//user_details.b_zipcode = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"delivery_address\"][\"zip_code\"];\nuser_details.b_address = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"delivery_address\"];\n// user_details.b_address_2 = \"\";\n// user_details.b_city = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"delivery_address\"][\"city\"];\nuser_details.b_country = \"IN\"\nuser_details.email = $node[\"Get the po_details\"].json[\"data\"][\"shipment\"][\"vendor_po_num\"][\"po_num\"][\"issuer_name\"][\"user\"][\"email\"];\nuser_details.cname = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"company_name\"];\nuser_details.company_name = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"company_name\"];\n user_details.passwrod = $node[\"Globals\"].json[\"password\"];\nuser_details.s_firstname = firstname;\nuser_details.s_lastname = lastname;\nuser_details.s_phone = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"mobile\"];\nuser_details.s_state = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"destination_of_supply\"];\n// user_details.s_zipcode = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"delivery_address\"][\"zip_code\"];\nuser_details.s_address = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"delivery_address\"];\n// user_details.s_address_2 = \"\";\n//user_details.s_city = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"delivery_address\"][\"city\"];\nuser_details.s_country = \"IN\";\n\norder_obj.buyer_gsttin = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"gst\"]\norder_obj.hash = $node[\"Globals\"].json[\"hash\"];\norder_obj.company_id = $node[\"Globals\"].json[\"company_id\"];\norder_obj.custom_order = $node[\"Globals\"].json[\"custom_order\"];\norder_obj.invoice_no = $node[\"Get the po_details\"].json[\"data\"][\"shipment\"][\"invoice_number\"];\norder_obj.purchase_order_no = $node[\"Get the po_details\"].json[\"data\"][\"shipment\"][\"vendor_po_num\"][\"po_num\"][\"id\"];\norder_obj.invoice_date = new Date().toISOString().slice(0, 10);\norder_obj.start_date = '';\n//order_obj.buyer_gsttin =  $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"delivery_address\"][\"gstin\"]\norder_obj.po_date =  $node[\"Get the po_details\"].json[\"data\"][\"shipment\"][\"vendor_po_num\"][\"po_num\"][\"po_date\"]\norder_obj.sales_person = $node[\"Get the po_details\"].json[\"data\"][\"shipment\"][\"vendor_po_num\"][\"po_num\"][\"shakedeal_poc_details\"][\"email\"]\norder_obj.reference_number = $node[\"Wait for order\"].json[\"body\"][\"key\"]+Math.floor(1000+Math.random() * 9000);\norder_obj.user_data = user_details;\norder_obj.ship_to_another = \"1\";\norder_obj.payment_id = \"12\";\n//order_obj.payment_terms= $node[\"Get the po_details\"].json[\"data\"][\"shipment\"][\"vendor_po_num\"][\"payment_terms\"];\norder_obj.payment_terms = sd_payment_terms;\norder_obj.shipping_cost = \"\";\n//order_obj.advance_amount = round(order_total,1).toFixed(2).toString();\norder_obj.advance_amount =mozart_payment_terms==0?round(order_total,1).toFixed(2).toString():\"0\";\norder_obj.custom_order_type = $node[\"Get the po_details\"].json[\"data\"][\"shipment\"][\"vendor_po_num\"][\"po_num\"][\"po_type\"] == \"routing\"?\"1\":\"2\"\norder_obj.custom_client_type = \"2\"\norder_obj.product_data = products;\norder_obj.ajax_subtotal = sub_total.toString();\norder_obj.ajax_total = order_total.toString();\norder_obj.security_hash = $node[\"Globals\"].json[\"security_hash\"];\norder_obj.dispatch = $node[\"Globals\"].json[\"dispatch\"];\nif(issuesFlag){\n    missingProductData.forEach(function(mpd,index){\n        let text = `${mpd.sku} : `;\n        if(!mpd.productName && !mpd.hsn){\n            text = text + \"Product name and HSN code is missing \"\n        }else if(!mpd.productName && mpd.hsn){\n            text = text+\"Product name is missing\"\n        }else if(!mpd.hsn && mpd.mpd.productName){\n            text = text+\"HSN Code is missing\"\n        }\n\n        a=a+`<li>${text}</li>`\n    })\n}\n\nitems[0].json.htmlText = `<ol>${a}</ol>`\nitems[0].json.issuesFlag = issuesFlag;\nitems[0].json.issue = issue;\nitems[0].json.order_obj = order_obj;\n\nitems[0].json.updated_order_details_obj =  order_details;\nreturn items;"
       },
       "name": "Function for creating order details object",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1440,
+        1200,
         300
       ]
     },
@@ -512,7 +530,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1240,
+        1040,
         300
       ],
       "credentials": {
@@ -730,7 +748,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        620,
+        420,
         300
       ],
       "credentials": {
@@ -1161,10 +1179,51 @@
           "name": "Mozart DMS Token"
         }
       }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Function for creating order details object\"].json[\"issuesFlag\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "IF1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1420,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "=handyalsairam9177@gmail.com",
+        "toEmail": "bijan.krishna@shakedeal.com",
+        "subject": "={{$node[\"Function for creating order details object\"].json[\"issue\"]}}",
+        "html": "=<p>Below are missing details for products:</p>\n{{$node[\"Function for creating order details object\"].json[\"htmlText\"]}}",
+        "options": {}
+      },
+      "name": "Send Email1",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        1640,
+        80
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "17",
+          "name": "smtp(sai)creds"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-02-03T09:54:34.366Z"
+  "updatedAt": "2023-03-01T10:15:43.959Z"
 }
