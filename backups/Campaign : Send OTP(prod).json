@@ -5,7 +5,7 @@
       "main": [
         [
           {
-            "node": "Get Reward Link Details",
+            "node": "Update the mobile number",
             "type": "main",
             "index": 0
           }
@@ -167,6 +167,17 @@
           }
         ]
       ]
+    },
+    "Update the mobile number": {
+      "main": [
+        [
+          {
+            "node": "Get Reward Link Details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2022-10-27T10:47:11.521Z",
@@ -199,7 +210,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        780,
+        560,
         340
       ]
     },
@@ -414,7 +425,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        940,
+        880,
         340
       ],
       "credentials": {
@@ -436,7 +447,7 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        300,
+        160,
         360
       ],
       "webhookId": "374a9525-9b9a-41e9-9b71-17d22418576b",
@@ -503,7 +514,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        520,
+        380,
         360
       ],
       "disabled": true
@@ -514,7 +525,7 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        880,
+        740,
         620
       ]
     },
@@ -529,10 +540,39 @@
         2360,
         40
       ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sp_reward_links/{{$node[\"Webhook\"].json[\"body\"][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "phone",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"mobile\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update the mobile number",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        780,
+        40
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "57",
+          "name": "Adani header auth"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-01-05T08:53:01.574Z"
+  "updatedAt": "2023-03-02T05:53:44.620Z"
 }
