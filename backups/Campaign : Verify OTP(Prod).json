@@ -247,6 +247,10 @@
             {
               "name": "token_last_updated",
               "value": "={{new Date().toISOString()}}"
+            },
+            {
+              "name": "verified",
+              "value": "=true"
             }
           ]
         }
@@ -269,5 +273,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-12-15T09:25:56.997Z"
+  "updatedAt": "2023-03-02T12:29:31.550Z"
 }
