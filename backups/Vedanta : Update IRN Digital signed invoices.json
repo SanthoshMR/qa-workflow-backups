@@ -3,13 +3,7 @@
   "connections": {
     "Start": {
       "main": [
-        [
-          {
-            "node": "Get url and token",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Get Cloud Files": {
@@ -122,6 +116,17 @@
           }
         ]
       ]
+    },
+    "Cron": {
+      "main": [
+        [
+          {
+            "node": "Get url and token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2023-02-02T10:08:26.432Z",
@@ -134,8 +139,8 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        80,
-        280
+        -40,
+        80
       ]
     },
     {
@@ -411,10 +416,30 @@
           "name": "SD Cloud"
         }
       }
+    },
+    {
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "mode": "everyX"
+            }
+          ]
+        }
+      },
+      "name": "Cron",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        -20,
+        280
+      ]
     }
   ],
-  "settings": {},
+  "settings": {
+    "timezone": "Asia/Calcutta"
+  },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-02-22T09:27:11.105Z"
+  "updatedAt": "2023-03-03T09:52:07.964Z"
 }
