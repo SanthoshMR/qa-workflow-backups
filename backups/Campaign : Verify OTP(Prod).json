@@ -222,7 +222,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let responseData = [];\n\nresponseData.push({\n    json: {   \"success\":false,   \"message\":\"OTP Invalid/Expired\"}\t\t\t\n});\n\nreturn responseData;"
+        "functionCode": "let responseData = [];\n\nresponseData.push({\n    json: {   \"success\":false,   \"message\":\"Invalid OTP/Code\"}\t\t\t\n});\n\nreturn responseData;"
       },
       "name": "Invalid Response",
       "type": "n8n-nodes-base.function",
@@ -273,5 +273,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-03-02T12:29:31.550Z"
+  "updatedAt": "2023-03-03T11:11:57.345Z"
 }
