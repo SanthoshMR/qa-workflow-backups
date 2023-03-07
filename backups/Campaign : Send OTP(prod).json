@@ -217,7 +217,7 @@
     {
       "parameters": {
         "dataType": "string",
-        "value1": "={{$node[\"Get Reward Link Details\"].json[\"data\"][0][\"otp_mode\"]}}",
+        "value1": "={{$node[\"Get Reward Link Details\"].json[\"data\"][0][\"reward_campaign\"][\"otp_mode\"]}}",
         "rules": {
           "rules": [
             {
@@ -418,7 +418,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sp_reward_links?filter={\"id\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"id\"]}}\"}}&fields=*,reward_campaign.email_from,reward_campaign.email_regards",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sp_reward_links?filter={\"id\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"id\"]}}\"}}&fields=*,reward_campaign.email_from,reward_campaign.email_regards,reward_campaign.otp_mode",
         "options": {}
       },
       "name": "Get Reward Link Details",
@@ -574,5 +574,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-03-02T05:53:44.620Z"
+  "updatedAt": "2023-03-07T07:09:03.261Z"
 }
