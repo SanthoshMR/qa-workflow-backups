@@ -170,7 +170,7 @@
     },
     {
       "parameters": {
-        "functionCode": "item.message=\"\";\nif($node[\"Check Reference Number\"].json[\"data\"].length > 0){\n  if($node[\"Check Reference Number\"].json[\"data\"][0][\"mobile_number\"]){\n    item.resposecode=200;\n  }\n  else{\n    item.resposecode=302;\n    item.message=\"notregisteredenumber\";\n  }\n}\nelse{\n  item.resposecode=302;\n  item.message=\"incorrectcardnumber\";\n}\n\nreturn item;"
+        "functionCode": "item.message=\"\";\nif($node[\"Check Reference Number\"].json[\"data\"].length > 0){\n  if($node[\"Check Reference Number\"].json[\"data\"][0][\"mobile_number\"]){\n    item.resposecode=200;\n     item.message=\"registerednumber\";\n  }\n  else{\n    item.resposecode=200;\n    item.message=\"unregisterednumber\";\n  }\n}\nelse{\n  item.resposecode=200;\n  item.message=\"incorrectreferenceno\";\n}\n\nreturn item;"
       },
       "name": "Validate Data",
       "type": "n8n-nodes-base.functionItem",
@@ -268,5 +268,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-03-08T05:11:24.406Z"
+  "updatedAt": "2023-03-13T11:26:42.464Z"
 }
