@@ -1,11 +1,6 @@
 {
   "active": false,
   "connections": {
-    "Start": {
-      "main": [
-        []
-      ]
-    },
     "Get Cloud Files": {
       "main": [
         [
@@ -127,6 +122,50 @@
           }
         ]
       ]
+    },
+    "Move All Files": {
+      "main": [
+        [
+          {
+            "node": "Get the pending invoices",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the pending invoices": {
+      "main": [
+        [
+          {
+            "node": "Move the pending files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NoOp": {
+      "main": [
+        [
+          {
+            "node": "Get the pending invoices",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "update the order invoice in vpanel": {
+      "main": [
+        [
+          {
+            "node": "Get the pending invoices",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2023-02-02T10:08:26.432Z",
@@ -147,7 +186,7 @@
       "parameters": {
         "resource": "folder",
         "operation": "list",
-        "path": "IRN-digitally-signed/"
+        "path": "IRN-digitally-signed-qa/"
       },
       "name": "Get Cloud Files",
       "type": "n8n-nodes-base.nextCloud",
@@ -166,7 +205,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "=https://sdqa.mozart.shakedeal.com/items/sdm_order_invoices?filter={\"id\":{\"_eq\":\"{{$node[\"Get Cloud Files\"].json[\"path\"].replace('es/santhosh/IRN-digitally-signed/','').replace('.PDF','').trim()}}\"}}&fields=id,order.*",
+        "url": "=https://sdqa.mozart.shakedeal.com/items/sdm_order_invoices?filter={\"id\":{\"_eq\":\"{{$node[\"Get Cloud Files\"].json[\"path\"].replace('es/santhosh/IRN-digitally-signed-qa/','').replace('.pdf','').trim()}}\"}}&fields=id,order.*",
         "options": {}
       },
       "name": "HTTP Request",
@@ -205,7 +244,7 @@
     {
       "parameters": {
         "operation": "download",
-        "path": "=IRN-digitally-signed/{{$node[\"IF\"].json[\"data\"][0][\"id\"]+\".PDF\"}}"
+        "path": "=IRN-digitally-signed-qa/{{$node[\"IF\"].json[\"data\"][0][\"id\"]+\".pdf\"}}"
       },
       "name": "Nextcloud",
       "type": "n8n-nodes-base.nextCloud",
@@ -392,15 +431,15 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        1180,
-        560
+        1700,
+        740
       ]
     },
     {
       "parameters": {
         "operation": "move",
-        "path": "=IRN-digitally-signed/{{$node[\"Nextcloud\"].json[\"data\"][0][\"id\"]+\".PDF\"}}",
-        "toPath": "=IRN-old-digitally-signed/{{$node[\"Nextcloud\"].json[\"data\"][0][\"id\"]+\".PDF\"}}"
+        "path": "=IRN-digitally-signed-qa/{{$node[\"Nextcloud\"].json[\"data\"][0][\"id\"]+\".pdf\"}}",
+        "toPath": "=IRN-old-digitally-signed-qa/{{$node[\"Nextcloud\"].json[\"data\"][0][\"id\"]+\".pdf\"}}"
       },
       "name": "Move All Files",
       "type": "n8n-nodes-base.nextCloud",
@@ -434,6 +473,47 @@
         -20,
         280
       ]
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "operation": "list",
+        "path": "=IRN-digitally-signed-qa/"
+      },
+      "name": "Get the pending invoices",
+      "type": "n8n-nodes-base.nextCloud",
+      "typeVersion": 1,
+      "position": [
+        2360,
+        440
+      ],
+      "executeOnce": true,
+      "credentials": {
+        "nextCloudApi": {
+          "id": "43",
+          "name": "SD Cloud"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "move",
+        "path": "=IRN-digitally-signed-qa/{{$node[\"Get the pending invoices\"].json[\"path\"].replace(\"es/santhosh/IRN-digitally-signed-qa\",\"\")}}",
+        "toPath": "=Invoices-with-old-po/{{$node[\"Get the pending invoices\"].json[\"path\"].replace(\"es/santhosh/IRN-digitally-signed-qa\",\"\")}}"
+      },
+      "name": "Move the pending files",
+      "type": "n8n-nodes-base.nextCloud",
+      "typeVersion": 1,
+      "position": [
+        2680,
+        440
+      ],
+      "credentials": {
+        "nextCloudApi": {
+          "id": "43",
+          "name": "SD Cloud"
+        }
+      }
     }
   ],
   "settings": {
@@ -441,5 +521,5 @@
   },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-03-03T09:52:07.964Z"
+  "updatedAt": "2023-03-16T12:03:34.283Z"
 }
