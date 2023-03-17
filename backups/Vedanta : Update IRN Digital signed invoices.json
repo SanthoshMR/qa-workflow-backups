@@ -499,7 +499,7 @@
       "parameters": {
         "operation": "move",
         "path": "=IRN-digitally-signed-qa/{{$node[\"Get the pending invoices\"].json[\"path\"].replace(\"es/santhosh/IRN-digitally-signed-qa\",\"\")}}",
-        "toPath": "=Invoices-with-old-po/{{$node[\"Get the pending invoices\"].json[\"path\"].replace(\"es/santhosh/IRN-digitally-signed-qa\",\"\")}}"
+        "toPath": "=Invoices-with-old-po-qa/{{$node[\"Get the pending invoices\"].json[\"path\"].replace(\"es/santhosh/IRN-digitally-signed-qa\",\"\")}}"
       },
       "name": "Move the pending files",
       "type": "n8n-nodes-base.nextCloud",
@@ -521,5 +521,5 @@
   },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-03-16T12:03:34.283Z"
+  "updatedAt": "2023-03-17T11:45:57.387Z"
 }
