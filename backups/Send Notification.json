@@ -198,12 +198,12 @@
               "value": "whatsapp"
             },
             {
-              "name": "media_url",
-              "value": "={{$node[\"Webhook\"].json[\"body\"][\"media_url\"]}}"
-            },
-            {
               "name": "callback_url",
               "value": "https://qan8n.shakedeal.com/webhook/whatsappcallback"
+            },
+            {
+              "name": "media_url",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"media_url\"]}}"
             }
           ]
         },
@@ -262,5 +262,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-01-18T07:16:22.512Z"
+  "updatedAt": "2023-03-20T13:32:35.988Z"
 }
