@@ -82,7 +82,7 @@
       "main": [
         [
           {
-            "node": "Get pr_advance payment",
+            "node": "Get the shipment items",
             "type": "main",
             "index": 0
           }
@@ -245,6 +245,39 @@
           }
         ]
       ]
+    },
+    "Get the shipment items": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request2": {
+      "main": [
+        [
+          {
+            "node": "Get pr_advance payment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2022-09-14T06:59:46.778Z",
@@ -272,7 +305,7 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        100,
+        -300,
         420
       ],
       "webhookId": "6068e010-29ce-48cd-bfa2-ed6de444d572",
@@ -320,7 +353,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        460,
+        60,
         420
       ]
     },
@@ -335,7 +368,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        660,
+        260,
         420
       ],
       "credentials": {
@@ -358,7 +391,7 @@
       "type": "n8n-nodes-base.moveBinaryData",
       "typeVersion": 1,
       "position": [
-        880,
+        480,
         420
       ]
     },
@@ -379,7 +412,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1140,
+        740,
         420
       ],
       "credentials": {
@@ -392,14 +425,14 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_vendor_pos/{{$node[\"Wait for shipment\"].json[\"body\"][\"payload\"][\"vendor_po_number\"]}}",
+        "url": "={{$node[\"Globals\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_vendor_pos/{{$node[\"Wait for shipment\"].json[\"body\"][\"payload\"][\"vendor_po_number\"]}}?fields = id,po_number,shipments.*",
         "options": {}
       },
       "name": "Get the po number",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1400,
+        1000,
         420
       ],
       "credentials": {
@@ -419,7 +452,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1640,
+        1240,
         420
       ],
       "credentials": {
@@ -472,7 +505,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1900,
+        1500,
         420
       ],
       "credentials": {
@@ -505,7 +538,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        280,
+        -120,
         420
       ],
       "credentials": {
@@ -903,10 +936,65 @@
           "name": "VendorPanel DMS Token"
         }
       }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_shipments/{{$node[\"Wait for shipment\"].json[\"body\"][\"key\"]}}?fields=shipment_items.*.*",
+        "options": {}
+      },
+      "name": "Get the shipment items",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1720,
+        420
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let sdvShipmentItems = $node[\"Get the shipment items\"].json[\"data\"][\"shipment_items\"];\nlet sdmShipmentId = $node[\"Create shipment in mozart\"].json[\"data\"][\"id\"];\nlet sdmShipmentItems = [];\nsdvShipmentItems.forEach(function(shipmentItem,index){\n  sdmShipmentItems[index] ={};\n  sdmShipmentItems[index].sdm_shipments_id = sdmShipmentId;\n  sdmShipmentItems[index].sdm_po_items_id = shipmentItem.sdv_vendor_pos_sdv_products_id.po_items_id;\n  sdmShipmentItems[index].shipment_qty = shipmentItem.shipment_qty\n})\n\nitems[0].json.sdmShipmentItems = sdmShipmentItems\n\nreturn items;"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1840,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"mozart_dms_url\"]}}/items/sdm_shipment_items",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Function\"].json[\"sdmShipmentItems\"]}}"
+      },
+      "name": "HTTP Request2",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2080,
+        180
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-03-14T06:34:54.277Z"
+  "updatedAt": "2023-03-20T07:11:13.688Z"
 }
