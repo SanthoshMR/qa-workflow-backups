@@ -144,7 +144,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_orders?filter={\"order_id\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"order_id\"]}}\"}}&fields=order_id,shipment.*,shipment.vendor_po_num.po_num.id,shipment.vendor_po_num.po_num.po_file,shipment.vendor_po_num.id",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_orders?filter={\"order_id\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"order_id\"]}}\"}}&fields=order_id,shipment.*,shipment.vendor_po_num.po_num.id,shipment.vendor_po_num.po_num.po_file,shipment.vendor_po_num.id,user_created.*,shipment.vendor_po_num.operation_agent.*",
         "options": {}
       },
       "name": "Get the order",
@@ -196,7 +196,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Function to split files\"].json[\"dms_url\"]}}/assets/{{$node[\"Function to split files\"].json[\"id\"]}}",
+        "url": "=https://sdqa.mozart.shakedeal.com/assets/{{$node[\"Function to split files\"].json[\"id\"]}}",
         "allowUnauthorizedCerts": true,
         "responseFormat": "file",
         "dataPropertyName": "=data",
@@ -209,6 +209,7 @@
         1660,
         260
       ],
+      "executeOnce": true,
       "credentials": {
         "httpHeaderAuth": {
           "id": "31",
@@ -231,9 +232,10 @@
     {
       "parameters": {
         "fromEmail": "=handyalasairam9177@gmail.com",
-        "toEmail": "=shakedeal.web@gmail.com,ranjith@shakedeal.com,rachayya.hiremath@shakedeal.com",
+        "toEmail": "=sairam.reddy@shakedeal.com,bijan.krishna@shakedeal.com",
+        "ccEmail": "={{$node[\"Get the order\"].json[\"data\"][0][\"shipment\"][\"vendor_po_num\"][\"operation_agent\"][\"email\"]}}",
         "subject": "=Action needed : Generate IRN for invoice #{{$node[\"Webhook\"].json[\"body\"][\"invoice_number\"]}}",
-        "html": "=<p>Please generate IRN invoice for the Invoice # INV12039 which is punched against Order # {{$node[\"Webhook\"].json[\"body\"][\"order_id\"]}}</p>\n{{$node[\"Function to club the binay files\"].json[\"tableHtml\"]}}\n<br>\n<br>\n<p>Once it is generated please mandatorily upload digitally signed IRN invoice in folder which is shared by Tech team.</p>",
+        "html": "=<p>Please generate IRN invoice for the Invoice # {{$node[\"Webhook\"].json[\"body\"][\"invoice_number\"]}} which is punched against Order # {{$node[\"Webhook\"].json[\"body\"][\"order_id\"]}}</p>\n{{$node[\"Function to club the binay files\"].json[\"tableHtml\"]}}\n<br>\n<br>\n<p>Once it is generated please mandatorily upload digitally signed IRN invoice in folder which is shared by Tech team.</p>",
         "attachments": "={{$node[\"Function to club the binay files\"].json[\"binary_keys\"]}}",
         "options": {}
       },
@@ -255,5 +257,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-02-28T11:54:18.120Z"
+  "updatedAt": "2023-03-21T10:09:15.616Z"
 }
