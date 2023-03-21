@@ -833,7 +833,7 @@
           "parameter": [
             {
               "name": "client_id",
-              "value": "=1000.WBSVSVM7UXFERT32STIOQLG3CFWOKP"
+              "value": "=1000.UF5SWAYP2AFJZY340NXOPSQEQ7RC8A"
             },
             {
               "name": "grant_type",
@@ -841,15 +841,15 @@
             },
             {
               "name": "redirect_uri",
-              "value": "http://localhost:5678/webhook-test/sd_invoice"
+              "value": "=https://qan8n.shakedeal.com/webhook/get_invoice_zoho"
             },
             {
               "name": "client_secret",
-              "value": "=71afde1862948a64f91e451cdfe7f8c78250d32f7e"
+              "value": "=f17bf24f1a69269ca8134cd4771c4803505100ef2d"
             },
             {
               "name": "refresh_token",
-              "value": "=1000.5ff4be7b6c923c0d40d2b96565226359.bd12d19eea668016c7e40b698bb6a0a0"
+              "value": "=1000.77e0d632e4a1d8df6bb963794b7094fc.6ed78cf03d146b533f2c7d7524c6d752"
             }
           ]
         }
@@ -2449,5 +2449,5 @@
   },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-03-20T12:38:45.310Z"
+  "updatedAt": "2023-03-21T09:21:35.839Z"
 }
