@@ -5,14 +5,14 @@
       "main": [
         [
           {
-            "node": "Function",
+            "node": "Response from SES",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Function": {
+    "Response from SES": {
       "main": [
         []
       ]
@@ -28,8 +28,8 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        240,
-        300
+        -140,
+        260
       ]
     },
     {
@@ -43,26 +43,108 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        320,
-        500
+        40,
+        400
       ],
       "webhookId": "6aaeeb8a-89cf-428b-bda4-22a990bd4d75"
     },
     {
       "parameters": {
-        "functionCode": "let returnItems = [];\nreturnItems.push({\n  json:{\n    requestId:$node[\"Webhook\"].json[\"body\"][\"requestId\"],\n    timestamp:$node[\"Webhook\"].json[\"body\"][\"timestamp\"]\n  }\n})\n\nreturn returnItems"
+        "functionCode": "let returnItems = [];\nreturnItems.push({\n  json:{\n    records:$node[\"Webhook\"].json[\"body\"][\"records\"]\n  }\n})\n\nreturn returnItems"
       },
-      "name": "Function",
+      "name": "Function1",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        540,
-        500
+        40,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let returnItems = [];\nreturnItems.push({\n  json:{\n    requestId:$node[\"Webhook\"].json[\"body\"][\"requestId\"],\n    timestamp:$node[\"Webhook\"].json[\"body\"][\"timestamp\"]\n  }\n})\n\nreturn returnItems"
+      },
+      "name": "Function2",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        220,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://sdqa.shakedeal.com/index.php?dispatch=gift_voucher.resend",
+        "responseFormat": "string",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "records",
+              "value": "={{$node[\"Response from SES\"].json[\"data\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        520,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let returnItems = [];\nreturnItems.push({\n  json:{\n    requestId:$node[\"Webhook\"].json[\"body\"][\"requestId\"],\n    timestamp:$node[\"Webhook\"].json[\"body\"][\"timestamp\"]\n  }\n})\n\nreturn returnItems"
+      },
+      "name": "Function3",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        700,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let returnItems = [];\nlet data = [];\nconst records = $node[\"Webhook\"].json[\"body\"][\"records\"];\nrecords.forEach((obj,index)=>{\n  data[index]={};\n  // data[index].message = obj.data;\n\n  data[index].message = decodeURIComponent(obj.data);\n\n});\n\nreturnItems.push({\n  json:{\n    data\n  }\n})\n\nreturn returnItems;"
+      },
+      "name": "Response from SES",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        280,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://sdqa.shakedeal.com/index.php?dispatch=gift_voucher.resend",
+        "responseFormat": "string",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "records",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"records\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "HTTP Request1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        460,
+        120
       ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-03-24T10:00:35.818Z"
+  "updatedAt": "2023-03-27T11:58:00.106Z"
 }
