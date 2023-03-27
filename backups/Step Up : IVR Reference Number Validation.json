@@ -170,7 +170,7 @@
     },
     {
       "parameters": {
-        "functionCode": "item.message=\"\";\nif($node[\"Check Reference Number\"].json[\"data\"].length > 0){\n  if($node[\"Check Reference Number\"].json[\"data\"][0][\"mobile_number\"]){\n    item.resposecode=200;\n     item.message=\"registerednumber\";\n  }\n  else{\n    item.resposecode=200;\n    item.message=\"unregisterednumber\";\n  }\n}\nelse{\n  item.resposecode=200;\n  item.message=\"incorrectreferenceno\";\n}\n\nreturn item;"
+        "functionCode": "item.message=\"\";\nif($node[\"Check Reference Number\"].json[\"data\"].length > 0){\n  if($node[\"Check Reference Number\"].json[\"data\"][0][\"status\"] == \"RequestForActivation\"){\n    item.resposecode=200;\n    item.message=\"requestedforactivation\";\n  }\n  else if($node[\"Check Reference Number\"].json[\"data\"][0][\"status\"] == \"Activated\"){\n    item.resposecode=200;\n    item.message=\"activated\";\n  }\n  else if($node[\"Check Reference Number\"].json[\"data\"][0][\"status\"] == \"AssignedToUser\"){\n    if($node[\"Check Reference Number\"].json[\"data\"][0][\"mobile_number\"]){\n      item.resposecode=200;\n      item.message=\"registerednumber\";\n    }\n    else{\n      item.resposecode=200;\n      item.message=\"unregisterednumber\";\n    }\n  }\n \n}\nelse{\n  item.resposecode=200;\n  item.message=\"incorrectreferenceno\";\n}\n\nreturn item;"
       },
       "name": "Validate Data",
       "type": "n8n-nodes-base.functionItem",
@@ -186,7 +186,7 @@
           "boolean": [
             {
               "value1": true,
-              "value2": "={{$node[\"Validate Data\"].json[\"data\"][0][\"mobile_number\"]!=null?true:false}}"
+              "value2": "={{$node[\"Validate Data\"].json[\"data\"][0][\"status\"]==\"AssignedToUser\" && $node[\"Validate Data\"].json[\"data\"][0][\"mobile_number\"]!=null?true:false}}"
             }
           ]
         }
@@ -268,5 +268,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-03-14T04:37:19.101Z"
+  "updatedAt": "2023-03-27T05:53:02.308Z"
 }
