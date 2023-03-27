@@ -27,7 +27,7 @@
       "main": [
         [
           {
-            "node": "Respond to Webhook",
+            "node": "Validate Data",
             "type": "main",
             "index": 0
           }
@@ -73,6 +73,17 @@
           }
         ]
       ]
+    },
+    "Validate Data": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2023-02-20T06:48:25.364Z",
@@ -99,16 +110,17 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        -660,
+        -800,
         60
       ],
       "webhookId": "43c75623-116a-45b8-a595-72dab08a6d51"
     },
     {
       "parameters": {
-        "respondWith": "noData",
+        "respondWith": "text",
+        "responseBody": "={\"select\":\"{{$node[\"Validate Data\"].json[\"message\"]}}\"}",
         "options": {
-          "responseCode": "={{$node[\"Check Reference Number\"].json[\"data\"].length > 0 ? 200 : 302}}"
+          "responseCode": "={{$node[\"Validate Data\"].json[\"resposecode\"]}}"
         }
       },
       "name": "Respond to Webhook",
@@ -129,7 +141,7 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 1,
       "position": [
-        -340,
+        -480,
         60
       ],
       "credentials": {
@@ -149,7 +161,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        -160,
+        -300,
         60
       ],
       "credentials": {
@@ -175,7 +187,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        -500,
+        -640,
         60
       ]
     },
@@ -236,10 +248,22 @@
           "name": "ShakePe GCI - Zeus QA"
         }
       }
+    },
+    {
+      "parameters": {
+        "functionCode": "item.message=\"\";\nif($node[\"Check Reference Number\"].json[\"data\"].length > 0){\n  item.resposecode=200;\n  item.message=\"validotp\";\n}\nelse{\n  item.resposecode=200;\n  item.message=\"invalidotpone\";\n}\n\nreturn item;"
+      },
+      "name": "Validate Data",
+      "type": "n8n-nodes-base.functionItem",
+      "typeVersion": 1,
+      "position": [
+        -140,
+        60
+      ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-03-14T04:55:59.233Z"
+  "updatedAt": "2023-03-27T06:12:28.378Z"
 }
