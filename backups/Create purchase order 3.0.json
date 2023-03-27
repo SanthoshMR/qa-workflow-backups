@@ -2333,7 +2333,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/tally_pos?filter={\"id\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"keys\"][0]}}\"}}",
+        "url": "=https://zeus.shakedeal.com/items/tally_pos?filter={\"id\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"keys\"][0]}}\"}}",
         "options": {}
       },
       "name": "Get the PO",
@@ -2352,7 +2352,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let tally_po = {};\nlet po_data = {}\n\n//Create contact obj\nlet contact = {};\ncontact.contact_name = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"company_name\"];\ncontact.first_name = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"company_name\"];\ncontact.last_name = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"last_name\"];\ncontact.email = $node[\"wait for order data\"].json[\"body\"][\"contact_details\"][\"email\"];\ncontact.mobile = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"mobile\"];\ncontact.gst_no = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"gst\"];\ncontact.pan_no = $node[\"wait for order data\"].json[\"body\"][\"contact_details\"][\"pan_no\"];\ncontact.company_name = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"company_name\"];\n\n//Create vendor obj\nlet vendor = {};\nvendor.contact_name = $node[\"Get po_details\"].json[\"data\"][0][\"vendor\"][\"vendor_name\"];\nvendor.first_name = $node[\"Get po_details\"].json[\"data\"][0][\"vendor\"][\"vendor_name\"];\nvendor.last_name = \"\";\nvendor.email = $node[\"Get po_details\"].json[\"data\"][0][\"vendor\"][\"id\"].trim();\nvendor.mobile = $node[\"Get po_details\"].json[\"data\"][0][\"vendor\"][\"vendor_phone\"];\nvendor.gst_no = $node[\"Get po_details\"].json[\"data\"][0][\"vendor\"][\"gstin\"];\nvendor.pan_no = $node[\"Get po_details\"].json[\"data\"][0][\"vendor\"][\"pan_no\"];\nvendor.company_name = $node[\"Get po_details\"].json[\"data\"][0][\"vendor\"][\"vendor_name\"];\n\n//Create line items obj\nlet lineItems = [];\nlet poItems = $node[\"Get po_details\"].json[\"data\"][0][\"po_items\"];\npoItems.forEach(function(poItem,index){\n  lineItems[index]={}\n  lineItems[index].item_name = poItem.product.product_name;\n  lineItems[index].description = poItem.product.description;\n  lineItems[index].sku = poItem.product.id;\n  lineItems[index].hsn_or_sac = poItem.hsn;\n  lineItems[index].unit = poItem.uom;\n  lineItems[index].quantity = poItem.requested_qty;\n  lineItems[index].rate = poItem.unit_price;\n  lineItems[index].product_type = \"goods\";\n  lineItems[index].tax_percentage = poItem.tax_percentage;\n})\n\n\npo_data.reference_number = $node[\"Function to create po\"].json[\"reference_number\"];\npo_data.date = $node[\"Function to create po\"].json[\"date\"];\npo_data.expected_delivery_date = $node[\"Function to create po\"].json[\"expected_delivery_date\"];\npo_data.payment_terms = $node[\"Function to create po\"].json[\"payment_terms\"];\npo_data.source_of_supply = $node[\"Function to create po\"].json[\"source_of_supply\"];\npo_data.destination_of_supply = $node[\"Function to create po\"].json[\"destination_of_supply\"];\npo_data.delivery_address = $node[\"Function to create po\"].json[\"delivery_address\"];\npo_data.billing_address = \"\";\npo_data.contact = contact;\npo_data.vendor = vendor;\npo_data.line_items = lineItems;\n\n\ntally_po.id = $node[\"Webhook\"].json[\"body\"][\"keys\"][0];\ntally_po.po_data = po_data;\n\nitems[0].json.tally_po = tally_po\nreturn items;"
+        "functionCode": "let tally_po = {};\nlet po_data = {}\n\n//Create contact obj\nlet contact = {};\ncontact.contact_name = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"company_name\"];\ncontact.first_name = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"company_name\"];\ncontact.last_name = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"last_name\"];\ncontact.email = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"email\"];\ncontact.mobile = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"mobile\"];\ncontact.gst_no = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"gst\"];\ncontact.pan_no = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"pan\"];\ncontact.company_name = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"company_name\"];\n\n//Create vendor obj\nlet vendor = {};\nvendor.contact_name = $node[\"Get po_details\"].json[\"data\"][0][\"vendor\"][\"vendor_name\"];\nvendor.first_name = $node[\"Get po_details\"].json[\"data\"][0][\"vendor\"][\"vendor_name\"];\nvendor.last_name = \"\";\nvendor.email = $node[\"Get po_details\"].json[\"data\"][0][\"vendor\"][\"id\"].trim();\nvendor.mobile = $node[\"Get po_details\"].json[\"data\"][0][\"vendor\"][\"vendor_phone\"];\nvendor.gst_no = $node[\"Get po_details\"].json[\"data\"][0][\"vendor\"][\"gstin\"];\nvendor.pan_no = $node[\"Get po_details\"].json[\"data\"][0][\"vendor\"][\"pan_no\"];\nvendor.company_name = $node[\"Get po_details\"].json[\"data\"][0][\"vendor\"][\"vendor_name\"];\n\n//Create line items obj\nlet lineItems = [];\nlet poItems = $node[\"Get po_details\"].json[\"data\"][0][\"po_items\"];\npoItems.forEach(function(poItem,index){\n  lineItems[index]={}\n  lineItems[index].item_name = poItem.product.product_name;\n  lineItems[index].description = poItem.product.description;\n  lineItems[index].sku = poItem.product.id;\n  lineItems[index].hsn_or_sac = poItem.hsn;\n  lineItems[index].unit = poItem.uom;\n  lineItems[index].quantity = poItem.requested_qty;\n  lineItems[index].rate = poItem.unit_price;\n  lineItems[index].product_type = \"goods\";\n  lineItems[index].tax_percentage = poItem.tax_percentage;\n})\n\n\npo_data.reference_number = $node[\"Function to create po\"].json[\"reference_number\"];\npo_data.date = $node[\"Function to create po\"].json[\"date\"];\npo_data.expected_delivery_date = $node[\"Function to create po\"].json[\"expected_delivery_date\"];\npo_data.payment_terms = $node[\"Function to create po\"].json[\"payment_terms\"];\npo_data.source_of_supply = $node[\"Function to create po\"].json[\"source_of_supply\"];\npo_data.destination_of_supply = $node[\"Function to create po\"].json[\"destination_of_supply\"];\npo_data.delivery_address = $node[\"Function to create po\"].json[\"delivery_address\"];\npo_data.billing_address = \"\";\npo_data.contact = contact;\npo_data.vendor = vendor;\npo_data.line_items = lineItems;\n\n\ntally_po.id = $node[\"Webhook\"].json[\"body\"][\"keys\"][0];\ntally_po.po_data = po_data;\n\nitems[0].json.tally_po = tally_po\nreturn items;"
       },
       "name": "Function to create tally PO obj",
       "type": "n8n-nodes-base.function",
@@ -2385,7 +2385,7 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "PATCH",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/tally_pos/{{$node[\"Webhook\"].json[\"body\"][\"keys\"][0]}}",
+        "url": "=https://zeus.shakedeal.com/items/tally_pos/{{$node[\"Webhook\"].json[\"body\"][\"keys\"][0]}}",
         "options": {},
         "bodyParametersUi": {
           "parameter": [
@@ -2414,7 +2414,7 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "POST",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/tally_pos",
+        "url": "=https://zeus.shakedeal.com/items/tally_pos",
         "options": {},
         "bodyParametersUi": {
           "parameter": [
@@ -2423,7 +2423,7 @@
               "value": "={{$node[\"Webhook\"].json[\"body\"][\"keys\"][0]}}"
             },
             {
-              "name": "tally_pos",
+              "name": "po_data",
               "value": "={{$node[\"Function to create tally PO obj\"].json[\"tally_po\"]}}"
             }
           ]
@@ -2449,5 +2449,5 @@
   },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-03-21T09:21:35.839Z"
+  "updatedAt": "2023-03-27T10:27:51.529Z"
 }
