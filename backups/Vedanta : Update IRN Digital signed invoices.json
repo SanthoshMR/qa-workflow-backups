@@ -192,8 +192,8 @@
       "type": "n8n-nodes-base.nextCloud",
       "typeVersion": 1,
       "position": [
-        440,
-        300
+        460,
+        280
       ],
       "credentials": {
         "nextCloudApi": {
@@ -521,5 +521,5 @@
   },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-03-17T11:45:57.387Z"
+  "updatedAt": "2023-03-28T11:36:59.091Z"
 }
