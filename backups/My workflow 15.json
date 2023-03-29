@@ -1,0 +1,56 @@
+{
+  "active": false,
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-03-29T07:36:16.410Z",
+  "id": "274",
+  "name": "My workflow 15",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "handyalasairam9177@gmail.com",
+        "toEmail": "sairam.reddy@shakedeal.com",
+        "html": "=<!DOCTYPE html><html><head><title>Button Link Example</title></head><body><h1>Welcome to my website</h1><button><a href=\"https://qan8n.shakedeal.com/webhook/test-button?reference=PO100R100\">Visit my portfolio</a></button></body></html>",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "17",
+          "name": "smtp(sai)creds"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-03-29T08:03:36.952Z"
+}
