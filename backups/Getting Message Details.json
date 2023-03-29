@@ -1,11 +1,102 @@
 {
   "active": true,
   "connections": {
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Check for message ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for message ID": {
+      "main": [
+        [
+          {
+            "node": "Check Message ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Message ID": {
+      "main": [
+        [
+          {
+            "node": "Check Order ID",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Insert SES Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Order ID": {
+      "main": [
+        [
+          {
+            "node": "Order Response",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Processing Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Processing Data": {
+      "main": [
+        [
+          {
+            "node": "Update Order ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Order ID": {
+      "main": [
+        [
+          {
+            "node": "Update Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert SES Log": {
+      "main": [
+        [
+          {
+            "node": "Create Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "Webhook": {
       "main": [
         [
           {
-            "node": "HTTP Request",
+            "node": "Globals",
             "type": "main",
             "index": 0
           }
@@ -23,8 +114,243 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        -100,
-        300
+        -780,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "dms_url",
+              "value": "={{$node[\"Webhook\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ?\"https://zeus.shakedeal.com\":\"https://zeusqa.shakedeal.com\"}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        -400,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/ses_logs?filter={\"message_id\": {\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"message_id\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Check for message ID",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        -200,
+        100
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "81",
+          "name": "SES Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Check for message ID\"].json[\"data\"].length}}",
+              "operation": "larger",
+              "value2": "={{0}}"
+            }
+          ]
+        }
+      },
+      "name": "Check Message ID",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        20,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Check for message ID\"].json[\"data\"][0][\"order_id\"]}}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      },
+      "name": "Check Order ID",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        220,
+        -140
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let request = $node[\"Webhook\"].json.body\n\nlet keys = [];\nlet req_body = {};\n\nlet response = $node[\"Check for message ID\"].json.data\n\nresponse.forEach(function(obj,index){\n    keys.push(obj.log_id)\n})\n\nlet data = {\n    \"order_id\" : $node[\"Webhook\"].json[\"body\"][\"order_id\"]\n}\n\nreq_body.keys = keys;\nreq_body.data = data;\n\nitems[0].json.keys = keys;\nitems[0].json.req_body = req_body;\nreturn items;"
+      },
+      "name": "Processing Data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        440,
+        40
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let req_body = {};\n\nlet data = {\n    \"order_id\" : $node[\"Webhook\"].json[\"body\"][\"order_id\"],\n    \"message_id\" : $node[\"Webhook\"].json[\"body\"][\"message_id\"],\n}\n\nreq_body.data = data;\n\nitems[0].json.req_body = req_body;\nreturn items;"
+      },
+      "name": "Create Data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -260,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/ses_logs",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Processing Data\"].json[\"req_body\"]}}"
+      },
+      "name": "Update Order ID",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        680,
+        40
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "81",
+          "name": "SES Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let request = $node[\"Webhook\"].json.body\n\nlet keys = [];\nlet req_body = {};\n\nlet data = {\n    \"order_id\" : $node[\"Webhook\"].json[\"body\"][\"order_id\"],\n    \"message_id\" : $node[\"Webhook\"].json[\"body\"][\"message_id\"],\n}\n\nreq_body.data = data;\n\nitems[0].json.keys = keys;\nitems[0].json.req_body = req_body;\nreturn items;"
+      },
+      "name": "Create Data1",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -340,
+        580
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/ses_logs",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Create Data\"].json[\"req_body\"][\"data\"]}}"
+      },
+      "name": "HTTP Request1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        -140,
+        580
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "81",
+          "name": "SES Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/ses_logs",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "order_id",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"order_id\"]}}"
+            },
+            {
+              "name": "message_id",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"message_id\"]}}"
+            },
+            {
+              "name": "status",
+              "value": "Send"
+            }
+          ]
+        }
+      },
+      "name": "Insert SES Log",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        220,
+        280
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "81",
+          "name": "SES Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let returnItems = [];\nreturnItems.push({\n  json:{\n    message : \"Log already created\"\n  }\n})\n\nreturn returnItems"
+      },
+      "name": "Order Response",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        440,
+        -160
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let returnItems = [];\nconst log_id = $node[\"Update Order ID\"].json[\"data\"][\"log_id\"];\n\nreturnItems.push({\n  json:{\n    log_id : log_id,\n    message : \"Log Updated successfully!\"\n  }\n})\n\nreturn returnItems"
+      },
+      "name": "Update Response",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        880,
+        40
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let returnItems = [];\nconst log_id = $node[\"Insert SES Log\"].json[\"data\"][\"log_id\"];\n\nreturnItems.push({\n  json:{\n    log_id : log_id,\n    message : \"Log added successfully!\"\n  }\n})\n\nreturn returnItems"
+      },
+      "name": "Create Response",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        440,
+        280
       ]
     },
     {
@@ -49,47 +375,20 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        120,
-        300
+        -600,
+        100
       ],
-      "webhookId": "4eafb671-71dc-4bca-b3f2-190976b69339",
+      "webhookId": "3b9d5a0b-ebf4-4b42-8848-32380a4bc52f",
       "credentials": {
         "httpBasicAuth": {
           "id": "2",
           "name": "SD Basic Auth"
         }
       }
-    },
-    {
-      "parameters": {
-        "requestMethod": "POST",
-        "url": "https://sdqa.shakedeal.com/index.php?dispatch=gift_voucher.resend",
-        "responseFormat": "string",
-        "options": {},
-        "bodyParametersUi": {
-          "parameter": [
-            {
-              "name": "order_id",
-              "value": "={{$node[\"Webhook\"].json[\"body\"][\"order_id\"]}}"
-            },
-            {
-              "name": "message_id",
-              "value": "={{$node[\"Webhook\"].json[\"body\"][\"message_id\"]}}"
-            }
-          ]
-        }
-      },
-      "name": "HTTP Request",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        340,
-        300
-      ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-03-27T09:22:51.639Z"
+  "updatedAt": "2023-03-29T11:13:38.032Z"
 }
