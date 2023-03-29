@@ -1,0 +1,56 @@
+{
+  "active": true,
+  "connections": {},
+  "createdAt": "2023-03-29T04:56:56.572Z",
+  "id": "273",
+  "name": "Voucher Details",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "shakedeal_voucher_details",
+        "responseMode": "lastNode",
+        "responseData": "allEntries",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "X-SD-Voucher-Details",
+                "value": "8ff81eb0-5b1d-486b-9ca6-a4b7fcba49ba"
+              }
+            ]
+          }
+        }
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ],
+      "webhookId": "4cde132f-e447-4423-ac50-bcb726de88fe",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-03-29T04:58:40.783Z"
+}
