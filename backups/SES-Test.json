@@ -11,11 +11,6 @@
           }
         ]
       ]
-    },
-    "Response from SES": {
-      "main": [
-        []
-      ]
     }
   },
   "createdAt": "2023-03-20T09:45:42.924Z",
@@ -28,8 +23,8 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        -140,
-        260
+        -500,
+        120
       ]
     },
     {
@@ -37,14 +32,15 @@
         "httpMethod": "POST",
         "path": "ses-test",
         "responseMode": "lastNode",
+        "responseData": "allEntries",
         "options": {}
       },
       "name": "Webhook",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        40,
-        400
+        -320,
+        260
       ],
       "webhookId": "6aaeeb8a-89cf-428b-bda4-22a990bd4d75"
     },
@@ -56,8 +52,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        40,
-        120
+        -320,
+        -20
       ]
     },
     {
@@ -68,8 +64,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        220,
-        120
+        -140,
+        -20
       ]
     },
     {
@@ -91,8 +87,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        520,
-        400
+        380,
+        -120
       ]
     },
     {
@@ -103,20 +99,20 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        700,
-        400
+        600,
+        -80
       ]
     },
     {
       "parameters": {
-        "functionCode": "let returnItems = [];\nlet data = [];\nconst records = $node[\"Webhook\"].json[\"body\"][\"records\"];\nrecords.forEach((obj,index)=>{\n  data[index]={};\n  // data[index].message = obj.data;\n\n  data[index].message = decodeURIComponent(obj.data);\n\n});\n\nreturnItems.push({\n  json:{\n    data\n  }\n})\n\nreturn returnItems;"
+        "functionCode": "let returnItems1 = [];\nlet data1 = [];\n\nlet returnItems = [];\nlet data = [];\nconst records = $node[\"Webhook\"].json[\"body\"][\"records\"];\nrecords.forEach((obj,index)=>{\n  data[index]={};\n  const decodedString = Buffer.from(obj.data, 'base64').toString('utf-8');\n  let test = JSON.parse(decodedString);\n  console.log(decodedString); // Output: \"Hello World!\"\n\n  returnItems.push({\n    // json:{\n      test\n    // }\n  })\n\n});\n\n// data.reverse();\n\n// returnItems.push({\n//   // json:{\n//     data\n//   // }\n// })\n\nreturn returnItems;"
       },
       "name": "Response from SES",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        280,
-        400
+        -60,
+        260
       ]
     },
     {
@@ -138,13 +134,13 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        460,
-        120
+        100,
+        -20
       ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-03-27T11:58:00.106Z"
+  "updatedAt": "2023-03-29T13:28:44.249Z"
 }
