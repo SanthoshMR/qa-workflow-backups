@@ -1,0 +1,612 @@
+{
+  "active": false,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Response from SES": {
+      "main": [
+        [
+          {
+            "node": "Check for Message ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Response from SES",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for Message ID": {
+      "main": [
+        [
+          {
+            "node": "Check SES Update data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparing for update SES Data": {
+      "main": [
+        [
+          {
+            "node": "Update SES Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparing for create SES Data": {
+      "main": [
+        [
+          {
+            "node": "Insert SES Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update SES Log": {
+      "main": [
+        [
+          {
+            "node": "Check SES insert data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert SES Log": {
+      "main": [
+        [
+          {
+            "node": "Empty ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get SES Log ID": {
+      "main": [
+        [
+          {
+            "node": "Create Data for SES Log Details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Data for SES Log Details": {
+      "main": [
+        [
+          {
+            "node": "Insert SES Log Details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert SES Log Details": {
+      "main": [
+        [
+          {
+            "node": "Exit function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check SES Update data": {
+      "main": [
+        [
+          {
+            "node": "Check Update Data count",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Update Data count": {
+      "main": [
+        [
+          {
+            "node": "Preparing for update SES Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Preparing for create SES Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Insert Data count": {
+      "main": [
+        [
+          {
+            "node": "Preparing for create SES Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get SES Log ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check SES insert data": {
+      "main": [
+        [
+          {
+            "node": "Check Insert Data count",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Empty ": {
+      "main": [
+        [
+          {
+            "node": "Get SES Log ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-03-30T13:05:35.738Z",
+  "id": "277",
+  "name": "SES-bkp",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        -1080,
+        620
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ses-test",
+        "responseMode": "lastNode",
+        "responseData": "allEntries",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -880,
+        580
+      ],
+      "webhookId": "6aaeeb8a-89cf-428b-bda4-22a990bd4d75"
+    },
+    {
+      "parameters": {
+        "functionCode": "let returnItems = [];\nreturnItems.push({\n  json:{\n    records:$node[\"Webhook\"].json[\"body\"][\"records\"]\n  }\n})\n\nreturn returnItems"
+      },
+      "name": "Function1",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -240,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://sdqa.shakedeal.com/index.php?dispatch=gift_voucher.resend",
+        "responseFormat": "string",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "records",
+              "value": "={{$node[\"Response from SES\"].json[\"data\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        460,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let returnItems = [];\nreturnItems.push({\n  json:{\n    requestId:$node[\"Webhook\"].json[\"body\"][\"requestId\"],\n    timestamp:$node[\"Webhook\"].json[\"body\"][\"timestamp\"]\n  }\n})\n\nreturn returnItems"
+      },
+      "name": "Function3",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        680,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let returnItems1 = [];\nlet data1 = [];\n\nlet request_items = [];\nlet data = [];\nconst records = $node[\"Webhook\"].json[\"body\"][\"records\"];\n\nlet req_body = {};\nlet message_ids = [];\n\nrecords.forEach((obj,index)=>{\n  const decodedString = Buffer.from(obj.data, 'base64').toString('utf-8');\n  let ses_response = JSON.parse(decodedString);\n\n  data[index]={};\n  data[index].event_type = ses_response['eventType'];\n  data[index].message_id = ses_response['mail']['messageId'];\n  data[index].recipient = ses_response['mail']['destination'][0];\n  data[index].message = ses_response;\n\n  message_ids.push(ses_response['mail']['messageId']);\n});\n\nmessage_ids = [...new Set(message_ids)];\n// message_ids = Array.from(new Set(message_ids));\n\ndata.reverse();\n\nitems[0].json.message_ids = message_ids;\nitems[0].json.request_items = data;\nreturn items;"
+      },
+      "name": "Response from SES",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -500,
+        580
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://sdqa.shakedeal.com/index.php?dispatch=gift_voucher.resend",
+        "responseFormat": "string",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "records",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"records\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "HTTP Request1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        180,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "dms_url",
+              "value": "={{$node[\"Webhook\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ?\"https://zeus.shakedeal.com\":\"https://zeusqa.shakedeal.com\"}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        -700,
+        580
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/ses_logs?filter={\"message_id\": {\"_in\":\"{{$node[\"Response from SES\"].json[\"message_ids\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Check for Message ID",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        -280,
+        580
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "81",
+          "name": "SES Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/ses_logs",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Preparing for update SES Data\"].json[\"0\"]}}"
+      },
+      "name": "Insert SES Log1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        -740,
+        1040
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "81",
+          "name": "SES Auth"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "name": "Create SES Data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        960,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let response = $node[\"Check for Message ID\"].json.data;\nlet request_items = $node[\"Response from SES\"].json[\"request_items\"];\n\nconst message_ids = $node[\"Response from SES\"].json[\"message_ids\"];\n\nlet message_ids_for_update = [];\nlet update_data = [];\n\nresponse.forEach((obj,index)=>{\n    let messageId = obj.message_id;\n    let log_id = obj.log_id;\n    if(message_ids.includes(messageId)){\n        message_ids_for_update.push(messageId);\n        let keys = [];\n        keys.push(log_id);\n\n        let event_type = \"Send\";\n        let recipient = \"\";\n        request_items.forEach((request_item,request_items_index)=>{\n            if(request_item.message_id == messageId){\n                event_type = request_item.event_type;\n                recipient = request_item.recipient;\n            }\n        });\n\n        let data = {\n            // \"message_id\" : messageId,\n            \"status\": event_type,\n            \"recipient\" : recipient\n        }\n\n        update_data.push({\n            json: [{\n                keys:keys,\n                data:data,\n            }]\n        });\n    }  \n});\n\nreturn update_data;"
+      },
+      "name": "Preparing for update SES Data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        460,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let response = $node[\"Check for Message ID\"].json.data;\n\nlet update_data = [];\nlet ses_log_id = [];\n\nlet req_body = {};\n\nlet result = [];\nlet message_ids_for_update = [];\n\nconst message_ids = $node[\"Response from SES\"].json[\"message_ids\"];\n\nresponse.forEach((obj,index)=>{\n    let messageId = obj.message_id;\n    if(message_ids.includes(messageId)){\n        message_ids_for_update.push(messageId);\n    }  \n});\n\n// Compare all the message ids to already updated message ids.the reamining items are need to be create\nlet message_ids_for_create = message_ids.filter(x => message_ids_for_update.indexOf(x) === -1);\nlet request_items = $node[\"Response from SES\"].json[\"request_items\"];\n\nmessage_ids_for_create.forEach((message_id,index)=>{\n\n    let event_type = \"Send\";\n    let recipient = \"\";\n    request_items.forEach((request_item,request_items_index)=>{\n        if(request_item.message_id == message_id){\n            event_type = request_item.event_type;\n            recipient = request_item.recipient;\n        }\n    });\n\n    let data = {\n        \"message_id\" : message_id,\n        \"status\": event_type,\n        \"recipient\" : recipient\n    }\n\n    update_data.push({\n        json: [{\n            data:data,\n        }]\n    });\n  \n});\n\n\nreturn update_data;\n"
+      },
+      "name": "Preparing for create SES Data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        200,
+        900
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "https://zeusqa.shakedeal.com/items/ses_logs",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Preparing for update SES Data\"].json[\"0\"]}}"
+      },
+      "name": "Update SES Log",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        700,
+        460
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "81",
+          "name": "SES Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "=https://zeusqa.shakedeal.com/items/ses_logs",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Preparing for create SES Data\"].json[\"0\"].data}}"
+      },
+      "name": "Insert SES Log",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        460,
+        900
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "81",
+          "name": "SES Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let response = $node[\"Check for Message ID\"].json.data;\n\nlet message_ids_for_create = [];\nlet message_ids_for_update = [];\n\nlet update_data = [];\nlet ses_log_id = [];\n\nlet req_body = {};\n\nlet result = [];\n\nconst message_ids = $node[\"Response from SES\"].json[\"message_ids\"];\n\nresponse.forEach((obj,index)=>{\n    let messageId = obj.message_id;\n    if(message_ids.includes(messageId)){\n        message_ids_for_update.push(messageId);\n    }  \n});\n\n// Compare all the message ids to already updated message ids.the reamining items are need to be create\nlet difference = message_ids.filter(x => message_ids_for_update.indexOf(x) === -1);\n\nitems[0].json.message_ids_for_create = difference;\nitems[0].json.message_ids_for_update = message_ids_for_update;\nitems[0].json.req_body = update_data;\n\nreturn items;\n\n// let request = $node[\"Webhook\"].json.body\n\n// let keys = [];\n// let req_body = {};\n\n// let response = $node[\"Check for message ID\"].json.data\n\n// response.forEach(function(obj,index){\n//     keys.push(obj.log_id)\n// })\n\n// let data = {\n//     \"order_id\" : $node[\"Webhook\"].json[\"body\"][\"order_id\"]\n// }\n\n// req_body.keys = keys;\n// req_body.data = data;\n\n// items[0].json.keys = keys;\n// items[0].json.req_body = req_body;\n// return items;"
+      },
+      "name": "Preparing for update SES Data1",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -500,
+        1060
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/ses_logs?filter={\"message_id\": {\"_in\":\"{{$node[\"Response from SES\"].json[\"message_ids\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Get SES Log ID",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        900,
+        900
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "81",
+          "name": "SES Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let response = $node[\"Get SES Log ID\"].json.data;\n// let response = $node[\"Check for Message ID\"].json.data;\n\nlet update_data = [];\n\nlet req_body = {};\n\nlet result = [];\n\nlet request_items = $node[\"Response from SES\"].json[\"request_items\"];\n\nresponse.forEach((obj,index)=>{\n    let messageId = obj.message_id;\n    let log_id = obj.log_id;\n    \n    request_items.forEach((request_item,request_items_index)=>{\n        if(request_item.message_id == messageId){\n            event_type = request_item.event_type;\n            let data = {\n                \"ses_log_id\" : log_id,\n                \"status\": event_type,\n                \"message\": request_item\n            }\n\n            update_data.push({\n                json: [{\n                    data:data,\n                }]\n            });\n        }\n    });\n});\n\nreturn update_data;"
+      },
+      "name": "Create Data for SES Log Details",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        900
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "=https://zeusqa.shakedeal.com/items/ses_log_details",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Create Data for SES Log Details\"].json[\"0\"][\"data\"]}}"
+      },
+      "name": "Insert SES Log Details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1320,
+        900
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "81",
+          "name": "SES Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let response = $node[\"Check for Message ID\"].json.data;\nlet request_items = $node[\"Response from SES\"].json[\"request_items\"];\nlet message_ids = $node[\"Response from SES\"].json[\"message_ids\"];\nlet message_ids_for_update = [];\n\nresponse.forEach((obj,index)=>{\n    let messageId = obj.message_id;\n    if(message_ids.includes(messageId)){\n        message_ids_for_update.push(messageId);\n    }  \n});\n\nitems[0].json.message_ids_for_update = message_ids_for_update;\nreturn items;"
+      },
+      "name": "Check SES Update data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -60,
+        580
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Check SES Update data\"].json[\"message_ids_for_update\"].length}}",
+              "operation": "larger",
+              "value2": "={{0}}"
+            }
+          ]
+        }
+      },
+      "name": "Check Update Data count",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        160,
+        580
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Check SES insert data\"].json[\"message_ids_for_create\"].length}}",
+              "operation": "larger",
+              "value2": "={{0}}"
+            }
+          ]
+        }
+      },
+      "name": "Check Insert Data count",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        920,
+        660
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let response = $node[\"Check for Message ID\"].json.data;\nlet message_ids_for_create = [];\nlet message_ids_for_update = [];\n\nconst message_ids = $node[\"Response from SES\"].json[\"message_ids\"];\nlet request_items = $node[\"Response from SES\"].json[\"request_items\"];\n\nresponse.forEach((obj,index)=>{\n    let messageId = obj.message_id;\n    if(message_ids.includes(messageId)){\n        message_ids_for_update.push(messageId);\n    }  \n});\n\nmessage_ids_for_create = message_ids.filter(x => message_ids_for_update.indexOf(x) === -1);\n\nlet returnItems = [];\nreturnItems.push({\n  json:{\n    message_ids_for_create\n  }\n})\n\nreturn returnItems\n"
+      },
+      "name": "Check SES insert data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        920,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let returnItems = [];\n\nlet message = [];\n\nreturnItems.push({\n  json:{\n    message\n  }\n})\n\nreturn returnItems\n"
+      },
+      "name": "Empty ",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        680,
+        900
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let returnItems = [];\nreturnItems.push({\n  json:{\n    requestId:$node[\"Webhook\"].json[\"body\"][\"requestId\"],\n    timestamp:$node[\"Webhook\"].json[\"body\"][\"timestamp\"]\n  }\n})\n\nreturn returnItems"
+      },
+      "name": "Exit function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1520,
+        900
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-03-30T13:05:35.738Z"
+}
