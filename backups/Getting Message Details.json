@@ -355,7 +355,6 @@
     },
     {
       "parameters": {
-        "authentication": "basicAuth",
         "httpMethod": "POST",
         "path": "shakedeal_message_details",
         "responseMode": "lastNode",
@@ -378,17 +377,45 @@
         -600,
         100
       ],
-      "webhookId": "3b9d5a0b-ebf4-4b42-8848-32380a4bc52f",
+      "webhookId": "3b9d5a0b-ebf4-4b42-8848-32380a4bc52f"
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "shakedeal_message_details",
+        "responseMode": "lastNode",
+        "responseData": "allEntries",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "X-SD-Message-Details",
+                "value": "8ff81eb0-5b1d-486b-9ca6-a4b7fcba49ba"
+              }
+            ]
+          }
+        }
+      },
+      "name": "Webhook1",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -600,
+        240
+      ],
+      "webhookId": "699dfcd8-33a3-458f-bc2a-b25154c3ce9c",
       "credentials": {
         "httpBasicAuth": {
           "id": "2",
           "name": "SD Basic Auth"
         }
-      }
+      },
+      "disabled": true
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-03-29T11:13:38.032Z"
+  "updatedAt": "2023-03-30T08:31:19.956Z"
 }
