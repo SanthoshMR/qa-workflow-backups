@@ -5,7 +5,51 @@
       "main": [
         [
           {
-            "node": "Update the log",
+            "node": "Check for message ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for message ID": {
+      "main": [
+        [
+          {
+            "node": "Check Message ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Data": {
+      "main": [
+        [
+          {
+            "node": "Update SES Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update SES Log": {
+      "main": [
+        [
+          {
+            "node": "Insert SES Log Details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Message ID": {
+      "main": [
+        [
+          {
+            "node": "Update Data",
             "type": "main",
             "index": 0
           }
@@ -23,7 +67,7 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        -320,
+        -640,
         300
       ]
     },
@@ -36,7 +80,7 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        -100,
+        -380,
         300
       ],
       "webhookId": "4feec8fe-5b18-4854-b20b-3e24ad514a2d"
@@ -60,8 +104,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        120,
-        300
+        320,
+        20
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -69,10 +113,122 @@
           "name": "Adani header auth"
         }
       }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://zeusqa.shakedeal.com/items/ses_logs?filter={\"_and\": [{\"message_id\": {\"_eq\":\"{{$node[\"Webhook\"].json[\"query\"][\"id\"]}}\"}},{\"event_type\":{\"_eq\":\"WhatsApp\"}}]}",
+        "options": {}
+      },
+      "name": "Check for message ID",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        -180,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "81",
+          "name": "SES Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let request = $node[\"Webhook\"].json.body\n\nlet keys = [];\nlet req_body = {};\n\nlet response = $node[\"Check for message ID\"].json.data\n\nresponse.forEach(function(obj,index){\n    keys.push(obj.log_id)\n})\n\nlet data = {\n    \"status\" : $node[\"Webhook\"].json[\"query\"][\"status\"]\n}\n\nreq_body.keys = keys;\nreq_body.data = data;\n\nitems[0].json.keys = keys;\nitems[0].json.req_body = req_body;\nreturn items;"
+      },
+      "name": "Update Data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        260,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "=https://zeusqa.shakedeal.com/items/ses_logs",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Update Data\"].json[\"req_body\"]}}"
+      },
+      "name": "Update SES Log",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "81",
+          "name": "SES Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "=https://zeusqa.shakedeal.com/items/ses_log_details",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "ses_log_id",
+              "value": "={{$node[\"Update SES Log\"].json[\"data\"][0][\"log_id\"]}}"
+            },
+            {
+              "name": "status",
+              "value": "={{$node[\"Webhook\"].json[\"query\"][\"status\"]}}"
+            },
+            {
+              "name": "message",
+              "value": "={{$node[\"Webhook\"].json[\"query\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Insert SES Log Details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        640,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "81",
+          "name": "SES Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Check for message ID\"].json[\"data\"].length}}",
+              "operation": "larger",
+              "value2": "={{0}}"
+            }
+          ]
+        }
+      },
+      "name": "Check Message ID",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        20,
+        300
+      ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-12-13T11:39:53.074Z"
+  "updatedAt": "2023-03-31T07:34:59.445Z"
 }
