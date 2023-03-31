@@ -1,17 +1,6 @@
 {
   "active": true,
   "connections": {
-    "Webhook": {
-      "main": [
-        [
-          {
-            "node": "Globals",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Globals": {
       "main": [
         [
@@ -56,7 +45,40 @@
       "main": [
         [
           {
+            "node": "Global DMS URL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Global DMS URL": {
+      "main": [
+        [
+          {
+            "node": "Insert SES Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert SES Log": {
+      "main": [
+        [
+          {
             "node": "Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Globals",
             "type": "main",
             "index": 0
           }
@@ -80,29 +102,6 @@
     },
     {
       "parameters": {
-        "authentication": "basicAuth",
-        "httpMethod": "POST",
-        "path": "send-notification",
-        "responseMode": "lastNode",
-        "options": {}
-      },
-      "name": "Webhook",
-      "type": "n8n-nodes-base.webhook",
-      "typeVersion": 1,
-      "position": [
-        0,
-        160
-      ],
-      "webhookId": "6711f5d3-e36a-4de1-8e55-c55907748cfa",
-      "credentials": {
-        "httpBasicAuth": {
-          "id": "60",
-          "name": "Notification"
-        }
-      }
-    },
-    {
-      "parameters": {
         "values": {
           "boolean": [
             {
@@ -121,7 +120,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        160,
+        100,
         160
       ]
     },
@@ -254,13 +253,98 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        900,
+        1280,
         160
       ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "dms_url",
+              "value": "={{$node[\"Webhook\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ?\"https://zeus.shakedeal.com\":\"https://zeusqa.shakedeal.com\"}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Global DMS URL",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        880,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Global DMS URL\"].json[\"dms_url\"]}}/items/ses_logs",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "order_id",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"order_id\"]}}"
+            },
+            {
+              "name": "message_id",
+              "value": "={{$node[\"Call Kaleyra\"].json[\"id\"]}}:0"
+            },
+            {
+              "name": "recipient",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"mobile\"]}}"
+            },
+            {
+              "name": "event_type",
+              "value": "WhatsApp"
+            }
+          ]
+        }
+      },
+      "name": "Insert SES Log",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1080,
+        160
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "81",
+          "name": "SES Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "send-notification",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -100,
+        160
+      ],
+      "webhookId": "90e5cec9-6b9c-46c8-94ec-e5efca641da1",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "60",
+          "name": "Notification"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-03-20T13:32:35.988Z"
+  "updatedAt": "2023-03-31T07:25:51.648Z"
 }
