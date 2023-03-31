@@ -212,18 +212,6 @@
     },
     {
       "parameters": {
-        "functionCode": "let req_body = {};\n\nlet data = {\n    \"order_id\" : $node[\"Webhook\"].json[\"body\"][\"order_id\"],\n    \"message_id\" : $node[\"Webhook\"].json[\"body\"][\"message_id\"],\n}\n\nreq_body.data = data;\n\nitems[0].json.req_body = req_body;\nreturn items;"
-      },
-      "name": "Create Data",
-      "type": "n8n-nodes-base.function",
-      "typeVersion": 1,
-      "position": [
-        -260,
-        380
-      ]
-    },
-    {
-      "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "PATCH",
         "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/ses_logs",
@@ -237,41 +225,6 @@
       "position": [
         680,
         40
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "81",
-          "name": "SES Auth"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "functionCode": "let request = $node[\"Webhook\"].json.body\n\nlet keys = [];\nlet req_body = {};\n\nlet data = {\n    \"order_id\" : $node[\"Webhook\"].json[\"body\"][\"order_id\"],\n    \"message_id\" : $node[\"Webhook\"].json[\"body\"][\"message_id\"],\n}\n\nreq_body.data = data;\n\nitems[0].json.keys = keys;\nitems[0].json.req_body = req_body;\nreturn items;"
-      },
-      "name": "Create Data1",
-      "type": "n8n-nodes-base.function",
-      "typeVersion": 1,
-      "position": [
-        -340,
-        580
-      ]
-    },
-    {
-      "parameters": {
-        "authentication": "headerAuth",
-        "requestMethod": "POST",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/ses_logs",
-        "jsonParameters": true,
-        "options": {},
-        "bodyParametersJson": "={{$node[\"Create Data\"].json[\"req_body\"][\"data\"]}}"
-      },
-      "name": "HTTP Request1",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        -140,
-        580
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -355,6 +308,7 @@
     },
     {
       "parameters": {
+        "authentication": "basicAuth",
         "httpMethod": "POST",
         "path": "shakedeal_message_details",
         "responseMode": "lastNode",
@@ -377,45 +331,17 @@
         -600,
         100
       ],
-      "webhookId": "3b9d5a0b-ebf4-4b42-8848-32380a4bc52f"
-    },
-    {
-      "parameters": {
-        "authentication": "basicAuth",
-        "httpMethod": "POST",
-        "path": "shakedeal_message_details",
-        "responseMode": "lastNode",
-        "responseData": "allEntries",
-        "options": {
-          "responseHeaders": {
-            "entries": [
-              {
-                "name": "X-SD-Message-Details",
-                "value": "8ff81eb0-5b1d-486b-9ca6-a4b7fcba49ba"
-              }
-            ]
-          }
-        }
-      },
-      "name": "Webhook1",
-      "type": "n8n-nodes-base.webhook",
-      "typeVersion": 1,
-      "position": [
-        -600,
-        240
-      ],
       "webhookId": "699dfcd8-33a3-458f-bc2a-b25154c3ce9c",
       "credentials": {
         "httpBasicAuth": {
           "id": "2",
           "name": "SD Basic Auth"
         }
-      },
-      "disabled": true
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-03-30T08:31:19.956Z"
+  "updatedAt": "2023-03-31T05:14:00.857Z"
 }
