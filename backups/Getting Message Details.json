@@ -200,7 +200,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let request = $node[\"Webhook\"].json.body\n\nlet keys = [];\nlet req_body = {};\n\nlet response = $node[\"Check for message ID\"].json.data\n\nresponse.forEach(function(obj,index){\n    keys.push(obj.log_id)\n})\n\nlet data = {\n    \"order_id\" : $node[\"Webhook\"].json[\"body\"][\"order_id\"]\n}\n\nreq_body.keys = keys;\nreq_body.data = data;\n\nitems[0].json.keys = keys;\nitems[0].json.req_body = req_body;\nreturn items;"
+        "functionCode": "let request = $node[\"Webhook\"].json.body\n\nlet keys = [];\nlet req_body = {};\n\nlet response = $node[\"Check for message ID\"].json.data\n\nresponse.forEach(function(obj,index){\n    keys.push(obj.log_id)\n})\n\nlet data = {\n    \"order_id\" : $node[\"Webhook\"].json[\"body\"][\"order_id\"],\n    \"recipient\": $node[\"Webhook\"].json[\"body\"][\"recipient\"]\n}\n\nreq_body.keys = keys;\nreq_body.data = data;\n\nitems[0].json.keys = keys;\nitems[0].json.req_body = req_body;\nreturn items;"
       },
       "name": "Processing Data",
       "type": "n8n-nodes-base.function",
@@ -252,6 +252,10 @@
             {
               "name": "status",
               "value": "Send"
+            },
+            {
+              "name": "recipient",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"recipient\"]}}"
             }
           ]
         }
@@ -343,5 +347,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-03-31T05:14:00.857Z"
+  "updatedAt": "2023-04-03T05:15:27.382Z"
 }
