@@ -209,7 +209,7 @@
     {
       "parameters": {
         "httpMethod": "POST",
-        "path": "ses-test",
+        "path": "ses-email-log",
         "responseMode": "lastNode",
         "options": {}
       },
@@ -277,7 +277,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let response = $node[\"Check for Message ID\"].json.data;\nlet request_items = $node[\"Response from SES\"].json[\"request_items\"];\n\nconst message_ids = $node[\"Response from SES\"].json[\"message_ids\"];\n\nlet message_ids_for_update = [];\nlet update_data = [];\n\nresponse.forEach((obj,index)=>{\n    let messageId = obj.message_id;\n    let log_id = obj.log_id;\n    if(message_ids.includes(messageId)){\n        message_ids_for_update.push(messageId);\n        let keys = [];\n        keys.push(log_id);\n\n        var event_type = \"\";\n        let recipient = \"\";\n        request_items.forEach((request_item,request_items_index)=>{\n            if(request_item.message_id == messageId){\n                if(request_item.event_type != \"Send\"){\n                    event_type = request_item.event_type;\n                }\n                recipient = request_item.recipient;\n            }\n        });\n        if(!event_type){\n            event_type = \"Send\";\n        }\n\n        let data = {\n            // \"message_id\" : messageId,\n            \"status\": event_type,\n            \"recipient\" : recipient\n        }\n\n        update_data.push({\n            json: [{\n                keys:keys,\n                data:data,\n            }]\n        });\n    }  \n});\n\nreturn update_data;"
+        "functionCode": "let response = $node[\"Check for Message ID\"].json.data;\nlet request_items = $node[\"Response from SES\"].json[\"request_items\"];\n\nconst message_ids = $node[\"Response from SES\"].json[\"message_ids\"];\n\nlet message_ids_for_update = [];\nlet update_data = [];\n\nresponse.forEach((obj,index)=>{\n    let messageId = obj.message_id;\n    let log_id = obj.log_id;\n    if(message_ids.includes(messageId)){\n        message_ids_for_update.push(messageId);\n        let keys = [];\n        keys.push(log_id);\n\n        var event_type = \"\";\n        request_items.forEach((request_item,request_items_index)=>{\n            if(request_item.message_id == messageId){\n                if(request_item.event_type != \"Send\"){\n                    event_type = request_item.event_type;\n                }\n            }\n        });\n        if(!event_type){\n            event_type = \"Send\";\n        }\n\n        let data = {\n            // \"message_id\" : messageId,\n            \"status\": event_type\n        }\n\n        update_data.push({\n            json: [{\n                keys:keys,\n                data:data,\n            }]\n        });\n    }  \n});\n\nreturn update_data;"
       },
       "name": "Preparing for update SES Data",
       "type": "n8n-nodes-base.function",
@@ -289,7 +289,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let response = $node[\"Check for Message ID\"].json.data;\n\nlet update_data = [];\nlet ses_log_id = [];\n\nlet req_body = {};\n\nlet result = [];\nlet message_ids_for_update = [];\n\nconst message_ids = $node[\"Response from SES\"].json[\"message_ids\"];\n\nresponse.forEach((obj,index)=>{\n    let messageId = obj.message_id;\n    if(message_ids.includes(messageId)){\n        message_ids_for_update.push(messageId);\n    }  \n});\n\n// Compare all the message ids to already updated message ids.the reamining items are need to be create\nlet message_ids_for_create = message_ids.filter(x => message_ids_for_update.indexOf(x) === -1);\nlet request_items = $node[\"Response from SES\"].json[\"request_items\"];\n\nmessage_ids_for_create.forEach((message_id,index)=>{\n    \n    var event_type = \"\";\n    let recipient = \"\";\n    request_items.forEach((request_item,request_items_index)=>{\n        if(request_item.message_id == message_id){\n            if(request_item.event_type != \"Send\"){\n                event_type = request_item.event_type;\n            }\n            recipient = request_item.recipient;\n        }\n    });\n    if(!event_type){\n        event_type = \"Send\";\n    }\n\n    let data = {\n        \"message_id\" : message_id,\n        \"status\": event_type,\n        \"recipient\" : recipient\n    }\n\n    update_data.push({\n        json: [{\n            data:data,\n        }]\n    });\n  \n});\n\n\nreturn update_data;\n"
+        "functionCode": "let response = $node[\"Check for Message ID\"].json.data;\n\nlet update_data = [];\nlet ses_log_id = [];\n\nlet req_body = {};\n\nlet result = [];\nlet message_ids_for_update = [];\n\nconst message_ids = $node[\"Response from SES\"].json[\"message_ids\"];\n\nresponse.forEach((obj,index)=>{\n    let messageId = obj.message_id;\n    if(message_ids.includes(messageId)){\n        message_ids_for_update.push(messageId);\n    }  \n});\n\n// Compare all the message ids to already updated message ids.the reamining items are need to be create\nlet message_ids_for_create = message_ids.filter(x => message_ids_for_update.indexOf(x) === -1);\nlet request_items = $node[\"Response from SES\"].json[\"request_items\"];\n\nmessage_ids_for_create.forEach((message_id,index)=>{\n    \n    var event_type = \"\";\n    request_items.forEach((request_item,request_items_index)=>{\n        if(request_item.message_id == message_id){\n            if(request_item.event_type != \"Send\"){\n                event_type = request_item.event_type;\n            }\n        }\n    });\n    if(!event_type){\n        event_type = \"Send\";\n    }\n\n    let data = {\n        \"message_id\" : message_id,\n        \"status\": event_type\n    }\n\n    update_data.push({\n        json: [{\n            data:data,\n        }]\n    });\n  \n});\n\n\nreturn update_data;\n"
       },
       "name": "Preparing for create SES Data",
       "type": "n8n-nodes-base.function",
@@ -492,5 +492,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-03-31T09:45:20.687Z"
+  "updatedAt": "2023-04-03T05:43:16.715Z"
 }
