@@ -117,7 +117,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "=https://zeusqa.shakedeal.com/items/ses_logs?filter={\"_and\": [{\"message_id\": {\"_eq\":\"{{$node[\"Webhook\"].json[\"query\"][\"id\"]}}\"}},{\"event_type\":{\"_eq\":\"WhatsApp\"}}]}",
+        "url": "=https://zeusqa.shakedeal.com/items/sd_ses_logs?filter={\"_and\": [{\"message_id\": {\"_eq\":\"{{$node[\"Webhook\"].json[\"query\"][\"id\"]}}\"}},{\"event_type\":{\"_eq\":\"WhatsApp\"}}]}",
         "options": {}
       },
       "name": "Check for message ID",
@@ -136,7 +136,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let request = $node[\"Webhook\"].json.body\n\nlet keys = [];\nlet req_body = {};\n\nlet response = $node[\"Check for message ID\"].json.data\n\nresponse.forEach(function(obj,index){\n    keys.push(obj.log_id)\n})\n\nlet data = {\n    \"status\" : $node[\"Webhook\"].json[\"query\"][\"status\"]\n}\n\nreq_body.keys = keys;\nreq_body.data = data;\n\nitems[0].json.keys = keys;\nitems[0].json.req_body = req_body;\nreturn items;"
+        "functionCode": "let request = $node[\"Webhook\"].json.body\n\nlet keys = [];\nlet req_body = {};\n\nlet response = $node[\"Check for message ID\"].json.data\n\nresponse.forEach(function(obj,index){\n    keys.push(obj.log_id)\n})\n\nlet whatsapp_status = '';\nif($node[\"Webhook\"].json[\"query\"][\"status\"] == 'read'){\n    whatsapp_status = 'Seen';\n}else if($node[\"Webhook\"].json[\"query\"][\"status\"] == 'delivered'){\n    whatsapp_status = 'Delivered';\n}else{\n    whatsapp_status = 'Send';\n}\n\nlet data = {\n    \"status\" : whatsapp_status\n}\n\nreq_body.keys = keys;\nreq_body.data = data;\n\nitems[0].json.keys = keys;\nitems[0].json.status = whatsapp_status;\nitems[0].json.req_body = req_body;\nreturn items;"
       },
       "name": "Update Data",
       "type": "n8n-nodes-base.function",
@@ -150,7 +150,7 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "PATCH",
-        "url": "=https://zeusqa.shakedeal.com/items/ses_logs",
+        "url": "=https://zeusqa.shakedeal.com/items/sd_ses_logs",
         "jsonParameters": true,
         "options": {},
         "bodyParametersJson": "={{$node[\"Update Data\"].json[\"req_body\"]}}"
@@ -173,17 +173,17 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "POST",
-        "url": "=https://zeusqa.shakedeal.com/items/ses_log_details",
+        "url": "=https://zeusqa.shakedeal.com/items/sd_ses_log_details",
         "options": {},
         "bodyParametersUi": {
           "parameter": [
             {
-              "name": "ses_log_id",
+              "name": "sd_ses_log_id",
               "value": "={{$node[\"Update SES Log\"].json[\"data\"][0][\"log_id\"]}}"
             },
             {
               "name": "status",
-              "value": "={{$node[\"Webhook\"].json[\"query\"][\"status\"]}}"
+              "value": "={{$node[\"Update Data\"].json[\"status\"]}}"
             },
             {
               "name": "message",
@@ -230,5 +230,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-03-31T07:34:59.445Z"
+  "updatedAt": "2023-04-04T12:19:56.512Z"
 }
