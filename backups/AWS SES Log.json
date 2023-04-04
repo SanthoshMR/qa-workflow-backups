@@ -258,7 +258,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/ses_logs?filter={\"message_id\": {\"_in\":\"{{$node[\"Response from SES\"].json[\"message_ids\"]}}\"}}",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_ses_logs?filter={\"message_id\": {\"_in\":\"{{$node[\"Response from SES\"].json[\"message_ids\"]}}\"}}",
         "options": {}
       },
       "name": "Check for Message ID",
@@ -277,7 +277,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let response = $node[\"Check for Message ID\"].json.data;\nlet request_items = $node[\"Response from SES\"].json[\"request_items\"];\n\nconst message_ids = $node[\"Response from SES\"].json[\"message_ids\"];\n\nlet message_ids_for_update = [];\nlet update_data = [];\n\nresponse.forEach((obj,index)=>{\n    let messageId = obj.message_id;\n    let log_id = obj.log_id;\n    if(message_ids.includes(messageId)){\n        message_ids_for_update.push(messageId);\n        let keys = [];\n        keys.push(log_id);\n\n        var event_type = \"\";\n        request_items.forEach((request_item,request_items_index)=>{\n            if(request_item.message_id == messageId){\n                if(request_item.event_type != \"Send\"){\n                    event_type = request_item.event_type;\n                }\n            }\n        });\n        if(!event_type){\n            event_type = \"Send\";\n        }\n\n        let data = {\n            // \"message_id\" : messageId,\n            \"status\": event_type\n        }\n\n        update_data.push({\n            json: [{\n                keys:keys,\n                data:data,\n            }]\n        });\n    }  \n});\n\nreturn update_data;"
+        "functionCode": "let response = $node[\"Check for Message ID\"].json.data;\nlet request_items = $node[\"Response from SES\"].json[\"request_items\"];\n\nconst message_ids = $node[\"Response from SES\"].json[\"message_ids\"];\n\nlet message_ids_for_update = [];\nlet update_data = [];\n\nresponse.forEach((obj,index)=>{\n    let messageId = obj.message_id;\n    let log_id = obj.log_id;\n    if(message_ids.includes(messageId)){\n        message_ids_for_update.push(messageId);\n        let keys = [];\n        keys.push(log_id);\n\n        var event_type = \"\";\n        request_items.forEach((request_item,request_items_index)=>{\n            if(request_item.message_id == messageId){\n                if((request_item.event_type.toLowerCase()) == \"delivery\"){\n                    event_type = 'Delivered';\n                }else if((request_item.event_type.toLowerCase()) != \"send\"){\n                    event_type = request_item.event_type;\n                    event_type = event_type.charAt(0).toUpperCase() + event_type.slice(1);\n                }\n            }\n        });\n        if(!event_type){\n            event_type = \"Send\";\n        }\n\n        let data = {\n            // \"message_id\" : messageId,\n            \"status\": event_type\n        }\n\n        update_data.push({\n            json: [{\n                keys:keys,\n                data:data,\n            }]\n        });\n    }  \n});\n\nreturn update_data;"
       },
       "name": "Preparing for update SES Data",
       "type": "n8n-nodes-base.function",
@@ -289,7 +289,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let response = $node[\"Check for Message ID\"].json.data;\n\nlet update_data = [];\nlet ses_log_id = [];\n\nlet req_body = {};\n\nlet result = [];\nlet message_ids_for_update = [];\n\nconst message_ids = $node[\"Response from SES\"].json[\"message_ids\"];\n\nresponse.forEach((obj,index)=>{\n    let messageId = obj.message_id;\n    if(message_ids.includes(messageId)){\n        message_ids_for_update.push(messageId);\n    }  \n});\n\n// Compare all the message ids to already updated message ids.the reamining items are need to be create\nlet message_ids_for_create = message_ids.filter(x => message_ids_for_update.indexOf(x) === -1);\nlet request_items = $node[\"Response from SES\"].json[\"request_items\"];\n\nmessage_ids_for_create.forEach((message_id,index)=>{\n    \n    var event_type = \"\";\n    request_items.forEach((request_item,request_items_index)=>{\n        if(request_item.message_id == message_id){\n            if(request_item.event_type != \"Send\"){\n                event_type = request_item.event_type;\n            }\n        }\n    });\n    if(!event_type){\n        event_type = \"Send\";\n    }\n\n    let data = {\n        \"message_id\" : message_id,\n        \"status\": event_type\n    }\n\n    update_data.push({\n        json: [{\n            data:data,\n        }]\n    });\n  \n});\n\n\nreturn update_data;\n"
+        "functionCode": "let response = $node[\"Check for Message ID\"].json.data;\n\nlet update_data = [];\nlet ses_log_id = [];\n\nlet req_body = {};\n\nlet result = [];\nlet message_ids_for_update = [];\n\nconst message_ids = $node[\"Response from SES\"].json[\"message_ids\"];\n\nresponse.forEach((obj,index)=>{\n    let messageId = obj.message_id;\n    if(message_ids.includes(messageId)){\n        message_ids_for_update.push(messageId);\n    }  \n});\n\n// Compare all the message ids to already updated message ids.the reamining items are need to be create\nlet message_ids_for_create = message_ids.filter(x => message_ids_for_update.indexOf(x) === -1);\nlet request_items = $node[\"Response from SES\"].json[\"request_items\"];\n\nmessage_ids_for_create.forEach((message_id,index)=>{\n    \n    var event_type = \"\";\n    request_items.forEach((request_item,request_items_index)=>{\n        if(request_item.message_id == message_id){\n            if((request_item.event_type.toLowerCase()) == \"delivery\"){\n                event_type = 'Delivered';\n            }else if((request_item.event_type.toLowerCase()) != \"send\"){\n                event_type = request_item.event_type;\n                event_type = event_type.charAt(0).toUpperCase() + event_type.slice(1);\n            }\n        }\n    });\n    if(!event_type){\n        event_type = \"Send\";\n    }\n\n    let data = {\n        \"message_id\" : message_id,\n        \"status\": event_type\n    }\n\n    update_data.push({\n        json: [{\n            data:data,\n        }]\n    });\n  \n});\n\n\nreturn update_data;\n"
       },
       "name": "Preparing for create SES Data",
       "type": "n8n-nodes-base.function",
@@ -303,7 +303,7 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "PATCH",
-        "url": "https://zeusqa.shakedeal.com/items/ses_logs",
+        "url": "=https://zeusqa.shakedeal.com/items/sd_ses_logs",
         "jsonParameters": true,
         "options": {},
         "bodyParametersJson": "={{$node[\"Preparing for update SES Data\"].json[\"0\"]}}"
@@ -326,7 +326,7 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "POST",
-        "url": "=https://zeusqa.shakedeal.com/items/ses_logs",
+        "url": "=https://zeusqa.shakedeal.com/items/sd_ses_logs",
         "jsonParameters": true,
         "options": {},
         "bodyParametersJson": "={{$node[\"Preparing for create SES Data\"].json[\"0\"].data}}"
@@ -348,7 +348,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/ses_logs?filter={\"message_id\": {\"_in\":\"{{$node[\"Response from SES\"].json[\"message_ids\"]}}\"}}",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_ses_logs?filter={\"message_id\": {\"_in\":\"{{$node[\"Response from SES\"].json[\"message_ids\"]}}\"}}",
         "options": {}
       },
       "name": "Get SES Log ID",
@@ -367,7 +367,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let response = $node[\"Get SES Log ID\"].json.data;\n// let response = $node[\"Check for Message ID\"].json.data;\n\nlet update_data = [];\n\nlet req_body = {};\n\nlet result = [];\n\nlet request_items = $node[\"Response from SES\"].json[\"request_items\"];\n\nresponse.forEach((obj,index)=>{\n    let messageId = obj.message_id;\n    let log_id = obj.log_id;\n    \n    request_items.forEach((request_item,request_items_index)=>{\n        if(request_item.message_id == messageId){\n            event_type = request_item.event_type;\n            let data = {\n                \"ses_log_id\" : log_id,\n                \"status\": event_type,\n                \"message\": request_item\n            }\n\n            update_data.push({\n                json: [{\n                    data:data,\n                }]\n            });\n        }\n    });\n});\n\nreturn update_data;"
+        "functionCode": "let response = $node[\"Get SES Log ID\"].json.data;\n// let response = $node[\"Check for Message ID\"].json.data;\n\nlet update_data = [];\n\nlet req_body = {};\n\nlet result = [];\n\nlet request_items = $node[\"Response from SES\"].json[\"request_items\"];\n\nresponse.forEach((obj,index)=>{\n    let messageId = obj.message_id;\n    let log_id = obj.log_id;\n    \n    request_items.forEach((request_item,request_items_index)=>{\n        if(request_item.message_id == messageId){\n            if((request_item.event_type.toLowerCase()) == \"delivery\"){\n                event_type = 'Delivered';\n            }else{\n                event_type = request_item.event_type;\n                event_type = event_type.charAt(0).toUpperCase() + event_type.slice(1);\n            }\n            let data = {\n                \"sd_ses_log_id\" : log_id,\n                \"status\": event_type,\n                \"message\": request_item\n            }\n\n            update_data.push({\n                json: [{\n                    data:data,\n                }]\n            });\n        }\n    });\n});\n\nreturn update_data;"
       },
       "name": "Create Data for SES Log Details",
       "type": "n8n-nodes-base.function",
@@ -381,7 +381,7 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "POST",
-        "url": "=https://zeusqa.shakedeal.com/items/ses_log_details",
+        "url": "=https://zeusqa.shakedeal.com/items/sd_ses_log_details",
         "jsonParameters": true,
         "options": {},
         "bodyParametersJson": "={{$node[\"Create Data for SES Log Details\"].json[\"0\"][\"data\"]}}"
@@ -492,5 +492,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-04-03T05:43:16.715Z"
+  "updatedAt": "2023-04-04T12:16:30.826Z"
 }
