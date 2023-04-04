@@ -282,7 +282,7 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "POST",
-        "url": "={{$node[\"Global DMS URL\"].json[\"dms_url\"]}}/items/ses_logs",
+        "url": "={{$node[\"Global DMS URL\"].json[\"dms_url\"]}}/items/sd_ses_logs",
         "options": {},
         "bodyParametersUi": {
           "parameter": [
@@ -346,5 +346,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-03-31T07:25:51.648Z"
+  "updatedAt": "2023-04-04T10:32:34.050Z"
 }
