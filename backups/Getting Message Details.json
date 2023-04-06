@@ -142,7 +142,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_ses_logs?filter={\"message_id\": {\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"message_id\"]}}\"}}",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_delivery_logs?filter={\"message_id\": {\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"message_id\"]}}\"}}",
         "options": {}
       },
       "name": "Check for message ID",
@@ -214,7 +214,7 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "PATCH",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_ses_logs",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_delivery_logs",
         "jsonParameters": true,
         "options": {},
         "bodyParametersJson": "={{$node[\"Processing Data\"].json[\"req_body\"]}}"
@@ -237,7 +237,7 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "POST",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_ses_logs",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_delivery_logs",
         "options": {},
         "bodyParametersUi": {
           "parameter": [
@@ -347,5 +347,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-04-04T11:29:04.347Z"
+  "updatedAt": "2023-04-06T10:48:27.154Z"
 }
