@@ -117,7 +117,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "=https://zeusqa.shakedeal.com/items/sd_ses_logs?filter={\"_and\": [{\"message_id\": {\"_eq\":\"{{$node[\"Webhook\"].json[\"query\"][\"id\"]}}\"}},{\"event_type\":{\"_eq\":\"WhatsApp\"}}]}",
+        "url": "=https://zeusqa.shakedeal.com/items/sd_delivery_logs?filter={\"_and\": [{\"message_id\": {\"_eq\":\"{{$node[\"Webhook\"].json[\"query\"][\"id\"]}}\"}},{\"event_type\":{\"_eq\":\"WhatsApp\"}}]}",
         "options": {}
       },
       "name": "Check for message ID",
@@ -150,7 +150,7 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "PATCH",
-        "url": "=https://zeusqa.shakedeal.com/items/sd_ses_logs",
+        "url": "=https://zeusqa.shakedeal.com/items/sd_delivery_logs",
         "jsonParameters": true,
         "options": {},
         "bodyParametersJson": "={{$node[\"Update Data\"].json[\"req_body\"]}}"
@@ -173,12 +173,12 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "POST",
-        "url": "=https://zeusqa.shakedeal.com/items/sd_ses_log_details",
+        "url": "=https://zeusqa.shakedeal.com/items/sd_delivery_log_details",
         "options": {},
         "bodyParametersUi": {
           "parameter": [
             {
-              "name": "sd_ses_log_id",
+              "name": "sd_delivery_log_id",
               "value": "={{$node[\"Update SES Log\"].json[\"data\"][0][\"log_id\"]}}"
             },
             {
@@ -230,5 +230,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-04-04T12:19:56.512Z"
+  "updatedAt": "2023-04-06T10:46:09.051Z"
 }
