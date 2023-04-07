@@ -136,7 +136,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let request = $node[\"Webhook\"].json.body\n\nlet keys = [];\nlet req_body = {};\n\nlet response = $node[\"Check for message ID\"].json.data\n\nresponse.forEach(function(obj,index){\n    keys.push(obj.log_id)\n})\n\nlet whatsapp_status = '';\nif($node[\"Webhook\"].json[\"query\"][\"status\"] == 'read'){\n    whatsapp_status = 'Seen';\n}else if($node[\"Webhook\"].json[\"query\"][\"status\"] == 'delivered'){\n    whatsapp_status = 'Delivered';\n}else{\n    whatsapp_status = 'Send';\n}\n\nlet data = {\n    \"status\" : whatsapp_status\n}\n\nreq_body.keys = keys;\nreq_body.data = data;\n\nitems[0].json.keys = keys;\nitems[0].json.status = whatsapp_status;\nitems[0].json.req_body = req_body;\nreturn items;"
+        "functionCode": "let request = $node[\"Webhook\"].json.body\n\nlet keys = [];\nlet req_body = {};\n\nlet response = $node[\"Check for message ID\"].json.data\n\nresponse.forEach(function(obj,index){\n    keys.push(obj.log_id)\n})\n\nlet whatsapp_status = '';\nif($node[\"Webhook\"].json[\"query\"][\"status\"] == 'read'){\n    whatsapp_status = 'Seen';\n}else if($node[\"Webhook\"].json[\"query\"][\"status\"] == 'delivered'){\n    whatsapp_status = 'Delivered';\n}else if($node[\"Webhook\"].json[\"query\"][\"status\"] == 'failed'){\n    whatsapp_status = 'Failed';\n}else{\n    whatsapp_status = 'Send';\n}\n\nlet data = {\n    \"status\" : whatsapp_status\n}\n\nreq_body.keys = keys;\nreq_body.data = data;\n\nitems[0].json.keys = keys;\nitems[0].json.status = whatsapp_status;\nitems[0].json.req_body = req_body;\nreturn items;"
       },
       "name": "Update Data",
       "type": "n8n-nodes-base.function",
@@ -230,5 +230,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-04-06T10:46:09.051Z"
+  "updatedAt": "2023-04-07T06:56:15.495Z"
 }
