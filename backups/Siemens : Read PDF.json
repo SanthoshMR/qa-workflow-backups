@@ -75,7 +75,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let contentSubStringArray = $node[\"Read PDF\"].json[\"text\"].split(\"\\n\");\n\nreturn items[0].json[\"das\"]=contentSubStringArray;"
+        "functionCode": "let contentSubStringArray = $node[\"Read PDF\"].json[\"text\"].split(\"\\n\");\nitems[0].json.das=contentSubStringArray;\nreturn items"
       },
       "name": "Function",
       "type": "n8n-nodes-base.function",
@@ -118,5 +118,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-04-06T14:27:07.200Z"
+  "updatedAt": "2023-04-07T06:29:00.306Z"
 }
