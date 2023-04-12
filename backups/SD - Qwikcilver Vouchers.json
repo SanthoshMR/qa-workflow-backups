@@ -1,0 +1,234 @@
+{
+  "active": true,
+  "connections": {
+    "Check for order and sku": {
+      "main": [
+        [
+          {
+            "node": "Check for order",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Check for order and sku",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparing for create Data": {
+      "main": [
+        [
+          {
+            "node": "Insert Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for order": {
+      "main": [
+        [
+          {
+            "node": "Order Response",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Preparing for create Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert Data": {
+      "main": [
+        [
+          {
+            "node": "Order Response1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-04-12T06:18:03.331Z",
+  "id": "285",
+  "name": "SD - Qwikcilver Vouchers",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        -160,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_gift_card_inventory?filter={\"_and\": [{\"order_id\": {\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"order_id\"]}}\"}},{\"product_code\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"product_code\"]}}\"}}]}&sort=date_created",
+        "options": {}
+      },
+      "name": "Check for order and sku",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        520,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "75",
+          "name": "Vendor Partner Program Zeus QA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Check for order and sku\"].json[\"data\"].length}}",
+              "operation": "larger",
+              "value2": "={{0}}"
+            }
+          ]
+        }
+      },
+      "name": "Check for order",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        740,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "dms_url",
+              "value": "={{$node[\"Webhook\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ?\"https://zeus.shakedeal.com\":\"https://zeusqa.shakedeal.com\"}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        280,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "sd_qwikcilver_voucher_details",
+        "responseMode": "lastNode",
+        "responseData": "allEntries",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        60,
+        320
+      ],
+      "webhookId": "7ef2430a-40e8-436d-9a36-2163079a599b"
+    },
+    {
+      "parameters": {
+        "functionCode": "let cards = $node[\"Webhook\"].json.body.cards;\n\nlet order_id = $node[\"Webhook\"].json.body.order_id;\nlet product_code = $node[\"Webhook\"].json.body.product_code;\n\nlet insert_data = [];\n\ncards.forEach((obj,index)=>{\n    let data = {\n        \"order_id\" : order_id,\n        \"product_code\": product_code,\n        \"code\": obj.cardNumber,\n        \"pin\": obj.cardPin,\n        \"price\": obj.amount,\n        \"validity\": obj.validity,\n        \"vendors\": 11,\n        \"gift_card\": true\n    }\n    \n    insert_data.push({\n        json: [{\n            data:data,\n        }]\n    });  \n});\n\n\nreturn insert_data;\n"
+      },
+      "name": "Preparing for create Data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1020,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "=https://zeusqa.shakedeal.com/items/sd_gift_card_inventory",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Preparing for create Data\"].json[\"0\"].data}}"
+      },
+      "name": "Insert Data",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1280,
+        340
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "75",
+          "name": "Vendor Partner Program Zeus QA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let returnItems = [];\nreturnItems.push({\n  json:{\n    message : \"Vouchers already added\"\n  }\n})\n\nreturn returnItems;"
+      },
+      "name": "Order Response",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1020,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let returnItems = [];\nreturnItems.push({\n  json:{\n    message : \"Vouchers added successfully!\"\n  }\n})\n\nreturn returnItems;"
+      },
+      "name": "Order Response1",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1560,
+        340
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-04-12T12:31:19.082Z"
+}
