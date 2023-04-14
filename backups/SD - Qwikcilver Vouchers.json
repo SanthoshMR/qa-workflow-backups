@@ -73,6 +73,18 @@
           }
         ]
       ]
+    },
+    "IF": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2023-04-12T06:18:03.331Z",
@@ -146,17 +158,27 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        280,
+        320,
         320
       ]
     },
     {
       "parameters": {
+        "authentication": "basicAuth",
         "httpMethod": "POST",
         "path": "qwikcilver_voucher_details",
         "responseMode": "lastNode",
         "responseData": "allEntries",
-        "options": {}
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "X-SD-Qwikcilver-Vouchers",
+                "value": "z42vr42o34-v1edf-8543rr4-58vdem4luqe6"
+              }
+            ]
+          }
+        }
       },
       "name": "Webhook",
       "type": "n8n-nodes-base.webhook",
@@ -165,11 +187,17 @@
         60,
         320
       ],
-      "webhookId": "7ef2430a-40e8-436d-9a36-2163079a599b"
+      "webhookId": "7ef2430a-40e8-436d-9a36-2163079a599b",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
     },
     {
       "parameters": {
-        "functionCode": "let cards = $node[\"Webhook\"].json.body.cards;\n\nlet order_id = $node[\"Webhook\"].json.body.order_id;\nlet product_code = $node[\"Webhook\"].json.body.product_code;\n\nlet insert_data = [];\n\ncards.forEach((obj,index)=>{\n    let data = {\n        \"order_id\" : order_id,\n        \"product_code\": product_code,\n        \"code\": obj.cardNumber,\n        \"pin\": obj.cardPin,\n        \"price\": obj.amount,\n        \"validity\": obj.validity,\n        \"vendors\": 11,\n        \"gift_card\": true\n    }\n    \n    insert_data.push({\n        json: [{\n            data:data,\n        }]\n    });  \n});\n\n\nreturn insert_data;\n"
+        "functionCode": "let cards = $node[\"Webhook\"].json.body.cards;\n\nlet order_id = $node[\"Webhook\"].json.body.order_id;\nlet product_code = $node[\"Webhook\"].json.body.product_code;\nlet ref_no = $node[\"Webhook\"].json.body.ref_no;\n\nlet insert_data = [];\n\ncards.forEach((obj,index)=>{\n    let data = {\n        \"order_id\" : order_id,\n        \"product_code\": product_code,\n        \"code\": obj.cardNumber,\n        \"pin\": obj.cardPin,\n        \"price\": obj.amount,\n        \"validity\": obj.validity,\n        \"vendors\": 11,\n        \"vendor_order_id\": ref_no,\n        \"gift_card\": true\n    }\n    \n    insert_data.push({\n        json: [{\n            data:data,\n        }]\n    });  \n});\n\n\nreturn insert_data;\n"
       },
       "name": "Preparing for create Data",
       "type": "n8n-nodes-base.function",
@@ -225,10 +253,41 @@
         1560,
         340
       ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Webhook\"].json[\"headers\"][\"x-sd-qwikcilver-vouchers\"]}}",
+              "value2": "={{$node[\"Webhook\"].parameter[\"options\"][\"responseHeaders\"][\"entries\"][0][\"value\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        300,
+        -40
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let returnItems = [];\nreturnItems.push({\n  json:{\n    message : \"Vouchers already added\"\n  }\n})\n\nreturn returnItems;"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        600,
+        -100
+      ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-04-13T07:27:10.723Z"
+  "updatedAt": "2023-04-14T07:36:34.071Z"
 }
