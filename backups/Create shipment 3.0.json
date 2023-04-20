@@ -278,6 +278,28 @@
           }
         ]
       ]
+    },
+    "Send Email": {
+      "main": [
+        [
+          {
+            "node": "Function to update hsn",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to update hsn": {
+      "main": [
+        [
+          {
+            "node": "Update hsn",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2022-09-14T06:59:46.778Z",
@@ -559,7 +581,7 @@
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 1,
       "position": [
-        3500,
+        3060,
         440
       ],
       "executeOnce": true,
@@ -674,8 +696,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        3160,
-        240
+        3140,
+        60
       ],
       "retryOnFail": true,
       "credentials": {
@@ -693,8 +715,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        2920,
-        240
+        2900,
+        60
       ]
     },
     {
@@ -726,8 +748,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        4020,
-        260
+        4000,
+        80
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -759,8 +781,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        4260,
-        260
+        4240,
+        80
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -784,8 +806,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        3360,
-        240
+        3340,
+        60
       ]
     },
     {
@@ -839,8 +861,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        3580,
-        -120
+        3560,
+        -300
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -868,8 +890,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        3880,
-        -120
+        3860,
+        -300
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -884,8 +906,8 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        3640,
-        300
+        3620,
+        120
       ]
     },
     {
@@ -927,8 +949,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        4180,
-        -100
+        4160,
+        -280
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -959,7 +981,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let sdvShipmentItems = $node[\"Get the shipment items\"].json[\"data\"][\"shipment_items\"];\nlet sdmShipmentId = $node[\"Create shipment in mozart\"].json[\"data\"][\"id\"];\nlet sdmShipmentItems = [];\nsdvShipmentItems.forEach(function(shipmentItem,index){\n  sdmShipmentItems[index] ={};\n  sdmShipmentItems[index].sdm_shipments_id = sdmShipmentId;\n  sdmShipmentItems[index].sdm_po_items_id = shipmentItem.sdv_vendor_pos_sdv_products_id.po_items_id;\n  sdmShipmentItems[index].shipment_qty = shipmentItem.shipment_qty\n})\n\nitems[0].json.sdmShipmentItems = sdmShipmentItems\n\nreturn items;"
+        "functionCode": "let sdvShipmentItems = $node[\"Get the shipment items\"].json[\"data\"][\"shipment_items\"];\nlet sdmShipmentId = $node[\"Create shipment in mozart\"].json[\"data\"][\"id\"];\n\nlet sdmShipmentItems = [];\nsdvShipmentItems.forEach(function(shipmentItem,index){\n  sdmShipmentItems[index] ={};\n  sdmShipmentItems[index].sdm_shipments_id = sdmShipmentId;\n  sdmShipmentItems[index].sdm_po_items_id = shipmentItem.sdv_vendor_pos_sdv_products_id.po_items_id;\n  sdmShipmentItems[index].shipment_qty = shipmentItem.shipment_qty;\n  sdmShipmentItems[index].hsn = shipmentItem.sdv_vendor_pos_sdv_products_id.hsn;\n})\n\nitems[0].json.sdmShipmentItems = sdmShipmentItems\n\nreturn items;"
       },
       "name": "Function",
       "type": "n8n-nodes-base.function",
@@ -991,10 +1013,51 @@
           "name": "Mozart DMS Token"
         }
       }
+    },
+    {
+      "parameters": {
+        "functionCode": "let shipmentItems = $node[\"Function\"].json[\"sdmShipmentItems\"];\nlet returnItems =[];\nshipmentItems.forEach(function(item,index){\n  returnItems.push({\n    json: \n      {\n       poItemId : item.sdm_po_items_id,\n       hsn : item.hsn,\n       dms_url : $node[\"Globals\"].json[\"0\"][\"mozart_url\"]\n    }\n  });\n})\n\nreturn returnItems;"
+      },
+      "name": "Function to update hsn",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        3300,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Function to update hsn\"].json[\"dms_url\"]}}/items/sdm_po_items/{{$node[\"Function to update hsn\"].json[\"poItemId\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "hsn",
+              "value": "={{$node[\"Function to update hsn\"].json[\"hsn\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update hsn",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3600,
+        420
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-03-20T07:11:13.688Z"
+  "updatedAt": "2023-04-20T13:22:15.101Z"
 }
