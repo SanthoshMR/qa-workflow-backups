@@ -170,7 +170,7 @@
     },
     {
       "parameters": {
-        "functionCode": "item.message=\"\";\nif($node[\"Check Reference Number\"].json[\"data\"].length > 0){\n  if($node[\"Check Reference Number\"].json[\"data\"][0][\"status\"] == \"RequestForActivation\"){\n    item.resposecode=200;\n    item.message=\"requestedforactivation\";\n  }\n  else if($node[\"Check Reference Number\"].json[\"data\"][0][\"status\"] == \"Activated\"){\n    item.resposecode=200;\n    item.message=\"activated\";\n  }\n  else if($node[\"Check Reference Number\"].json[\"data\"][0][\"status\"] == \"AssignedToUser\"){\n    if($node[\"Check Reference Number\"].json[\"data\"][0][\"mobile_number\"]){\n      item.resposecode=200;\n      item.message=\"registerednumber\";\n    }\n    else{\n      item.resposecode=200;\n      item.message=\"unregisterednumber\";\n    }\n  }\n \n}\nelse{\n  item.resposecode=200;\n  item.message=\"incorrectreferenceno\";\n}\n\nreturn item;"
+        "functionCode": "item.message=\"\";\nif($node[\"Check Reference Number\"].json[\"data\"].length > 0){\n  if($node[\"Check Reference Number\"].json[\"data\"][0][\"status\"] == \"RequestForActivation\"){\n    item.resposecode=200;\n    item.message=\"requestedforactivation\";\n  }\n  else if($node[\"Check Reference Number\"].json[\"data\"][0][\"status\"] == \"Activated\"){\n    item.resposecode=200;\n    item.message=\"activated\";\n  }\n  else if($node[\"Check Reference Number\"].json[\"data\"][0][\"status\"] == \"AssignedToUser\"){\n    if($node[\"Check Reference Number\"].json[\"data\"][0][\"mobile_number\"] && $node[\"Check Reference Number\"].json[\"data\"][0][\"otp_verified\"] == true){\n      item.resposecode=200;\n      item.message=\"registerednumber\";\n    }\n    else{\n      item.resposecode=200;\n      item.message=\"unregisterednumber\";\n    }\n  }\n \n}\nelse{\n  item.resposecode=200;\n  item.message=\"incorrectreferenceno\";\n}\n\nreturn item;"
       },
       "name": "Validate Data",
       "type": "n8n-nodes-base.functionItem",
@@ -223,7 +223,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sp_card_inventory?filter={\"reference_number\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"query\"][\"digits\"].replaceAll('\"','')}}\"}}&fields=mobile_number,status",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sp_card_inventory?filter={\"reference_number\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"query\"][\"digits\"].replaceAll('\"','')}}\"}}&fields=mobile_number,status,otp_verified",
         "options": {}
       },
       "name": "Check Reference Number",
@@ -268,5 +268,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-04-18T10:12:08.707Z"
+  "updatedAt": "2023-04-21T05:32:41.721Z"
 }
