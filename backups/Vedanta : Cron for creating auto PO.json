@@ -1,8 +1,188 @@
 {
   "active": false,
-  "connections": {},
-  "createdAt": "2023-04-18T09:02:52.645Z",
-  "id": "286",
+  "connections": {
+    "Cron": {
+      "main": [
+        [
+          {
+            "node": "Get url and token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get url and token": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the inventorty items other than sufficient qty": {
+      "main": [
+        [
+          {
+            "node": "Check for inventory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "Get the buyers and ops",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for products in bpo": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Get the inventorty items other than sufficient qty",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the latest vmi record": {
+      "main": [
+        [
+          {
+            "node": "Function to create vendor po",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the buyers and ops": {
+      "main": [
+        [
+          {
+            "node": "Get the emails",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the emails": {
+      "main": [
+        [
+          {
+            "node": "Check for buyers",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for buyers": {
+      "main": [
+        [
+          {
+            "node": "Check for ops",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for ops": {
+      "main": [
+        [
+          {
+            "node": "Check for products in bpo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to create vendor po": {
+      "main": [
+        [
+          {
+            "node": "Create auto vendor PO",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create auto vendor PO": {
+      "main": [
+        [
+          {
+            "node": "Update the inventorty item status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Get the latest vmi record",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for inventory": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-04-18T09:02:52.673Z",
+  "id": "287",
   "name": "Vedanta : Cron for creating auto PO",
   "nodes": [
     {
@@ -11,13 +191,369 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        240,
+        120,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {}
+          ]
+        }
+      },
+      "name": "Cron",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        140,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "=https://qan8n.shakedeal.com/webhook/get-url",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "client",
+              "value": "=vedanta"
+            },
+            {
+              "name": "env",
+              "value": "=qa"
+            }
+          ]
+        }
+      },
+      "name": "Get url and token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        320,
+        320
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://sdqa.mozart.shakedeal.com/items/sdm_inventory?filter={\"_and\": [{\"stock_status\": {\"_neq\":\"sufficient_quantity\"}},{\"item_status\":{\"_neq\":\"po_generated\"}}]}",
+        "options": {}
+      },
+      "name": "Get the inventorty items other than sufficient qty",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        720,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "80",
+          "name": "Mozart qa creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let inventoryData = $node[\"Get the inventorty items other than sufficient qty\"].json[\"data\"];\nlet productIds = inventoryData.map(id=>id.product);\nlet negligable_plants = JSON.parse($node[\"Globals\"].json[\"negligable_plants\"]);\nlet categoryIds = inventoryData.map(id=>negligable_plants.includes(id.plant)?id.plant:id.product.slice(0,2));\n\n\nitems[0].json.categoryIds = categoryIds;\nitems[0].json.negligable_plants = negligable_plants;\nitems[0].json.productIds = productIds;\nreturn items;"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1280,
         300
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "value": "={{$node[\"Check for ops\"].json[\"data\"]}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1960,
+        -40
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://sdqa.mozart.shakedeal.com/items/sdm_bpos?filter={\"product\":{\"_in\":\"{{$node[\"Function\"].json[\"productIds\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Check for products in bpo",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2300,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "80",
+          "name": "Mozart qa creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "po_prefix",
+              "value": "1000000001"
+            },
+            {
+              "name": "negligable_plants",
+              "value": "=[\"NIES\",\"BCES\",\"KBES\",\"ARES\",\"NKES\"]"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        500,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://sdqa.mozart.shakedeal.com/items/sdm_vendor_pos?filter={\"consignment_type\":{\"_eq\":\"vmi\"}}&sort=-date_created&limit=1",
+        "options": {}
+      },
+      "name": "Get the latest vmi record",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2800,
+        280
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "80",
+          "name": "Mozart qa creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_product_buyer?filter={\"id\":{\"_in\":\"{{$node[\"Function\"].json[\"categoryIds\"]}}\"}}&fields=*.*",
+        "options": {}
+      },
+      "name": "Get the buyers and ops",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1460,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "80",
+          "name": "Mozart qa creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let prodBuyerData = $node[\"Get the buyers and ops\"].json[\"data\"];\nlet buyerEmails = [];\nlet opsEmails = [];\nprodBuyerData.forEach(function(pbd,index){\n  if(pbd.additional_buyers){\n    pbd.additional_buyers.forEach(function(additionalBuyer,index){\n      buyerEmails.push(additionalBuyer.email);\n    })\n  }\n  buyerEmails.push(pbd.buyer.email);\n  opsEmails.push(pbd.operation_agent.email)\n})\n\nitems[0].json.buyerEmails = buyerEmails;\nitems[0].json.opsEmails = opsEmails;\nreturn items;"
+      },
+      "name": "Get the emails",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1660,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_buyers?filter={\"buyer\":{ \"email\": { \"_in\": \"{{$node[\"Get the emails\"].json[\"buyerEmails\"]}}\" }}}&fields=*.*",
+        "options": {}
+      },
+      "name": "Check for buyers",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1820,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "80",
+          "name": "Mozart qa creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_operation_agents?filter={\"operation_agent\":{ \"email\": { \"_in\": \"{{$node[\"Get the emails\"].json[\"opsEmails\"]}}\" }}}&fields=*.*",
+        "options": {}
+      },
+      "name": "Check for ops",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2040,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "80",
+          "name": "Mozart qa creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let bpoProducts = $node[\"Check for products in bpo\"].json[\"data\"];\nlet inventoryData = $node[\"Get the inventorty items other than sufficient qty\"].json[\"data\"];\nlet prodVen = [];\nlet vendorPoObj = [];\nlet catBuyersOps = $node[\"Get the buyers and ops\"].json[\"data\"];\nlet buyers_data = $node[\"Check for buyers\"].json[\"data\"];\nlet operation_agent_data = $node[\"Check for ops\"].json[\"data\"];\nlet negligable_plants = JSON.parse($node[\"Globals\"].json[\"negligable_plants\"]);\nlet updateInventoryIds = [];\nlet poNumber = $node[\"Get the latest vmi record\"].json[\"data\"].length>0?$node[\"Get the latest vmi record\"].json[\"data\"][0][\"id\"]:$node[\"Globals\"].json[\"po_prefix\"]\ninventoryData.forEach(function(product,index){\n  let matchedBpoProduct = bpoProducts.filter(bpoProd=>bpoProd.product == product.product )\n  if(matchedBpoProduct.length>0){\n    updateInventoryIds.push(product.id);\n    let prodVenObj = {\n      id:matchedBpoProduct[0].id,\n      product : product.product,\n      vendorEmail : matchedBpoProduct[0].vendor,\n      plant : product.plant,\n      uom : product.uom,\n      leadTime : product.lead_time,\n      reOrderQuantity : product.re_order_quantity,\n      tax:18,\n      hsn:\"1234\",\n      rate : product.avg_price,\n      bpo : matchedBpoProduct[0].sd_bpo_vedanta_ref\n    }\n    prodVen.push(prodVenObj)\n  }\n})\n\nlet updateInventotyObj = {\n  keys : updateInventoryIds,\n  data: {\n\t\titem_status: \"po_generated\"\n\t}\n}\nuniqueArr = Object.create(null),\n    uniqueVendorPlantArr = prodVen.filter(o => {\n        var key = ['plant', 'vendorEmail'].map(k => o[k]).join('|');\n        if (!uniqueArr[key]) {\n            uniqueArr[key] = true;\n            return true;\n        }\n    });\nuniqueVendorPlantArr.forEach(function(obj,index){\n  poNumber = (parseInt(poNumber)+1).toString();\n  let matchedProduct = prodVen.filter(pv=>obj.plant == pv.plant && obj.vendorEmail == pv.vendorEmail);\n  let delivery_dates = [];\n  let poItems = [];\n  let net_po_value = matchedProduct.reduce((total,mp)=>parseFloat(mp.rate)*parseFloat(mp.reOrderQuantity)+ total, 0);\n  let po_value = matchedProduct.reduce((total,mp)=>parseFloat(mp.rate)*parseFloat(mp.reOrderQuantity)+(parseFloat(mp.rate)*parseFloat(mp.reOrderQuantity)*mp.tax)/100+ total, 0);\n  let buyers = [];\n  let ops = [];\n  let buyerEmails = [];\n  let opsEmails = [];\n  if(negligable_plants.includes(obj.plant)){\n    let getCatBuy = catBuyersOps.filter(cbo=>cbo.id == obj.plant);\n    if(getCatBuy[0].additional_buyers){\n      getCatBuy[0].additional_buyers.forEach(function(ab,index){\n        buyerEmails.push(ab.email);\n      })\n    }\n    buyerEmails.push(getCatBuy[0].buyer.email)\n    opsEmails.push(getCatBuy[0].operation_agent.email)\n  }else {\n    let catBuy = catBuyersOps.filter(cbo=>cbo.id == obj.product.slice(0,2));\n    if(catBuy[0].additional_buyers){\n      catBuy[0].additional_buyers.forEach(function(ab,index){\n        catBuy.push(ab.email);\n      })\n    }\n    buyerEmails.push(getCatBuy[0].buyer.email)\n    opsEmails.push(getCatBuy[0].operation_agent.email)\n  }\n  let uniqueBuyerArr = buyerEmails.filter((value, index) => {\n    return buyerEmails.indexOf(value) === index;\n  });\n  let uniqueOpsArr = opsEmails.filter((value, index) => {\n    return opsEmails.indexOf(value) === index;\n  });\n\n  uniqueOpsArr.forEach(function(ops_email,index){\n    let get_ops_id =  operation_agent_data.filter(oad=>oad.operation_agent.email == ops_email);\n    ops[index]={};\n    ops[index].sdm_operation_agents_id = get_ops_id[0].id;\n  })\n  uniqueBuyerArr.forEach(function(buyer_email,index){\n    let get_buyer_id =  buyers_data.filter(bd=>bd.buyer.email == buyer_email);\n    buyers[index]={};\n    buyers[index].sdm_buyers_id = get_buyer_id[0].id;\n  })\n  matchedProduct.forEach(function(mp,index){\n    let timeLead = parseFloat(mp.leadTime);\n    let numDaysToAdd = timeLead - (timeLead*0.2);\n    let today = new Date();\n    let resultDate = new Date(today);\n    resultDate.setDate(today.getDate() + parseFloat(numDaysToAdd));\n    delivery_dates.push(resultDate);\n    let net_price = mp.reOrderQuantity * mp.rate;\n    poItems[index] = {};\n    poItems[index].id = `${poNumber}-${index}`;\n    poItems[index].product = mp.product;\n    poItems[index].vendor =  mp.vendorEmail;\n    poItems[index].net_price = net_price;\n    poItems[index].gross_price = net_price+(net_price*mp.tax)/100 ;\n    poItems[index].requested_qty = mp.reOrderQuantity;\n    poItems[index].delivery_date = new Date(resultDate).toISOString();\n    poItems[index].unit_price = mp.rate;\n    poItems[index].tax_percentage = mp.tax;\n    poItems[index].uom = mp.uom;\n    poItems[index].plant = mp.plant;\n    poItems[index].hsn = mp.hsn;\n  })\n  let maxDate = new Date(\n  Math.max(\n    ...delivery_dates.map(element => {\n      return new Date(element);\n      }),\n    ),\n  );\n  vendorPoObj[index]={};\n  vendorPoObj[index].vendor = obj.vendorEmail;\n  vendorPoObj[index].id = `SD${obj.plant}${poNumber}`;\n  vendorPoObj[index].po_date = new Date().toISOString();\n  vendorPoObj[index].po_status = \"draft\";\n  vendorPoObj[index].po_value = po_value;\n  vendorPoObj[index].net_po_value = net_po_value;\n  vendorPoObj[index].po_type = \"use_and_pay\";\n  vendorPoObj[index].po_deliver_date = new Date(maxDate).toISOString();\n  vendorPoObj[index].po_items = poItems;\n  vendorPoObj[index].buyers = buyers;\n  vendorPoObj[index].operation_agents = ops;\n  vendorPoObj[index].bpo = obj.id;\n  vendorPoObj[index].consignment_type = \"vmi\";\n})\n\nitems[0].json.updateInventotyObj = updateInventotyObj;\nitems[0].json.prodVen = prodVen;\nitems[0].json.uniqueArr = uniqueVendorPlantArr;\nitems[0].json.poNumber = poNumber;\nitems[0].json.vendorPoObj = vendorPoObj;\nreturn items;"
+      },
+      "name": "Function to create vendor po",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        2960,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_pos",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Function to create vendor po\"].json[\"vendorPoObj\"]}}"
+      },
+      "name": "Create auto vendor PO",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3180,
+        280
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "80",
+          "name": "Mozart qa creds"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_inventory",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Function to create vendor po\"].json[\"updateInventotyObj\"]}}"
+      },
+      "name": "Update the inventorty item status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3380,
+        280
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "80",
+          "name": "Mozart qa creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Check for products in bpo\"].json[\"data\"].length>0?true:false}}"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        2480,
+        300
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        2800,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Get the inventorty items other than sufficient qty\"].json[\"data\"].length>0?true:false}}"
+            }
+          ]
+        }
+      },
+      "name": "Check for inventory",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        960,
+        320
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "NoOp1",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1300,
+        500
       ]
     }
   ],
-  "settings": {},
+  "settings": {
+    "saveManualExecutions": true
+  },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-04-18T09:02:52.645Z"
+  "updatedAt": "2023-04-20T06:52:54.574Z"
 }
