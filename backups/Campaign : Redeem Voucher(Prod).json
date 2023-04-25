@@ -368,7 +368,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"dms_campaign_url\"]}}/items/sp_reward_links?filter={\"id\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"id\"]}}\"}}",
+        "url": "={{$node[\"Globals\"].json[\"dms_campaign_url\"]}}/items/sp_reward_links?filter={\"id\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"id\"]}}\"}}&fields=*,reward_campaign.*",
         "options": {}
       },
       "name": "Verify Link",
@@ -608,7 +608,7 @@
         "options": {
           "bodyContentType": "json"
         },
-        "bodyParametersJson": "={\n\t\"required_vouchers\": [\n         {\n           \"sku\": \"{{$node[\"Webhook\"].json[\"body\"][\"sku\"]}}\",\n           \"qty\": 1,\n           \"amt\": {{$node[\"Get Value of Vocher Code\"].json[\"data\"][0][\"value\"]*1}}\n          }\n     ],\n\t \"options\": {\n\t \t\"redeemed\": true,\n        \"order_id\":\"{{$node[\"Webhook\"].json[\"body\"][\"id\"]}}\" \n\t }\n}"
+        "bodyParametersJson": "={\n\t\"required_vouchers\": [\n         {\n           \"sku\": \"{{$node[\"Webhook\"].json[\"body\"][\"sku\"]}}\",\n           \"qty\": 1,\n           \"amt\": {{$node[\"Get Value of Vocher Code\"].json[\"data\"][0][\"value\"]*1}}\n          }\n     ],\n\t \"options\": {\n\t \t\"redeemed\": true,\n        \"reference_id\": \"{{$node[\"Webhook\"].json[\"body\"][\"sku\"]+\"-\"+(($node[\"Verify Link\"].json[\"data\"][0][\"reward_campaign\"][\"catalog_mode\"]==\"leq\")?($node[\"Verify Link\"].json[\"data\"][0][\"pending_value\"]*1+\"-\"):(\"\"))+$node[\"Webhook\"].json[\"body\"][\"id\"]}}\",\n        \"order_id\":\"{{$node[\"Webhook\"].json[\"body\"][\"id\"]}}\" \n\t }\n}"
       },
       "name": "Get Voucher from VPP API",
       "type": "n8n-nodes-base.httpRequest",
@@ -647,5 +647,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-12-26T12:08:23.779Z"
+  "updatedAt": "2023-04-24T12:13:24.215Z"
 }
