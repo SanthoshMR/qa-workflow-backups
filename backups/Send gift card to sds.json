@@ -365,13 +365,13 @@
         "options": {
           "bodyContentType": "json"
         },
-        "bodyParametersJson": "={\n\t\"required_vouchers\": [\n         {\n           \"sku\": \"{{$node[\"Wait for order\"].json[\"body\"][\"product_code\"]}}\",\n           \"qty\": {{$node[\"Wait for order\"].json[\"body\"][\"quantity\"]}},\n           \"amt\": {{$node[\"Check for gift card amount\"].json[\"data\"][0]?$node[\"Check for gift card amount\"].json[\"data\"][0][\"amount\"]*1:null}}\n          }\n     ],\n\t \"options\": {\n\t \t\"redeemed\": true,\n\t \t\"order_id\": {{$node[\"Wait for order\"].json[\"body\"][\"order_id\"]?$node[\"Wait for order\"].json[\"body\"][\"order_id\"]+\"\":null}}\n\t }\n}"
+        "bodyParametersJson": "={\n\t\"required_vouchers\": [\n         {\n           \"sku\": \"{{$node[\"Wait for order\"].json[\"body\"][\"product_code\"]}}\",\n           \"qty\": {{$node[\"Wait for order\"].json[\"body\"][\"quantity\"]}},\n           \"amt\": {{$node[\"Check for gift card amount\"].json[\"data\"][0]?$node[\"Check for gift card amount\"].json[\"data\"][0][\"amount\"]*1:0}}\n          }\n     ],\n\t \"options\": {\n\t \t\"redeemed\": true,\n        \"reference_id\":\"{{$node[\"Wait for order\"].json[\"body\"][\"product_code\"]+\"-\"+$node[\"Wait for order\"].json[\"body\"][\"order_id\"]}}\", \n\t \t\"order_id\": {{$node[\"Wait for order\"].json[\"body\"][\"order_id\"]?$node[\"Wait for order\"].json[\"body\"][\"order_id\"]+\"\":null}}\n\t }\n}"
       },
       "name": "Get Voucher from VPP API",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1560,
+        1640,
         500
       ],
       "credentials": {
@@ -379,7 +379,8 @@
           "id": "75",
           "name": "Vendor Partner Program Zeus QA"
         }
-      }
+      },
+      "continueOnFail": true
     },
     {
       "parameters": {
@@ -403,15 +404,29 @@
     },
     {
       "parameters": {
-        "functionCode": "let gift_card = [];\nconst isSuccess = $node[\"Get Voucher from VPP API\"].json[0][\"success\"];\nconst vouchers = $node[\"Get Voucher from VPP API\"].json[0][\"response\"];\nconst amount = $node[\"Check for gift card amount\"].json[\"data\"][0][\"amount\"]*1;\nconst productCode = $node[\"Wait for order\"].json[\"body\"][\"product_code\"];\n\nif(isSuccess){\n  vouchers.forEach((obj,index)=>{\n    gift_card[index]={};\n    gift_card[index].cardNumber = obj.code;\n    gift_card[index].validity = obj.expiry;\n    gift_card[index].cardPin = obj.pin;\n    gift_card[index].amount = amount\n    gift_card[index].sku = productCode;\n  });\n}\n\nitems[0].json[0].cards = gift_card;\nreturn items[0].json;\n\n// items[0].json.cards = gift_card;\n// return items;"
+        "functionCode": "let gift_card = [];\nconst isSuccess = $node[\"Get Voucher from VPP API\"].json[0][\"success\"];\nconst message = $node[\"Get Voucher from VPP API\"].json[0][\"message\"].toLowerCase();\nconst try_qwikcilver = (isSuccess==false && !message.includes(\"unique reference id\"))? true: false;\nconst vouchers = $node[\"Get Voucher from VPP API\"].json[0][\"response\"];\nconst amount = $node[\"Check for gift card amount\"].json[\"data\"][0][\"amount\"]*1;\nconst productCode = $node[\"Wait for order\"].json[\"body\"][\"product_code\"];\n\nif(isSuccess){\n  vouchers.forEach((obj,index)=>{\n    gift_card[index]={};\n    gift_card[index].cardNumber = obj.code;\n    gift_card[index].validity = obj.expiry;\n    gift_card[index].cardPin = obj.pin;\n    gift_card[index].amount = amount\n    gift_card[index].sku = productCode;\n  });\n}\n\nitems[0].json[0].cards = gift_card;\nitems[0].json[0].try_qwikcilver = try_qwikcilver;\nreturn items[0].json;\n\n// items[0].json.cards = gift_card;\n// return items;"
       },
       "name": "send gift card to sds",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1780,
+        1920,
         500
       ]
+    },
+    {
+      "parameters": {
+        "url": "https://httpstat.us/504",
+        "options": {}
+      },
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1620,
+        760
+      ],
+      "continueOnFail": true
     }
   ],
   "settings": {},
@@ -424,5 +439,5 @@
       "updatedAt": "2022-06-27T13:07:10.771Z"
     }
   ],
-  "updatedAt": "2023-01-23T12:34:22.737Z"
+  "updatedAt": "2023-04-25T13:30:43.234Z"
 }
