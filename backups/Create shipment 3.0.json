@@ -166,7 +166,7 @@
         ],
         [
           {
-            "node": "Send Email",
+            "node": "NoOp1",
             "type": "main",
             "index": 0
           }
@@ -295,6 +295,68 @@
         [
           {
             "node": "Update hsn",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NoOp1": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update hsn": {
+      "main": [
+        [
+          {
+            "node": "IF2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF2": {
+      "main": [
+        [
+          {
+            "node": "Function to create order",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to create order": {
+      "main": [
+        [
+          {
+            "node": "Create Order",
             "type": "main",
             "index": 0
           }
@@ -547,7 +609,7 @@
           "parameter": [
             {
               "name": "client",
-              "value": "={{$node[\"Wait for shipment\"].json[\"body\"][\"payload\"][\"client\"]}}"
+              "value": "=vedanta"
             },
             {
               "name": "env",
@@ -581,8 +643,8 @@
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 1,
       "position": [
-        3060,
-        440
+        4300,
+        420
       ],
       "executeOnce": true,
       "credentials": {
@@ -1022,8 +1084,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        3300,
-        440
+        4520,
+        420
       ]
     },
     {
@@ -1045,7 +1107,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        3600,
+        4840,
         420
       ],
       "credentials": {
@@ -1054,10 +1116,87 @@
           "name": "Mozart DMS Token"
         }
       }
+    },
+    {
+      "parameters": {},
+      "name": "NoOp1",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        3400,
+        620
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let orderObj = {};\nlet orderItems = [];\nlet shipmentItems = $node[\"Function\"].json[\"sdmShipmentItems\"];\nshipmentItems.forEach(function(item,index){\n  orderItems[index]={};\n  orderItems[index].sdm_po_items_id = item.sdm_po_items_id;\n  orderItems[index].quantity  = item.shipment_qty;\n})\norderObj.order_value = $node[\"Create shipment in mozart\"].json[\"data\"][\"invoice_value\"];\norderObj.order_status = \"draft\";\norderObj.order_type = $node[\"Get po_id from mozart\"].json[\"data\"][0][\"po_type\"];\norderObj.order_date = new Date().toISOString();\n//orderObj.shipment = $node[\"Create shipment in mozart\"].json[\"data\"][\"id\"];\norderObj.order_items = orderItems;\n\nitems[0].json.orderObj = orderObj;\nitems[0].json.orderItems = orderItems;\nreturn items;"
+      },
+      "name": "Function to create order",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        5300,
+        300
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Get po_id from mozart\"].json[\"data\"][0][\"consignment_type\"] == \"non_consignmnet\"?true:false}}"
+            }
+          ]
+        }
+      },
+      "name": "IF2",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        5060,
+        420
+      ],
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"mozart_dms_url\"]}}/items/sdm_orders",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Function to create order\"].json[\"orderObj\"]}}"
+      },
+      "name": "Create Order",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        5520,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {},
+      "name": "NoOp2",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        5300,
+        580
+      ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-04-20T13:22:15.101Z"
+  "updatedAt": "2023-04-25T06:46:04.538Z"
 }
