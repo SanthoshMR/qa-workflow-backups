@@ -1,0 +1,329 @@
+{
+  "active": true,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for Message ID": {
+      "main": [
+        [
+          {
+            "node": "Check SES Update data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Processing Data": {
+      "main": [
+        [
+          {
+            "node": "Update Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Status": {
+      "main": [
+        [
+          {
+            "node": "Insert SES Log Details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Message ID": {
+      "main": [
+        [
+          {
+            "node": "Processing Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "Check for Message ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check SES Update data": {
+      "main": [
+        [
+          {
+            "node": "Check Update Data count",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparing for update SES Data": {
+      "main": [
+        [
+          {
+            "node": "Update SES Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Update Data count": {
+      "main": [
+        [
+          {
+            "node": "Preparing for update SES Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-04-26T07:52:59.268Z",
+  "id": "293",
+  "name": "Msg91 Logs",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        -420,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "msg91-log-details",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -220,
+        300
+      ],
+      "webhookId": "84f9315f-cf34-47b2-ab0c-63eb525fbc58"
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://zeusqa.shakedeal.com/items/sd_delivery_logs?filter={\"_and\": [{\"message_id\": {\"_in\":\"{{$node[\"Function\"].json[\"message_ids\"]}}\"}},{\"event_type\":{\"_eq\":\"SMS\"}}]}",
+        "options": {}
+      },
+      "name": "Check for Message ID",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "81",
+          "name": "SES Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Check for Message ID\"].json[\"data\"].length}}",
+              "operation": "larger",
+              "value2": "={{0}}"
+            }
+          ]
+        }
+      },
+      "name": "Check Message ID",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        500,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let request = $node[\"Webhook\"].json.body[0];\n\nlet keys = [];\nlet req_body = {};\n\nlet response = $node[\"Check for Message ID\"].json.data\n\nresponse.forEach(function(obj,index){\n    keys.push(obj.log_id)\n})\n\nlet report = request.report[0];\nvar message_status = \"\";\nif(report.status == 1){\n    message_status = 'Delivered';\n}else if(report.status == 2){\n    message_status = 'Failed';\n}else if(report.status == 9){\n    message_status = 'NDNC (In case of Promotional SMS only)';\n}else if(report.status == 16 || report.status == 25){\n    message_status = 'Reected';\n}else if(report.status == 17){\n    message_status = 'Blocked Number';\n}\n\n// if((report.desc.toLowerCase()) == \"delivered\"){\n//     event_type = 'Delivered';\n// }else{\n//     event_type = request_item.event_type;\n//     event_type = event_type.charAt(0).toUpperCase() + event_type.slice(1);\n// }\n\nlet data = {\n    \"status\" : message_status\n}\n\nreq_body.keys = keys;\nreq_body.data = data;\n\nitems[0].json.keys = keys;\nitems[0].json.req_body = req_body;\nitems[0].json.status = message_status;\nreturn items;"
+      },
+      "name": "Processing Data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        780,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_delivery_logs",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Processing Data\"].json[\"req_body\"]}}"
+      },
+      "name": "Update Status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        280
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "81",
+          "name": "SES Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_delivery_log_details",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "sd_delivery_log_id",
+              "value": "={{$node[\"Update Status\"].json[\"data\"][0][\"log_id\"]}}"
+            },
+            {
+              "name": "status",
+              "value": "={{$node[\"Processing Data\"].json[\"status\"]}}"
+            },
+            {
+              "name": "message",
+              "value": "={{$node[\"Webhook\"].json[\"body\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Insert SES Log Details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1320,
+        280
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "81",
+          "name": "SES Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let data = [];\n// let records = $node[\"Webhook\"].json[\"body\"];\n\nlet records = JSON.parse($node[\"Webhook\"].json[\"body\"][\"data\"]);\nlet message_ids = [];\n\nrecords.forEach((obj,index)=>{\n  data[index]={};\n  data[index].requestId = obj.requestId;\n  data[index].report = obj.report;\n  data[index].message = obj;\n\n  message_ids.push(obj.requestId);\n});\n\nmessage_ids = [...new Set(message_ids)];\n\nitems[0].json.message_ids = message_ids;\n\nitems[0].json.records = data;\nreturn items;"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -20,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let response = $node[\"Check for Message ID\"].json.data;\nlet message_ids = $node[\"Function\"].json[\"message_ids\"];\nlet message_ids_for_update = [];\n\nresponse.forEach((obj,index)=>{\n    let messageId = obj.message_id;\n    if(message_ids.includes(messageId)){\n        message_ids_for_update.push(messageId);\n    }  \n});\n\nitems[0].json.message_ids_for_update = message_ids_for_update;\nreturn items;"
+      },
+      "name": "Check SES Update data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        160,
+        620
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Check SES Update data\"].json[\"message_ids_for_update\"].length}}",
+              "operation": "larger",
+              "value2": "={{0}}"
+            }
+          ]
+        }
+      },
+      "name": "Check Update Data count",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        400,
+        620
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let response = $node[\"Check for Message ID\"].json.data;\nlet request_items = $node[\"Function\"].json.records;\n\nconst message_ids = $node[\"Function\"].json.message_ids;\n\nlet update_data = [];\n\nresponse.forEach((obj,index)=>{\n    let messageId = obj.message_id;\n    let log_id = obj.log_id;\n    if(message_ids.includes(messageId)){\n        let keys = [];\n        keys.push(log_id);\n\n        var message_status = \"\";\n        request_items.forEach((request_item,request_items_index)=>{\n            if(request_item.requestId == messageId){\n                let report = request_item.report[0];\n                if(report.status == 1){\n                    message_status = 'Delivered';\n                }else{\n                    message_status = 'Failed';\n                }\n            }\n        });\n        \n        let data = {\n            \"status\" : message_status\n        }\n\n        update_data.push({\n            json: [{\n                keys:keys,\n                data:data,\n            }]\n        });\n    }  \n});\n\nreturn update_data;"
+      },
+      "name": "Preparing for update SES Data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        660,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "=https://zeusqa.shakedeal.com/items/sd_delivery_logs",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Preparing for update SES Data\"].json[\"0\"]}}"
+      },
+      "name": "Update SES Log",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        900,
+        600
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "81",
+          "name": "SES Auth"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-04-26T13:54:37.323Z"
+}
