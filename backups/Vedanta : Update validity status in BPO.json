@@ -1,6 +1,18 @@
 {
   "active": false,
-  "connections": {},
+  "connections": {
+    "Cron": {
+      "main": [
+        [
+          {
+            "node": "Setting nth day from present date",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
   "createdAt": "2023-04-25T14:19:29.351Z",
   "id": "291",
   "name": "Vedanta : Update validity status in BPO",
@@ -14,10 +26,32 @@
         240,
         300
       ]
+    },
+    {
+      "parameters": {},
+      "name": "Cron",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        480,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let someDate = new Date();\nlet daysToAdd = [45,30,15,7];\nlet addedDays = [];\n\ndaysToAdd.forEach(function(numberOfDaysToAdd,index){\n  someDate.setDate(someDate.getDate() + numberOfDaysToAdd);\n\n  let dd =parseInt(someDate.getDate());\n  let day = dd < 10 ? '0' + dd : dd;\n  let mm =parseInt(someDate.getMonth() + 1);\n  let month = mm < 10 ? '0' + mm : mm;\n  let y = someDate.getFullYear();\n\n  let someFormattedDate = y+'-'+month +'-'+day;\n  addedDays.push(someFormattedDate);\n})\n\n\nitems[0].json.addedDays=addedDays\nreturn items;\n"
+      },
+      "name": "Setting nth day from present date",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        700,
+        300
+      ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-04-25T14:19:29.351Z"
+  "updatedAt": "2023-04-26T11:40:13.819Z"
 }
