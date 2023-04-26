@@ -1,0 +1,343 @@
+{
+  "active": true,
+  "connections": {
+    "Get url and token": {
+      "main": [
+        [
+          {
+            "node": "Get Cloud Files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        []
+      ]
+    },
+    "Nextcloud": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Combine Items": {
+      "main": [
+        [
+          {
+            "node": "Nextcloud",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "Spreadsheet File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Cloud Files": {
+      "main": [
+        [
+          {
+            "node": "Combine Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Spreadsheet File": {
+      "main": [
+        [
+          {
+            "node": "Function to get products",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to get products": {
+      "main": [
+        [
+          {
+            "node": "Get inventory Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get inventory Data": {
+      "main": [
+        [
+          {
+            "node": "Function to return updated current stock",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to return updated current stock": {
+      "main": [
+        [
+          {
+            "node": "Update inventory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get url and token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-04-26T06:58:06.758Z",
+  "id": "292",
+  "name": "Vedanta : Update Inventory Status",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        -60,
+        -120
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "update-inventory-stock",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        40,
+        220
+      ],
+      "webhookId": "445f197b-6b0c-4ed7-bd97-5aba35023640"
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "operation": "list",
+        "path": "Inventory-Current-stock-qa/"
+      },
+      "name": "Get Cloud Files",
+      "type": "n8n-nodes-base.nextCloud",
+      "typeVersion": 1,
+      "position": [
+        500,
+        220
+      ],
+      "credentials": {
+        "nextCloudApi": {
+          "id": "43",
+          "name": "SD Cloud"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "=https://qan8n.shakedeal.com/webhook/get-url",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "client",
+              "value": "=vedanta"
+            },
+            {
+              "name": "env",
+              "value": "=qa"
+            }
+          ]
+        }
+      },
+      "name": "Get url and token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        280,
+        220
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "path": "=Inventory-Current-stock-qa/{{$node[\"Combine Items\"].json[\"excelData\"][0][\"file_name\"]}}"
+      },
+      "name": "Nextcloud",
+      "type": "n8n-nodes-base.nextCloud",
+      "typeVersion": 1,
+      "position": [
+        940,
+        220
+      ],
+      "credentials": {
+        "nextCloudApi": {
+          "id": "43",
+          "name": "SD Cloud"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "// return items;\nlet poFiles=[];\nlet excelFiles=[];\nitems.forEach((item) => {\n    const fullPath = item.json[\"path\"].split(\"/\");\n    const fileName = fullPath[fullPath.length - 1]\n    if(decodeURI(fileName).includes(\".csv\") || decodeURI(fileName).includes(\".xlsx\")){\n        excelFiles.push({\"file_name\":decodeURI(fileName)});\n    }\n});\n\nreturn [{\n     json: {\n         excelData:excelFiles\n    }\n}];"
+      },
+      "name": "Combine Items",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        720,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let binaries = {};\nconst { read: xlsxRead } = require('xlsx'); \nconst data = items[0].binary.data; \nworkbook = xlsxRead(data.data); \nbinaries[\"data\"] = workbook;\n\nitems[0].json.binaries= binaries\nreturn items;"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "binaryPropertyName": "=data",
+        "options": {
+          "sheetName": "={{$node[\"Function\"].json[\"binaries\"][\"data\"][\"SheetNames\"][0]}}"
+        }
+      },
+      "name": "Spreadsheet File",
+      "type": "n8n-nodes-base.spreadsheetFile",
+      "typeVersion": 1,
+      "position": [
+        1380,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let products = [];\nlet productIds = [];\nitems.forEach((item, index) => {\n  // products[index]={};\n  // products[index].product = item.json[\"Material \"];\n  // products[index].plant = item.json[\"plant\"];\n  // products[index].currentStock = item.json[\"Current Stock\"]\n  productIds.push(item.json[\"Material   \"])\n  products.push({\n    product : item.json[\"Material\"],\n    plant : item.json[\"Plant\"],\n    currentStock : item.json[\"Current Stock\"]\n  })\n})\n\n// for ([item,index] of items) {\n//   products[index]={};\n//   products[index].product = item.json[\"Material \"];\n//   products[index].plant = item.json[\"plant\"];\n//   products[index].currentStock = item.json[\"Current Stock\"]\n// }\nreturn [{\n    json: {\n        products: products,\n        productIds : productIds\n    },\n    //binary: binaries\n}];"
+      },
+      "name": "Function to get products",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1580,
+        220
+      ],
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_inventory?filter={\"product\":{\"_in\":\"{{$node[\"Function to get products\"].json[\"productIds\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Get inventory Data",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1780,
+        220
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "80",
+          "name": "Mozart qa creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let inventoryData = $node[\"Get inventory Data\"].json[\"data\"];\nlet excelStockData = $node[\"Function to get products\"].json[\"products\"];\nlet updateObj = [];\nlet returnItems = [];\nexcelStockData.forEach(function(item,index){\n  let matchedInvetoryItem = inventoryData.filter(data=>data.plant == item.plant && data.product == item.product);\n  if(matchedInvetoryItem.length>0){\n    updateObj.push({\n      id:matchedInvetoryItem[0].id,\n      currentStock : item.currentStock,\n      itemStatus : matchedInvetoryItem[0].current_stock > item.currentStock?\"po_not_generated\":matchedInvetoryItem[0].item_status\n    })\n  }\n\n})\nupdateObj.forEach(function(obj,index){  \n    returnItems.push({\n    json: {\n       id : obj.id,\n       currentStock:obj.currentStock,\n       itemStatus:obj.itemStatus,\n       dms_url : $node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]\n    }\n  });\n  \n})\n\nreturn returnItems;"
+      },
+      "name": "Function to return updated current stock",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        2000,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Function to return updated current stock\"].json[\"dms_url\"]}}/items/sdm_inventory/{{$node[\"Function to return updated current stock\"].json[\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "current_stock",
+              "value": "={{$node[\"Function to return updated current stock\"].json[\"currentStock\"]}}"
+            },
+            {
+              "name": "item_status",
+              "value": "={{$node[\"Function to return updated current stock\"].json[\"itemStatus\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update inventory",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2220,
+        220
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "80",
+          "name": "Mozart qa creds"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-04-26T13:10:00.562Z"
+}
