@@ -12,11 +12,6 @@
         ]
       ]
     },
-    "Start": {
-      "main": [
-        []
-      ]
-    },
     "Nextcloud": {
       "main": [
         [
@@ -94,7 +89,51 @@
         ]
       ]
     },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get url and token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "Function to return updated current stock": {
+      "main": [
+        [
+          {
+            "node": "Move File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set": {
+      "main": [
+        [
+          {
+            "node": "Start Loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start Loop": {
+      "main": [
+        [
+          {
+            "node": "Function to get the splitted stock",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to get the splitted stock": {
       "main": [
         [
           {
@@ -105,11 +144,56 @@
         ]
       ]
     },
-    "Webhook": {
+    "Increment index": {
       "main": [
         [
           {
-            "node": "Get url and token",
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "End Loop",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Start Loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update inventory": {
+      "main": [
+        [
+          {
+            "node": "Increment index",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "End Loop": {
+      "main": [
+        []
+      ]
+    },
+    "Move File": {
+      "main": [
+        [
+          {
+            "node": "Set",
             "type": "main",
             "index": 0
           }
@@ -259,7 +343,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let products = [];\nlet productIds = [];\nitems.forEach((item, index) => {\n  // products[index]={};\n  // products[index].product = item.json[\"Material \"];\n  // products[index].plant = item.json[\"plant\"];\n  // products[index].currentStock = item.json[\"Current Stock\"]\n  productIds.push(item.json[\"Material   \"])\n  products.push({\n    product : item.json[\"Material\"],\n    plant : item.json[\"Plant\"],\n    currentStock : item.json[\"Current Stock\"]\n  })\n})\n\n// for ([item,index] of items) {\n//   products[index]={};\n//   products[index].product = item.json[\"Material \"];\n//   products[index].plant = item.json[\"plant\"];\n//   products[index].currentStock = item.json[\"Current Stock\"]\n// }\nreturn [{\n    json: {\n        products: products,\n        productIds : productIds\n    },\n    //binary: binaries\n}];"
+        "functionCode": "let products = [];\nlet productIds = [];\nitems.forEach((item, index) => {\n  // products[index]={};\n  // products[index].product = item.json[\"Material \"];\n  // products[index].plant = item.json[\"plant\"];\n  // products[index].currentStock = item.json[\"Current Stock\"]\n  productIds.push(item.json[\"Material\"])\n  products.push({\n    product : item.json[\"Material\"],\n    plant : item.json[\"Plant\"],\n    currentStock : item.json[\"Current Stock\"]\n  })\n})\n\n// for ([item,index] of items) {\n//   products[index]={};\n//   products[index].product = item.json[\"Material \"];\n//   products[index].plant = item.json[\"plant\"];\n//   products[index].currentStock = item.json[\"Current Stock\"]\n// }\nreturn [{\n    json: {\n        products: products,\n        productIds : productIds\n    },\n    //binary: binaries\n}];"
       },
       "name": "Function to get products",
       "type": "n8n-nodes-base.function",
@@ -292,7 +376,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let inventoryData = $node[\"Get inventory Data\"].json[\"data\"];\nlet excelStockData = $node[\"Function to get products\"].json[\"products\"];\nlet updateObj = [];\nlet returnItems = [];\nexcelStockData.forEach(function(item,index){\n  let matchedInvetoryItem = inventoryData.filter(data=>data.plant == item.plant && data.product == item.product);\n  if(matchedInvetoryItem.length>0){\n    updateObj.push({\n      id:matchedInvetoryItem[0].id,\n      currentStock : item.currentStock,\n      itemStatus : matchedInvetoryItem[0].current_stock > item.currentStock?\"po_not_generated\":matchedInvetoryItem[0].item_status\n    })\n  }\n\n})\nupdateObj.forEach(function(obj,index){  \n    returnItems.push({\n    json: {\n       id : obj.id,\n       currentStock:obj.currentStock,\n       itemStatus:obj.itemStatus,\n       dms_url : $node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]\n    }\n  });\n  \n})\n\nreturn returnItems;"
+        "functionCode": "let inventoryData = $node[\"Get inventory Data\"].json[\"data\"];\nlet excelStockData = $node[\"Function to get products\"].json[\"products\"];\nlet updateObj = [];\nlet returnItems = [];\nexcelStockData.forEach(function(item,index){\n  let matchedInvetoryItem = inventoryData.filter(data=>data.plant == item.plant && data.product == item.product);\n  if(matchedInvetoryItem.length>0){\n    updateObj.push({\n      id:matchedInvetoryItem[0].id,\n      currentStock : item.currentStock,\n      itemStatus : matchedInvetoryItem[0].current_stock > item.currentStock?\"po_not_generated\":matchedInvetoryItem[0].item_status\n    })\n  }\n\n})\n// updateObj.forEach(function(obj,index){  \n//     returnItems.push({\n//     json: {\n//        id : obj.id,\n//        currentStock:obj.currentStock,\n//        itemStatus:obj.itemStatus,\n//        dms_url : $node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]\n//     }\n//   });\n  \n// })\n\n//return returnItems;\nconst size = 10; // size of each subarray\n\nconst result = [];\nfor (let i = 0; i < updateObj.length; i += size) {\n  result.push(updateObj.slice(i, i + size));\n}\nitems[0].json.updateObj= updateObj;\nitems[0].json.result= result;\nitems[0].json.resultlength = result.length;\nreturn items"
       },
       "name": "Function to return updated current stock",
       "type": "n8n-nodes-base.function",
@@ -306,17 +390,17 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "PATCH",
-        "url": "={{$node[\"Function to return updated current stock\"].json[\"dms_url\"]}}/items/sdm_inventory/{{$node[\"Function to return updated current stock\"].json[\"id\"]}}",
+        "url": "={{$node[\"Function to get the splitted stock\"].json[\"dms_url\"]}}/items/sdm_inventory/{{$node[\"Function to get the splitted stock\"].json[\"id\"]}}",
         "options": {},
         "bodyParametersUi": {
           "parameter": [
             {
               "name": "current_stock",
-              "value": "={{$node[\"Function to return updated current stock\"].json[\"currentStock\"]}}"
+              "value": "={{$node[\"Function to get the splitted stock\"].json[\"currentStock\"]}}"
             },
             {
               "name": "item_status",
-              "value": "={{$node[\"Function to return updated current stock\"].json[\"itemStatus\"]}}"
+              "value": "={{$node[\"Function to get the splitted stock\"].json[\"itemStatus\"]}}"
             }
           ]
         }
@@ -325,7 +409,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2220,
+        3120,
         220
       ],
       "credentials": {
@@ -334,10 +418,124 @@
           "name": "Mozart qa creds"
         }
       }
+    },
+    {
+      "parameters": {},
+      "name": "Start Loop",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        2600,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "number": [
+            {
+              "name": "index"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        2400,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let stockData = $node[\"Function to return updated current stock\"].json[\"result\"];\nlet currentIndex = $node[\"Start Loop\"].json[\"index\"];\nlet currentStock = stockData[currentIndex];\nlet returnItems = [];\n\ncurrentStock.forEach(function(obj,index){  \n    returnItems.push({\n    json: {\n       id : obj.id,\n       currentStock:obj.currentStock,\n       itemStatus:obj.itemStatus,\n       dms_url : $node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]\n    }\n  });\n  \n})\n\nreturn returnItems;\n\n// items[0].json.currentStock= currentStock;\n\n// return items;"
+      },
+      "name": "Function to get the splitted stock",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        2820,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "number": [
+            {
+              "name": "index",
+              "value": "={{$node[\"Start Loop\"].json[\"index\"]+1}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Increment index",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        3340,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Increment index\"].json[\"index\"]}}",
+              "operation": "equal",
+              "value2": "={{$node[\"Function to return updated current stock\"].json[\"resultlength\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        3520,
+        220
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "End Loop",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        3600,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "move",
+        "path": "=Inventory-Current-stock-qa/{{$node[\"Combine Items\"].json[\"excelData\"][0][\"file_name\"]}}",
+        "toPath": "=Inventory-old-uploaded-stock-qa/{{$node[\"Combine Items\"].json[\"excelData\"][0][\"file_name\"]}}"
+      },
+      "name": "Move File",
+      "type": "n8n-nodes-base.nextCloud",
+      "typeVersion": 1,
+      "position": [
+        2180,
+        220
+      ],
+      "executeOnce": true,
+      "credentials": {
+        "nextCloudApi": {
+          "id": "43",
+          "name": "SD Cloud"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-04-26T13:10:00.562Z"
+  "updatedAt": "2023-04-27T10:26:08.078Z"
 }
