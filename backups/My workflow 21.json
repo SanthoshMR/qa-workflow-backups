@@ -1,0 +1,306 @@
+{
+  "active": false,
+  "connections": {
+    "Msg91": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Kaleyra": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "SMS Templates",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Email Templates",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SMS Templates": {
+      "main": [
+        [
+          {
+            "node": "Msg91",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email Templates": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-04-27T09:03:36.488Z",
+  "id": "294",
+  "name": "My workflow 21",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        140,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{$node[\"Webhook\"].json[\"body\"][\"otp_mode\"]}}",
+        "rules": {
+          "rules": [
+            {
+              "value2": "sms"
+            },
+            {
+              "value2": "email",
+              "output": 1
+            },
+            {
+              "value2": "whatsapp",
+              "output": 2
+            }
+          ]
+        }
+      },
+      "name": "Switch",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [
+        340,
+        360
+      ]
+    },
+    {
+      "parameters": {
+        "from": "SHAKDL",
+        "to": "=91{{$node[\"Webhook\"].json[\"body\"][\"phone\"]}}",
+        "message": "={{$node[\"SMS Templates\"].json[\"smsBody\"]}}"
+      },
+      "name": "Msg91",
+      "type": "n8n-nodes-base.msg91",
+      "typeVersion": 1,
+      "position": [
+        900,
+        160
+      ],
+      "credentials": {
+        "msg91Api": {
+          "id": "59",
+          "name": "Msg91 Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://api.kaleyra.io/v1/HXIN1732535738IN/messages",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "from",
+              "value": "+917406700552"
+            },
+            {
+              "name": "to",
+              "value": "=91{{$node[\"Webhook\"].json[\"body\"][\"phone\"]}}"
+            },
+            {
+              "name": "type",
+              "value": "mediatemplate"
+            },
+            {
+              "name": "params",
+              "value": "={{$node[\"Update OTP\"].json[\"data\"][\"otp\"]}}"
+            },
+            {
+              "name": "template_name",
+              "value": "=otp"
+            },
+            {
+              "name": "channel",
+              "value": "whatsapp"
+            },
+            {
+              "name": "media_url",
+              "value": "="
+            },
+            {
+              "name": "callback_url",
+              "value": "https://qan8n.shakedeal.com/webhook/whatsappcallback"
+            }
+          ]
+        },
+        "headerParametersUi": {
+          "parameter": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "api-key",
+              "value": "A826baea1feaa6207057eb1f52f68fde8"
+            }
+          ]
+        },
+        "queryParametersUi": {
+          "parameter": [
+            {}
+          ]
+        }
+      },
+      "name": "Call Kaleyra",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        900,
+        560
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{$node[\"Webhook\"].json[\"body\"][\"email_from\"]}}",
+        "toEmail": "={{$node[\"Webhook\"].json[\"body\"][\"email_to\"]}}",
+        "subject": "Diwali Voucher - OTP",
+        "text": "=",
+        "html": "={{$node[\"Email Templates\"].json[\"emailBody\"]}}",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        900,
+        360
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "36",
+          "name": "SendGrid"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let responseData = [];\n\nresponseData.push({\n    json: {\n      \"success\":true,\n      \"message\":\"OTP Sent Successfully\"\n    }\t\t\t\t\n});\n\nreturn responseData;"
+      },
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1260,
+        360
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "httpMethod": "POST",
+        "path": "sd-notifications",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        140,
+        360
+      ],
+      "webhookId": "b6d016ec-2af2-4432-a24d-f5fa2cde27cf",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "85",
+          "name": "SD Notifications Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let smsBody = null;\n\nconst templateName = $node[\"Webhook\"].json[\"body\"][\"template_name\"];\nconst templateParams = $node[\"Webhook\"].json[\"body\"][\"template_params\"];\n\nswitch(templateName) {\n  case 'reward-template': {\n    let roughTemplate =  \"{{$par0}} is your OTP for account verification on ShakeDeal. The OTP is valid for 30 mins. Please do not share OTP with anyone.\"\n+\"\\nTeam ShakeDeal\";\n\n    templateParams.forEach((param, index)=>{\n      roughTemplate = roughTemplate.split(`{{$par${index}}}`).join(param);\n    });\n    \n    smsBody = roughTemplate;\n    break;\n  }\n}\n\nreturn {smsBody};"
+      },
+      "name": "SMS Templates",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        640,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let emailBody = null;\n\nconst templateName = $node[\"Webhook\"].json[\"body\"][\"template_name\"];\nconst templateParams = $node[\"Webhook\"].json[\"body\"][\"template_params\"];\n\nswitch(templateName) {\n  case 'reward-template': {\n    let roughTemplate =  \"Hello, <br /><br /> The OTP to redeem your Voucher is: <br /><br /><strong>{{$par0}}</strong> <br /><br />The OTP is valid for 5 mins. Please do not share OTP with anyone.<br /><br />Regards,<br />{{$par1}}<br />\";\n\n    templateParams.forEach((param, index)=>{\n      roughTemplate = roughTemplate.split(`{{$par${index}}}`).join(param);\n    });\n    \n    emailBody = roughTemplate;\n    break;\n  }\n}\n\nreturn {emailBody};"
+      },
+      "name": "Email Templates",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        640,
+        360
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-04-27T12:07:05.054Z"
+}
