@@ -11,6 +11,28 @@
           }
         ]
       ]
+    },
+    "Setting nth day from present date": {
+      "main": [
+        [
+          {
+            "node": "Postgres",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres": {
+      "main": [
+        [
+          {
+            "node": "Update expired bpo data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2023-04-25T14:19:29.351Z",
@@ -39,7 +61,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let someDate = new Date();\nlet daysToAdd = [45,30,15,7];\nlet addedDays = [];\n\ndaysToAdd.forEach(function(numberOfDaysToAdd,index){\n  someDate.setDate(someDate.getDate() + numberOfDaysToAdd);\n\n  let dd =parseInt(someDate.getDate());\n  let day = dd < 10 ? '0' + dd : dd;\n  let mm =parseInt(someDate.getMonth() + 1);\n  let month = mm < 10 ? '0' + mm : mm;\n  let y = someDate.getFullYear();\n\n  let someFormattedDate = y+'-'+month +'-'+day;\n  addedDays.push(someFormattedDate);\n})\n\n\nitems[0].json.addedDays=addedDays\nreturn items;\n"
+        "functionCode": "\nlet daysToAdd = [45,30,15,7];\nlet addedDays = [];\nlet executeQueries = [];\nlet returnItems =[]\ndaysToAdd.forEach(function(numberOfDaysToAdd,index){\n  let validityStatus = \"\"\n  let someDate = new Date();\n  someDate.setDate(someDate.getDate() + numberOfDaysToAdd);\n\n  let dd =parseInt(someDate.getDate());\n  let day = dd < 10 ? '0' + dd : dd;\n  let mm =parseInt(someDate.getMonth() + 1);\n  let month = mm < 10 ? '0' + mm : mm;\n  let y = someDate.getFullYear();\n\n  let someFormattedDate = y+'-'+month +'-'+day;\n  if(numberOfDaysToAdd == 45){\n    validityStatus = \"45_days\";\n  }else if(numberOfDaysToAdd == 30){\n    validityStatus = \"1_month\"\n  }else if(numberOfDaysToAdd == 15){\n    validityStatus = \"15_days\"\n  }else if(numberOfDaysToAdd == 7){\n    validityStatus = \"1_week\"\n  }\n  addedDays.push({\n    date : someFormattedDate,\n    validity_status : validityStatus\n  })\n  //addedDays.push(someFormattedDate);\n})\naddedDays.forEach(function(day,index){\n  let query = `update sdm_vendor_bpos set validity_status ='${day.validity_status}' where validity_end='${day.date}'`\n  executeQueries.push(query)\n})\n\nexecuteQueries.forEach(function(query,index){  \n    returnItems.push({\n    json: {\n       query:query\n    }\n  });\n  \n})\n\nreturn returnItems;\n"
       },
       "name": "Setting nth day from present date",
       "type": "n8n-nodes-base.function",
@@ -48,10 +70,51 @@
         700,
         300
       ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "={{$node[\"Setting nth day from present date\"].json[\"query\"]}}",
+        "additionalFields": {}
+      },
+      "name": "Postgres",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        300
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "78",
+          "name": "Vedanta postgres qa"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=update sdm_vendor_bpos set validity_status ='expired' where validity_end< NOW()::DATE",
+        "additionalFields": {}
+      },
+      "name": "Update expired bpo data",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        1260,
+        300
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "78",
+          "name": "Vedanta postgres qa"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-04-26T11:40:13.819Z"
+  "updatedAt": "2023-04-27T06:18:14.621Z"
 }
