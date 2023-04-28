@@ -1,0 +1,318 @@
+{
+  "active": true,
+  "connections": {
+    "Insert SES Log": {
+      "main": [
+        [
+          {
+            "node": "Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Message ID": {
+      "main": [
+        [
+          {
+            "node": "Insert SES Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Msg91 Send OTP": {
+      "main": [
+        [
+          {
+            "node": "Get Message ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Configs": {
+      "main": [
+        [
+          {
+            "node": "Get Template ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Template ID": {
+      "main": [
+        [
+          {
+            "node": "Msg91 Send OTP",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Configs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-04-28T06:06:56.861Z",
+  "id": "295",
+  "name": "Msg91-SendOTP",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        -280,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "send-otp",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        320
+      ],
+      "webhookId": "90e5cec9-6b9c-46c8-94ec-e5efca641da1",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "60",
+          "name": "Notification"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "={{$node[\"Configs\"].json[\"msg91_otp_url\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "OTP",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"otp\"]}}"
+            }
+          ]
+        },
+        "headerParametersUi": {
+          "parameter": [
+            {
+              "name": "accept",
+              "value": "=application/json"
+            },
+            {
+              "name": "authkey",
+              "value": "={{$node[\"Configs\"].json[\"authkey\"]}}"
+            },
+            {
+              "name": "content-type",
+              "value": "=application/json"
+            }
+          ]
+        },
+        "queryParametersUi": {
+          "parameter": [
+            {
+              "name": "template_id",
+              "value": "={{$node[\"Get Template ID\"].json[\"template_id\"]}}"
+            },
+            {
+              "name": "mobile",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"mobile\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Msg91 Send OTP",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        520,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "https://qan8n.shakedeal.com/webhook/send-otp",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "mobile",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"mobile\"]}}"
+            },
+            {
+              "name": "otp",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"params\"][0]}}"
+            },
+            {
+              "name": "source",
+              "value": "=Enterprise"
+            },
+            {
+              "name": "sender_id",
+              "value": "=SHAKDL"
+            }
+          ]
+        }
+      },
+      "name": "Send OTP-Msg91",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        -140,
+        620
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "60",
+          "name": "Notification"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let responseData = [];\n\nresponseData.push({\n    json: {\n        \"success\": true\n    }\t\t\t\n});\n\nreturn responseData;\n"
+      },
+      "name": "Response",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Configs\"].json[\"dms_url\"]}}/items/sd_delivery_logs",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "order_id",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"order_id\"]}}"
+            },
+            {
+              "name": "message_id",
+              "value": "={{$node[\"Get Message ID\"].json[\"0\"][\"message_id\"]}}"
+            },
+            {
+              "name": "recipient",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"mobile\"]}}"
+            },
+            {
+              "name": "event_type",
+              "value": "=SMS"
+            },
+            {
+              "name": "template",
+              "value": "=OTP"
+            },
+            {
+              "name": "source",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"source\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Insert SES Log",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        920,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "81",
+          "name": "SES Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let response = [];\n    let message_id = $node[\"Msg91 Send OTP\"].json.request_id;\n    response.push({\n        json: [{\n            message_id:message_id,\n            event_type:\"SMS\"\n        }]\n    });\n\n\nreturn response;\n"
+      },
+      "name": "Get Message ID",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        720,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "msg91_otp_url",
+              "value": "https://control.msg91.com/api/v5/otp"
+            },
+            {
+              "name": "authkey",
+              "value": "=347294AezCVKJ7F5fbc988dP1"
+            },
+            {
+              "name": "dms_url",
+              "value": "=https://zeusqa.shakedeal.com"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Configs",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        120,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let records = $node[\"Webhook\"].json[\"body\"];\n\nlet template_id = \"\";\nif(records.sender_id == 'SHAKDL'){\n  template_id = \"644764e8d6fc05102a41e423\";\n}else{\n  template_id = \"644764e8d6fc05102a41e423\";\n}\nitems[0].json.template_id = template_id;\nreturn items;"
+      },
+      "name": "Get Template ID",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        320,
+        320
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-04-28T07:36:47.540Z"
+}
