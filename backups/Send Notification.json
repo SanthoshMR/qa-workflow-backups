@@ -16,7 +16,7 @@
       "main": [
         [
           {
-            "node": "Msg91 Configs",
+            "node": "Send OTP-Msg91",
             "type": "main",
             "index": 0
           }
@@ -45,7 +45,7 @@
       "main": [
         [
           {
-            "node": "Get Message ID",
+            "node": "Global DMS URL",
             "type": "main",
             "index": 0
           }
@@ -85,33 +85,11 @@
         ]
       ]
     },
-    "Msg91 Configs": {
+    "Send OTP-Msg91": {
       "main": [
         [
           {
-            "node": "Msg91 Send OTP",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Get Message ID": {
-      "main": [
-        [
-          {
-            "node": "Global DMS URL",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Msg91 Send OTP": {
-      "main": [
-        [
-          {
-            "node": "Get Message ID",
+            "node": "Response",
             "type": "main",
             "index": 0
           }
@@ -188,8 +166,8 @@
       "type": "n8n-nodes-base.msg91",
       "typeVersion": 1,
       "position": [
-        220,
-        -200
+        260,
+        -140
       ],
       "credentials": {
         "msg91Api": {
@@ -286,8 +264,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1360,
-        160
+        1180,
+        0
       ]
     },
     {
@@ -307,7 +285,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        960,
+        780,
         160
       ]
     },
@@ -325,7 +303,7 @@
             },
             {
               "name": "message_id",
-              "value": "={{$node[\"Get Message ID\"].json[\"0\"][\"message_id\"]}}"
+              "value": "={{$node[\"Call Kaleyra\"].json[\"id\"]}}:0"
             },
             {
               "name": "recipient",
@@ -333,11 +311,15 @@
             },
             {
               "name": "event_type",
-              "value": "={{$node[\"Get Message ID\"].json[\"0\"][\"event_type\"]}}"
+              "value": "=WhatsApp"
             },
             {
               "name": "template",
               "value": "={{$node[\"Function to get params and templates\"].json[\"template_name\"]}}"
+            },
+            {
+              "name": "source",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"source\"]}}"
             }
           ]
         }
@@ -346,7 +328,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1160,
+        1000,
         160
       ],
       "credentials": {
@@ -381,122 +363,48 @@
     },
     {
       "parameters": {
+        "authentication": "basicAuth",
         "requestMethod": "POST",
-        "url": "={{$node[\"Msg91 Configs\"].json[\"msg91_otp_url\"]}}",
+        "url": "=https://qan8n.shakedeal.com/webhook/send-otp",
         "options": {},
         "bodyParametersUi": {
           "parameter": [
             {
-              "name": "OTP",
-              "value": "={{$node[\"Webhook\"].json[\"body\"][\"params\"][0]}}"
-            }
-          ]
-        },
-        "headerParametersUi": {
-          "parameter": [
-            {
-              "name": "accept",
-              "value": "=application/json"
-            },
-            {
-              "name": "authkey",
-              "value": "={{$node[\"Msg91 Configs\"].json[\"authkey\"]}}"
-            },
-            {
-              "name": "content-type",
-              "value": "=application/json"
-            }
-          ]
-        },
-        "queryParametersUi": {
-          "parameter": [
-            {
-              "name": "template_id",
-              "value": "={{$node[\"Msg91 Configs\"].json[\"otp_template_id\"]}}"
-            },
-            {
               "name": "mobile",
               "value": "={{$node[\"Webhook\"].json[\"body\"][\"mobile\"]}}"
+            },
+            {
+              "name": "otp",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"params\"][0]}}"
+            },
+            {
+              "name": "source",
+              "value": "=Enterprise"
+            },
+            {
+              "name": "sender_id",
+              "value": "=SHAKDL"
             }
           ]
         }
       },
-      "name": "Msg91 Send OTP",
+      "name": "Send OTP-Msg91",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        700,
-        -120
-      ]
-    },
-    {
-      "parameters": {
-        "keepOnlySet": true,
-        "values": {
-          "string": [
-            {
-              "name": "msg91_otp_url",
-              "value": "https://control.msg91.com/api/v5/otp"
-            },
-            {
-              "name": "authkey",
-              "value": "=347294AezCVKJ7F5fbc988dP1"
-            },
-            {
-              "name": "otp_template_id",
-              "value": "=644764e8d6fc05102a41e423"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "name": "Msg91 Configs",
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 1,
-      "position": [
-        420,
-        -120
-      ]
-    },
-    {
-      "parameters": {
-        "authentication": "basicAuth",
-        "httpMethod": "POST",
-        "path": "send-notification",
-        "responseMode": "lastNode",
-        "options": {}
-      },
-      "name": "Webhook1",
-      "type": "n8n-nodes-base.webhook",
-      "typeVersion": 1,
-      "position": [
-        -200,
-        -40
+        540,
+        -140
       ],
-      "webhookId": "90406c34-bf08-4f21-8790-37faacc7e471",
       "credentials": {
         "httpBasicAuth": {
           "id": "60",
           "name": "Notification"
         }
-      },
-      "disabled": true
-    },
-    {
-      "parameters": {
-        "functionCode": "let response = [];\nlet template = $node[\"Webhook\"].json[\"body\"][\"template_name\"];\n\nif(template == \"otp\"){\n    let message_id = $node[\"Msg91 Send OTP\"].json.request_id;\n    response.push({\n        json: [{\n            message_id:message_id,\n            event_type:\"SMS\"\n        }]\n    });\n}else{\n    let message_id = $node[\"Call Kaleyra\"].json.id;\n    message_id = message_id + ':0';\n    response.push({\n        json: [{\n            message_id:message_id,\n            event_type:\"WhatsApp\"\n        }]\n    });\n}\n\nreturn response;\n"
-      },
-      "name": "Get Message ID",
-      "type": "n8n-nodes-base.function",
-      "typeVersion": 1,
-      "position": [
-        760,
-        160
-      ]
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-04-26T09:27:24.518Z"
+  "updatedAt": "2023-04-28T07:34:12.162Z"
 }
