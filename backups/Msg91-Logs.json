@@ -1,0 +1,678 @@
+{
+  "active": true,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Response from Msg91",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for Message ID": {
+      "main": [
+        [
+          {
+            "node": "Check Message ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Processing Data": {
+      "main": [
+        [
+          {
+            "node": "Update Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Status": {
+      "main": [
+        [
+          {
+            "node": "Insert SES Log Details-old",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update SES Log": {
+      "main": [
+        [
+          {
+            "node": "Preparing for insert SES Log Details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparing for update SES Data": {
+      "main": [
+        [
+          {
+            "node": "Update SES Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Response from Msg91": {
+      "main": [
+        [
+          {
+            "node": "Check for Message ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparing for insert SES Log Details": {
+      "main": [
+        [
+          {
+            "node": "Insert SES Log Details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert SES Log Details": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Message ID_old": {
+      "main": [
+        [
+          {
+            "node": "Processing Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Message ID": {
+      "main": [
+        [
+          {
+            "node": "Preparing for update SES Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Failure Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data for Retry": {
+      "main": [
+        [
+          {
+            "node": "OTP Call Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OTP Call Request": {
+      "main": [
+        [
+          {
+            "node": "Combine OTP Response ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Combine OTP Response ": {
+      "main": [
+        [
+          {
+            "node": "Preparing for update OTP call logs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparing for update OTP call logs": {
+      "main": [
+        [
+          {
+            "node": "Insert Call details to SES Log Details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert Call details to SES Log Details": {
+      "main": [
+        [
+          {
+            "node": "Data for Update OTP Call Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data for Update OTP Call Status": {
+      "main": [
+        [
+          {
+            "node": "Update Call Status in SES Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Call Status in SES Log": {
+      "main": [
+        [
+          {
+            "node": "Success Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Data for Retry",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Success Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-04-26T07:52:59.268Z",
+  "id": "293",
+  "name": "Msg91-Logs",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        -420,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "msg91-log-details",
+        "responseMode": "lastNode",
+        "responseCode": "={{200}}",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -220,
+        300
+      ],
+      "webhookId": "84f9315f-cf34-47b2-ab0c-63eb525fbc58"
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://zeusqa.shakedeal.com/items/sd_delivery_logs?filter={\"_and\": [{\"message_id\": {\"_in\":\"{{$node[\"Response from Msg91\"].json[\"message_ids\"]}}\"}},{\"event_type\":{\"_eq\":\"SMS\"}}]}",
+        "options": {}
+      },
+      "name": "Check for Message ID",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "81",
+          "name": "SES Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let request = $node[\"Webhook\"].json.body[0];\n\nlet keys = [];\nlet req_body = {};\n\nlet response = $node[\"Check for Message ID\"].json.data\n\nresponse.forEach(function(obj,index){\n    keys.push(obj.log_id)\n})\n\nlet report = request.report[0];\nvar message_status = \"\";\nif(report.status == 1){\n    message_status = 'Delivered';\n}else if(report.status == 2){\n    message_status = 'Failed';\n}else if(report.status == 9){\n    message_status = 'NDNC (In case of Promotional SMS only)';\n}else if(report.status == 16 || report.status == 25){\n    message_status = 'Reected';\n}else if(report.status == 17){\n    message_status = 'Blocked Number';\n}\n\n// if((report.desc.toLowerCase()) == \"delivered\"){\n//     event_type = 'Delivered';\n// }else{\n//     event_type = request_item.event_type;\n//     event_type = event_type.charAt(0).toUpperCase() + event_type.slice(1);\n// }\n\nlet data = {\n    \"status\" : message_status\n}\n\nreq_body.keys = keys;\nreq_body.data = data;\n\nitems[0].json.keys = keys;\nitems[0].json.req_body = req_body;\nitems[0].json.status = message_status;\nreturn items;"
+      },
+      "name": "Processing Data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        680,
+        -180
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_delivery_logs",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Processing Data\"].json[\"req_body\"]}}"
+      },
+      "name": "Update Status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        940,
+        -180
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "81",
+          "name": "SES Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let response = $node[\"Check for Message ID\"].json.data;\nlet message_ids = $node[\"Response from Msg91\"].json[\"message_ids\"];\nlet message_ids_for_update = [];\n\nresponse.forEach((obj,index)=>{\n    let messageId = obj.message_id;\n    if(message_ids.includes(messageId)){\n        message_ids_for_update.push(messageId);\n    }  \n});\n\nitems[0].json.message_ids_for_update = message_ids_for_update;\nreturn items;"
+      },
+      "name": "Check SES Update data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -20,
+        -180
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Check SES Update data\"].json[\"message_ids_for_update\"].length}}",
+              "operation": "larger",
+              "value2": "={{0}}"
+            }
+          ]
+        }
+      },
+      "name": "Check Update Data count",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -240,
+        -180
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let response = $node[\"Check for Message ID\"].json.data;\nlet request_items = $node[\"Response from Msg91\"].json.records;\n\nconst message_ids = $node[\"Response from Msg91\"].json.message_ids;\n\nlet update_data = [];\n\nlet insert_data = [];\n\nresponse.forEach((obj,index)=>{\n    let messageId = obj.message_id;\n    let log_id = obj.log_id;\n    if(message_ids.includes(messageId)){\n        let keys = [];\n        keys.push(log_id);\n\n        var message_status = \"\";\n        request_items.forEach((request_item,request_items_index)=>{\n            if(request_item.requestId == messageId){\n                let report = request_item.report[0];\n                if(report.status == 1){\n                    message_status = 'Delivered';\n                }else{\n                    message_status = 'Failed';\n                }\n            }\n        });\n        \n        let data = {\n            \"status\" : message_status\n        }\n\n        update_data.push({\n            json: [{\n                keys:keys,\n                data:data,\n            }]\n        });\n    }  \n});\n\nreturn update_data;"
+      },
+      "name": "Preparing for update SES Data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        720,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "=https://zeusqa.shakedeal.com/items/sd_delivery_logs",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Preparing for update SES Data\"].json[\"0\"]}}"
+      },
+      "name": "Update SES Log",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        960,
+        280
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "81",
+          "name": "SES Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let response = $node[\"Check for Message ID\"].json.data;\nlet request_items = $node[\"Response from Msg91\"].json.records;\nlet insert_data = [];\n\nresponse.forEach((obj,index)=>{\n    let messageId = obj.message_id;\n    let log_id = obj.log_id;\n\n    request_items.forEach((request_item,request_items_index)=>{\n        if(request_item.requestId == messageId){\n            let report = request_item.report[0];\n            if(report.status == 1){\n                message_status = 'Delivered';\n            }else{\n                message_status = 'Failed';\n            }\n\n            let data = {\n                \"sd_delivery_log_id\" : log_id,\n                \"status\": message_status,\n                \"message\": request_item.message\n            }\n\n            insert_data.push({\n                json: [{\n                    data:data,\n                }]\n            });\n        }\n    });\n});\n\nreturn insert_data;"
+      },
+      "name": "Preparing for insert SES Log Details",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let data = [];\n// let records = $node[\"Webhook\"].json[\"body\"];\n\nlet records = JSON.parse($node[\"Webhook\"].json[\"body\"][\"data\"]);\nlet message_ids = [];\n\nlet retry_count = 0;\n\nrecords.forEach((obj,index)=>{\n  data[index]={};\n  data[index].requestId = obj.requestId;\n  data[index].report = obj.report;\n  data[index].message = obj;\n\n  let report = obj.report[0];\n  if(report.status != 1){\n      retry_count++;\n  }\n\n  message_ids.push(obj.requestId);\n});\n\nmessage_ids = [...new Set(message_ids)];\n\nitems[0].json.message_ids = message_ids;\n\nitems[0].json.records = data;\nitems[0].json.retry_count = retry_count;\nreturn items;"
+      },
+      "name": "Response from Msg91",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        0,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_delivery_log_details",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "sd_delivery_log_id",
+              "value": "={{$node[\"Update Status\"].json[\"data\"][0][\"log_id\"]}}"
+            },
+            {
+              "name": "status",
+              "value": "={{$node[\"Processing Data\"].json[\"status\"]}}"
+            },
+            {
+              "name": "message",
+              "value": "={{$node[\"Webhook\"].json[\"body\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Insert SES Log Details-old",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1220,
+        -180
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "81",
+          "name": "SES Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "=https://zeusqa.shakedeal.com/items/sd_delivery_log_details",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Preparing for insert SES Log Details\"].json[\"0\"][\"data\"]}}"
+      },
+      "name": "Insert SES Log Details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1400,
+        280
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "81",
+          "name": "SES Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Check for Message ID\"].json[\"data\"].length}}",
+              "operation": "larger",
+              "value2": "={{0}}"
+            }
+          ]
+        }
+      },
+      "name": "Check Message ID_old",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        400,
+        -160
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Check for Message ID\"].json[\"data\"].length}}",
+              "operation": "larger",
+              "value2": "={{0}}"
+            }
+          ]
+        }
+      },
+      "name": "Check Message ID",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        480,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let response = $node[\"Check for Message ID\"].json.data;\nlet request_items = $node[\"Response from Msg91\"].json.records;\n\nconst message_ids = $node[\"Response from Msg91\"].json.message_ids;\n\nlet retry_data = [];\n\nresponse.forEach((obj,index)=>{\n    let messageId = obj.message_id;\n    if(message_ids.includes(messageId)){\n        request_items.forEach((request_item,request_items_index)=>{\n            if(request_item.requestId == messageId){\n                let report = request_item.report[0];\n                if(report.status != 1){\n                    let data = {\n                        \"mobile\" : report.number,\n                        \"message_id\" : messageId,\n                        \"log_id\":obj.log_id\n                    }\n\n                    retry_data.push({\n                        json: {\n                            data:data,\n                        }\n                    });\n                }\n            }\n        });\n    }  \n});\n\nreturn retry_data;"
+      },
+      "name": "Data for Retry",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1060,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "url": "=https://control.msg91.com/api/v5/otp/retry",
+        "options": {},
+        "queryParametersUi": {
+          "parameter": [
+            {
+              "name": "=authkey",
+              "value": "=347294AezCVKJ7F5fbc988dP1"
+            },
+            {
+              "name": "=retrytype",
+              "value": "=voice"
+            },
+            {
+              "name": "=mobile",
+              "value": "={{$node[\"Data for Retry\"].json[\"data\"][\"mobile\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "OTP Call Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1280,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let response = $node[\"Check for Message ID\"].json.data;\nlet request_items = $node[\"Response from Msg91\"].json.records;\n\nconst message_ids = $node[\"Response from Msg91\"].json.message_ids;\n\nlet call_responses = $node[\"Combine OTP Response \"].json.data;\n\nlet retry_data = [];\nlet records = [];\nlet call_records = [];\n\nlet data = [];\n\nvar i = 0;\nresponse.forEach((obj,index)=>{\n    let messageId = obj.message_id;\n    if(message_ids.includes(messageId)){\n        request_items.forEach((request_item,request_items_index)=>{\n            if(request_item.requestId == messageId){\n                let report = request_item.report[0];\n                if(report.status != 1){\n                    records[i]={};\n                    records[i].log_id = obj.log_id;\n                    records[i].message_id = obj.message_id;\n                    i++;\n                }\n            }\n        });\n    }  \n});\n\n// Update the call responses\nrecords.forEach((obj,index)=>{\n    let call_response = call_responses[index];\n    let call_status = \"Success\";\n    if(call_response.type === 'error'){\n        call_status = \"Failed\";\n    }\n    call_records[index]={};\n    call_records[index].sd_delivery_log_id = obj.log_id;\n    call_records[index].status = call_status;\n    call_records[index].message = call_response;\n});\n\nitems[0].json.call_records = call_records;\nreturn items;\n\n\n"
+      },
+      "name": "Preparing for update OTP call logs",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1680,
+        540
+      ],
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "functionCode": "let returnItems = [];\n\nitems.forEach((item) => {  \n    returnItems.push(\n        {\n            \"type\":item.json.type,\n            \"message\":item.json.message,\n        });    \n});\n\nreturn [{\n     json: {\n         data: returnItems,\n    }\n}];\n"
+      },
+      "name": "Combine OTP Response ",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1480,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "=https://zeusqa.shakedeal.com/items/sd_delivery_log_details",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Preparing for update OTP call logs\"].json[\"call_records\"]}}"
+      },
+      "name": "Insert Call details to SES Log Details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1880,
+        540
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "81",
+          "name": "SES Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "\nlet response = $node[\"Preparing for update OTP call logs\"].json.call_records;\n\nlet update_data = [];\n\nresponse.forEach((obj,index)=>{\n    let message_status = obj.status;\n    let log_id = obj.sd_delivery_log_id;\n    \n    let keys = [];\n    keys.push(log_id);\n\n    let data = {\n        \"call_status\" : message_status\n    }\n\n    update_data.push({\n        json: [{\n            keys:keys,\n            data:data,\n        }]\n    });\n});\n\nreturn update_data;"
+      },
+      "name": "Data for Update OTP Call Status",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        2060,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "=https://zeusqa.shakedeal.com/items/sd_delivery_logs",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Data for Update OTP Call Status\"].json[\"0\"]}}"
+      },
+      "name": "Update Call Status in SES Log",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1560,
+        800
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "81",
+          "name": "SES Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Response from Msg91\"].json[\"retry_count\"]}}",
+              "operation": "larger",
+              "value2": "={{0}}"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        780,
+        640
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let returnItems = [];\n\nreturnItems.push({\n  json:{\n    message : \"Log Updated successfully!\"\n  }\n})\n\nreturn returnItems"
+      },
+      "name": "Success Response",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1060,
+        780
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let returnItems = [];\n\nreturnItems.push({\n  json:{\n    message : \"Message ID cannot found!\"\n  }\n})\n\nreturn returnItems"
+      },
+      "name": "Failure Response",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        500,
+        600
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-04-28T12:26:11.385Z"
+}
