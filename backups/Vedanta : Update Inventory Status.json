@@ -184,11 +184,6 @@
         ]
       ]
     },
-    "End Loop": {
-      "main": [
-        []
-      ]
-    },
     "Move File": {
       "main": [
         [
@@ -376,7 +371,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let inventoryData = $node[\"Get inventory Data\"].json[\"data\"];\nlet excelStockData = $node[\"Function to get products\"].json[\"products\"];\nlet updateObj = [];\nlet returnItems = [];\nexcelStockData.forEach(function(item,index){\n  let matchedInvetoryItem = inventoryData.filter(data=>data.plant == item.plant && data.product == item.product);\n  if(matchedInvetoryItem.length>0){\n    updateObj.push({\n      id:matchedInvetoryItem[0].id,\n      currentStock : item.currentStock,\n      itemStatus : matchedInvetoryItem[0].current_stock > item.currentStock?\"po_not_generated\":matchedInvetoryItem[0].item_status\n    })\n  }\n\n})\n// updateObj.forEach(function(obj,index){  \n//     returnItems.push({\n//     json: {\n//        id : obj.id,\n//        currentStock:obj.currentStock,\n//        itemStatus:obj.itemStatus,\n//        dms_url : $node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]\n//     }\n//   });\n  \n// })\n\n//return returnItems;\nconst size = 10; // size of each subarray\n\nconst result = [];\nfor (let i = 0; i < updateObj.length; i += size) {\n  result.push(updateObj.slice(i, i + size));\n}\nitems[0].json.updateObj= updateObj;\nitems[0].json.result= result;\nitems[0].json.resultlength = result.length;\nreturn items"
+        "functionCode": "let inventoryData = $node[\"Get inventory Data\"].json[\"data\"];\nlet excelStockData = $node[\"Function to get products\"].json[\"products\"];\nlet updateObj = [];\nlet returnItems = [];\nexcelStockData.forEach(function(item,index){\n  let matchedInvetoryItem = inventoryData.filter(data=>data.plant == item.plant && data.product == item.product);\n  if(matchedInvetoryItem.length>0){\n    updateObj.push({\n      id:matchedInvetoryItem[0].id,\n      currentStock : item.currentStock,\n      itemStatus :  item.currentStock > matchedInvetoryItem[0].current_stock?\"po_not_generated\":matchedInvetoryItem[0].item_status\n    })\n  }\n\n})\n// updateObj.forEach(function(obj,index){  \n//     returnItems.push({\n//     json: {\n//        id : obj.id,\n//        currentStock:obj.currentStock,\n//        itemStatus:obj.itemStatus,\n//        dms_url : $node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]\n//     }\n//   });\n  \n// })\n\n//return returnItems;\nconst size = 10; // size of each subarray\n\nconst result = [];\nfor (let i = 0; i < updateObj.length; i += size) {\n  result.push(updateObj.slice(i, i + size));\n}\nitems[0].json.updateObj= updateObj;\nitems[0].json.result= result;\nitems[0].json.resultlength = result.length;\nreturn items"
       },
       "name": "Function to return updated current stock",
       "type": "n8n-nodes-base.function",
@@ -537,5 +532,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-04-27T10:26:08.078Z"
+  "updatedAt": "2023-05-02T09:09:05.507Z"
 }
