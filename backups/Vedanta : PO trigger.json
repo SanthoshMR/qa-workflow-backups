@@ -618,7 +618,7 @@
       "main": [
         [
           {
-            "node": "Function",
+            "node": "Check for BPOs",
             "type": "main",
             "index": 0
           }
@@ -630,6 +630,17 @@
         [
           {
             "node": "Check for buyers",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for BPOs": {
+      "main": [
+        [
+          {
+            "node": "Function",
             "type": "main",
             "index": 0
           }
@@ -1433,7 +1444,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let prodven = $node[\"Extracting PO details\"].json[\"prodven\"];\nlet poDetails = $node[\"constructing po_details\"].json.po_details;\nlet poProducts = $node[\"constructing po_details\"].json.po_details[0].po_items;\nlet productsDetails = $node[\"constructing po_details\"].json.concated_products;\nlet po_date =$node[\"Extracting Vedanta PO details\"].json[\"po_date\"]; \nlet po_value= $node[\"Extracting Vedanta PO details\"].json[\"po_value\"];\nlet po_deliver_date = $node[\"Extracting PO details\"].json[\"max_date\"];\nlet po_type = $node[\"Extracting PO details\"].json[\"po_type\"].toLowerCase().trim();\nlet commision_percentage = $node[\"Globals\"].json[\"commision_percentage\"]; \nlet client = $node[\"Globals\"].json[\"client\"];\nlet vendorPoDetails = [];\nlet vendor_po_num_prefix = $node[\"Globals\"].json[\"vendor_po_num_prefix\"];\nlet po_number = $node[\"Extracting Vedanta PO details\"].json[\"po_number\"];\nlet category_buyer_data = $node[\"Get buyer on category\"].json[\"data\"];\nlet buyers_data = $node[\"Check for buyers\"].json[\"data\"];\nlet operation_agent_data = $node[\"check for opertion agents\"].json[\"data\"]\nlet negligible_plants = $node[\"Get the index of attachment\"].json[\"negligible_plants\"];\nlet consignment_plants = $node[\"Get the index of attachment\"].json[\"consignment_plants\"];\npoProducts = poProducts.map((obj, i) => ({ ...obj, req_qty: parseInt(obj.req_qty) }));\n\n//Reduce commision charges and if client is vedanta and po_type is routing\nif(client == \"vedanta\" && po_type == \"routing\" ){\n  poProducts = poProducts.map((obj, i) => ({ ...obj, product_total: obj.gross_price-(obj.gross_price*commision_percentage)/100 }));\n}\n\n\npo_items = [];\nuniqueArr = Object.create(null),\n    uniqueVendorPlantArr = poProducts.filter(o => {\n        var key = ['plant', 'vendor'].map(k => o[k]).join('|');\n        if (!uniqueArr[key]) {\n            uniqueArr[key] = true;\n            return true;\n        }\n    });\n\nuniqueVendorPlantArr.forEach(function(obj,index){\n  po_items[index]={};\n  let matchedProdVen = poProducts.filter(pv => pv.vendor== obj.vendor && pv.plant == obj.plant);\n  let buyer_emails = [];\n  let operation_emails = [];\n  let buyers =[];\n  let ops = [];\n  let productVendorDetails = \n   poProducts.filter(product=>\n     matchedProdVen.some(\n      data=> data.product === product.product && data.plant == product.plant\n    )\n  );\n  let maxDate = new Date(\n  Math.max(\n    ...matchedProdVen.map(element => {\n      return new Date(element.delivery_date);\n      }),\n    ),\n  );\n  if(negligible_plants.includes(obj.plant)){\n    let get_cat_buy = category_buyer_data.filter(cbd=>cbd.id == obj.plant);\n    if(get_cat_buy[0].additional_buyers){\n      get_cat_buy[0].additional_buyers.forEach(function(ab,index){\n        buyer_emails.push(ab.email);\n      })\n    }\n    buyer_emails.push(get_cat_buy[0].buyer.email)\n  }else{\n    matchedProdVen.forEach(function(mpd,index){\n      buyer_emails.push(mpd.buyer);\n    })\n  }\n  matchedProdVen.forEach(function(mpd,index){\n    operation_emails.push(mpd.operation_agent);\n  })\n\n  let uniqueBuyerArr = buyer_emails.filter((value, index) => {\n    return buyer_emails.indexOf(value) === index;\n  });\n  let uniqueOpsArr = operation_emails.filter((value, index) => {\n    return operation_emails.indexOf(value) === index;\n  });\n\n  uniqueOpsArr.forEach(function(ops_email,index){\n    let get_ops_id =  operation_agent_data.filter(oad=>oad.operation_agent.email == ops_email);\n    ops[index]={};\n    ops[index].sdm_operation_agents_id = get_ops_id[0].id;\n  })\n  uniqueBuyerArr.forEach(function(buyer_email,index){\n    let get_buyer_id =  buyers_data.filter(bd=>bd.buyer.email == buyer_email);\n    buyers[index]={};\n    buyers[index].sdm_buyers_id = get_buyer_id[0].id;\n  })\n  let vendor_po_number = `${vendor_po_num_prefix+obj.plant+po_number}-${index+1}`\n  po_items[index].po_items = matchedProdVen ;\n   po_items[index].vendor_po_number = vendor_po_number \n  let po_total = matchedProdVen .reduce((total,obj)=>obj.gross_price+ total, 0);\n  let net_po_value = matchedProdVen .reduce((total,obj)=>(obj.unit_price*parseFloat(obj.requested_qty))+total, 0);\n  vendorPoDetails[index]={};\n  vendorPoDetails[index].id = vendor_po_number;\n  vendorPoDetails[index].vendor=obj.vendor\n  vendorPoDetails[index].po_num=$node[\"post the po_details\"].json.data[0].id;\n  vendorPoDetails[index].po_value= po_type == \"routing\"?po_total-(po_total*commision_percentage)/100:po_total;\n  vendorPoDetails[index].net_po_value = net_po_value\n  vendorPoDetails[index].po_status=\"draft\";\n  vendorPoDetails[index].po_date=new Date(po_date).toISOString();\n  vendorPoDetails[index].po_type=client == \"vedanta\"?po_type:\"routing\";\n  vendorPoDetails[index].po_deliver_date =new Date(maxDate).toISOString(); \n  vendorPoDetails[index].buyers = buyers;\n  vendorPoDetails[index].operation_agents = ops;\n  vendorPoDetails[index].consignment_type = consignment_plants.includes(obj.plant)?\"non_vmi\":\"non_consignmnet\";\n  //vendorPoDetails[index].delivery_address = 1;\n  \n})\n\n\nitems[0].json.uniqueVendorPlantArr = uniqueVendorPlantArr;\nitems[0].json.prodven= prodven;\nitems[0].json.poDetails =  poDetails;\nitems[0].json.poProducts = poProducts;\nitems[0].json.productsDetails = productsDetails;\nitems[0].json.vendorPoDetails =  vendorPoDetails;\nitems[0].json.po_items = po_items\nreturn items;\n"
+        "functionCode": "let prodven = $node[\"Extracting PO details\"].json[\"prodven\"];\nlet poDetails = $node[\"constructing po_details\"].json.po_details;\nlet poProducts = $node[\"constructing po_details\"].json.po_details[0].po_items;\nlet productsDetails = $node[\"constructing po_details\"].json.concated_products;\nlet po_date =$node[\"Extracting Vedanta PO details\"].json[\"po_date\"]; \nlet po_value= $node[\"Extracting Vedanta PO details\"].json[\"po_value\"];\nlet po_deliver_date = $node[\"Extracting PO details\"].json[\"max_date\"];\nlet po_type = $node[\"Extracting PO details\"].json[\"po_type\"].toLowerCase().trim();\nlet commision_percentage = $node[\"Globals\"].json[\"commision_percentage\"]; \nlet client = $node[\"Globals\"].json[\"client\"];\nlet vendorPoDetails = [];\nlet vendor_po_num_prefix = $node[\"Globals\"].json[\"vendor_po_num_prefix\"];\nlet po_number = $node[\"Extracting Vedanta PO details\"].json[\"po_number\"];\nlet category_buyer_data = $node[\"Get buyer on category\"].json[\"data\"];\nlet buyers_data = $node[\"Check for buyers\"].json[\"data\"];\nlet operation_agent_data = $node[\"check for opertion agents\"].json[\"data\"]\nlet negligible_plants = $node[\"Get the index of attachment\"].json[\"negligible_plants\"];\nlet consignment_plants = $node[\"Get the index of attachment\"].json[\"consignment_plants\"];\nlet bpoData = $node[\"Check for BPOs\"].json[\"data\"];\npoProducts = poProducts.map((obj, i) => ({ ...obj, req_qty: parseInt(obj.req_qty) }));\n\n//Reduce commision charges and if client is vedanta and po_type is routing\nif(client == \"vedanta\" && po_type == \"routing\" ){\n  poProducts = poProducts.map((obj, i) => ({ ...obj, product_total: obj.gross_price-(obj.gross_price*commision_percentage)/100 }));\n}\n\n\npo_items = [];\nuniqueArr = Object.create(null),\n    uniqueVendorPlantArr = poProducts.filter(o => {\n        var key = ['plant', 'vendor'].map(k => o[k]).join('|');\n        if (!uniqueArr[key]) {\n            uniqueArr[key] = true;\n            return true;\n        }\n    });\n\nuniqueVendorPlantArr.forEach(function(obj,index){\n  po_items[index]={};\n  let matchedProdVen = poProducts.filter(pv => pv.vendor== obj.vendor && pv.plant == obj.plant);\n  let matchedBpo = bpoData.filter(bpo=>bpo.vendor.id == obj.vendor);\n  let buyer_emails = [];\n  let operation_emails = [];\n  let buyers =[];\n  let ops = [];\n  let bpoNumber =\"\";\n  let productVendorDetails = \n   poProducts.filter(product=>\n     matchedProdVen.some(\n      data=> data.product === product.product && data.plant == product.plant\n    )\n  );\n  matchedBpo.forEach(function(bpo,index){\n    bpo.bpo_items.forEach(function(bpoItem,index){\n      if(bpoItem.product == matchedProdVen[0].product){\n        bpoNumber = bpo.sd_bpo_vedanta_ref;\n      }\n    })\n  });\n  let maxDate = new Date(\n  Math.max(\n    ...matchedProdVen.map(element => {\n      return new Date(element.delivery_date);\n      }),\n    ),\n  );\n  if(negligible_plants.includes(obj.plant)){\n    let get_cat_buy = category_buyer_data.filter(cbd=>cbd.id == obj.plant);\n    if(get_cat_buy[0].additional_buyers){\n      get_cat_buy[0].additional_buyers.forEach(function(ab,index){\n        buyer_emails.push(ab.email);\n      })\n    }\n    buyer_emails.push(get_cat_buy[0].buyer.email)\n  }else{\n    matchedProdVen.forEach(function(mpd,index){\n      buyer_emails.push(mpd.buyer);\n    })\n  }\n  matchedProdVen.forEach(function(mpd,index){\n    operation_emails.push(mpd.operation_agent);\n  })\n\n  let uniqueBuyerArr = buyer_emails.filter((value, index) => {\n    return buyer_emails.indexOf(value) === index;\n  });\n  let uniqueOpsArr = operation_emails.filter((value, index) => {\n    return operation_emails.indexOf(value) === index;\n  });\n\n  uniqueOpsArr.forEach(function(ops_email,index){\n    let get_ops_id =  operation_agent_data.filter(oad=>oad.operation_agent.email == ops_email);\n    ops[index]={};\n    ops[index].sdm_operation_agents_id = get_ops_id[0].id;\n  })\n  uniqueBuyerArr.forEach(function(buyer_email,index){\n    let get_buyer_id =  buyers_data.filter(bd=>bd.buyer.email == buyer_email);\n    buyers[index]={};\n    buyers[index].sdm_buyers_id = get_buyer_id[0].id;\n  })\n  let vendor_po_number = `${vendor_po_num_prefix+obj.plant+po_number}-${index+1}`\n  po_items[index].po_items = matchedProdVen ;\n   po_items[index].vendor_po_number = vendor_po_number \n  let po_total = matchedProdVen .reduce((total,obj)=>obj.gross_price+ total, 0);\n  let net_po_value = matchedProdVen .reduce((total,obj)=>(obj.unit_price*parseFloat(obj.requested_qty))+total, 0);\n  vendorPoDetails[index]={};\n  vendorPoDetails[index].id = vendor_po_number;\n  vendorPoDetails[index].vendor=obj.vendor\n  vendorPoDetails[index].po_num=$node[\"post the po_details\"].json.data[0].id;\n  vendorPoDetails[index].po_value= po_type == \"routing\"?po_total-(po_total*commision_percentage)/100:po_total;\n  vendorPoDetails[index].net_po_value = net_po_value\n  vendorPoDetails[index].po_status=\"draft\";\n  vendorPoDetails[index].po_date=new Date(po_date).toISOString();\n  vendorPoDetails[index].po_type=client == \"vedanta\"?po_type:\"routing\";\n  vendorPoDetails[index].po_deliver_date =new Date(maxDate).toISOString(); \n  vendorPoDetails[index].buyers = buyers;\n  vendorPoDetails[index].operation_agents = ops;\n  vendorPoDetails[index].consignment_type = consignment_plants.includes(obj.plant)?\"non_vmi\":\"non_consignmnet\";\n  vendorPoDetails[index].vendor_bpo = bpoNumber?bpoNumber : null;\n  //vendorPoDetails[index].delivery_address = 1;\n  \n})\n\n\nitems[0].json.uniqueVendorPlantArr = uniqueVendorPlantArr;\nitems[0].json.prodven= prodven;\nitems[0].json.poDetails =  poDetails;\nitems[0].json.poProducts = poProducts;\nitems[0].json.productsDetails = productsDetails;\nitems[0].json.vendorPoDetails =  vendorPoDetails;\nitems[0].json.po_items = po_items\nreturn items;\n"
       },
       "name": "Constructing Vendor PO Details",
       "type": "n8n-nodes-base.function",
@@ -1680,7 +1691,7 @@
     },
     {
       "parameters": {
-        "functionCode": "items[0].json.attachmentIndex = items[0].binary ? Object.values(items[0].binary).findIndex(key => key.mimeType === \"application/pdf\") : -1;\nif(items[0].json.attachmentIndex !== -1){\n  items[0].json.data = items[0].binary[items[0].json.attachmentIndex];\n}\n\nlet fromEmails = [\"sairam.reddy@shakedeal.com\",\"ordersender-prod@ansmtp.ariba.com\",\"chidanand@shakedeal.com\",\"surya.kc@shakedeal.com\",\"mozartautomationtest@gmail.com\",\"tendul.kumar@shakedeal.com\"];\nlet toEmails = [\"shakedeal.mozart+balco@shakedeal.com\",\"shakedeal.mozart+vedanta@shakedeal.com\",\"sairam.shakedeal+vedantaqa@gmail.com\",\"sairam.shakedeal+balcoqa@gmail.com\"]\nlet negligible_plants = [\"NIES\",\"BCES\",\"KBES\",\"ARES\",\"NKES\"];\nlet consignment_plants = [\"PIES\",\"PIEP\",\"MCES\",\"GEES\",\"NPES\"];\nitems[0].json.negligible_plants = negligible_plants;\nitems[0].json.fromEmails = fromEmails;\n\nreturn items\n"
+        "functionCode": "items[0].json.attachmentIndex = items[0].binary ? Object.values(items[0].binary).findIndex(key => key.mimeType === \"application/pdf\") : -1;\nif(items[0].json.attachmentIndex !== -1){\n  items[0].json.data = items[0].binary[items[0].json.attachmentIndex];\n}\n\nlet fromEmails = [\"sairam.reddy@shakedeal.com\",\"ordersender-prod@ansmtp.ariba.com\",\"chidanand@shakedeal.com\",\"surya.kc@shakedeal.com\",\"mozartautomationtest@gmail.com\",\"tendul.kumar@shakedeal.com\"];\nlet toEmails = [\"shakedeal.mozart+balco@shakedeal.com\",\"shakedeal.mozart+vedanta@shakedeal.com\",\"sairam.shakedeal+vedantaqa@gmail.com\",\"sairam.shakedeal+balcoqa@gmail.com\"]\nlet negligible_plants = [\"NIES\",\"BCES\",\"KBES\",\"ARES\",\"NKES\"];\nlet consignment_plants = [\"PIES\",\"PIEP\",\"MCES\",\"GEES\",\"NPES\"];\nitems[0].json.negligible_plants = negligible_plants;\nitems[0].json.fromEmails = fromEmails;\nitems[0].json.consignment_plants = consignment_plants;\n\nreturn items\n"
       },
       "name": "Get the index of attachment",
       "type": "n8n-nodes-base.function",
@@ -1812,10 +1823,30 @@
         2120,
         1560
       ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sdm_vendor_bpos?filter={\"_and\": [{\"vendor\":{\"_in\":\"{{$node[\"Extracting PO details\"].json[\"vendor_email\"]}}\"}},{\"validity_end\":{\"_gte\":\"$NOW()\"}}]}&fields=*.*",
+        "options": {}
+      },
+      "name": "Check for BPOs",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2980,
+        1440
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "80",
+          "name": "Mozart qa creds"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-04-27T10:41:16.169Z"
+  "updatedAt": "2023-05-02T10:39:15.600Z"
 }
