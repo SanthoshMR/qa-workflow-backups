@@ -3,13 +3,7 @@
   "connections": {
     "Msg91": {
       "main": [
-        [
-          {
-            "node": "Respond to Webhook",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Call Kaleyra": {
@@ -60,6 +54,13 @@
             "type": "main",
             "index": 0
           }
+        ],
+        [
+          {
+            "node": "Call Kaleyra",
+            "type": "main",
+            "index": 0
+          }
         ]
       ]
     },
@@ -67,7 +68,7 @@
       "main": [
         [
           {
-            "node": "Msg91",
+            "node": "Send OTP-Msg91",
             "type": "main",
             "index": 0
           }
@@ -79,6 +80,17 @@
         [
           {
             "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send OTP-Msg91": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
             "type": "main",
             "index": 0
           }
@@ -138,8 +150,8 @@
       "type": "n8n-nodes-base.msg91",
       "typeVersion": 1,
       "position": [
-        900,
-        160
+        180,
+        660
       ],
       "credentials": {
         "msg91Api": {
@@ -169,7 +181,7 @@
             },
             {
               "name": "params",
-              "value": "={{$node[\"Update OTP\"].json[\"data\"][\"otp\"]}}"
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"template_params\"][0]+\"\"}}"
             },
             {
               "name": "template_name",
@@ -308,15 +320,15 @@
           "parameter": [
             {
               "name": "mobile",
-              "value": "={{$node[\"Webhook\"].json[\"body\"][\"mobile\"]}}"
+              "value": "=91{{$node[\"Webhook\"].json[\"body\"][\"phone\"]}}"
             },
             {
               "name": "otp",
-              "value": "={{$node[\"Webhook\"].json[\"body\"][\"params\"][0]}}"
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"template_params\"][0]+\"\"}}"
             },
             {
               "name": "source",
-              "value": "=Cam"
+              "value": "=reward-links"
             },
             {
               "name": "sender_id",
@@ -329,8 +341,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        300,
-        680
+        900,
+        160
       ],
       "credentials": {
         "httpBasicAuth": {
@@ -343,5 +355,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-04-28T09:21:22.823Z"
+  "updatedAt": "2023-05-03T09:41:40.411Z"
 }
