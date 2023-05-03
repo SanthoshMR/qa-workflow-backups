@@ -1,0 +1,126 @@
+{
+  "active": true,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get the invoice data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to Webhook": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the invoice data": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-05-03T10:24:54.483Z",
+  "id": "297",
+  "name": "Tally : Get E-Invoice Data",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "path": "get-e-invoice-data",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        440,
+        340
+      ],
+      "webhookId": "2e13f9e9-4909-4422-9e42-ff610fbaea3c",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "86",
+          "name": "Tally Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n\"po_data\":{{$node[\"Get the invoice data\"].json[\"data\"][0][\"po_data\"]}}\n} {{$node[\"Get the invoice data\"].json[\"data\"]}}",
+        "options": {}
+      },
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        960,
+        340
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "functionCode": "let returnItems =[]\nlet invoiceData = []\n\nlet poData = $node[\"Get the invoice data\"].json[\"data\"];\npoData.forEach(function(obj,index){  \n  //   returnItems.push({\n  //   json: \n  //      obj[\"invoice_data\"],\n   \n  // });\n  invoiceData.push(obj[\"invoice_data\"])\n  \n})\n    \nreturnItems.push({\n   json:{\n     invoices : invoiceData\n   }\n }) \n\n\nreturn returnItems;"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1180,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://zeusqa.shakedeal.com/items/tally_e_invoices?filter={\"status\":{\"_eq\":false}}&limit=-1",
+        "options": {}
+      },
+      "name": "Get the invoice data",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        640,
+        340
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "10",
+          "name": "SD-Dms-Token"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-05-03T10:25:05.666Z"
+}
