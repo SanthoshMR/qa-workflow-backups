@@ -1,0 +1,126 @@
+{
+  "active": true,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get the PO data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the PO data": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to Webhook": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-05-03T10:23:42.691Z",
+  "id": "296",
+  "name": "Tally : Get PO Data",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "path": "get-po-data",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        440,
+        280
+      ],
+      "webhookId": "cd9bf71a-bd31-435c-a0b0-14616b88ba55",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "86",
+          "name": "Tally Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://zeusqa.shakedeal.com/items/tally_pos?filter={\"status\":{\"_eq\":false}}&fields = po_data&limit=-1",
+        "options": {}
+      },
+      "name": "Get the PO data",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        640,
+        280
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "10",
+          "name": "SD-Dms-Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n\"po_data\":{{$node[\"Get the PO data\"].json[\"data\"][0][\"po_data\"]}}\n} {{$node[\"Get the PO data\"].json[\"data\"]}}",
+        "options": {}
+      },
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        960,
+        280
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "functionCode": "let returnItems =[]\nlet pos = [];\n\nlet poData = $node[\"Get the PO data\"].json[\"data\"];\npoData.forEach(function(obj,index){  \n    // returnItems.push({\n    // json: {\n    //   purchase_orders : obj[\"po_data\"]\n    // }\n\n       \n   \n  //});\n  pos.push(obj[\"po_data\"])\n  \n})\n    \n returnItems.push({\n   json:{\n     purchase_orders : pos\n   }\n }) \n\n\nreturn returnItems;"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1180,
+        280
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-05-03T10:24:04.295Z"
+}
