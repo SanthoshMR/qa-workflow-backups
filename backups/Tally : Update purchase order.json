@@ -1,0 +1,279 @@
+{
+  "active": true,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update PO Data": {
+      "main": [
+        [
+          {
+            "node": "Increment index",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start Loop": {
+      "main": [
+        [
+          {
+            "node": "Function to get the splitted data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set": {
+      "main": [
+        [
+          {
+            "node": "Start Loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Increment index": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "End Loop",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Start Loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to get the splitted data": {
+      "main": [
+        [
+          {
+            "node": "Update PO Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-05-03T10:26:26.663Z",
+  "id": "298",
+  "name": "Tally : Update purchase order",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "=update-po-data",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        420,
+        300
+      ],
+      "webhookId": "1621cebf-5870-483f-b65d-e119aace339c",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "86",
+          "name": "Tally Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let purchaseOrders = $node[\"Webhook\"].json[\"body\"][\"purchase_order\"];\nconst size = 10; // size of each subarray\n\nconst result = [];\nfor (let i = 0; i < purchaseOrders.length; i += size) {\n  result.push(purchaseOrders.slice(i, i + size));\n}\n// let updateObj = {};\n// let updateStatus = {\n//   status:true\n// }\n// updateObj.keys = purchaseOrders;\n// updateObj.data = updateStatus;\n\n//items[0].json.updateObj= updateObj;\nitems[0].json.result= result;\nitems[0].json.resultlength = result.length;\nreturn items;"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        680,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "=https://zeusqa.shakedeal.com/items/tally_pos/{{$node[\"Function to get the splitted data\"].json[\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "status",
+              "value": "={{$node[\"Function to get the splitted data\"].json[\"status\"]}}"
+            },
+            {
+              "name": "reference_number",
+              "value": "={{$node[\"Function to get the splitted data\"].json[\"referenceNumber\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update PO Data",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1780,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "10",
+          "name": "SD-Dms-Token"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "name": "Start Loop",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1320,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "number": [
+            {
+              "name": "index"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "number": [
+            {
+              "name": "index",
+              "value": "={{$node[\"Start Loop\"].json[\"index\"]+1}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Increment index",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        2060,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Increment index\"].json[\"index\"]}}",
+              "operation": "equal",
+              "value2": "={{$node[\"Function\"].json[\"resultlength\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        2240,
+        300
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "End Loop",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        2320,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let poData = $node[\"Function\"].json[\"result\"];\nlet currentIndex = $node[\"Start Loop\"].json[\"index\"];\nlet currentPO = poData[currentIndex];\nlet returnItems = [];\n\ncurrentPO.forEach(function(obj,index){  \n    returnItems.push({\n    json: {\n       id : obj.po_number,\n       referenceNumber:obj.reference_number,\n       status:true,\n    }\n  });\n  \n})\n\nreturn returnItems;\n\n// items[0].json.currentStock= currentStock;\n\n// return items;"
+      },
+      "name": "Function to get the splitted data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1540,
+        300
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-05-03T12:20:34.463Z"
+}
