@@ -1,0 +1,107 @@
+{
+  "active": false,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-05-04T09:43:59.215Z",
+  "id": "300",
+  "name": "SP Reward Ledger Updater",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        -340,
+        40
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "update-reward-ledger",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        0,
+        240
+      ],
+      "webhookId": "96579495-29af-4ff7-a29c-3ccfbf507f40"
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_campaign_url\"]}}/items/sp_reward_links?aggregate[sum]=",
+        "options": {}
+      },
+      "name": "Get Value of Vocher Code",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        640,
+        340
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "57",
+          "name": "Adani header auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "dms_url",
+              "value": "https://zeusqa.shakedeal.com"
+            },
+            {
+              "name": "dms_campaign_url",
+              "value": "https://campaignsqa.shakepe.com"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        840,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// import axios from 'axios';\nconst axios = require('axios');\n// Code here will run only once, no matter how many input items there are.\n// More info and help: https://docs.n8n.io/nodes/n8n-nodes-base.function\n// Tip: You can use luxon for dates and $jmespath for querying JSON structures\n\n// Loop over inputs and add a new field called 'myNewField' to the JSON of each one\nfor (item of items) {\n  item.json.myNewField = 1;\n}\n\nconst something = await axios.get(`https://jsonplaceholder.typicode.com/users`);\n\n// You can write logs to the browser console\nconsole.log('Done!');\n\nreturn something.data;"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        220,
+        240
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-05-04T13:24:42.458Z"
+}
