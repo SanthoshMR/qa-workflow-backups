@@ -197,7 +197,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let cards = $node[\"Webhook\"].json.body.cards;\n\nlet order_id = $node[\"Webhook\"].json.body.order_id;\nlet product_code = $node[\"Webhook\"].json.body.product_code;\nlet ref_no = $node[\"Webhook\"].json.body.ref_no;\n\nlet insert_data = [];\n\ncards.forEach((obj,index)=>{\n    let data = {\n        \"order_id\" : order_id,\n        \"product_code\": product_code,\n        \"code\": obj.cardNumber,\n        \"pin\": obj.cardPin,\n        \"price\": obj.amount,\n        \"validity\": obj.validity,\n        \"vendors\": 11,\n        \"vendor_order_id\": ref_no,\n        \"gift_card\": true\n    }\n    \n    insert_data.push({\n        json: [{\n            data:data,\n        }]\n    });  \n});\n\n\nreturn insert_data;\n"
+        "functionCode": "let cards = $node[\"Webhook\"].json.body.cards;\n\nlet order_id = $node[\"Webhook\"].json.body.order_id;\nlet product_code = $node[\"Webhook\"].json.body.product_code;\nlet ref_no = $node[\"Webhook\"].json.body.ref_no;\nlet client = $node[\"Webhook\"].json.body.client;\n\nlet insert_data = [];\n\ncards.forEach((obj,index)=>{\n    let data = {\n        \"order_id\" : order_id,\n        \"product_code\": product_code,\n        \"code\": obj.cardNumber,\n        \"pin\": obj.cardPin,\n        \"price\": obj.amount,\n        \"validity\": obj.validity,\n        \"vendors\": 11,\n        \"vendor_order_id\": ref_no,\n        \"client\": client,\n        \"gift_card\": true\n    }\n    \n    insert_data.push({\n        json: [{\n            data:data,\n        }]\n    });  \n});\n\n\nreturn insert_data;\n"
       },
       "name": "Preparing for create Data",
       "type": "n8n-nodes-base.function",
@@ -289,5 +289,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-04-14T07:36:34.071Z"
+  "updatedAt": "2023-05-04T09:20:54.067Z"
 }
