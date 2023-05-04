@@ -200,7 +200,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let request = $node[\"Webhook\"].json.body\n\nlet keys = [];\nlet req_body = {};\n\nlet response = $node[\"Check for message ID\"].json.data\n\nresponse.forEach(function(obj,index){\n    keys.push(obj.log_id)\n})\n\nlet data = {\n    \"order_id\" : $node[\"Webhook\"].json[\"body\"][\"order_id\"],\n    \"recipient\": $node[\"Webhook\"].json[\"body\"][\"recipient\"],\n    \"template\": $node[\"Webhook\"].json[\"body\"][\"template\"]\n}\n\nreq_body.keys = keys;\nreq_body.data = data;\n\nitems[0].json.keys = keys;\nitems[0].json.req_body = req_body;\nreturn items;"
+        "functionCode": "let request = $node[\"Webhook\"].json.body\n\nlet keys = [];\nlet req_body = {};\n\nlet response = $node[\"Check for message ID\"].json.data\n\nresponse.forEach(function(obj,index){\n    keys.push(obj.log_id)\n})\n\nlet data = {\n    \"order_id\" : $node[\"Webhook\"].json[\"body\"][\"order_id\"],\n    \"recipient\": $node[\"Webhook\"].json[\"body\"][\"recipient\"],\n    \"template\": $node[\"Webhook\"].json[\"body\"][\"template\"],\n    \"source\": $node[\"Webhook\"].json[\"body\"][\"source\"]\n}\n\nreq_body.keys = keys;\nreq_body.data = data;\n\nitems[0].json.keys = keys;\nitems[0].json.req_body = req_body;\nreturn items;"
       },
       "name": "Processing Data",
       "type": "n8n-nodes-base.function",
@@ -260,6 +260,10 @@
             {
               "name": "template",
               "value": "={{$node[\"Webhook\"].json[\"body\"][\"template\"]}}"
+            },
+            {
+              "name": "source",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"source\"]}}"
             }
           ]
         }
@@ -351,5 +355,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-04-10T07:15:36.846Z"
+  "updatedAt": "2023-05-04T11:52:13.008Z"
 }
