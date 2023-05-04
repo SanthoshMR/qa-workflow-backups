@@ -1,0 +1,591 @@
+{
+  "active": false,
+  "connections": {
+    "Get Cloud Files": {
+      "main": [
+        [
+          {
+            "node": "Combine Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get url and token": {
+      "main": [
+        [
+          {
+            "node": "Get Cloud Files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nextcloud": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Combine Items": {
+      "main": [
+        [
+          {
+            "node": "Nextcloud",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "Spreadsheet File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Get url and token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Spreadsheet File": {
+      "main": [
+        [
+          {
+            "node": "Function to get grn data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start Loop": {
+      "main": [
+        [
+          {
+            "node": "Function to get the splitted grn",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set": {
+      "main": [
+        [
+          {
+            "node": "Start Loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Increment index": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "End Loop",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Start Loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to get grn data": {
+      "main": [
+        [
+          {
+            "node": "Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to get the splitted grn": {
+      "main": [
+        [
+          {
+            "node": "Get Shipment Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Shipment Items": {
+      "main": [
+        [
+          {
+            "node": "Update shipment Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update shipment Items": {
+      "main": [
+        [
+          {
+            "node": "Function to get product ids",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to get product ids": {
+      "main": [
+        [
+          {
+            "node": "Get the inventory items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the inventory items": {
+      "main": [
+        [
+          {
+            "node": "Function to return updated inventory stock",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to return updated inventory stock": {
+      "main": [
+        [
+          {
+            "node": "Update Inventory Current stock",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Inventory Current stock": {
+      "main": [
+        [
+          {
+            "node": "Increment index",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-05-04T09:18:33.374Z",
+  "id": "299",
+  "name": "Vedanta : Update GRN",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "operation": "list",
+        "path": "Grn-Report-qa/"
+      },
+      "name": "Get Cloud Files",
+      "type": "n8n-nodes-base.nextCloud",
+      "typeVersion": 1,
+      "position": [
+        660,
+        300
+      ],
+      "credentials": {
+        "nextCloudApi": {
+          "id": "43",
+          "name": "SD Cloud"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "=https://qan8n.shakedeal.com/webhook/get-url",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "client",
+              "value": "=vedanta"
+            },
+            {
+              "name": "env",
+              "value": "=qa"
+            }
+          ]
+        }
+      },
+      "name": "Get url and token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        440,
+        300
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "path": "=Grn-Report-qa/{{$node[\"Combine Items\"].json[\"excelData\"][0][\"file_name\"]}}"
+      },
+      "name": "Nextcloud",
+      "type": "n8n-nodes-base.nextCloud",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        300
+      ],
+      "credentials": {
+        "nextCloudApi": {
+          "id": "43",
+          "name": "SD Cloud"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "// return items;\nlet poFiles=[];\nlet excelFiles=[];\nitems.forEach((item) => {\n    const fullPath = item.json[\"path\"].split(\"/\");\n    const fileName = fullPath[fullPath.length - 1]\n    if(decodeURI(fileName).includes(\".csv\") || decodeURI(fileName).includes(\".xlsx\")){\n        excelFiles.push({\"file_name\":decodeURI(fileName)});\n    }\n});\n\nreturn [{\n     json: {\n         excelData:excelFiles\n    }\n}];"
+      },
+      "name": "Combine Items",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        880,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let binaries = {};\nconst { read: xlsxRead } = require('xlsx'); \nconst data = items[0].binary.data; \nworkbook = xlsxRead(data.data); \nbinaries[\"data\"] = workbook;\n\nitems[0].json.binaries= binaries\nreturn items;"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1280,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "binaryPropertyName": "=data",
+        "options": {
+          "sheetName": "={{$node[\"Function\"].json[\"binaries\"][\"data\"][\"SheetNames\"][0]}}"
+        }
+      },
+      "name": "Spreadsheet File",
+      "type": "n8n-nodes-base.spreadsheetFile",
+      "typeVersion": 1,
+      "position": [
+        1540,
+        300
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "Start Loop",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        2200,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "number": [
+            {
+              "name": "index"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        2000,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "number": [
+            {
+              "name": "index",
+              "value": "={{$node[\"Start Loop\"].json[\"index\"]+1}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Increment index",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        3900,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Increment index\"].json[\"index\"]}}",
+              "operation": "equal",
+              "value2": "={{$node[\"Function to get grn data\"].json[\"resultlength\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        4120,
+        280
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "End Loop",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        4160,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let grnData = [];\n//let productIds = [];\nitems.forEach((item, index) => {\n  //productIds.push(item.json[\"Material\"])\n  grnData.push({\n    product : item.json[\"Material\"],\n    plant : item.json[\"Plant\"],\n    qty : item.json[\"Qty in OPUn\"],\n    vendor_invoice : item.json[\"Vendor Invoice\"],\n    vendor_po : item.json[\"Vendor PO Number\"],\n    plant : item.json[\"Plant\"],\n    movement_type : item.json[\"Movement type\"] == \"103\"?\"received\":item.json[\"Movement type\"] == \"105\"?\"accepted\":\"rejected\"\n  })\n})\nconst size = 10; // size of each subarray\n\nconst result = [];\nfor (let i = 0; i < grnData.length; i += size) {\n  result.push(grnData.slice(i, i + size));\n}\n\n//items[0].json.result= result;\n//items[0].json.resultlength = result.length;\n//return items;\nreturn [{\n    json: {\n        result: result,\n        resultlength : result.length\n    },\n}];\n"
+      },
+      "name": "Function to get grn data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1760,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let grnData = $node[\"Function to get grn data\"].json[\"result\"];\nlet currentIndex = $node[\"Start Loop\"].json[\"index\"];\nlet currentGrn = grnData[currentIndex];\nlet returnItems = [];\nuniqueArr = Object.create(null),\n    uniqueShipmentProductArr = currentGrn.filter(o => {\n        var key = ['product', 'vendor_invoice','vendor_po','movement_type'].map(k => o[k]).join('|');\n        if (!uniqueArr[key]) {\n            uniqueArr[key] = true;\n            return true;\n        }\n    });\nuniqueShipmentProductArr.forEach(function(obj,index){\n    let matchedShipmentProduct =   currentGrn.filter(grn=>grn.product == obj.product && grn.vendor_po == obj.vendor_po && grn.movement_type == obj.movement_type && grn.vendor_invoice==obj.vendor_invoice);\n    let totalQty = matchedShipmentProduct.reduce((total,obj)=>obj.qty+ total, 0)\n    returnItems.push({\n    json: {\n       product : obj.product,\n       vendor_invoice:obj.vendor_invoice,\n       vendor_po:obj.vendor_po,\n       plant : obj.plant,\n       qty : totalQty,\n       dms_url : $node[\"Get url and token\"].json[\"0\"][\"mozart_url\"],\n       movement_type : obj.movement_type\n    }\n  });\n  \n})\n\nreturn returnItems;\n"
+      },
+      "name": "Function to get the splitted grn",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        2420,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Function to get the splitted grn\"].json[\"dms_url\"]}}/items/sdm_shipment_items?filter={\"_and\": [{\"sdm_shipments_id\":{\"invoice_number\":{\"_eq\":\"{{$node[\"Function to get the splitted grn\"].json[\"vendor_invoice\"]}}\"}}},{\"sdm_po_items_id\":{\"product\":{\"_eq\":\"{{$node[\"Function to get the splitted grn\"].json[\"product\"]}}\"}}},{\"sdm_shipments_id\":{\"vendor_po_num\":{\"_eq\":\"{{$node[\"Function to get the splitted grn\"].json[\"vendor_po\"]}}\"}}}]}",
+        "options": {}
+      },
+      "name": "Get Shipment Items",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2620,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "80",
+          "name": "Mozart qa creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Function to get the splitted grn\"].json[\"dms_url\"]}}/items/sdm_shipment_items/{{$node[\"Get Shipment Items\"].json[\"data\"][0][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "received_qty",
+              "value": "={{$node[\"Function to get the splitted grn\"].json[\"movement_type\"] == \"received\"?$node[\"Get Shipment Items\"].json[\"data\"][0][\"received_qty\"]+parseFloat($node[\"Function to get the splitted grn\"].json[\"qty\"]):$node[\"Get Shipment Items\"].json[\"data\"][0][\"received_qty\"]}}"
+            },
+            {
+              "name": "accepted_qty",
+              "value": "={{$node[\"Function to get the splitted grn\"].json[\"movement_type\"] == \"accepted\"?$node[\"Get Shipment Items\"].json[\"data\"][0][\"accepted_qty\"]+parseFloat($node[\"Function to get the splitted grn\"].json[\"qty\"]):$node[\"Get Shipment Items\"].json[\"data\"][0][\"accepted_qty\"]}}"
+            },
+            {
+              "name": "rejected_qty",
+              "value": "={{$node[\"Function to get the splitted grn\"].json[\"movement_type\"] == \"accepted\"?$node[\"Get Shipment Items\"].json[\"data\"][0][\"rejected_qty\"]+parseFloat($node[\"Function to get the splitted grn\"].json[\"qty\"]):$node[\"Get Shipment Items\"].json[\"data\"][0][\"rejected_qty\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update shipment Items",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2800,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "80",
+          "name": "Mozart qa creds"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "functionCode": "let grnData = $node[\"Function to get grn data\"].json[\"result\"];\nlet currentIndex = $node[\"Start Loop\"].json[\"index\"];\nlet currentGrn = grnData[currentIndex];\nlet productIds = [];\ncurrentGrn.forEach(function(grn,index){\n  productIds.push(grn.product)\n})\n\n\nreturn [{\n    json: {\n        productIds: productIds,\n        currentGrn : currentGrn\n    },\n}];"
+      },
+      "name": "Function to get product ids",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        3000,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Function to get the splitted grn\"].json[\"dms_url\"]}}/items/sdm_inventory?filter={\"product\":{\"_in\":\"{{$node[\"Function to get product ids\"].json[\"productIds\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Get the inventory items",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3240,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "80",
+          "name": "Mozart qa creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let currentGrn = $node[\"Function to get product ids\"].json[\"currentGrn\"];\nlet productIds = $node[\"Function to get product ids\"].json[\"productIds\"];\nlet inventoryItems = $node[\"Get the inventory items\"].json[\"data\"];\nlet updateInventoryObj = [];\nlet returnItems = [];\ninventoryItems.forEach(function(inventoryItem,index){\n    let matchedProductPlant = currentGrn.filter(grn=>inventoryItem.product == grn.product && inventoryItem.plant == grn.plant && grn.movement_type == \"accepted\");\n    if(matchedProductPlant.length>0){\n        let totalQty = matchedProductPlant.reduce((total,obj)=>obj.qty+ total, 0) \n        updateInventoryObj.push({\n            id:inventoryItem.id,\n            current_stock:parseFloat(inventoryItem.current_stock) + totalQty,\n            item_status : \"po_not_generated\"\n        })\n    }\n    \n})\nupdateInventoryObj.forEach(function(obj,index){  \n    returnItems.push({\n    json: {\n       id:obj[\"id\"],\n       current_stock:obj[\"current_stock\"],\n       item_status:obj[\"item_status\"],\n       dms_url : $node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]\n    }\n  });\n  \n})\n\nreturn returnItems;"
+      },
+      "name": "Function to return updated inventory stock",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        3420,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Function to return updated inventory stock\"].json[\"dms_url\"]}}/items/sdm_inventory/{{$node[\"Function to return updated inventory stock\"].json[\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "current_stock",
+              "value": "={{$node[\"Function to return updated inventory stock\"].json[\"current_stock\"]}}"
+            },
+            {
+              "name": "item_status",
+              "value": "={{$node[\"Function to return updated inventory stock\"].json[\"item_status\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update Inventory Current stock",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3660,
+        280
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "80",
+          "name": "Mozart qa creds"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-05-04T13:12:31.995Z"
+}
