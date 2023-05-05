@@ -5,7 +5,18 @@
       "main": [
         [
           {
-            "node": "Msg91",
+            "node": "Source Name",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Source Name": {
+      "main": [
+        [
+          {
+            "node": "Send OTP-Msg91",
             "type": "main",
             "index": 0
           }
@@ -59,8 +70,8 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        420,
-        420
+        -40,
+        460
       ],
       "webhookId": "374a9525-9b9a-41e9-9b71-17d22418576b",
       "credentials": {
@@ -69,10 +80,63 @@
           "name": "sp campaigns"
         }
       }
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "=https://qan8n.shakedeal.com/webhook/send-otp",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "mobile",
+              "value": "=91{{$node[\"Webhook\"].json[\"body\"][\"phone\"]}}"
+            },
+            {
+              "name": "otp",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"otp\"]}}"
+            },
+            {
+              "name": "source",
+              "value": "={{$node[\"Source Name\"].json[\"name\"]}}"
+            },
+            {
+              "name": "sender_id",
+              "value": "=SHAKDL"
+            }
+          ]
+        }
+      },
+      "name": "Send OTP-Msg91",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        360,
+        460
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "60",
+          "name": "Notification"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "const sourceName = {\n  name: \"Unknown\"\n};\n\nconst project_code = $node[\"Webhook\"].json[\"body\"][\"project_code\"];\n\nif(project_code) {\n  sourceName.name = project_code\n}\n\nswitch(project_code) {\n  case \"lima-proj-1\": sourceName.name = \"Limagrain QR App\"; break;\n  case \"sd-shakepe-proj\": sourceName.name = \"ShakePe QR App\"; break;\n  case \"polar_bear\": sourceName.name = \"Polar Bear\"; break;\n}\n\nreturn sourceName;"
+      },
+      "name": "Source Name",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        160,
+        460
+      ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-01-25T09:01:37.620Z"
+  "updatedAt": "2023-05-05T07:43:14.106Z"
 }
