@@ -1,11 +1,22 @@
 {
-  "active": false,
+  "active": true,
   "connections": {
     "Webhook": {
       "main": [
         [
           {
-            "node": "Function",
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Ledger Calculator and Updater",
             "type": "main",
             "index": 0
           }
@@ -38,42 +49,22 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        0,
-        240
+        -520,
+        320
       ],
       "webhookId": "96579495-29af-4ff7-a29c-3ccfbf507f40"
-    },
-    {
-      "parameters": {
-        "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"dms_campaign_url\"]}}/items/sp_reward_links?aggregate[sum]=",
-        "options": {}
-      },
-      "name": "Get Value of Vocher Code",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        640,
-        340
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "57",
-          "name": "Adani header auth"
-        }
-      }
     },
     {
       "parameters": {
         "values": {
           "string": [
             {
-              "name": "dms_url",
-              "value": "https://zeusqa.shakedeal.com"
-            },
-            {
               "name": "dms_campaign_url",
               "value": "https://campaignsqa.shakepe.com"
+            },
+            {
+              "name": "campaigns_header_auth",
+              "value": "Bearer A1SgJqv876pUzTBHfwg1f86znvD3iD3C"
             }
           ]
         },
@@ -83,25 +74,25 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        840,
-        340
+        -280,
+        320
       ]
     },
     {
       "parameters": {
-        "functionCode": "// import axios from 'axios';\nconst axios = require('axios');\n// Code here will run only once, no matter how many input items there are.\n// More info and help: https://docs.n8n.io/nodes/n8n-nodes-base.function\n// Tip: You can use luxon for dates and $jmespath for querying JSON structures\n\n// Loop over inputs and add a new field called 'myNewField' to the JSON of each one\nfor (item of items) {\n  item.json.myNewField = 1;\n}\n\nconst something = await axios.get(`https://jsonplaceholder.typicode.com/users`);\n\n// You can write logs to the browser console\nconsole.log('Done!');\n\nreturn something.data;"
+        "functionCode": "const axios = require('axios');\n\nconst dmsUrl = $node[\"Globals\"].json[\"dms_campaign_url\"];\nconst campaignsAuth = $node[\"Globals\"].json[\"campaigns_header_auth\"];\n\ntry {\n  const allRedemptionsFromActiveCampaign = await axios.get(`${dmsUrl}/items/sp_reward_redemptions`, {\n    params: {\n      sort: [\"date_created\"],\n      fields: [\n        \"*\", \n        \"reward_link.pending_value\",\n        \"reward_link.value\",\n        \"reward_link.reward_campaign\",\n        \"reward_link.id\",\n        \"sku.value\",\n        \"sku.name\",\n        \"reward_link.reward_campaign.name\",\n        \"reward_link.reward_campaign.status\",\n        \"reward_link.reward_campaign.id\",\n      ],\n      filter: {\n        _and: [\n          {\n            reward_link: {\n              _nnull: true\n            }\n          },\n          {\n            reward_link: {\n              reward_campaign: {\n                status: {\n                  _eq: \"active\"\n                }\n              }\n            }\n          }\n        ]\n      },\n      limit: -1\n    },\n    headers: {\n      'Authorization': campaignsAuth\n    }\n  });\n\n  const campaignWiseTotalLinkValues = await axios.get(`${dmsUrl}/items/sp_reward_links`, {\n    params: {\n      sort: [\"date_created\"],\n      fields: [\n        \"reward_campaign\", \"value\"\n      ],\n      filter: {\n        _and: [\n          {\n              reward_campaign: {\n                status: {\n                  _eq: \"active\"\n              }\n            }\n          }\n        ]\n      },\n      limit: -1\n    },\n    headers: {\n      'Authorization': campaignsAuth\n    }\n  });\n\n  const campaignWiseOpeningBalances = {};\n\n  const allRewardLinkValues = campaignWiseTotalLinkValues.data.data;\n\n  allRewardLinkValues.forEach(({reward_campaign, value})=>{\n    if(!campaignWiseOpeningBalances[reward_campaign]){ \n      campaignWiseOpeningBalances[reward_campaign]={ opening_balance: 0 }\n    }\n    campaignWiseOpeningBalances[reward_campaign][\"opening_balance\"]+=value*1;\n  });\n  \n  const campaignWiseReportsJson = {};\n\n  const redemptionsArray = allRedemptionsFromActiveCampaign.data.data;\n\n  redemptionsArray.forEach(redemption=>{\n    const campaignName = redemption[\"reward_link\"][\"reward_campaign\"][\"name\"];\n    const campaignId = redemption[\"reward_link\"][\"reward_campaign\"][\"id\"];\n    const redemptionValue = redemption[\"sku\"]?redemption[\"sku\"][\"value\"]:0;\n    const redemptionMonthYear = (new Date(redemption[\"date_created\"]).getMonth()+1)+\"-\"+new Date(redemption[\"date_created\"]).getFullYear();\n    if(!campaignWiseReportsJson[campaignId]) {\n      campaignWiseReportsJson[campaignId] = {};\n    }\n    if(!campaignWiseReportsJson[campaignId][redemptionMonthYear]) {\n      let openingBalanceCalc = 0;\n      if(Object.keys(campaignWiseReportsJson[campaignId]).length>1) {\n        const lastMonthKey = Object.keys(campaignWiseReportsJson[campaignId])[Object.keys(campaignWiseReportsJson[campaignId]).length-1];\n        openingBalanceCalc = campaignWiseReportsJson[campaignId][lastMonthKey][\"closing_balance\"];\n        campaignWiseReportsJson[campaignId][redemptionMonthYear] = {\n          opening_balance: openingBalanceCalc,\n          closing_balance: 0,\n          loaded_balance: 0,\n          redeemed_amount: 0\n        };\n      } else if(Object.keys(campaignWiseReportsJson[campaignId]).length==1) {\n        const lastMonthKey = Object.keys(campaignWiseReportsJson[campaignId])[Object.keys(campaignWiseReportsJson[campaignId]).length-1];\n        openingBalanceCalc = campaignWiseReportsJson[campaignId][lastMonthKey][\"loaded_balance\"];\n        campaignWiseReportsJson[campaignId][redemptionMonthYear] = {\n          opening_balance: openingBalanceCalc,\n          closing_balance: 0,\n          loaded_balance: 0,\n          redeemed_amount: 0\n        };\n      } else {\n        openingBalanceCalc = campaignWiseOpeningBalances[campaignId][\"opening_balance\"];\n        campaignWiseReportsJson[campaignId][redemptionMonthYear] = {\n          opening_balance: 0,\n          closing_balance: 0,\n          loaded_balance: openingBalanceCalc,\n          redeemed_amount: 0\n        };\n      }\n\n      \n    }\n    campaignWiseReportsJson[campaignId][redemptionMonthYear][\"redeemed_amount\"]+=redemptionValue*1;\n    campaignWiseReportsJson[campaignId][redemptionMonthYear][\"closing_balance\"]=\n       campaignWiseReportsJson[campaignId][redemptionMonthYear][\"opening_balance\"] \n       + campaignWiseReportsJson[campaignId][redemptionMonthYear][\"loaded_balance\"]\n       - campaignWiseReportsJson[campaignId][redemptionMonthYear][\"redeemed_amount\"];\n  });\n\n  const campaignWiseReportsList = [];\n\n  Object.keys(campaignWiseReportsJson).forEach(campaignId=>{\n    Object.keys(campaignWiseReportsJson[campaignId]).forEach(record=>{\n      const month = record.split(\"-\")[0];\n      const year = record.split(\"-\")[1];\n      campaignWiseReportsList.push({\n        month, year, reward_campaign: campaignId, ...campaignWiseReportsJson[campaignId][record]\n      });\n    });\n  });\n  \n\n  // return { data: campaignWiseReportsList };\n\n  try {\n    const getAllLedgerResponse = await axios.get(`${dmsUrl}/items/sp_reward_ledger`, {\n      params: {\n        fields: [\n          \"id\"\n        ],\n        limit: -1\n      },\n      headers: {\n        'Authorization': campaignsAuth\n      }\n    });\n\n    const allLedgerKeys = getAllLedgerResponse.data.data.map(led=>{\n      return led.id;\n    });\n\n    const deleteAllLedgerResponse = await axios.delete(`${dmsUrl}/items/sp_reward_ledger`, {\n      headers: {\n        'Authorization': campaignsAuth\n      },\n      data: {\n        keys: allLedgerKeys\n      }\n    });\n\n    const addAllLedgerResponse = await axios.post(`${dmsUrl}/items/sp_reward_ledger`, campaignWiseReportsList,\n    {\n      headers: {\n        'Authorization': campaignsAuth,\n        'Content-Type': 'application/json'\n      }\n    });\n\n    return campaignWiseReportsList;\n    \n  } catch(e) {\n    return { updationError: \"\"+e};\n  }\n\n} catch (e) {\n  return { calculationError: \"\"+e};\n}\n\n\n\n\n"
       },
-      "name": "Function",
+      "name": "Ledger Calculator and Updater",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        220,
-        240
+        -80,
+        320
       ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-05-04T13:24:42.458Z"
+  "updatedAt": "2023-05-05T09:23:57.644Z"
 }
