@@ -320,6 +320,10 @@
             {
               "name": "source",
               "value": "={{$node[\"Webhook\"].json[\"body\"][\"source\"]}}"
+            },
+            {
+              "name": "status",
+              "value": "=Send"
             }
           ]
         }
@@ -406,5 +410,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-05-02T11:31:06.401Z"
+  "updatedAt": "2023-05-05T10:07:39.118Z"
 }
