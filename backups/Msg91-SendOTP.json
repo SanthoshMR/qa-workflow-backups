@@ -234,11 +234,15 @@
             },
             {
               "name": "template",
-              "value": "=OTP"
+              "value": "=otp"
             },
             {
               "name": "source",
               "value": "={{$node[\"Webhook\"].json[\"body\"][\"source\"]}}"
+            },
+            {
+              "name": "status",
+              "value": "=Send"
             }
           ]
         }
@@ -314,5 +318,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-04-28T07:36:47.540Z"
+  "updatedAt": "2023-05-05T10:17:26.284Z"
 }
