@@ -1,0 +1,259 @@
+{
+  "active": true,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get url and token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get url and token": {
+      "main": [
+        [
+          {
+            "node": "Get the shipment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to create order": {
+      "main": [
+        [
+          {
+            "node": "Create Order",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the shipment": {
+      "main": [
+        [
+          {
+            "node": "Function to create order",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Order": {
+      "main": [
+        [
+          {
+            "node": "Create sdm_shipments_sdm_orders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create sdm_shipments_sdm_orders": {
+      "main": [
+        [
+          {
+            "node": "Create sdm_orders_sdm_shipments",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-05-05T05:13:34.508Z",
+  "id": "301",
+  "name": "Vedanta : Auto order for non-consignment",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "create-auto-order",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        440,
+        300
+      ],
+      "webhookId": "96d53357-5282-4a54-8c35-9730dbc4dfd3"
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "=https://qan8n.shakedeal.com/webhook/get-url",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "client",
+              "value": "=vedanta"
+            },
+            {
+              "name": "env",
+              "value": "=qa"
+            }
+          ]
+        }
+      },
+      "name": "Get url and token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        660,
+        300
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_shipments/{{$node[\"Webhook\"].json[\"body\"][\"keys\"][0]}}?fields=*.*",
+        "options": {}
+      },
+      "name": "Get the shipment",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        920,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "80",
+          "name": "Mozart qa creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let orderObj = {};\nlet orderItems = [];\nlet shipmentItems = $node[\"Get the shipment\"].json[\"data\"][\"shipment_items\"];\nshipmentItems.forEach(function(item,index){\n  orderItems[index]={};\n  orderItems[index].sdm_po_items_id = item.sdm_po_items_id;\n  orderItems[index].quantity  = item.shipment_qty;\n})\norderObj.order_value = $node[\"Get the shipment\"].json[\"data\"][\"invoice_value\"];\norderObj.order_status = \"draft\";\norderObj.order_type = $node[\"Get the shipment\"].json[\"data\"][\"vendor_po_num\"][\"po_type\"];\norderObj.order_date = new Date().toISOString();\n//orderObj.shipment = $node[\"Create shipment in mozart\"].json[\"data\"][\"id\"];\norderObj.order_items = orderItems;\n\nitems[0].json.orderObj = orderObj;\nitems[0].json.orderItems = orderItems;\nreturn items;"
+      },
+      "name": "Function to create order",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1160,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_orders",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Function to create order\"].json[\"orderObj\"]}}"
+      },
+      "name": "Create Order",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1380,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "80",
+          "name": "Mozart qa creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_shipments_sdm_orders",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "sdm_shipments_id",
+              "value": "={{$node[\"Get the shipment\"].json[\"data\"][\"id\"]}}"
+            },
+            {
+              "name": "sdm_orders_id",
+              "value": "={{$node[\"Create Order\"].json[\"data\"][\"id\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Create sdm_shipments_sdm_orders",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1560,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "80",
+          "name": "Mozart qa creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_orders_sdm_shipments",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "sdm_orders_id",
+              "value": "={{$node[\"Create Order\"].json[\"data\"][\"id\"]}}"
+            },
+            {
+              "name": "sdm_shipments_id",
+              "value": "={{$node[\"Get the shipment\"].json[\"data\"][\"id\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Create sdm_orders_sdm_shipments",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1760,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "80",
+          "name": "Mozart qa creds"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-05-05T06:33:27.701Z"
+}
