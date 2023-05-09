@@ -1,6 +1,117 @@
 {
   "active": false,
-  "connections": {},
+  "connections": {
+    "Get Cloud Files": {
+      "main": [
+        [
+          {
+            "node": "Combine Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get url and token": {
+      "main": [
+        [
+          {
+            "node": "Get Cloud Files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nextcloud": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Combine Items": {
+      "main": [
+        [
+          {
+            "node": "Nextcloud",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "Spreadsheet File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Get url and token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Spreadsheet File": {
+      "main": [
+        [
+          {
+            "node": "Function to get issuance data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to get issuance data": {
+      "main": [
+        [
+          {
+            "node": "Get the shipment Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the shipment Items": {
+      "main": [
+        [
+          {
+            "node": "Create order obj",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create order obj": {
+      "main": [
+        [
+          {
+            "node": "Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
   "createdAt": "2023-05-08T12:53:28.988Z",
   "id": "303",
   "name": "Vedanta : Create Auto orders for issuances",
@@ -14,10 +125,185 @@
         240,
         300
       ]
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "operation": "list",
+        "path": "Vedanta-Issuances-qa/"
+      },
+      "name": "Get Cloud Files",
+      "type": "n8n-nodes-base.nextCloud",
+      "typeVersion": 1,
+      "position": [
+        660,
+        300
+      ],
+      "credentials": {
+        "nextCloudApi": {
+          "id": "43",
+          "name": "SD Cloud"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "=https://qan8n.shakedeal.com/webhook/get-url",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "client",
+              "value": "=vedanta"
+            },
+            {
+              "name": "env",
+              "value": "=qa"
+            }
+          ]
+        }
+      },
+      "name": "Get url and token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        440,
+        300
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "path": "=Vedanta-Issuances-qa/{{$node[\"Combine Items\"].json[\"excelData\"][0][\"file_name\"]}}"
+      },
+      "name": "Nextcloud",
+      "type": "n8n-nodes-base.nextCloud",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        300
+      ],
+      "credentials": {
+        "nextCloudApi": {
+          "id": "43",
+          "name": "SD Cloud"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "// return items;\nlet poFiles=[];\nlet excelFiles=[];\nitems.forEach((item) => {\n    const fullPath = item.json[\"path\"].split(\"/\");\n    const fileName = fullPath[fullPath.length - 1]\n    if(decodeURI(fileName).includes(\".csv\") || decodeURI(fileName).includes(\".xlsx\") ||decodeURI(fileName).includes(\".xls\")){\n        excelFiles.push({\"file_name\":decodeURI(fileName)});\n    }\n});\n\nreturn [{\n     json: {\n         excelData:excelFiles\n    }\n}];"
+      },
+      "name": "Combine Items",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        880,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let binaries = {};\nconst { read: xlsxRead } = require('xlsx'); \nconst data = items[0].binary.data; \nworkbook = xlsxRead(data.data); \nbinaries[\"data\"] = workbook;\n\nitems[0].json.binaries= binaries\nreturn items;"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1280,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "binaryPropertyName": "=data",
+        "options": {
+          "sheetName": "={{$node[\"Function\"].json[\"binaries\"][\"data\"][\"SheetNames\"][0]}}"
+        }
+      },
+      "name": "Spreadsheet File",
+      "type": "n8n-nodes-base.spreadsheetFile",
+      "typeVersion": 1,
+      "position": [
+        1540,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let issuanceData = [];\nlet products = [];\nitems.forEach((item, index) => {\n  if(item.json[\"Movement type\"] == \"101\"){\n    const orderDate = getFormattedDate(item.json[\"Posting Date\"]);\n    products.push(item.json[\"Material\"])\n    issuanceData.push({\n      po_number : item.json[\"Purchase order\"],\n      product : item.json[\"Material\"],\n      plant : item.json[\"Plant\"],\n      qty : item.json[\"Qty in unit of entry\"],\n      order_date : orderDate\n    })\n  }\n})\nfunction getFormattedDate(secs){\n  const millisecondsPerDay = 24 * 60 * 60 * 1000; // Number of milliseconds in a day\n\n  const date = new Date((secs-1) * millisecondsPerDay + Date.parse(\"1900-01-01\"));\n\n  const day = date.getDate();\n  const month = date.getMonth() + 1; // Months are zero-based, so we add 1\n  const year = date.getFullYear();\n  const formattedDate = `${year}-${month < 10 ? '0' : ''}${month}-${day < 10 ? '0' : ''}${day-1}`;\n  return formattedDate\n}\nlet uniqueProductArr = products.filter((value, index) => {\n    return products.indexOf(value) === index;\n  });\nreturn [{\n    json: {\n        issuanceData: issuanceData,\n        products : uniqueProductArr\n    },\n}];\n"
+      },
+      "name": "Function to get issuance data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1800,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_shipment_items?filter={\"_and\": [{\"sdm_po_items_id\":{\"product\":{\"_in\":\"{{$node[\"Function to get issuance data\"].json[\"products\"]}}\"}}},{\"remaining_qty\":{\"_neq\":0}},{\"sdm_shipments_id\":{\"vendor_po_num\":{\"consignment_type\":{\"_neq\":\"non_consignmnet\"}}}}]}&sort=id&fields=*.*",
+        "options": {}
+      },
+      "name": "Get the shipment Items",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2000,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let issuances = $node[\"Function to get issuance data\"].json[\"issuanceData\"];\nlet shipmentItems = $node[\"Get the shipment Items\"].json[\"data\"];\nlet orderObj = [];\nuniqueArr = Object.create(null),\n    uniqueProductPoPlantArr = issuances.filter(o => {\n        var key = ['po_number','plant'].map(k => o[k]).join('|');\n        if (!uniqueArr[key]) {\n            uniqueArr[key] = true;\n            return true;\n        }\n    });\nuniqueProductPoPlantArr.forEach(function(product,index){\n    let matchedIssuances = issuances.filter(issuance =>product.po_number == issuance.po_number && product.plant == issuance.plant );\n    uniqueIssuanceArr = Object.create(null),\n    uniqueProductArr = matchedIssuances.filter(o => {\n        var key = ['product'].map(k => o[k]).join('|');\n        if (!uniqueIssuanceArr[key]) {\n            uniqueIssuanceArr[key] = true;\n            return true;\n        }\n    }); \n    //let matchedShipmentItems = shipmentItems.filter(shipmentItem => product.product == shipmentItem.sdm_po_items_id.product && product.plant == shipmentItem.sdm_po_items_id.plant);\n    let orderProducts = [];\n    uniqueProductArr.forEach(function(unqProduct,index){\n        let matchedProducts = matchedIssuances.filter(matchedIssuance =>matchedIssuance.product == unqProduct.product);\n        orderProducts[index] = {};\n        orderProducts[index].product = unqProduct.product;\n        orderProducts[index].qty = matchedProducts.reduce((total,obj)=>parseFloat(obj.qty)+ total, 0);\n    });\n    orderProducts.forEach(function(orderProduct,index){\n        let matchedShipmentItems = shipmentItems.filter(shipmentItem => orderProduct.product == shipmentItem.sdm_po_items_id.product && product.plant == shipmentItem.sdm_po_items_id.plant);\n        \n    })\n    orderObj[index] = {};\n    orderObj[index].order_value = orderValue;\n})\nitems[0].json.uniqueProductPoPlantArr = uniqueProductPoPlantArr;\nreturn items;"
+      },
+      "name": "Create order obj",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        2240,
+        300
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "value": "={{$node[\"Get the shipment Items\"].json[\"data\"]}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        2560,
+        180
+      ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-05-08T12:53:28.988Z"
+  "updatedAt": "2023-05-09T11:23:50.670Z"
 }
