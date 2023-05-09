@@ -122,7 +122,7 @@
         ],
         [
           {
-            "node": "Preparing for create SES Data",
+            "node": "Exit function",
             "type": "main",
             "index": 0
           }
@@ -133,7 +133,7 @@
       "main": [
         [
           {
-            "node": "Preparing for create SES Data",
+            "node": "Get SES Log ID",
             "type": "main",
             "index": 0
           }
@@ -488,13 +488,13 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1460,
-        560
+        0,
+        800
       ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-05-03T05:43:50.188Z"
+  "updatedAt": "2023-05-09T07:23:41.718Z"
 }
