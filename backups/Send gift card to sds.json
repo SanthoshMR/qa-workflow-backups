@@ -271,7 +271,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let data = $node[\"Check for gift card\"].json.data\nlet keys = [];\nlet req_body = {};\nlet gift_card_status = {\n    \"gift_card\": true,\n    \"order_id\" : $node[\"Wait for order\"].json[\"body\"][\"order_id\"]\n}\ndata.forEach(function(obj,index){\n    keys.push(obj.id)\n})\nreq_body.keys = keys;\nreq_body.data = gift_card_status;\n\n\nitems[0].json.keys = keys;\nitems[0].json.req_body = req_body;\nreturn items;"
+        "functionCode": "let data = $node[\"Check for gift card\"].json.data\nlet keys = [];\nlet req_body = {};\nlet gift_card_status = {\n    \"gift_card\": true,\n    \"order_id\" : $node[\"Wait for order\"].json[\"body\"][\"order_id\"],\n    \"client\" : $node[\"Wait for order\"].json[\"body\"][\"client\"]\n}\ndata.forEach(function(obj,index){\n    keys.push(obj.id)\n})\nreq_body.keys = keys;\nreq_body.data = gift_card_status;\n\nitems[0].json.keys = keys;\nitems[0].json.req_body = req_body;\nreturn items;"
       },
       "name": "Function to get keys",
       "type": "n8n-nodes-base.function",
@@ -365,7 +365,7 @@
         "options": {
           "bodyContentType": "json"
         },
-        "bodyParametersJson": "={\n\t\"required_vouchers\": [\n         {\n           \"sku\": \"{{$node[\"Wait for order\"].json[\"body\"][\"product_code\"]}}\",\n           \"qty\": {{$node[\"Wait for order\"].json[\"body\"][\"quantity\"]}},\n           \"amt\": {{$node[\"Check for gift card amount\"].json[\"data\"][0]?$node[\"Check for gift card amount\"].json[\"data\"][0][\"amount\"]*1:0}}\n          }\n     ],\n\t \"options\": {\n\t \t\"redeemed\": true,\n        \"reference_id\":\"{{$node[\"Wait for order\"].json[\"body\"][\"product_code\"]+\"-\"+$node[\"Wait for order\"].json[\"body\"][\"order_id\"]}}\", \n\t \t\"order_id\": {{$node[\"Wait for order\"].json[\"body\"][\"order_id\"]?$node[\"Wait for order\"].json[\"body\"][\"order_id\"]+\"\":null}}\n\t }\n}"
+        "bodyParametersJson": "={\n\t\"required_vouchers\": [\n         {\n           \"sku\": \"{{$node[\"Wait for order\"].json[\"body\"][\"product_code\"]}}\",\n           \"qty\": {{$node[\"Wait for order\"].json[\"body\"][\"quantity\"]}},\n           \"amt\": {{$node[\"Check for gift card amount\"].json[\"data\"][0]?$node[\"Check for gift card amount\"].json[\"data\"][0][\"amount\"]*1:0}}\n          }\n     ],\n\t \"options\": {\n\t \t\"redeemed\": true,\n        \"reference_id\":\"{{$node[\"Wait for order\"].json[\"body\"][\"product_code\"]+\"-\"+$node[\"Wait for order\"].json[\"body\"][\"order_id\"]}}\", \n\t \t\"order_id\": {{$node[\"Wait for order\"].json[\"body\"][\"order_id\"]?$node[\"Wait for order\"].json[\"body\"][\"order_id\"]+\"\":null}},\n\t    \"extra\": {\n               \"client\": \" {{$node[\"Wait for order\"].json[\"body\"][\"client\"]}}\"\n\t\t}\t\t\t\n\t }\n}"
       },
       "name": "Get Voucher from VPP API",
       "type": "n8n-nodes-base.httpRequest",
@@ -439,5 +439,5 @@
       "updatedAt": "2022-06-27T13:07:10.771Z"
     }
   ],
-  "updatedAt": "2023-04-28T06:37:51.578Z"
+  "updatedAt": "2023-05-09T09:40:36.288Z"
 }
