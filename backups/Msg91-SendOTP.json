@@ -304,7 +304,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let records = $node[\"Webhook\"].json[\"body\"];\n\nlet template_id = \"\";\nif(records.sender_id == 'SHAKDL'){\n  template_id = \"644764e8d6fc05102a41e423\";\n}else{\n  template_id = \"644764e8d6fc05102a41e423\";\n}\nitems[0].json.template_id = template_id;\nreturn items;"
+        "functionCode": "let records = $node[\"Webhook\"].json[\"body\"];\n\nlet template_id = \"\";\nif(records.sender_id == 'SHAKDL'){\n  template_id = \"644764e8d6fc05102a41e423\";\n}else if(records.sender_id == 'SHAKPE-IVR-Card-Activation'){\n  template_id = \"645cc210d6fc05026a1959c5\";\n}else{\n  template_id = \"644764e8d6fc05102a41e423\";\n}\nitems[0].json.template_id = template_id;\nreturn items;"
       },
       "name": "Get Template ID",
       "type": "n8n-nodes-base.function",
@@ -318,5 +318,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-05-05T10:17:26.284Z"
+  "updatedAt": "2023-05-11T10:28:25.072Z"
 }
