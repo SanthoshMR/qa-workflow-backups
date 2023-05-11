@@ -104,7 +104,62 @@
       "main": [
         [
           {
-            "node": "Set",
+            "node": "Create order in mozart",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create order in mozart": {
+      "main": [
+        [
+          {
+            "node": "Function to update shipment Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to update shipment Items": {
+      "main": [
+        [
+          {
+            "node": "Get the Inventory items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the Inventory items": {
+      "main": [
+        [
+          {
+            "node": "Function to return inventory stock update",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to return inventory stock update": {
+      "main": [
+        [
+          {
+            "node": "Update Shipment Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Shipment Items": {
+      "main": [
+        [
+          {
+            "node": "Update Inventory Items",
             "type": "main",
             "index": 0
           }
@@ -271,7 +326,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let issuances = $node[\"Function to get issuance data\"].json[\"issuanceData\"];\nlet shipmentItems = $node[\"Get the shipment Items\"].json[\"data\"];\nlet orderObj = [];\nuniqueArr = Object.create(null),\n    uniqueProductPoPlantArr = issuances.filter(o => {\n        var key = ['po_number','plant'].map(k => o[k]).join('|');\n        if (!uniqueArr[key]) {\n            uniqueArr[key] = true;\n            return true;\n        }\n    });\nuniqueProductPoPlantArr.forEach(function(product,index){\n    let matchedIssuances = issuances.filter(issuance =>product.po_number == issuance.po_number && product.plant == issuance.plant );\n    uniqueIssuanceArr = Object.create(null),\n    uniqueProductArr = matchedIssuances.filter(o => {\n        var key = ['product'].map(k => o[k]).join('|');\n        if (!uniqueIssuanceArr[key]) {\n            uniqueIssuanceArr[key] = true;\n            return true;\n        }\n    }); \n    //let matchedShipmentItems = shipmentItems.filter(shipmentItem => product.product == shipmentItem.sdm_po_items_id.product && product.plant == shipmentItem.sdm_po_items_id.plant);\n    let orderProducts = [];\n    uniqueProductArr.forEach(function(unqProduct,index){\n        let matchedProducts = matchedIssuances.filter(matchedIssuance =>matchedIssuance.product == unqProduct.product);\n        orderProducts[index] = {};\n        orderProducts[index].product = unqProduct.product;\n        orderProducts[index].qty = matchedProducts.reduce((total,obj)=>parseFloat(obj.qty)+ total, 0);\n    });\n    orderProducts.forEach(function(orderProduct,index){\n        let matchedShipmentItems = shipmentItems.filter(shipmentItem => orderProduct.product == shipmentItem.sdm_po_items_id.product && product.plant == shipmentItem.sdm_po_items_id.plant);\n        \n    })\n    orderObj[index] = {};\n    orderObj[index].order_value = orderValue;\n})\nitems[0].json.uniqueProductPoPlantArr = uniqueProductPoPlantArr;\nreturn items;"
+        "functionCode": "let issuances = $node[\"Function to get issuance data\"].json[\"issuanceData\"];\nlet shipmentItems = $node[\"Get the shipment Items\"].json[\"data\"];\nlet orderObj = [];\nlet updateShipmentItems = [];\nlet testConsole = [];\nuniqueArr = Object.create(null),\n    uniqueProductPoPlantArr = issuances.filter(o => {\n        var key = ['po_number','plant'].map(k => o[k]).join('|');\n        if (!uniqueArr[key]) {\n            uniqueArr[key] = true;\n            return true;\n        }\n    });\nuniqueProductPoPlantArr.forEach(function(product,index){\n    let matchedIssuances = issuances.filter(issuance =>product.po_number == issuance.po_number && product.plant == issuance.plant );\n    uniqueIssuanceArr = Object.create(null),\n    uniqueProductArr = matchedIssuances.filter(o => {\n        var key = ['product'].map(k => o[k]).join('|');\n        if (!uniqueIssuanceArr[key]) {\n            uniqueIssuanceArr[key] = true;\n            return true;\n        }\n    }); \n    //let matchedShipmentItems = shipmentItems.filter(shipmentItem => product.product == shipmentItem.sdm_po_items_id.product && product.plant == shipmentItem.sdm_po_items_id.plant);\n    let orderProducts = [];\n    let orderItems = [];\n    let shipments = [];\n    let orderValue = 0;\n    uniqueProductArr.forEach(function(unqProduct,index){\n        let matchedProducts = matchedIssuances.filter(matchedIssuance =>matchedIssuance.product == unqProduct.product);\n        orderProducts[index] = {};\n        orderProducts[index].product = unqProduct.product;\n        orderProducts[index].qty = matchedProducts.reduce((total,obj)=>parseFloat(obj.qty)+ total, 0);\n    });\n    orderProducts.forEach(function(orderProduct,index){\n        let quantity = orderProduct.qty;\n        let matchedShipmentItems = shipmentItems.filter(shipmentItem => orderProduct.product == shipmentItem.sdm_po_items_id.product && product.plant == shipmentItem.sdm_po_items_id.plant);\n        //if(quantity>0){\n            matchedShipmentItems.forEach(function(shipmentItem,index){\n                if(quantity>0){\n                    if(!shipmentItem.itemStatus){\n                        let matchedPoItemIndex = orderItems.findIndex(orderItem => orderItem.sdm_po_items_id ==  shipmentItem.sdm_po_items_id.id);\n                        if(matchedPoItemIndex>=0){\n                            let orderQty = quantity>matchedShipmentItems[0].remaining_qty?matchedShipmentItems[0].remaining_qty:quantity\n                            let previousQty = orderItems[matchedPoItemIndex].quantity;\n                            orderItems[matchedPoItemIndex].quantity = previousQty + orderQty;\n                            \n                            let shipmentItemIndex = shipmentItems.findIndex(sItem =>sItem.id == shipmentItem.id);\n                            shipmentItems[shipmentItemIndex].itemStatus = quantity>shipmentItems[shipmentItemIndex].remaining_qty?true:false\n                            testConsole.push({\n                                id : shipmentItems[shipmentItemIndex].id,\n                                status : shipmentItems[shipmentItemIndex].itemStatus\n                            })\n                            quantity = quantity - orderQty;\n                            shipments.push({\n                                sdm_shipments_id : shipmentItem.sdm_shipments_id.id\n                            })\n                            updateShipmentItems.push({\n                                id : shipmentItem.id,\n                                ordered_qty : shipmentItem.ordered_qty + orderQty,\n                                remaining_qty : shipmentItem.remaining_qty - orderQty\n                            })\n                            let netValue = orderQty*shipmentItem.sdm_po_items_id.unit_price;\n                            orderValue =  orderValue + netValue+(netValue*shipmentItem.sdm_po_items_id.tax_percentage)/100;\n                        }else{\n                            let orderQty = quantity>matchedShipmentItems[0].remaining_qty?matchedShipmentItems[0].remaining_qty:quantity\n                            orderItems.push({\n                                sdm_po_items_id : shipmentItem.sdm_po_items_id.id,\n                                quantity : orderQty\n                            })\n                            \n                            \n                            let shipmentItemIndex = shipmentItems.findIndex(sItem =>sItem.id == shipmentItem.id);\n                            shipmentItems[shipmentItemIndex].itemStatus = quantity>shipmentItems[shipmentItemIndex].remaining_qty?true:false\n                            testConsole.push({\n                                id : shipmentItems[shipmentItemIndex].id,\n                                status : shipmentItems[shipmentItemIndex].itemStatus,\n                                qty : quantity,\n                                remaining : shipmentItems[shipmentItemIndex].remaining_qty\n                            })\n                            quantity = quantity - orderQty;\n                            shipments.push({\n                                sdm_shipments_id : shipmentItem.sdm_shipments_id.id\n                            })\n                            updateShipmentItems.push({\n                                id : shipmentItem.id,\n                                ordered_qty : shipmentItem.ordered_qty + orderQty,\n                                remaining_qty : shipmentItem.remaining_qty - orderQty\n                            })\n                            let netValue = orderQty*shipmentItem.sdm_po_items_id.unit_price;\n                            orderValue =  orderValue + netValue+(netValue*shipmentItem.sdm_po_items_id.tax_percentage)/100;\n                        }\n                    }\n                }\n                \n            })  \n        //}\n        \n    })\n    orderObj[index] = {};\n    orderObj[index].order_value = orderValue;\n    orderObj[index].order_status = \"open\";\n    orderObj[index].order_type = \"use_and_pay\";\n    orderObj[index].order_date = product.order_date;\n    orderObj[index].order_items = orderItems;\n    orderObj[index].shipments = shipments;\n    orderObj[index].po_number = product.po_number\n})\nitems[0].json.uniqueProductPoPlantArr = uniqueProductPoPlantArr;\nitems[0].json.orderObj= orderObj;\nitems[0].json.updateShipmentItems= updateShipmentItems\nitems[0].json.testConsole = testConsole\nreturn items;"
       },
       "name": "Create order obj",
       "type": "n8n-nodes-base.function",
@@ -279,15 +334,81 @@
       "position": [
         2240,
         300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_orders",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Create order obj\"].json[\"orderObj\"]}}"
+      },
+      "name": "Create order in mozart",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2460,
+        300
       ],
-      "disabled": true
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "80",
+          "name": "Mozart qa creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let shipmentItems = $node[\"Create order obj\"].json[\"updateShipmentItems\"];\nuniqueArr = Object.create(null),\n    uniqueShipmentItemArr =  shipmentItems.filter(o => {\n        var key = ['id'].map(k => o[k]).join('|');\n        if (!uniqueArr[key]) {\n            uniqueArr[key] = true;\n            return true;\n        }\n    });\nlet updateShipmentItemArr = [];\n\nuniqueShipmentItemArr.forEach(function(sItem,index){\n    let matchedShipmentItem = shipmentItems.filter(item =>item.id == sItem.id);\n    let shipmentItem = matchedShipmentItem.pop();\n    updateShipmentItemArr.push({\n        id:shipmentItem.id,\n        ordered_qty : shipmentItem.ordered_qty,\n        remaining_qty : shipmentItem.remaining_qty\n    })\n})\nitems[0].json.uniqueShipmentItemArr = uniqueShipmentItemArr\nitems[0].json.updateShipmentItemArr = updateShipmentItemArr\nreturn items;"
+      },
+      "name": "Function to update shipment Items",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        2740,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_inventory?filter={\"product\":{\"_in\":\"{{$node[\"Function to get issuance data\"].json[\"products\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Get the Inventory items",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2980,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "80",
+          "name": "Mozart qa creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let inventoryItems = $node[\"Get the Inventory items\"].json[\"data\"];\nlet issuances = $node[\"Function to get issuance data\"].json[\"issuanceData\"];\nlet updateIssuanceArr = [];\nuniqueArr = Object.create(null),\n    uniqueProductArr =  issuances.filter(o => {\n        var key = ['product','plant'].map(k => o[k]).join('|');\n        if (!uniqueArr[key]) {\n            uniqueArr[key] = true;\n            return true;\n        }\n    });\nuniqueProductArr.forEach(function(product,index){\n    let matchedInventoryItems = inventoryItems.filter(inventoryItem =>inventoryItem.product == product.product && inventoryItem.plant == product.plant);\n    if(matchedInventoryItems.length>0){\n        let matchedIssuances = issuances.filter(issuance =>issuance.product == product.product && issuance.plant == product.plant);\n        let qty = matchedIssuances.reduce((total,obj)=>obj.qty+ total, 0);\n        let previousStock = matchedInventoryItems[0].current_stock;\n        updateIssuanceArr.push({\n            id : matchedInventoryItems[0].id,\n            current_stock : previousStock - qty\n        })\n    }\n})\n\nitems[0].json.uniqueProductArr = uniqueProductArr\nitems[0].json.updateIssuanceArr = updateIssuanceArr\nreturn items;"
+      },
+      "name": "Function to return inventory stock update",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        3280,
+        300
+      ]
     },
     {
       "parameters": {
         "values": {
           "string": [
             {
-              "value": "={{$node[\"Get the shipment Items\"].json[\"data\"]}}"
+              "value": "="
             }
           ]
         },
@@ -297,13 +418,61 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        2560,
-        180
+        3780,
+        -60
       ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "=https://qan8n.shakedeal.com/webhook/update-shipment-items",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Function to update shipment Items\"].json[\"updateShipmentItemArr\"]}}"
+      },
+      "name": "Update Shipment Items",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3520,
+        300
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "=https://qan8n.shakedeal.com/webhook/update-inventory-current-stock",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Function to return inventory stock update\"].json[\"updateIssuanceArr\"]}}"
+      },
+      "name": "Update Inventory Items",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3760,
+        300
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
     }
   ],
-  "settings": {},
+  "settings": {
+    "saveManualExecutions": true
+  },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-05-09T11:23:50.670Z"
+  "updatedAt": "2023-05-11T11:37:31.973Z"
 }
