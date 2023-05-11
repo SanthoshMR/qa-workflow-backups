@@ -152,7 +152,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let orderObj = {};\nlet orderItems = [];\nlet shipmentItems = $node[\"Get the shipment\"].json[\"data\"][\"shipment_items\"];\nshipmentItems.forEach(function(item,index){\n  orderItems[index]={};\n  orderItems[index].sdm_po_items_id = item.sdm_po_items_id;\n  orderItems[index].quantity  = item.shipment_qty;\n})\norderObj.order_value = $node[\"Get the shipment\"].json[\"data\"][\"invoice_value\"];\norderObj.order_status = \"draft\";\norderObj.order_type = $node[\"Get the shipment\"].json[\"data\"][\"vendor_po_num\"][\"po_type\"];\norderObj.order_date = new Date().toISOString();\n//orderObj.shipment = $node[\"Create shipment in mozart\"].json[\"data\"][\"id\"];\norderObj.order_items = orderItems;\n\nitems[0].json.orderObj = orderObj;\nitems[0].json.orderItems = orderItems;\nreturn items;"
+        "functionCode": "let orderObj = {};\nlet orderItems = [];\nlet shipmentItems = $node[\"Get the shipment\"].json[\"data\"][\"shipment_items\"];\nshipmentItems.forEach(function(item,index){\n  orderItems[index]={};\n  orderItems[index].sdm_po_items_id = item.sdm_po_items_id;\n  orderItems[index].quantity  = item.shipment_qty;\n})\norderObj.order_value = $node[\"Get the shipment\"].json[\"data\"][\"invoice_value\"];\norderObj.order_status = \"draft\";\norderObj.order_type = $node[\"Get the shipment\"].json[\"data\"][\"vendor_po_num\"][\"po_type\"];\norderObj.order_date = new Date().toISOString();\n//orderObj.shipment = $node[\"Create shipment in mozart\"].json[\"data\"][\"id\"];\norderObj.po_number = $node[\"Get the shipment\"].json[\"data\"][\"vendor_po_num\"][\"po_num\"]\norderObj.order_items = orderItems;\n\nitems[0].json.orderObj = orderObj;\nitems[0].json.orderItems = orderItems;\nreturn items;"
       },
       "name": "Function to create order",
       "type": "n8n-nodes-base.function",
@@ -255,5 +255,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-05-05T06:33:27.701Z"
+  "updatedAt": "2023-05-11T06:55:26.062Z"
 }
