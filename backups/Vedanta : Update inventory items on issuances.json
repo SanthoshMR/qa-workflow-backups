@@ -1,0 +1,320 @@
+{
+  "active": true,
+  "connections": {
+    "Start Loop": {
+      "main": [
+        [
+          {
+            "node": "Function to get the splitted inventory Item",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set": {
+      "main": [
+        [
+          {
+            "node": "Start Loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Increment index": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "End Loop",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Start Loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get url and token": {
+      "main": [
+        [
+          {
+            "node": "Function to split inventory items to batches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get url and token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to split inventory items to batches": {
+      "main": [
+        [
+          {
+            "node": "Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to get the splitted inventory Item": {
+      "main": [
+        [
+          {
+            "node": "Update Inventory Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Inventory Items": {
+      "main": [
+        [
+          {
+            "node": "Increment index",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-05-11T10:59:39.250Z",
+  "id": "305",
+  "name": "Vedanta : Update inventory items on issuances",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "update-inventory-current-stock",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        480,
+        280
+      ],
+      "webhookId": "ca9abcb3-18a5-4a6f-9c81-4ef528702d6c",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "name": "Start Loop",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "number": [
+            {
+              "name": "index",
+              "value": "={{0}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "number": [
+            {
+              "name": "index",
+              "value": "={{$node[\"Start Loop\"].json[\"index\"]+1}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Increment index",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        2100,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Increment index\"].json[\"index\"]}}",
+              "operation": "equal",
+              "value2": "={{$node[\"Function to split inventory items to batches\"].json[\"resultlength\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        2280,
+        300
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "End Loop",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        2340,
+        -20
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "=https://qan8n.shakedeal.com/webhook/get-url",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "client",
+              "value": "=vedanta"
+            },
+            {
+              "name": "env",
+              "value": "=qa"
+            }
+          ]
+        }
+      },
+      "name": "Get url and token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        700,
+        280
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let inventoryItems = $node[\"Webhook\"].json[\"body\"];\nconst size = 10; // size of each subarray\n\nconst result = [];\nfor (let i = 0; i < inventoryItems.length; i += size) {\n  result.push(inventoryItems.slice(i, i + size));\n}\n\nitems[0].json.result= result;\nitems[0].json.resultlength = result.length;\n\nreturn items;"
+      },
+      "name": "Function to split inventory items to batches",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        900,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let inventoryData = $node[\"Function to split inventory items to batches\"].json[\"result\"];\nlet currentIndex = $node[\"Start Loop\"].json[\"index\"];\nlet currentInventory = inventoryData[currentIndex];\nlet returnItems = [];\n\ncurrentInventory.forEach(function(obj,index){  \n    returnItems.push({\n    json: {\n       id : obj.id,\n       current_stock:obj.current_stock,\n       dms_url : $node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]\n    }\n  });\n  \n})\n\nreturn returnItems;\n\n// items[0].json.currentStock= currentStock;\n\n// return items;"
+      },
+      "name": "Function to get the splitted inventory Item",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1580,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Function to get the splitted inventory Item\"].json[\"dms_url\"]}}/items/sdm_inventory/{{$node[\"Function to get the splitted inventory Item\"].json[\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "current_stock",
+              "value": "={{$node[\"Function to get the splitted inventory Item\"].json[\"current_stock\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update Inventory Items",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1860,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "80",
+          "name": "Mozart qa creds"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-05-11T12:10:21.988Z"
+}
