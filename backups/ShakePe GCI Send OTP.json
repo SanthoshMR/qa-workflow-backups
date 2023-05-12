@@ -138,17 +138,6 @@
           }
         ]
       ]
-    },
-    "Msg91": {
-      "main": [
-        [
-          {
-            "node": "Respond Success",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
     }
   },
   "createdAt": "2023-01-05T07:56:47.486Z",
@@ -238,26 +227,6 @@
         "httpHeaderAuth": {
           "id": "77",
           "name": "ShakePe GCI - Zeus QA"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "from": "SHAKDL",
-        "to": "=91{{$node[\"Webhook\"].json[\"body\"][\"mobile_number\"]?$node[\"Webhook\"].json[\"body\"][\"mobile_number\"]:$node[\"Update OTP\"].json[\"data\"][\"mobile_number\"]}}",
-        "message": "={{$node[\"Update OTP\"].json[\"data\"][\"otp\"]}} is your OTP for activating your gift card. The OTP is valid for 30 mins. Please do not share OTP with anyone.\nBest,\nTeam ShakePe"
-      },
-      "name": "Msg91",
-      "type": "n8n-nodes-base.msg91",
-      "typeVersion": 1,
-      "position": [
-        2260,
-        80
-      ],
-      "credentials": {
-        "msg91Api": {
-          "id": "59",
-          "name": "Msg91 Api account"
         }
       }
     },
@@ -431,26 +400,6 @@
     },
     {
       "parameters": {
-        "from": "SHAKDL",
-        "to": "=91{{$node[\"Webhook\"].json[\"body\"][\"mobile_number\"]?$node[\"Webhook\"].json[\"body\"][\"mobile_number\"]:$node[\"Update OTP\"].json[\"data\"][\"mobile_number\"]}}",
-        "message": "={{$node[\"Update OTP\"].json[\"data\"][\"otp\"]}} is your OTP for account verification on ShakeDeal. The OTP is valid for 30 mins. Please do not share OTP with anyone.\nTeam ShakeDeal"
-      },
-      "name": "Msg911",
-      "type": "n8n-nodes-base.msg91",
-      "typeVersion": 1,
-      "position": [
-        2300,
-        500
-      ],
-      "credentials": {
-        "msg91Api": {
-          "id": "59",
-          "name": "Msg91 Api account"
-        }
-      }
-    },
-    {
-      "parameters": {
         "authentication": "basicAuth",
         "requestMethod": "POST",
         "url": "=https://qan8n.shakedeal.com/webhook/send-otp",
@@ -480,8 +429,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2260,
-        -300
+        2280,
+        80
       ],
       "credentials": {
         "httpBasicAuth": {
@@ -489,10 +438,30 @@
           "name": "Notification"
         }
       }
+    },
+    {
+      "parameters": {
+        "from": "SHAKDL",
+        "to": "=91{{$node[\"Webhook\"].json[\"body\"][\"mobile_number\"]?$node[\"Webhook\"].json[\"body\"][\"mobile_number\"]:$node[\"Update OTP\"].json[\"data\"][\"mobile_number\"]}}",
+        "message": "={{$node[\"Update OTP\"].json[\"data\"][\"otp\"]}} is your OTP for account verification on ShakeDeal. The OTP is valid for 30 mins. Please do not share OTP with anyone.\nTeam ShakeDeal"
+      },
+      "name": "Msg91",
+      "type": "n8n-nodes-base.msg91",
+      "typeVersion": 1,
+      "position": [
+        2280,
+        320
+      ],
+      "credentials": {
+        "msg91Api": {
+          "id": "59",
+          "name": "Msg91 Api account"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-05-11T13:09:49.388Z"
+  "updatedAt": "2023-05-12T07:14:22.993Z"
 }
