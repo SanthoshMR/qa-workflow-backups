@@ -52,17 +52,6 @@
         ]
       ]
     },
-    "Respond to Webhook": {
-      "main": [
-        [
-          {
-            "node": "Check Mobile Number Exist",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Check Reference Number": {
       "main": [
         [
@@ -79,6 +68,17 @@
         [
           {
             "node": "Check Reference Number",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to Webhook": {
+      "main": [
+        [
+          {
+            "node": "Check Mobile Number Exist",
             "type": "main",
             "index": 0
           }
@@ -166,8 +166,7 @@
           "id": "76",
           "name": "ShakePe Credential"
         }
-      },
-      "disabled": true
+      }
     },
     {
       "parameters": {
@@ -187,7 +186,7 @@
           "boolean": [
             {
               "value1": true,
-              "value2": "={{$node[\"Validate Data\"].json[\"data\"][0][\"status\"]==\"AssignedToUser\" && $node[\"Validate Data\"].json[\"data\"][0][\"mobile_number\"]!=null?true:false}}"
+              "value2": "={{$node[\"Validate Data\"].json[\"data\"][0][\"status\"]==\"AssignedToUser\" && ($node[\"Validate Data\"].json[\"data\"][0][\"mobile_number\"]!=null && $node[\"Check Reference Number\"].json[\"data\"][0][\"otp_verified\"] == true)?true:false}}"
             }
           ]
         }
@@ -198,8 +197,7 @@
       "position": [
         -180,
         120
-      ],
-      "disabled": true
+      ]
     },
     {
       "parameters": {
@@ -270,5 +268,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-05-11T13:12:09.215Z"
+  "updatedAt": "2023-05-12T12:30:57.954Z"
 }
