@@ -60,7 +60,7 @@
       "main": [
         [
           {
-            "node": "Function",
+            "node": "Check Mobile Number",
             "type": "main",
             "index": 0
           }
@@ -85,7 +85,7 @@
         ]
       ]
     },
-    "Function": {
+    "Check Mobile Number": {
       "main": [
         [
           {
@@ -136,11 +136,15 @@
           "parameter": [
             {
               "name": "mobile_number",
-              "value": "={{$node[\"Function\"].json[\"data\"][\"mobile_number\"]}}"
+              "value": "={{$node[\"Check Mobile Number\"].json[\"data\"][\"mobile_number\"]}}"
             },
             {
               "name": "otp_last_updated",
-              "value": "={{$node[\"Function\"].json[\"data\"][\"otp_last_updated\"]}}"
+              "value": "={{$node[\"Check Mobile Number\"].json[\"data\"][\"otp_last_updated\"]}}"
+            },
+            {
+              "name": "otp_verified",
+              "value": "=false"
             }
           ]
         }
@@ -298,18 +302,6 @@
     },
     {
       "parameters": {
-        "functionCode": "let response = $node[\"Get Details From Serial\"].json.data[0];\n\nlet update_data = [];\n\nlet digits = $node[\"Webhook\"].json[\"query\"][\"CallFrom\"].substring(1);\n\nlet otp_last_updated = null;\nif(response.mobile_number == digits){\n    otp_last_updated = response.otp_last_updated;\n}\n\nlet data = {\n    \"mobile_number\" : digits,\n    \"otp_last_updated\": otp_last_updated\n}\n\nupdate_data.push({\n    json: {\n        data:data,\n    }\n});\n       \n\nreturn update_data;"
-      },
-      "name": "Function",
-      "type": "n8n-nodes-base.function",
-      "typeVersion": 1,
-      "position": [
-        820,
-        480
-      ]
-    },
-    {
-      "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "PATCH",
         "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sp_card_inventory/{{$node[\"Get Details From Serial\"].json[\"data\"][0][\"sd_serial_number\"]}}",
@@ -336,10 +328,22 @@
           "name": "ShakePe GCI - Zeus QA"
         }
       }
+    },
+    {
+      "parameters": {
+        "functionCode": "let response = $node[\"Get Details From Serial\"].json.data[0];\n\nlet update_data = [];\n\nlet digits = $node[\"Webhook\"].json[\"query\"][\"CallFrom\"].substring(1);\n\nlet otp_last_updated = null;\nif(response.mobile_number == digits){\n    otp_last_updated = response.otp_last_updated;\n}\n\nlet data = {\n    \"mobile_number\" : digits,\n    \"otp_last_updated\": otp_last_updated\n}\n\nupdate_data.push({\n    json: {\n        data:data,\n    }\n});\n       \n\nreturn update_data;"
+      },
+      "name": "Check Mobile Number",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        820,
+        480
+      ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-05-11T13:56:54.179Z"
+  "updatedAt": "2023-05-12T06:57:22.157Z"
 }
