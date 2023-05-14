@@ -57,13 +57,13 @@
       ]
     }
   },
-  "createdAt": "2022-09-06T07:05:46.732Z",
-  "id": "176",
+  "createdAt": "2022-11-17T10:19:13.046Z",
+  "id": "236",
   "name": "Capture Invoice Data",
   "nodes": [
     {
       "parameters": {
-        "functionCode": "let invoice_text = $node[\"Wait for invoice Email\"].json[\"text\"];\nlet subject = $node[\"Wait for invoice Email\"].json[\"subject\"];\nlet lines=  invoice_text.split(\"\\n\");\nlet dp_number = lines.find(line=>line.includes(\"Our Unique Reference number (DP number):\")).split(\":\")[1].trim();\nlet invoice_number = lines.find(line=>line.includes(\"Invoice number\")).split(\":\")[1].trim();\nlet payment_status = \"\";\nlet processing_number = \"\";\nif(subject.includes(\"processed\")){\n  payment_status = \"processed\"; \n  processing_number = lines.find(line=>line.includes(\"Invoice Processing number\")).split(\":\")[1].trim();\n}else if(subject.includes(\"rejected\")){\n  payment_status = \"rejected\";\n}else payment_status = \"pn_pending\"\n\nitems[0].json.invoice_text = invoice_text;\nitems[0].json.lines = lines;\nitems[0].json.dp_number = dp_number;\nitems[0].json.invoice_number = invoice_number;\nitems[0].json.payment_status = payment_status;\nitems[0].json.processing_number = processing_number;\nitems[0].json.subject = subject;\nreturn items;"
+        "functionCode": "let invoice_text = $node[\"Wait for invoice Email\"].json[\"text\"];\nlet subject = $node[\"Wait for invoice Email\"].json[\"subject\"];\nlet lines=  invoice_text.split(\"\\n\");\nlet dp_number = lines.find(line=>line.includes(\"Our Unique Reference number (DP number):\")).split(\":\")[1].trim();\nlet invoice_number = lines.find(line=>line.includes(\"Invoice number\")).split(\":\")[1].trim();\nlet payment_status = \"\";\nlet processing_number = \"\";\nif(subject.includes(\"processed\")){\n  payment_status = \"processed\"; \n  processing_number = lines.find(line=>line.includes(\"Invoice Processing number\")).split(\":\")[1].trim();\n}else if(subject.includes(\"rejected\")){\n  payment_status = \"rejected\";\n}else payment_status = \"paymentpending\"\n\nitems[0].json.invoice_text = invoice_text;\nitems[0].json.lines = lines;\nitems[0].json.dp_number = dp_number;\nitems[0].json.invoice_number = invoice_number;\nitems[0].json.payment_status = payment_status;\nitems[0].json.processing_number = processing_number;\nitems[0].json.subject = subject;\nreturn items;"
       },
       "name": "Function to update shakedeal payment status",
       "type": "n8n-nodes-base.function",
@@ -167,7 +167,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_payment_advise?filter={\"invoice\":{\"id\":{\"_eq\":\"{{$node[\"Function to update shakedeal payment status\"].json.invoice_number}}\"}}}",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_payment_advise?filter={\"order\":{\"shipment\":{\"invoice_number\":{\"_eq\":\"{{$node[\"Function to update shakedeal payment status\"].json.invoice_number}}\"}}}}",
         "options": {}
       },
       "name": "Get the invoice details",
@@ -195,17 +195,8 @@
       ]
     }
   ],
-  "settings": {
-    "saveManualExecutions": true
-  },
+  "settings": {},
   "staticData": null,
-  "tags": [
-    {
-      "id": "5",
-      "name": "Mozart",
-      "createdAt": "2022-05-30T07:16:52.136Z",
-      "updatedAt": "2022-05-30T07:16:52.136Z"
-    }
-  ],
-  "updatedAt": "2022-11-16T09:51:49.908Z"
+  "tags": [],
+  "updatedAt": "2022-11-17T10:19:13.046Z"
 }
