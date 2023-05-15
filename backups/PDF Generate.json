@@ -1,0 +1,88 @@
+{
+  "active": false,
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Get the shakedeal invoice",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-05-15T06:06:12.261Z",
+  "id": "306",
+  "name": "PDF Generate",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "=https://sdqa.shakedeal.com/index.php?dispatch=wfs_update.pdf_generate",
+        "responseFormat": "string",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "data",
+              "value": "PCFET0NUWVBFIGh0bWw+CjxodG1sPgo8aGVhZD4KICA8dGl0bGU+UHJvZHVjdCBUYWJsZTwvdGl0bGU+CiAgPHN0eWxlPgogICAgIGJvZHksIGgxLCB0YWJsZSB7CiAgbWFyZ2luOiAwOwogIHBhZGRpbmc6IDA7Cn0KCi8qIEhlYWRlciBTdHlsZXMgKi8KaGVhZGVyIHsKICBkaXNwbGF5OiBmbGV4OwogIGp1c3RpZnktY29udGVudDogc3BhY2UtYmV0d2VlbjsKICBhbGlnbi1pdGVtczogY2VudGVyOwogIHBhZGRpbmc6IDIwcHg7CiAgYm9yZGVyLWJvdHRvbSA6c29saWQgMnB4OwogIHdpZHRoIDoxMDAlOwp9CgouaGVhZGVyLWxlZnQgaW1nIHsKICBtYXgtd2lkdGg6IDEwMHB4Owp9CgouaGVhZGVyLXJpZ2h0IGgxIHsKICBmb250LXdlaWdodDogYm9sZDsKfQoKLyogRGV0YWlscyBTdHlsZXMgKi8KLmRldGFpbHMgewogIGRpc3BsYXk6IGZsZXg7CiAgcGFkZGluZzogMjBweDsKfQoKLnZlbmRvci1kZXRhaWxzLAouaW52b2ljZS1kZXRhaWxzIHsKICBmbGV4OiAxOwp9CgovKiBBZGRyZXNzIFN0eWxlcyAqLwouYWRkcmVzcyB7CiAgZGlzcGxheTogZmxleDsKICBwYWRkaW5nOiAyMHB4Owp9CgouYmlsbC10bywKLnNoaXAtdG8gewogIGZsZXg6IDE7Cn0KICAgIHRhYmxlIHsKICAgICAgYm9yZGVyLWNvbGxhcHNlOiBjb2xsYXBzZTsKICAgICAgd2lkdGg6IDEwMCU7CiAgICAgIGJvcmRlcjogMXB4IHNvbGlkICNkZGQ7CiAgICB9CiAgICAKICAgIHRoLCB0ZCB7CiAgICAgIHRleHQtYWxpZ246IGxlZnQ7CiAgICAgIHBhZGRpbmc6IDhweDsKICAgICAgYm9yZGVyLWJvdHRvbTogMXB4IHNvbGlkICNkZGQ7CiAgICAgIGJvcmRlci1yaWdodDogMXB4IHNvbGlkICNkZGQ7CiAgICB9CiAgICAKICAgIHRoOmZpcnN0LWNoaWxkLCB0ZDpmaXJzdC1jaGlsZCB7CiAgICAgIGJvcmRlci1sZWZ0OiAxcHggc29saWQgI2RkZDsKICAgIH0KICAgIAogICAgdGggewogICAgICBiYWNrZ3JvdW5kLWNvbG9yOiAjZjJmMmYyOwogICAgfQogICAgCiAgICAucHJvZHVjdC1za3UgewogICAgICBmb250LXdlaWdodDogYm9sZDsKICAgIH0KICAgIAogICAgLnByb2R1Y3QtbmFtZSB7CiAgICAgIG92ZXJmbG93LXdyYXA6IGJyZWFrLXdvcmQ7IC8qIEJyZWFrIHByb2R1Y3QgbmFtZSBpbnRvIG11bHRpcGxlIGxpbmVzICovCiAgICB9CiAgICAKICAgIC5zaWduYXR1cmUgewogICAgICBib3JkZXI6IG5vbmU7IC8qIFJlbW92ZSBib3JkZXIgZm9yIHNpZ25hdHVyZSBjZWxscyAqLwogICAgfQogICAgCiAgICAuYm90dG9tLXNwYWNlIHsKICAgICAgcGFkZGluZy1ib3R0b206IDEwcHg7IC8qIEFkZCBib3R0b20gc3BhY2UgYWZ0ZXIgIkZvciBTYWlyYW0iICovCiAgICB9CiAgPC9zdHlsZT4KPC9oZWFkPgo8Ym9keT4KPGhlYWRlcj4KICAgIDxkaXYgY2xhc3M9ImhlYWRlci1sZWZ0Ij4KICAgICAgPGltZyBzcmM9Imh0dHBzOi8vY2RuLnNoYWtlZGVhbC5jb20vaW1hZ2VzL2xvZ29zLzIvU2hha2VEZWFsTG9nby5wbmciIGFsdD0iQ29tcGFueSBMb2dvIj4KICAgIDwvZGl2PgogICAgPGRpdiBjbGFzcz0iaGVhZGVyLXJpZ2h0Ij4KICAgICAgPGgxPlRheCBJbnZvaWNlPC9oMT4KICAgIDwvZGl2PgogIDwvaGVhZGVyPgogIAogIDwhLS0gVmVuZG9yIGFuZCBJbnZvaWNlIERldGFpbHMgLS0+CiAgPGRpdiBjbGFzcz0iZGV0YWlscyI+CiAgICA8ZGl2IGNsYXNzPSJ2ZW5kb3ItZGV0YWlscyI+CiAgICAgIDxwPjxzdHJvbmc+U29sZCBCeTo8L3N0cm9uZz4gSm9obiBEb2U8L3A+CiAgICAgIDxwPjxzdHJvbmc+U3RhdGUgQ29kZTo8L3N0cm9uZz4gWFlaPC9wPgogICAgICA8cD48c3Ryb25nPkNvbnRhY3Q6PC9zdHJvbmc+ICsxMjM0NTY3ODkwPC9wPgogICAgICA8cD48c3Ryb25nPkVtYWlsOjwvc3Ryb25nPiB2ZW5kb3JAZXhhbXBsZS5jb208L3A+CiAgICAgIDxwPjxzdHJvbmc+UEFOIE5vOjwvc3Ryb25nPiBBQkNERTEyMzRGPC9wPgogICAgICA8cD48c3Ryb25nPkdTVElOOjwvc3Ryb25nPiAxMjM0NTY3ODkwMTIzNDU8L3A+CiAgICA8L2Rpdj4KICAgIDxkaXYgY2xhc3M9Imludm9pY2UtZGV0YWlscyI+CiAgICAgIDxwPjxzdHJvbmc+SW52b2ljZSBObzo8L3N0cm9uZz4gSU5WLTIwMjMwMDE8L3A+CiAgICAgIDxwPjxzdHJvbmc+SW52b2ljZSBEZXRhaWxzOjwvc3Ryb25nPiBTYW1wbGUgaW52b2ljZSBkZXRhaWxzPC9wPgogICAgICA8cD48c3Ryb25nPlBPIE5vOjwvc3Ryb25nPiBQTy0yMDIzMDAxPC9wPgogICAgICA8cD48c3Ryb25nPlBPIERhdGU6PC9zdHJvbmc+IDIwMjMtMDUtMDE8L3A+CiAgICAgIDxwPjxzdHJvbmc+VGF4IFBheWFibGU6PC9zdHJvbmc+ICQ1MDA8L3A+CiAgICAgIDxwPjxzdHJvbmc+RS13YXkgQmlsbDo8L3N0cm9uZz4gMTIzNDU2Nzg5MDwvcD4KICAgIDwvZGl2PgogIDwvZGl2PgogIAogIDwhLS0gQmlsbCBUbyBhbmQgU2hpcCBUbyAtLT4KICA8ZGl2IGNsYXNzPSJhZGRyZXNzIj4KICAgIDxkaXYgY2xhc3M9ImJpbGwtdG8iPgogICAgICA8aDI+QmlsbCBUbzwvaDI+CiAgICAgIDxwPkN1c3RvbWVyIE5hbWU8L3A+CiAgICAgIDxwPkN1c3RvbWVyIEFkZHJlc3MgTGluZSAxPC9wPgogICAgICA8cD5DdXN0b21lciBBZGRyZXNzIExpbmUgMjwvcD4KICAgICAgPHA+PHN0cm9uZz5HU1RJTjo8L3N0cm9uZz4gMTIzNDU2Nzg5MDEyMzQ1PC9wPgogICAgICA8cD48c3Ryb25nPlN0YXRlOjwvc3Ryb25nPiBTdGF0ZSBOYW1lPC9wPgogICAgPC9kaXY+CiAgICA8ZGl2IGNsYXNzPSJzaGlwLXRvIj4KICAgICAgPGgyPlNoaXAgVG88L2gyPgogICAgICA8cD5DdXN0b21lciBOYW1lPC9wPgogICAgICA8cD5DdXN0b21lciBBZGRyZXNzIExpbmUgMTwvcD4KICAgICAgPHA+Q3VzdG9tZXIgQWRkcmVzcyBMaW5lIDI8L3A+CiAgICAgIDxwPjxzdHJvbmc+R1NUSU46PC9zdHJvbmc+IDEyMzQ1Njc4OTAxMjM0NTwvcD4KICAgICAgPHA+PHN0cm9uZz5TdGF0ZTo8L3N0cm9uZz4gU3RhdGUgTmFtZTwvcD4KICAgIDwvZGl2PgogIDwvZGl2PgogIDx0YWJsZT4KICAgIDx0cj4KICAgICAgPHRoPlByb2R1Y3Q8L3RoPgogICAgICA8dGg+SFNOPC90aD4KICAgICAgPHRoPlF0eTwvdGg+CiAgICAgIDx0aD5VT008L3RoPgogICAgICA8dGg+VW5pdCBQcmljZTwvdGg+CiAgICAgIDx0aD5OZXQgQW1vdW50PC90aD4KICAgICAgPHRoPlRheCByYXRlPC90aD4KICAgICAgPHRoPklHU1Q8L3RoPgogICAgICA8dGg+U0dTVDwvdGg+CiAgICAgIDx0aD5DR1NUPC90aD4KICAgICAgPHRoPlRvdGFsIEFtb3VudDwvdGg+CiAgICA8L3RyPgogICAgPHRyPgogICAgICA8dGQ+CiAgICAgICAgPGRpdiBjbGFzcz0icHJvZHVjdC1za3UiPlNLVTEyMzQ8L2Rpdj4KICAgICAgICA8ZGl2IGNsYXNzPSJwcm9kdWN0LW5hbWUiPlByb2R1Y3QgTmFtZSB3aXRoIExvbmcgRGVzY3JpcHRpb248L2Rpdj4KICAgICAgPC90ZD4KICAgICAgPHRkPjEyMzQ1NjwvdGQ+CiAgICAgIDx0ZD41PC90ZD4KICAgICAgPHRkPnBjczwvdGQ+CiAgICAgIDx0ZD4kMTAuMDA8L3RkPgogICAgICA8dGQ+JDUwLjAwPC90ZD4KICAgICAgPHRkPjUlPC90ZD4KICAgICAgPHRkPiQyLjUwPC90ZD4KICAgICAgPHRkPiQxLjI1PC90ZD4KICAgICAgPHRkPiQxLjI1PC90ZD4KICAgICAgPHRkPiQ1NS4wMDwvdGQ+CiAgICA8L3RyPgogICAgPCEtLSBBZGQgbW9yZSByb3dzIGFzIG5lZWRlZCAtLT4KICAgIDx0cj4KICAgICAgPHRkIGNvbHNwYW49IjYiPjxzdHJvbmc+VG90YWw8L3N0cm9uZz48L3RkPgogICAgICA8dGQ+MzAwMDwvdGQ+CiAgICAgIDx0ZD40MDAwPC90ZD4KICAgICAgPHRkPjYwMDA8L3RkPgogICAgICA8dGQ+MTAwMDA8L3RkPgogICAgICA8dGQ+PC90ZD4KICAgIDwvdHI+CiAgICA8dHI+CiAgICAgIDx0ZCBjb2xzcGFuPSIxMSI+CiAgICAgICAgPHN0cm9uZz5BbW91bnQgaW4gd29yZHM6PC9zdHJvbmc+IFRocmVlIHRob3VzYW5kIHJ1cGVlcyBvbmx5CiAgICAgIDwvdGQ+CiAgICA8L3RyPgogICAgPHRyPgogICAgICA8dGQgY29sc3Bhbj0iOCI+PC90ZD4KICAgICAgPHRkIGNsYXNzPSJyaWdodC1hbGlnbiBib3R0b20tc3BhY2UiPjxzdHJvbmc+Rm9yIFNhaXJhbTwvc3Ryb25nPjwvdGQ+CiAgICAgIDx0ZCBjbGFzcz0icmlnaHQtYWxpZ24gc2lnbmF0dXJlIj48c3Ryb25nPkF1dGhvcml6ZWQgU2lnbmF0b3J5PC9zdHJvbmc+PC90ZD4KICAgIDwvdHI+CiAgPC90YWJsZT4KPC9ib2R5Pgo8L2h0bWw+"
+            },
+            {
+              "name": "hash",
+              "value": "wfs%#hash"
+            }
+          ]
+        }
+      },
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{$node[\"HTTP Request\"].json[\"data\"][\"path\"]}}",
+        "allowUnauthorizedCerts": true,
+        "responseFormat": "file",
+        "options": {}
+      },
+      "name": "Get the shakedeal invoice",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        680,
+        300
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-05-15T07:35:11.672Z"
+}
