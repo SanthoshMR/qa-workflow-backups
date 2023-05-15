@@ -5,7 +5,7 @@
       "main": [
         [
           {
-            "node": "Get url and token",
+            "node": "Create vendor invoice",
             "type": "main",
             "index": 0
           }
@@ -66,6 +66,17 @@
           }
         ]
       ]
+    },
+    "Create vendor invoice": {
+      "main": [
+        [
+          {
+            "node": "Get url and token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2023-05-05T05:13:34.508Z",
@@ -92,7 +103,7 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        440,
+        400,
         300
       ],
       "webhookId": "96d53357-5282-4a54-8c35-9730dbc4dfd3"
@@ -120,7 +131,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        660,
+        720,
         300
       ],
       "credentials": {
@@ -250,10 +261,39 @@
           "name": "Mozart qa creds"
         }
       }
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "=https://qan8n.shakedeal.com/webhook/create-vendor-invoice",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "shipment_key",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"keys\"][0]}}"
+            }
+          ]
+        }
+      },
+      "name": "Create vendor invoice",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        540,
+        300
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-05-11T06:55:26.062Z"
+  "updatedAt": "2023-05-15T06:34:40.562Z"
 }
