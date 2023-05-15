@@ -1,0 +1,220 @@
+{
+  "active": true,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Details From Reference": {
+      "main": [
+        [
+          {
+            "node": "IF Mobile Number Exists & AssignedToUser",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Mobile Number Exists & AssignedToUser": {
+      "main": [
+        [
+          {
+            "node": "Send OTP-Msg91",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Get Details From Reference",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-05-15T11:36:15.858Z",
+  "id": "308",
+  "name": "ShakePe CI - SMS After Mobile User Assigned",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "shakepe/notify-user-assigned",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        400
+      ],
+      "webhookId": "1a88707f-1620-461e-9c5d-2cb9f6b38119",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "76",
+          "name": "ShakePe Credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sp_card_inventory?filter={\"reference_number\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"id\"]}}\"}}&fields=mobile_number,status,amount,card_number",
+        "options": {}
+      },
+      "name": "Get Details From Reference",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        680,
+        400
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "77",
+          "name": "ShakePe GCI - Zeus QA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"n8n_url\"]}}/webhook/send-otp",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "mobile",
+              "value": "=91{{$node[\"Get Details From Reference\"].json[\"data\"][0][\"mobile_number\"]}}"
+            },
+            {
+              "name": "otp",
+              "value": "={{\"\"}}"
+            },
+            {
+              "name": "source",
+              "value": "=ShakePe StepUp Activation"
+            },
+            {
+              "name": "sender_id",
+              "value": "=SHAKPE-Card-Distribution"
+            },
+            {
+              "name": "params",
+              "value": "={{[ $node[\"Get Details From Reference\"].json[\"data\"][0][\"amount\"],  $node[\"Get Details From Reference\"].json[\"data\"][0][\"card_number\"], $node[\"Webhook\"].json[\"body\"][\"id\"] ]}}"
+            }
+          ]
+        }
+      },
+      "name": "Send OTP-Msg91",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1260,
+        300
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "60",
+          "name": "Notification"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "name": "NoOp1",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1260,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$node[\"Get Details From Reference\"].json[\"data\"][0][\"mobile_number\"] && (\"\"+$node[\"Get Details From Reference\"].json[\"data\"][0][\"mobile_number\"]).length==10 }}",
+              "value2": true
+            },
+            {
+              "value1": "={{$node[\"Get Details From Reference\"].json[\"data\"][0][\"status\"]==\"AssignedToUser\"}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "IF Mobile Number Exists & AssignedToUser",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        900,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "dms_url",
+              "value": "https://zeusqa.shakedeal.com"
+            },
+            {
+              "name": "n8n_url",
+              "value": "https://qan8n.shakedeal.com"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        460,
+        400
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-05-15T13:46:14.632Z"
+}
