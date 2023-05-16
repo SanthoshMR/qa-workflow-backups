@@ -100,7 +100,7 @@
       "main": [
         [
           {
-            "node": "Response",
+            "node": "Get Message ID",
             "type": "main",
             "index": 0
           }
@@ -244,8 +244,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1400,
-        280
+        1540,
+        320
       ]
     },
     {
@@ -274,7 +274,7 @@
             },
             {
               "name": "template",
-              "value": "=otp"
+              "value": "={{$node[\"Get Message ID\"].json[\"0\"][\"template\"]}}"
             },
             {
               "name": "source",
@@ -291,8 +291,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1120,
-        460
+        1360,
+        320
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -303,14 +303,14 @@
     },
     {
       "parameters": {
-        "functionCode": "let response = [];\n    let message_id = $node[\"Msg91 Send OTP\"].json.request_id;\n    response.push({\n        json: [{\n            message_id:message_id,\n            event_type:\"SMS\"\n        }]\n    });\n\n\nreturn response;\n"
+        "functionCode": "let response = [];\n    let message_id = \"\";\n    let template = \"\";\n    let records = $node[\"Webhook\"].json[\"body\"];\n    if(records.sender_id == 'SHAKPE-Card-Distribution'){\n        message_id = $node[\"Msg91- Send SMS\"].json.message;\n        template = \"Loading Gift Card\";\n    }else{\n        message_id = $node[\"Msg91 Send OTP\"].json.request_id;\n        template = \"OTP\";\n    }\n    response.push({\n        json: [{\n            message_id:message_id,\n            event_type:\"SMS\",\n            template: template\n        }]\n    });\n\n\nreturn response;\n"
       },
       "name": "Get Message ID",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        940,
-        460
+        1180,
+        320
       ]
     },
     {
@@ -455,5 +455,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-05-15T12:17:34.026Z"
+  "updatedAt": "2023-05-16T09:47:08.330Z"
 }
