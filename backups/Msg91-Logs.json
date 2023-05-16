@@ -392,7 +392,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let data = [];\nlet records = $node[\"Webhook\"].json[\"body\"];\n\n// let records = JSON.parse($node[\"Webhook\"].json[\"body\"][\"data\"]);\nlet message_ids = [];\n\nlet retry_count = 0;\n\nrecords.forEach((obj,index)=>{\n  data[index]={};\n  data[index].requestId = obj.requestId;\n  data[index].report = obj.report;\n  data[index].message = obj;\n\n  let report = obj.report[0];\n  if(report.status != 1){\n      retry_count++;\n  }\n\n  message_ids.push(obj.requestId);\n});\n\nmessage_ids = [...new Set(message_ids)];\n\nitems[0].json.message_ids = message_ids;\n\nitems[0].json.records = data;\nitems[0].json.retry_count = retry_count;\nreturn items;"
+        "functionCode": "let data = [];\n// let records = $node[\"Webhook\"].json[\"body\"];\n\nlet records = JSON.parse($node[\"Webhook\"].json[\"body\"][\"data\"]);\nlet message_ids = [];\n\nlet retry_count = 0;\n\nrecords.forEach((obj,index)=>{\n  data[index]={};\n  data[index].requestId = obj.requestId;\n  data[index].report = obj.report;\n  data[index].message = obj;\n\n  let report = obj.report[0];\n  if(report.status != 1){\n      retry_count++;\n  }\n\n  message_ids.push(obj.requestId);\n});\n\nmessage_ids = [...new Set(message_ids)];\n\nitems[0].json.message_ids = message_ids;\n\nitems[0].json.records = data;\nitems[0].json.retry_count = retry_count;\nreturn items;"
       },
       "name": "Response from Msg91",
       "type": "n8n-nodes-base.function",
@@ -674,5 +674,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-05-15T07:38:17.206Z"
+  "updatedAt": "2023-05-16T05:29:14.131Z"
 }
