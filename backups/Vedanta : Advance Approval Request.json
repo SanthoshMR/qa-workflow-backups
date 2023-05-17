@@ -38,7 +38,7 @@
       "main": [
         [
           {
-            "node": "Get vendor PO details",
+            "node": "Get vendor payment",
             "type": "main",
             "index": 0
           }
@@ -159,6 +159,35 @@
           }
         ]
       ]
+    },
+    "Get vendor payment": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Get vendor PO details",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2022-12-05T07:13:51.079Z",
@@ -171,8 +200,8 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        240,
-        300
+        140,
+        480
       ]
     },
     {
@@ -198,7 +227,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        680,
+        140,
         220
       ],
       "credentials": {
@@ -219,7 +248,7 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        480,
+        -80,
         220
       ],
       "webhookId": "c9ab68c9-c343-4fac-b0e2-1dfd771a7b06",
@@ -240,7 +269,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        920,
+        860,
         220
       ],
       "credentials": {
@@ -299,8 +328,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        940,
-        0
+        320,
+        220
       ]
     },
     {
@@ -406,7 +435,7 @@
     },
     {
       "parameters": {
-        "functionCode": "// let binaries = {}, binary_keys = [];\nlet po_data = $node[\"Get vendor PO details\"].json[\"data\"];\nlet vendor_payments_key = $node[\"Wait for approval\"].json[\"body\"][\"key\"];\nlet negligable_plants = [\"NIES\",\"ARES\",\"KBES\",\"BCES\",\"NKES\"];\nlet plant = $node[\"Get vendor PO details\"].json[\"data\"][\"po_items\"][0][\"plant\"][\"id\"];\n// let vendor_payments = $node[\"Get vendor PO details\"].json[\"data\"][\"vendor_payments\"];\n// let current_raised_vendor_payment = vendor_payments.filter(vp=>vp.id == vendor_payments_key);\n// let operation_agent_first_name = $node[\"Get vendor PO details\"].json[\"data\"][\"operation_agent\"][\"first_name\"];\n// let buyer_first_name = current_raised_vendor_payment[0][\"user_created\"][\"first_name\"];\n// let operation_agent_last_name = $node[\"Get vendor PO details\"].json[\"data\"][\"operation_agent\"][\"last_name\"];\n// let buyer_last_name = current_raised_vendor_payment[0][\"user_created\"][\"last_name\"];\n// let operation_agent_email = $node[\"Get vendor PO details\"].json[\"data\"][\"operation_agent\"][\"email\"];\n// let buyer_email = current_raised_vendor_payment[0][\"user_created\"][\"email\"];\n\nlet buyers = $node[\"Update actual paid amount\"].json[\"data\"][\"vendor_po_number\"][\"buyers\"].map(buyer=>buyer.sdm_buyers_id.buyer.email);\nlet ops = $node[\"Update actual paid amount\"].json[\"data\"][\"vendor_po_number\"][\"operation_agents\"].map(op=>op.sdm_operation_agents_id.operation_agent.email);\nif(negligable_plants.includes(plant)){\n  buyers.push($node[\"Globals\"].json[\"plant_email\"])\n}else if(po_data.po_type != \"routing\" && !negligable_plants.includes(plant)){\n  buyers.push($node[\"Globals\"].json[\"category_admin\"])\n}\nlet buyer_emails = buyers.join();\nlet ops_emails = ops.join();\nlet cc_emails = po_data.po_type != \"routing\"?buyer_emails:ops_emails\nlet approved_payments = po_data.vendor_payments.filter(vp=>vp.vendor_payment_status);\nlet already_paid_to_vendor = approved_payments.reduce(function (result, item) {\n  return result + parseFloat(item.actual_paid_amount);\n}, 0);\nlet requested_first_name = $node[\"Update actual paid amount\"].json[\"data\"][\"sd_user_created\"][\"first_name\"]\nlet requested_last_name = $node[\"Update actual paid amount\"].json[\"data\"][\"sd_user_created\"][\"last_name\"]\nlet requested_email = $node[\"Update actual paid amount\"].json[\"data\"][\"sd_user_created\"][\"email\"]\nlet approval_request ={};\napproval_request.vedanta_po_number = po_data.po_num.id;\napproval_request.vendor_po_number = po_data.id;\napproval_request.vendor_po_value = po_data.po_value;\napproval_request.vendor_name = po_data.vendor.vendor_name;\napproval_request.po_delivery_date =  po_data.po_deliver_date;\napproval_request.residual_amount = po_data.po_value-(parseFloat(already_paid_to_vendor)+$node[\"Wait for approval\"].json[\"body\"][\"payload\"][\"payment_amount\"]);\napproval_request.already_paid_to_vendor = already_paid_to_vendor;\napproval_request.advance = $node[\"Wait for approval\"].json[\"body\"][\"payload\"][\"payment_amount\"];\napproval_request.reason_for_advance = $node[\"Wait for approval\"].json[\"body\"][\"payload\"]['reason_for_advance'];\napproval_request.po_type = po_data.po_type;\napproval_request.shipment_status = $node[\"Wait for approval\"].json[\"body\"][\"payload\"].shipment_status;\napproval_request.key = $node[\"Wait for approval\"].json[\"body\"][\"key\"];\napproval_request.requested_by = `${requested_first_name} ${requested_last_name?requested_last_name:\"\"}(${requested_email})`;\napproval_request.dispatch_in_days = $node[\"Wait for approval\"].json[\"body\"][\"payload\"]['dispatch_in_days']\napproval_request.has_vendor_filled = $node[\"Wait for approval\"].json[\"body\"][\"payload\"]['has_vendor_filled']\napproval_request.cc_emails = cc_emails\n// for([index, item] of items.entries()) {\n//     item.binary.data.fileName = item.json.data.filename_download\n//     binaries[`data_${index}.pdf`] = item.binary.data;\n//     binary_keys.push(`data_${index}.pdf`);\n// }\n\nreturn [{\n    json: {\n        //binary_keys: binary_keys.join(','),\n        approval_request : approval_request,\n        requested_email : requested_email,\n        buyer_emails :  buyer_emails,\n        ops_emails : ops_emails,\n        plant : plant,\n        cc_emails : cc_emails\n    },\n    //binary: binaries\n}];"
+        "functionCode": "// let binaries = {}, binary_keys = [];\nlet po_data = $node[\"Get vendor PO details\"].json[\"data\"];\nlet vendor_payments_key = $node[\"Wait for approval\"].json[\"body\"][\"key\"];\nlet negligable_plants = [\"NIES\",\"ARES\",\"KBES\",\"BCES\",\"NKES\"];\nlet plant = $node[\"Get vendor PO details\"].json[\"data\"][\"po_items\"][0][\"plant\"][\"id\"];\n// let vendor_payments = $node[\"Get vendor PO details\"].json[\"data\"][\"vendor_payments\"];\n// let current_raised_vendor_payment = vendor_payments.filter(vp=>vp.id == vendor_payments_key);\n// let operation_agent_first_name = $node[\"Get vendor PO details\"].json[\"data\"][\"operation_agent\"][\"first_name\"];\n// let buyer_first_name = current_raised_vendor_payment[0][\"user_created\"][\"first_name\"];\n// let operation_agent_last_name = $node[\"Get vendor PO details\"].json[\"data\"][\"operation_agent\"][\"last_name\"];\n// let buyer_last_name = current_raised_vendor_payment[0][\"user_created\"][\"last_name\"];\n// let operation_agent_email = $node[\"Get vendor PO details\"].json[\"data\"][\"operation_agent\"][\"email\"];\n// let buyer_email = current_raised_vendor_payment[0][\"user_created\"][\"email\"];\n\nlet buyers = $node[\"Update actual paid amount\"].json[\"data\"][\"vendor_po_number\"][\"buyers\"].map(buyer=>buyer.sdm_buyers_id.buyer.email);\nlet ops = $node[\"Update actual paid amount\"].json[\"data\"][\"vendor_po_number\"][\"operation_agents\"].map(op=>op.sdm_operation_agents_id.operation_agent.email);\nif(negligable_plants.includes(plant)){\n  buyers.push($node[\"Globals\"].json[\"plant_email\"])\n}else if(po_data.po_type != \"routing\" && !negligable_plants.includes(plant)){\n  buyers.push($node[\"Globals\"].json[\"category_admin\"])\n}\nlet buyer_emails = buyers.join();\nlet ops_emails = ops.join();\nlet cc_emails = po_data.po_type != \"routing\"?buyer_emails:ops_emails\nlet approved_payments = po_data.vendor_payments.filter(vp=>vp.vendor_payment_status);\nlet already_paid_to_vendor = approved_payments.reduce(function (result, item) {\n  return result + parseFloat(item.actual_paid_amount);\n}, 0);\nlet requested_first_name = $node[\"Update actual paid amount\"].json[\"data\"][\"sd_user_created\"][\"first_name\"]\nlet requested_last_name = $node[\"Update actual paid amount\"].json[\"data\"][\"sd_user_created\"][\"last_name\"]\nlet requested_email = $node[\"Update actual paid amount\"].json[\"data\"][\"sd_user_created\"][\"email\"]\nlet approval_request ={};\napproval_request.vedanta_po_number = po_data.po_num.id;\napproval_request.vendor_po_number = po_data.id;\napproval_request.vendor_po_value = po_data.po_value;\napproval_request.vendor_name = po_data.vendor.vendor_name;\napproval_request.po_delivery_date =  po_data.po_deliver_date;\napproval_request.residual_amount = po_data.po_value-(parseFloat(already_paid_to_vendor)+$node[\"Wait for approval\"].json[\"body\"][\"payload\"][\"payment_amount\"]);\napproval_request.already_paid_to_vendor = already_paid_to_vendor;\napproval_request.advance = $node[\"Wait for approval\"].json[\"body\"][\"payload\"][\"payment_amount\"];\napproval_request.reason_for_advance = $node[\"Wait for approval\"].json[\"body\"][\"payload\"]['reason_for_advance'];\napproval_request.po_type = po_data.po_type;\napproval_request.shipment_status = $node[\"Wait for approval\"].json[\"body\"][\"payload\"].shipment_status;\napproval_request.key = $node[\"Wait for approval\"].json[\"body\"][\"key\"];\napproval_request.requested_by = `${requested_first_name} ${requested_last_name?requested_last_name:\"\"}(${requested_email})`;\napproval_request.dispatch_in_days = $node[\"Wait for approval\"].json[\"body\"][\"payload\"]['dispatch_in_days']\napproval_request.has_vendor_filled = $node[\"Wait for approval\"].json[\"body\"][\"payload\"]['has_vendor_filled'];\napproval_request.remarks = $node[\"Wait for approval\"].json[\"body\"][\"payload\"][\"remarks\"];\napproval_request.cc_emails = cc_emails\n// for([index, item] of items.entries()) {\n//     item.binary.data.fileName = item.json.data.filename_download\n//     binaries[`data_${index}.pdf`] = item.binary.data;\n//     binary_keys.push(`data_${index}.pdf`);\n// }\n\nreturn [{\n    json: {\n        //binary_keys: binary_keys.join(','),\n        approval_request : approval_request,\n        requested_email : requested_email,\n        buyer_emails :  buyer_emails,\n        ops_emails : ops_emails,\n        plant : plant,\n        cc_emails : cc_emails\n    },\n    //binary: binaries\n}];"
       },
       "name": "Function to create approval obj",
       "type": "n8n-nodes-base.function",
@@ -542,8 +571,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1320,
-        -180
+        1080,
+        220
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -551,10 +580,59 @@
           "name": "Mozart DMS Token"
         }
       }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_payments/{{$node[\"Wait for approval\"].json[\"body\"][\"key\"]}}",
+        "options": {}
+      },
+      "name": "Get vendor payment",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        500,
+        220
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Get vendor PO details\"].json[\"data\"][\"payment_type\"] == \"advance\"}}"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        660,
+        220
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        900,
+        420
+      ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-04-21T09:25:27.845Z"
+  "updatedAt": "2023-05-17T12:31:16.548Z"
 }
