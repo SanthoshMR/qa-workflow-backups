@@ -1,0 +1,537 @@
+{
+  "active": false,
+  "connections": {
+    "Get Cloud Files": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Function to get irn data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nextcloud": {
+      "main": [
+        [
+          {
+            "node": "Upload PO to mozart",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Upload invoice to vpanel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update IRN in mozart": {
+      "main": [
+        [
+          {
+            "node": "Move All Files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload PO to mozart": {
+      "main": [
+        [
+          {
+            "node": "Update IRN in mozart",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get url and token": {
+      "main": [
+        [
+          {
+            "node": "Get Cloud Files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the order from vpanel": {
+      "main": [
+        [
+          {
+            "node": "update the order invoice in vpanel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "update the order invoice in vpanel": {
+      "main": [
+        [
+          {
+            "node": "Get the pending invoices",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload invoice to vpanel": {
+      "main": [
+        [
+          {
+            "node": "Get the order from vpanel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NoOp": {
+      "main": [
+        [
+          {
+            "node": "Get the pending invoices",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Move All Files": {
+      "main": [
+        [
+          {
+            "node": "Get the pending invoices",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cron": {
+      "main": [
+        [
+          {
+            "node": "Get url and token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the pending invoices": {
+      "main": [
+        [
+          {
+            "node": "Move the pending files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-05-17T09:48:34.886Z",
+  "id": "311",
+  "name": "Vedanta : Update IRN Digital signed invoices (2.0)",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "operation": "list",
+        "path": "IRN-digitally-signed-qa/"
+      },
+      "name": "Get Cloud Files",
+      "type": "n8n-nodes-base.nextCloud",
+      "typeVersion": 1,
+      "position": [
+        1080,
+        320
+      ],
+      "credentials": {
+        "nextCloudApi": {
+          "id": "43",
+          "name": "SD Cloud"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://sdqa.mozart.shakedeal.com/items/sdm_order_invoices?filter={\"id\":{\"_eq\":\"{{$node[\"Get Cloud Files\"].json[\"path\"].replace('es/santhosh/IRN-digitally-signed-qa/','').replace('.pdf','').trim()}}\"}}&fields=id,order.*,order.shipments.sdm_shipments_id.*,order.shipments.sdm_shipments_id.vendor_po_num.id,order.shipments.sdm_shipments_id.vendor_po_num.consignment_type",
+        "options": {}
+      },
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        340
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"HTTP Request\"].json[\"data\"].length>0?true:false}}"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1540,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "path": "=IRN-digitally-signed-qa/{{$node[\"IF\"].json[\"data\"][0][\"id\"]+\".pdf\"}}"
+      },
+      "name": "Nextcloud",
+      "type": "n8n-nodes-base.nextCloud",
+      "typeVersion": 1,
+      "position": [
+        2040,
+        40
+      ],
+      "credentials": {
+        "nextCloudApi": {
+          "id": "43",
+          "name": "SD Cloud"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "=https://sdqa.mozart.shakedeal.com/items/sdm_order_invoices/{{$node[\"Nextcloud\"].json[\"data\"][0][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "view_shakedeal_invoice",
+              "value": "={{$node[\"Upload PO to mozart\"].json[\"data\"][\"id\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update IRN in mozart",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2520,
+        40
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "=https://sdqa.mozart.shakedeal.com/files",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {
+          "bodyContentType": "multipart-form-data"
+        },
+        "sendBinaryData": true,
+        "binaryPropertyName": "input_file:data"
+      },
+      "name": "Upload PO to mozart",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2240,
+        40
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "=https://qan8n.shakedeal.com/webhook/get-url",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "client",
+              "value": "=vedanta"
+            },
+            {
+              "name": "env",
+              "value": "=qa"
+            }
+          ]
+        }
+      },
+      "name": "Get url and token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        880,
+        320
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://sdqa.vpanel.shakedeal.com/items/sdv_orders?filter={\"order_id\":{\"_eq\":\"{{$node[\"Nextcloud\"].json[\"data\"][0][\"order\"][\"order_id\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Get the order from vpanel",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2500,
+        260
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "=https://sdqa.vpanel.shakedeal.com/items/sdv_orders/{{$node[\"Get the order from vpanel\"].json[\"data\"][0][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "invoice_file",
+              "value": "={{$node[\"Upload invoice to vpanel\"].json[\"data\"][\"id\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "update the order invoice in vpanel",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2780,
+        260
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "=https://sdqa.vpanel.shakedeal.com/files",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {
+          "bodyContentType": "multipart-form-data"
+        },
+        "sendBinaryData": true,
+        "binaryPropertyName": "=input_file:data"
+      },
+      "name": "Upload invoice to vpanel",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2240,
+        260
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        2320,
+        780
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "move",
+        "path": "=IRN-digitally-signed-qa/{{$node[\"Nextcloud\"].json[\"data\"][0][\"id\"]+\".pdf\"}}",
+        "toPath": "=IRN-old-digitally-signed-qa/{{$node[\"Nextcloud\"].json[\"data\"][0][\"id\"]+\".pdf\"}}"
+      },
+      "name": "Move All Files",
+      "type": "n8n-nodes-base.nextCloud",
+      "typeVersion": 1,
+      "position": [
+        2820,
+        40
+      ],
+      "executeOnce": false,
+      "credentials": {
+        "nextCloudApi": {
+          "id": "43",
+          "name": "SD Cloud"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "mode": "everyX"
+            }
+          ]
+        }
+      },
+      "name": "Cron",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        600,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "operation": "list",
+        "path": "=IRN-digitally-signed-qa/"
+      },
+      "name": "Get the pending invoices",
+      "type": "n8n-nodes-base.nextCloud",
+      "typeVersion": 1,
+      "position": [
+        2980,
+        480
+      ],
+      "executeOnce": true,
+      "credentials": {
+        "nextCloudApi": {
+          "id": "43",
+          "name": "SD Cloud"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "move",
+        "path": "=IRN-digitally-signed-qa/{{$node[\"Get the pending invoices\"].json[\"path\"].replace(\"es/santhosh/IRN-digitally-signed-qa\",\"\")}}",
+        "toPath": "=Invoices-with-old-po-qa/{{$node[\"Get the pending invoices\"].json[\"path\"].replace(\"es/santhosh/IRN-digitally-signed-qa\",\"\")}}"
+      },
+      "name": "Move the pending files",
+      "type": "n8n-nodes-base.nextCloud",
+      "typeVersion": 1,
+      "position": [
+        3300,
+        480
+      ],
+      "credentials": {
+        "nextCloudApi": {
+          "id": "43",
+          "name": "SD Cloud"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "functionCode": "let irnData = [];\n//let productIds = [];\nitems.forEach((item, index) => {\n  //productIds.push(item.json[\"Material\"])\n  if(item.json.data[0].shipments[0].)\n  irnData.push({\n      sd_invoice_number : item.json.data[0].id,\n      vendor_invoice_number : item.json.data[0].shipments[0].\n  })\n})\nconst size = 10; // size of each subarray\n\nconst result = [];\nfor (let i = 0; i < grnData.length; i += size) {\n  result.push(grnData.slice(i, i + size));\n}\n\n//items[0].json.result= result;\n//items[0].json.resultlength = result.length;\n//return items;\nreturn [{\n    json: {\n        result: result,\n        resultlength : result.length\n    },\n}];\n"
+      },
+      "name": "Function to get irn data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1760,
+        240
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-05-17T10:52:51.232Z"
+}
