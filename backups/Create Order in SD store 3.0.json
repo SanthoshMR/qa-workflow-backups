@@ -695,7 +695,8 @@
           "id": "51",
           "name": "VendorPanel DMS Token"
         }
-      }
+      },
+      "disabled": true
     },
     {
       "parameters": {
@@ -724,7 +725,8 @@
           "id": "51",
           "name": "VendorPanel DMS Token"
         }
-      }
+      },
+      "disabled": true
     },
     {
       "parameters": {
@@ -777,7 +779,8 @@
           "id": "50",
           "name": "Mozart DMS Token"
         }
-      }
+      },
+      "disabled": true
     },
     {
       "parameters": {
@@ -811,7 +814,8 @@
       "position": [
         4220,
         320
-      ]
+      ],
+      "disabled": true
     },
     {
       "parameters": {
@@ -831,7 +835,8 @@
           "id": "51",
           "name": "VendorPanel DMS Token"
         }
-      }
+      },
+      "disabled": true
     },
     {
       "parameters": {
@@ -850,7 +855,8 @@
       "position": [
         4960,
         320
-      ]
+      ],
+      "disabled": true
     },
     {
       "parameters": {
@@ -862,7 +868,8 @@
       "position": [
         4760,
         320
-      ]
+      ],
+      "disabled": true
     },
     {
       "parameters": {
@@ -886,7 +893,8 @@
           "id": "51",
           "name": "VendorPanel DMS Token"
         }
-      }
+      },
+      "disabled": true
     },
     {
       "parameters": {},
@@ -896,7 +904,8 @@
       "position": [
         5200,
         520
-      ]
+      ],
+      "disabled": true
     },
     {
       "parameters": {
@@ -908,7 +917,8 @@
       "position": [
         5340,
         320
-      ]
+      ],
+      "disabled": true
     },
     {
       "parameters": {
@@ -928,7 +938,8 @@
           "id": "51",
           "name": "VendorPanel DMS Token"
         }
-      }
+      },
+      "disabled": true
     },
     {
       "parameters": {
@@ -952,7 +963,8 @@
           "id": "51",
           "name": "VendorPanel DMS Token"
         }
-      }
+      },
+      "disabled": true
     },
     {
       "parameters": {
@@ -1142,7 +1154,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let orderItems = $node[\"Get the po_details\"].json[\"data\"][\"order_items\"];\nlet product_details = $node[\"Get the po_details\"].json[\"data\"][\"shipment\"][\"vendor_po_num\"].po_items;\nlet updatedItems = [];\nlet returnItems = [];\n\norderItems.forEach(function(item,index){\n  let product = product_details.filter(product=>product.id == item.sdm_po_items_id);\n  updatedItems.push({\n    json: {\n       id:item.sdm_po_items_id,\n       qty:(product[0].ordered_qty?product[0].ordered_qty:0)+item.quantity,\n    }\n  })\n})\n\n\n\nreturn updatedItems;"
+        "functionCode": "let orderItems = $node[\"Get the po_details\"].json[\"data\"][\"order_items\"];\nlet product_details = $node[\"Get the po_details\"].json[\"data\"][\"shipments\"][0][\"sdm_shipments_id\"][\"vendor_po_num\"].po_items;\nlet updatedItems = [];\nlet returnItems = [];\n\norderItems.forEach(function(item,index){\n  let product = product_details.filter(product=>product.id == item.sdm_po_items_id.id);\n  updatedItems.push({\n    json: {\n       id:item.sdm_po_items_id.id,\n       qty:(product[0].ordered_qty?product[0].ordered_qty:0)+item.quantity,\n    }\n  })\n})\n\n\n\nreturn updatedItems;"
       },
       "name": "Function to update po items",
       "type": "n8n-nodes-base.function",
@@ -1226,5 +1238,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-05-11T06:55:54.184Z"
+  "updatedAt": "2023-05-17T09:37:26.871Z"
 }
