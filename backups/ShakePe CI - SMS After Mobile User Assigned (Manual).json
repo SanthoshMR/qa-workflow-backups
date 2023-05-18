@@ -1,0 +1,144 @@
+{
+  "active": true,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Details From Reference": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Get Details From Reference",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-05-18T10:09:47.507Z",
+  "id": "313",
+  "name": "ShakePe CI - SMS After Mobile User Assigned (Manual)",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "shakepe/notify-user-assigned-manual",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        200,
+        560
+      ],
+      "webhookId": "1a88707f-1620-461e-9c5d-2cb9f6b38119",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "76",
+          "name": "ShakePe Credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sp_card_inventory?filter={\"sd_serial_number\":{\"_in\":\"{{$node[\"Webhook\"].json[\"body\"][\"keys\"]}}\"}}&fields=mobile_number,status,amount,card_number, reference_number,sd_serial_number",
+        "options": {}
+      },
+      "name": "Get Details From Reference",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        620,
+        560
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "77",
+          "name": "ShakePe GCI - Zeus QA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "dms_url",
+              "value": "https://zeusqa.shakedeal.com"
+            },
+            {
+              "name": "n8n_url",
+              "value": "https://qan8n.shakedeal.com"
+            },
+            {
+              "name": "msg91_auth",
+              "value": "Basic bm90aWZpYWN0aW9uOk5AJGhAa2VkZUBs"
+            },
+            {
+              "name": "dms_auth",
+              "value": "Bearer KjER16XjzRSEce3MUUqgKFR2kY61rIOJ"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        420,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "const axios = require(\"axios\");\n\ntry {\n  const n8nUrl = $node[\"Globals\"].json[\"n8n_url\"] + \"/webhook/send-otp\";\n  const dmsUrl = $node[\"Globals\"].json[\"dms_url\"];\n\n  const selectedCardsForSMS = $node[\"Get Details From Reference\"].json[\"data\"];\n\n  const sendMSG91Auth = $node[\"Globals\"].json[\"msg91_auth\"];\n  const dmsAuth = $node[\"Globals\"].json[\"dms_auth\"];\n\n  const successKeys = [];\n  const failureKeys = [];\n\n  for (let i = 0; i < selectedCardsForSMS.length; i++) {\n      const status = $node[\"Get Details From Reference\"].json[\"data\"][i][\"status\"];\n      const mobileNumber = $node[\"Get Details From Reference\"].json[\"data\"][i][\"mobile_number\"];\n\n      if(status==\"AssignedToUser\" && mobileNumber && mobileNumber.length) {\n          const smsConfig = {\n            mobile: \"91\"+mobileNumber,\n            otp: \"\",\n            source: \"ShakePe StepUp Activation\",\n            sender_id: \"SHAKPE-Card-Distribution\",\n            params: [ $node[\"Get Details From Reference\"].json[\"data\"][i][\"amount\"],  $node[\"Get Details From Reference\"].json[\"data\"][i][\"card_number\"], $node[\"Get Details From Reference\"].json[\"data\"][i][\"reference_number\"] ]\n          }\n\n          const sendSmsResponse = await axios.post(`${n8nUrl}`, smsConfig, {\n            headers: {\n              'Authorization': sendMSG91Auth,\n              'Content-Type': 'application/json'\n            }\n          });\n\n          const success = sendSmsResponse.data[\"success\"];\n\n          if(success) {\n            successKeys.push($node[\"Get Details From Reference\"].json[\"data\"][i][\"sd_serial_number\"])\n          } else {\n            failureKeys.push($node[\"Get Details From Reference\"].json[\"data\"][i][\"sd_serial_number\"])\n          }\n      }\n\n      \n  }\n\n  let saveSmsSuccessStatusResponse = null;\n  let saveSmsFailureStatusResponse = null;\n\n  if(successKeys.length) {\n    saveSmsSuccessStatusResponse = await axios.patch(`${dmsUrl}/items/sp_card_inventory`, {\n      \"keys\": successKeys,\n      \"data\": {\n        \"user_assigned_sms\": true\n      }\n    }, {\n      headers: {\n        'Authorization': dmsAuth,\n        'Content-Type': 'application/json'\n      }\n    });\n  }\n\n  if(failureKeys.length) {\n    saveSmsFailureStatusResponse = await axios.patch(`${dmsUrl}/items/sp_card_inventory`, {\n      \"keys\": failureKeys,\n      \"data\": {\n        \"user_assigned_sms\": false\n      }\n    }, {\n      headers: {\n        'Authorization': dmsAuth,\n        'Content-Type': 'application/json'\n      }\n    });\n  }\n\n\n  return { smsDelivery: true, responses: { successKeys, failureKeys } };\n} catch(e) {\n  return { smsDelivery: false, error: e };\n}\n\n"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        860,
+        560
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-05-18T11:17:53.223Z"
+}
