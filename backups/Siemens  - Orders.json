@@ -1,0 +1,77 @@
+{
+  "active": false,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-05-19T09:18:02.519Z",
+  "id": "314",
+  "name": "Siemens  - Orders",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        -40,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "path": "02e0b2f7-a9c5-44cb-8f21-b999c1afcc9e",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        180,
+        260
+      ],
+      "webhookId": "02e0b2f7-a9c5-44cb-8f21-b999c1afcc9e"
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "dms_url",
+              "value": "=https://noirqa.shakedeal.com"
+            },
+            {
+              "name": "order_table_name",
+              "value": "=sds_orders"
+            },
+            {
+              "name": "order_items_table_name",
+              "value": "=sds_order_items"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        400,
+        260
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-05-19T09:19:47.260Z"
+}
