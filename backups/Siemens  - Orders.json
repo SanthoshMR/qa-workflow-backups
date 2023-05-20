@@ -1,11 +1,175 @@
 {
-  "active": false,
+  "active": true,
   "connections": {
     "Webhook": {
       "main": [
         [
           {
             "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Check for Order ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for Order ID": {
+      "main": [
+        [
+          {
+            "node": "Check Order ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Order ID": {
+      "main": [
+        [
+          {
+            "node": "Prepare Order Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Success Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Order": {
+      "main": [
+        [
+          {
+            "node": "Prepare Order Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Order Data": {
+      "main": [
+        [
+          {
+            "node": "Check Order Existing Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Order Items": {
+      "main": [
+        [
+          {
+            "node": "Create Order Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Order": {
+      "main": [
+        [
+          {
+            "node": "Get Order Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove Old Order Items": {
+      "main": [
+        [
+          {
+            "node": "Prepare Order Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Order Items": {
+      "main": [
+        [
+          {
+            "node": "Get Order Item IDs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Order Item IDs": {
+      "main": [
+        [
+          {
+            "node": "Check Order Items Count",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Order Existing Status": {
+      "main": [
+        [
+          {
+            "node": "Update Order",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create Order",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Order Items Count": {
+      "main": [
+        [
+          {
+            "node": "Prepare Order Items",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Prepare Order Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Order Items": {
+      "main": [
+        [
+          {
+            "node": "Success Response",
             "type": "main",
             "index": 0
           }
@@ -23,21 +187,23 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        -40,
-        260
+        -520,
+        280
       ]
     },
     {
       "parameters": {
-        "path": "02e0b2f7-a9c5-44cb-8f21-b999c1afcc9e",
+        "httpMethod": "POST",
+        "path": "siemens/create-order",
+        "responseMode": "lastNode",
         "options": {}
       },
       "name": "Webhook",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        180,
-        260
+        -300,
+        280
       ],
       "webhookId": "02e0b2f7-a9c5-44cb-8f21-b999c1afcc9e"
     },
@@ -65,13 +231,272 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        400,
+        -80,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/{{$node[\"Globals\"].json[\"order_table_name\"]}}?filter={\"order_id\": {\"_eq\":\"OD{{$node[\"Webhook\"].json[\"body\"][\"parent_order_id\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Check for Order ID",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        140,
+        280
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "90",
+          "name": "Simens Order Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Check for Order ID\"].json[\"data\"].length}}",
+              "operation": "larger",
+              "value2": "={{0}}"
+            }
+          ]
+        }
+      },
+      "name": "Check Order ID",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        360,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/{{$node[\"Globals\"].json[\"order_table_name\"]}}",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Prepare Order Data\"].json[\"order_data\"]}}"
+      },
+      "name": "Create Order",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        660,
+        680
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "90",
+          "name": "Simens Order Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let order_response = $node[\"Webhook\"].json.body;\n\nlet products = order_response.products;\n\nlet product_data = [];\n\nlet count = 0;\nlet total_gross_value = total_tax_value = total_net_value = 0;\n\n//Product Details\nfor (var key in products) {\n    if (products.hasOwnProperty(key)) {\n        var product = products[key];\n\n        product_data[count]={};\n        product_data[count].product_code = product.product_code;\n        product_data[count].product_name = product.product;\n        \n        let product_price = product.price;\n        let product_qty = product.amount;\n        let tax_percentage = product.prod_tax_rate;\n        let net_amount = product_price / ((100+tax_percentage)/100);\n        let product_net_amount = net_amount * product_qty;\n        let total_amount = product_price * product_qty;\n        let product_tax_value = total_amount - product_net_amount;\n\n        product_data[count].price = product_price;\n\n        product_data[count].ordered_qty = product_qty;\n\n        product_data[count].tax_percentage = tax_percentage;\n\n        product_data[count].product_net_value = product_net_amount;\n        product_data[count].product_tax_value = product_tax_value;\n        \n        product_data[count].product_gross_value = total_amount;\n\n\n        total_gross_value = total_gross_value + total_amount;\n        total_tax_value = total_tax_value + product_tax_value;\n        total_net_value = total_net_value + product_net_amount;\n\n        count++;\n    }\n}\n\nlet order_id = \"\";\nlet parent_order_id = \"\";\nif(order_response.order_existing_status == 1){\n    parent_order_id = null;\n    order_id = \"OD\"+order_response.parent_order_id;\n}else{\n    parent_order_id = \"OD\"+order_response.parent_order_id;\n    order_id = \"OD\"+order_response.split_order_id;\n}\n\nlet order_data = {\n    \"order_id\": order_id,\n    \"parent_order_id\" : parent_order_id,\n    \"order_date\" : order_response.order_date,\n    \"order_value\" : total_gross_value,\n    \"order_status\" : 'Open',\n    \"ordered_qty\" : count,\n    \"net_value\" : total_net_value,\n    \"gross_value\" : total_gross_value,\n    \"tax_value\" : total_tax_value,\n    \"order_ref_number\" : order_response.reference_number,\n}\n\nitems[0].json.order_data = order_data;\nitems[0].json.product_data = product_data;\nreturn items;"
+      },
+      "name": "Prepare Order Data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        620,
         260
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let order_response = $node[\"Webhook\"].json.body;\nlet product_data = $node[\"Prepare Order Data\"].json.product_data;\n\nlet sds_orders_id = '';\nif(order_response.order_existing_status == 1){\n  let existing_order_info = $node[\"Update Order\"].json.data;\n  sds_orders_id = existing_order_info.id;\n}else{\n  let order_info = $node[\"Create Order\"].json.data;\n  sds_orders_id = order_info.id;\n}\n\nproduct_data.forEach((product,index)=>{\n  product.sds_orders_id = sds_orders_id;\n});\n\nitems[0].json.product_data = product_data;\nreturn items;\n\n"
+      },
+      "name": "Prepare Order Items",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1020,
+        680
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/{{$node[\"Globals\"].json[\"order_items_table_name\"]}}",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Prepare Order Items\"].json[\"product_data\"]}}"
+      },
+      "name": "Create Order Items",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1260,
+        680
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "90",
+          "name": "Simens Order Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/{{$node[\"Globals\"].json[\"order_table_name\"]}}/{{$node[\"Check for Order ID\"].json[\"data\"][0][\"id\"]}}",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Prepare Order Data\"].json[\"order_data\"]}}"
+      },
+      "name": "Update Order",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        660,
+        480
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "90",
+          "name": "Simens Order Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "DELETE",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/{{$node[\"Globals\"].json[\"order_items_table_name\"]}}/{{$node[\"Get Order Item IDs\"].json[\"order_item_ids\"]}}",
+        "options": {}
+      },
+      "name": "Remove Old Order Items",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1540,
+        400
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "90",
+          "name": "Simens Order Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/{{$node[\"Globals\"].json[\"order_items_table_name\"]}}?filter={\"sds_orders_id\": {\"_eq\":\"{{$node[\"Update Order\"].json[\"data\"][\"id\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Get Order Items",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        920,
+        420
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "90",
+          "name": "Simens Order Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let order_items = $node[\"Get Order Items\"].json.data;\n\nlet order_item_ids = [];\n\norder_items.forEach((order_item,index)=>{\n  order_item_ids.push(order_item.id);\n});\n\nitems[0].json.order_item_ids = order_item_ids;\n\nreturn items;\n"
+      },
+      "name": "Get Order Item IDs",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Webhook\"].json[\"body\"][\"order_existing_status\"]}}",
+              "operation": "equal",
+              "value2": "={{1}}"
+            }
+          ]
+        }
+      },
+      "name": "Check Order Existing Status",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        380,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Get Order Item IDs\"].json[\"order_item_ids\"].length}}",
+              "operation": "larger",
+              "value2": "={{0}}"
+            }
+          ]
+        }
+      },
+      "name": "Check Order Items Count",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1320,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "DELETE",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/{{$node[\"Globals\"].json[\"order_items_table_name\"]}}/{{$node[\"Get Order Item IDs\"].json[\"order_item_ids\"][0]}}",
+        "options": {}
+      },
+      "name": "Remove Old Order Items1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1400,
+        200
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "90",
+          "name": "Simens Order Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let responseData = [];\n\nresponseData.push({\n    json: {\n        \"success\": true,\n        \"message\" : \"Order Status updated successfully!\"\n    }\t\t\t\n});\n\nreturn responseData;\n"
+      },
+      "name": "Success Response",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        140,
+        760
       ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-05-19T09:19:47.260Z"
+  "updatedAt": "2023-05-20T13:21:44.253Z"
 }
