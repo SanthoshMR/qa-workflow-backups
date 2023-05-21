@@ -170,7 +170,7 @@
       "main": [
         [
           {
-            "node": "Move All Files",
+            "node": "Get the shipment from mozart",
             "type": "main",
             "index": 0
           }
@@ -240,6 +240,28 @@
         [
           {
             "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the shipment from mozart": {
+      "main": [
+        [
+          {
+            "node": "update the shipment status in mozart",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "update the shipment status in mozart": {
+      "main": [
+        [
+          {
+            "node": "Move All Files",
             "type": "main",
             "index": 0
           }
@@ -479,7 +501,7 @@
       "type": "n8n-nodes-base.nextCloud",
       "typeVersion": 1,
       "position": [
-        4160,
+        4580,
         280
       ],
       "executeOnce": false,
@@ -518,7 +540,7 @@
       "type": "n8n-nodes-base.nextCloud",
       "typeVersion": 1,
       "position": [
-        4860,
+        5280,
         60
       ],
       "executeOnce": true,
@@ -540,7 +562,7 @@
       "type": "n8n-nodes-base.nextCloud",
       "typeVersion": 1,
       "position": [
-        5060,
+        5480,
         60
       ],
       "credentials": {
@@ -661,7 +683,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        4380,
+        4800,
         280
       ]
     },
@@ -681,7 +703,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        4560,
+        4980,
         280
       ]
     },
@@ -691,7 +713,7 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        4660,
+        5080,
         60
       ]
     },
@@ -723,6 +745,55 @@
         2000,
         520
       ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Nextcloud\"].json[\"dms_url\"]}}/items/sdm_shipments?filter={\"_and\": [{\"vendor_po_number\":{\"id\":{\"_eq\":\"{{$node[\"Function to get the splitted inventory Item\"].json[\"vendor_po_num\"]}}\"}}},{\"invoice_number\":{\"_eq\":\"{{$node[\"Function to get the splitted inventory Item\"].json[\"sd_invoice_number\"]}}\"}}]}",
+        "options": {}
+      },
+      "name": "Get the shipment from mozart",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        4120,
+        280
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Nextcloud\"].json[\"dms_url\"]}}/items/sdm_shipments/{{$node[\"Get the shipment from mozart\"].json[\"data\"][0][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "shipment_Status",
+              "value": "awaiting_asn"
+            }
+          ]
+        }
+      },
+      "name": "update the shipment status in mozart",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        4380,
+        280
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
     }
   ],
   "settings": {
@@ -731,5 +802,5 @@
   },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-05-18T12:03:57.532Z"
+  "updatedAt": "2023-05-21T04:25:31.777Z"
 }
