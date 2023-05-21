@@ -96,17 +96,6 @@
         ]
       ]
     },
-    "Remove Old Order Items": {
-      "main": [
-        [
-          {
-            "node": "Prepare Order Items",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Get Order Items": {
       "main": [
         [
@@ -147,26 +136,26 @@
         ]
       ]
     },
-    "Check Order Items Count": {
+    "Create Order Items": {
       "main": [
         [
           {
-            "node": "Prepare Order Items",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Prepare Order Items",
+            "node": "Order Existing Status",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Create Order Items": {
+    "Order Existing Status": {
       "main": [
+        [
+          {
+            "node": "Success Response",
+            "type": "main",
+            "index": 0
+          }
+        ],
         [
           {
             "node": "Success Response",
@@ -318,7 +307,7 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1020,
+        900,
         680
       ]
     },
@@ -335,7 +324,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1260,
+        1140,
         680
       ],
       "credentials": {
@@ -493,10 +482,80 @@
         140,
         760
       ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Webhook\"].json[\"body\"][\"order_existing_status\"]}}",
+              "operation": "equal",
+              "value2": "={{1}}"
+            }
+          ]
+        }
+      },
+      "name": "Order Existing Status",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1520,
+        680
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "Create Order Data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        2160,
+        760
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/{{$node[\"Globals\"].json[\"order_items_table_name\"]}}?filter={\"sds_orders_id\": {\"_eq\":\"{{$node[\"Check for Order ID\"].json[\"data\"][0][\"id\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Get Order Items1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1780,
+        700
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "90",
+          "name": "Simens Order Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/{{$node[\"Globals\"].json[\"order_items_table_name\"]}}?filter={\"sds_orders_id\": {\"_eq\":\"{{$node[\"Check for Order ID\"].json[\"data\"][0][\"id\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Get Parent Order Items",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        840,
+        240
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "90",
+          "name": "Simens Order Token"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-05-20T13:21:44.253Z"
+  "updatedAt": "2023-05-21T14:23:11.130Z"
 }
