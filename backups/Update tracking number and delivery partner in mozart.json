@@ -299,7 +299,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"mozart_url\"]}}/items/sdm_shipments?filter={\"invoice_number\":{\"_eq\":\"{{$node[\"Update shipment status\"].json[\"data\"][\"invoice_number\"]}}\"}}&fields=*.*,orders.*",
+        "url": "={{$node[\"Globals\"].json[\"mozart_url\"]}}/items/sdm_shipments?filter={\"invoice_number\":{\"_eq\":\"{{$node[\"Update shipment status\"].json[\"data\"][\"invoice_number\"]}}\"}}&fields=*.*,sdm_orders.sdm_orders_id.*",
         "options": {}
       },
       "name": "Get the vendor po id",
@@ -446,7 +446,7 @@
           "parameter": [
             {
               "name": "order_id",
-              "value": "={{$node[\"Get the vendor po id\"].json[\"data\"][0][\"orders\"][0][\"order_id\"].replace(\"OD\",\"\")}}"
+              "value": "={{$node[\"Get the vendor po id\"].json[\"data\"][0][\"sdm_orders\"][0][\"sdm_orders_id\"][\"order_id\"].replace(\"OD\",\"\")}}"
             },
             {
               "name": "order_status",
@@ -483,7 +483,7 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "PATCH",
-        "url": "={{$node[\"Globals\"].json[\"mozart_url\"]}}/items/sdm_orders/{{$node[\"Get the vendor po id\"].json[\"data\"][0][\"orders\"][0][\"id\"]}}",
+        "url": "={{$node[\"Globals\"].json[\"mozart_url\"]}}/items/sdm_orders/{{$node[\"Get the vendor po id\"].json[\"data\"][0][\"sdm_orders\"][0][\"sdm_orders_id\"][\"id\"]}}",
         "options": {},
         "bodyParametersUi": {
           "parameter": [
@@ -535,7 +535,8 @@
           "id": "51",
           "name": "VendorPanel DMS Token"
         }
-      }
+      },
+      "disabled": true
     }
   ],
   "settings": {},
@@ -548,5 +549,5 @@
       "updatedAt": "2022-05-30T07:16:52.136Z"
     }
   ],
-  "updatedAt": "2022-11-17T10:42:47.564Z"
+  "updatedAt": "2023-05-21T05:30:07.149Z"
 }
