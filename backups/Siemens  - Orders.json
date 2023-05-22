@@ -67,7 +67,7 @@
       "main": [
         [
           {
-            "node": "Check Order Existing Status",
+            "node": "Get Parent Order Items",
             "type": "main",
             "index": 0
           }
@@ -159,6 +159,17 @@
         [
           {
             "node": "Success Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Parent Order Items": {
+      "main": [
+        [
+          {
+            "node": "Get PO Items",
             "type": "main",
             "index": 0
           }
@@ -552,10 +563,30 @@
           "name": "Simens Order Token"
         }
       }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sds_po_items?filter={\"po\": {\"_eq\":\"9707681813\"}}",
+        "options": {}
+      },
+      "name": "Get PO Items",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1060,
+        60
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "90",
+          "name": "Simens Order Token"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-05-21T14:23:11.130Z"
+  "updatedAt": "2023-05-21T14:54:11.508Z"
 }
