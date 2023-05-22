@@ -1619,7 +1619,7 @@
             },
             {
               "name": "role",
-              "value": "=afb9d0f3-e000-449a-8ed9-ce0901df7cf4"
+              "value": "=3528a2f7-42eb-4455-921c-83a763e1351b"
             }
           ]
         }
@@ -1823,6 +1823,10 @@
             {
               "name": "client",
               "value": "={{$node[\"Webhook\"].json[\"headers\"][\"client\"]}}"
+            },
+            {
+              "name": "po_delivery_date",
+              "value": "={{$node[\"Get po_details\"].json[\"data\"][0][\"po_deliver_date\"]}}"
             }
           ]
         }
@@ -2496,5 +2500,5 @@
   },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-05-03T10:20:46.010Z"
+  "updatedAt": "2023-05-22T09:19:16.187Z"
 }
