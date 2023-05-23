@@ -84,6 +84,17 @@
           }
         ]
       ]
+    },
+    "Update Status To Request for Activation": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2023-02-20T06:48:25.364Z",
@@ -178,6 +189,14 @@
             {
               "name": "dms_url",
               "value": "https://zeusqa.shakedeal.com"
+            },
+            {
+              "name": "from_email",
+              "value": "admin@shakepe.com"
+            },
+            {
+              "name": "to_email",
+              "value": "shakedeal.web@gmail.com"
             }
           ]
         },
@@ -268,10 +287,61 @@
         -140,
         60
       ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{$node[\"Globals\"].json[\"from_email\"]}}",
+        "toEmail": "={{$node[\"Globals\"].json[\"to_email\"]}}",
+        "subject": "ShakePe - Card Activation Request",
+        "text": "=",
+        "html": "=<div><h3><u><strong>ShakePe - Request for Card Activation</strong></u></h3></div>\n<div>A Request for Card Activation has been placed.</div>\n<br />\n<div><strong>Reference Number</strong> : <span>{{$node[\"Update Status To Request for Activation\"].json[\"data\"][\"reference_number\"]}}</span></div>\n<div><strong>Phone Number</strong> : <span>{{$node[\"Update Status To Request for Activation\"].json[\"data\"][\"mobile_number\"]}}</span></div>\n<div><strong>Amount</strong> : <span>{{$node[\"Update Status To Request for Activation\"].json[\"data\"][\"amount\"]}}</span></div>",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        740,
+        -100
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "36",
+          "name": "SendGrid"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "dms_url",
+              "value": "https://zeusqa.shakedeal.com"
+            },
+            {
+              "name": "from_email",
+              "value": "admin@shakepe.com"
+            },
+            {
+              "name": "to_email",
+              "value": "shakedeal.web@gmail.com, anup.routray@shakedeal.com"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        -240,
+        -160
+      ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-05-17T04:26:42.610Z"
+  "updatedAt": "2023-05-23T08:27:17.925Z"
 }
