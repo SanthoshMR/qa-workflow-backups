@@ -77,6 +77,17 @@
           }
         ]
       ]
+    },
+    "Send Email": {
+      "main": [
+        [
+          {
+            "node": "Update order status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2023-02-01T13:26:44.683Z",
@@ -144,7 +155,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_orders?filter={\"order_id\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"order_id\"]}}\"}}&fields=order_id,shipment.*,shipment.vendor_po_num.po_num.id,shipment.vendor_po_num.po_num.po_file,shipment.vendor_po_num.id,user_created.*,shipment.vendor_po_num.operation_agent.*",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_orders?filter={\"order_id\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"order_id\"]}}\"}}&fields=id,order_id,shipments.sdm_shipments_id.*,shipments.sdm_shipments_id.vendor_po_num.po_num.id,shipments.sdm_shipments_id.vendor_po_num.po_num.po_file,shipments.sdm_shipments_id.vendor_po_num.id,user_created.*,shipments.sdm_shipments_id.vendor_po_num.operation_agent.*",
         "options": {}
       },
       "name": "Get the order",
@@ -163,7 +174,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let responseData = [];\nlet order_data = $node[\"Get the order\"].json[\"data\"][0]\nlet files = [];\nfiles.push(order_data.shipment.vendor_invoice,order_data.shipment.vendor_po_num.po_num.po_file)\n\nif(files){\n    files.forEach(function(upload_file,index){\n        responseData.push({\n            json: {\n                \"id\":upload_file,\n                \"index\":\"data\"+index,\n                \"dms_url\":$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]\n            }\t\t\t\n        });\n    })\n}\n\n\nreturn responseData;"
+        "functionCode": "let responseData = [];\nlet order_data = $node[\"Get the order\"].json[\"data\"][0]\nlet files = [];\nfiles.push(order_data.shipments[0].sdm_shipments_id.vendor_invoice,order_data.shipments[0].sdm_shipments_id.vendor_po_num.po_num.po_file)\n\nif(files){\n    files.forEach(function(upload_file,index){\n        responseData.push({\n            json: {\n                \"id\":upload_file,\n                \"index\":\"data\"+index,\n                \"dms_url\":$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]\n            }\t\t\t\n        });\n    })\n}\n\n\nreturn responseData;"
       },
       "name": "Function to split files",
       "type": "n8n-nodes-base.function",
@@ -196,7 +207,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "=https://sdqa.mozart.shakedeal.com/assets/{{$node[\"Function to split files\"].json[\"id\"]}}",
+        "url": "=https://sdqa.mozart.shakedeal.com/assets/{{$node[\"Get the uploaded files\"].json[\"data\"][\"id\"]}}",
         "allowUnauthorizedCerts": true,
         "responseFormat": "file",
         "dataPropertyName": "=data",
@@ -209,7 +220,7 @@
         1660,
         260
       ],
-      "executeOnce": true,
+      "executeOnce": false,
       "credentials": {
         "httpHeaderAuth": {
           "id": "31",
@@ -219,7 +230,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let binaries = {}, binary_keys = [],uploadDocument = [],extension = [];\nlet vedantaPoNumnber = $node[\"Get the order\"].json[\"data\"][0][\"shipment\"][\"vendor_po_num\"][\"po_num\"][\"id\"];\nlet vendorPoNumber =  $node[\"Get the order\"].json[\"data\"][0][\"shipment\"][\"vendor_po_num\"][\"id\"];\nlet sdInvoiceNumber = $node[\"Webhook\"].json[\"body\"][\"invoice_number\"];\nlet orderId = $node[\"Webhook\"].json[\"body\"][\"order_id\"];\nlet orderValue = $node[\"Webhook\"].json[\"body\"][\"order_value\"];\nlet vendorInvoiceNumber = $node[\"Get the order\"].json[\"data\"][0][\"shipment\"][\"invoice_number\"];\nlet borderStyle = \"border: 1px solid black;border-collapse: collapse\"\n\nfor([index, item] of items.entries()) {\n    let extension = item.json.data.filename_disk.split(\".\")[1]\n    item.binary.data.fileName = `${item.json.data.title}.${extension}`;\n    binaries[`data_${index}.${extension}`] = item.binary.data;\n    binary_keys.push(`data_${index}.${extension}`);\n    uploadDocument.push(`input_file${index}:data_${index}.${extension}`);\n}\nlet tableHtml = `<table  style=\"color:#000000;width: auto;border: 1px solid black;border-collapse: collapse;\">`+\n    `<tr style='${borderStyle}'>`+\n    `<td style='${borderStyle}'>Vedanta PO</td>`+\n    `<td style='${borderStyle}'>${vedantaPoNumnber}</td>`+\n    `</tr>`+\n     `<tr style='${borderStyle}'>`+\n    `<td style='${borderStyle}'>Vendor PO</td>`+\n    `<td style='${borderStyle}'>${vendorPoNumber}</td>`+\n    `</tr>`+\n    `<tr style='${borderStyle}'>`+\n    `<td style='${borderStyle}'>SD Invoice Number</td>`+\n    `<td style='${borderStyle}'>${sdInvoiceNumber}</td>`+\n    `</tr>`+\n    `<tr style='${borderStyle}'>`+\n    `<td style='${borderStyle}'>Order ID</td>`+\n    `<td style='${borderStyle}'>${orderId}</td>`+\n    `</tr>`+\n    `<tr style='${borderStyle}'>`+\n    `<td style='${borderStyle}'>Order Value</td>`+\n    `<td style='${borderStyle}'>${orderValue}</td>`+\n    `</tr>`+\n    `<tr style='${borderStyle}'>`+\n    `<td style='${borderStyle}'>Vendor Invoice Number</td>`+\n    `<td style='${borderStyle}'>${vendorInvoiceNumber}</td>`+\n    `</tr>`+\n    `</table>`;\n\nreturn [{\n    json: {\n        binary_keys: binary_keys.join(','),\n        uploadDocument : uploadDocument.join(','),\n        tableHtml : tableHtml\n    },\n    binary: binaries\n}];"
+        "functionCode": "let binaries = {}, binary_keys = [],uploadDocument = [],extension = [];\nlet vedantaPoNumnber = $node[\"Get the order\"].json[\"data\"][0][\"shipments\"][0][\"sdm_shipments_id\"][\"vendor_po_num\"][\"po_num\"][\"id\"];\nlet vendorPoNumber =  $node[\"Get the order\"].json[\"data\"][0][\"shipments\"][0][\"sdm_shipments_id\"][\"vendor_po_num\"][\"id\"];\nlet sdInvoiceNumber = $node[\"Webhook\"].json[\"body\"][\"invoice_number\"];\nlet orderId = $node[\"Webhook\"].json[\"body\"][\"order_id\"];\nlet orderValue = $node[\"Webhook\"].json[\"body\"][\"order_value\"];\nlet vendorInvoiceNumber = $node[\"Get the order\"].json[\"data\"][0][\"shipments\"][0][\"sdm_shipments_id\"][\"invoice_number\"];\nlet borderStyle = \"border: 1px solid black;border-collapse: collapse\"\n\nfor([index, item] of items.entries()) {\n    let extension = item.json.data.filename_disk.split(\".\")[1]\n    item.binary.data.fileName = `${item.json.data.title}.${extension}`;\n    binaries[`data_${index}.${extension}`] = item.binary.data;\n    binary_keys.push(`data_${index}.${extension}`);\n    uploadDocument.push(`input_file${index}:data_${index}.${extension}`);\n}\nlet tableHtml = `<table  style=\"color:#000000;width: auto;border: 1px solid black;border-collapse: collapse;\">`+\n    `<tr style='${borderStyle}'>`+\n    `<td style='${borderStyle}'>Vedanta PO</td>`+\n    `<td style='${borderStyle}'>${vedantaPoNumnber}</td>`+\n    `</tr>`+\n     `<tr style='${borderStyle}'>`+\n    `<td style='${borderStyle}'>Vendor PO</td>`+\n    `<td style='${borderStyle}'>${vendorPoNumber}</td>`+\n    `</tr>`+\n    `<tr style='${borderStyle}'>`+\n    `<td style='${borderStyle}'>SD Invoice Number</td>`+\n    `<td style='${borderStyle}'>${sdInvoiceNumber}</td>`+\n    `</tr>`+\n    `<tr style='${borderStyle}'>`+\n    `<td style='${borderStyle}'>Order ID</td>`+\n    `<td style='${borderStyle}'>${orderId}</td>`+\n    `</tr>`+\n    `<tr style='${borderStyle}'>`+\n    `<td style='${borderStyle}'>Order Value</td>`+\n    `<td style='${borderStyle}'>${orderValue}</td>`+\n    `</tr>`+\n    `<tr style='${borderStyle}'>`+\n    `<td style='${borderStyle}'>Vendor Invoice Number</td>`+\n    `<td style='${borderStyle}'>${vendorInvoiceNumber}</td>`+\n    `</tr>`+\n    `</table>`;\n\nreturn [{\n    json: {\n        binary_keys: binary_keys.join(','),\n        uploadDocument : uploadDocument.join(','),\n        tableHtml : tableHtml\n    },\n    binary: binaries\n}];"
       },
       "name": "Function to club the binay files",
       "type": "n8n-nodes-base.function",
@@ -252,10 +263,39 @@
           "name": "smtp(sai)creds"
         }
       }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_orders/{{$node[\"Get the order\"].json[\"data\"][0][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "order_status",
+              "value": "=awaiting_irn"
+            }
+          ]
+        }
+      },
+      "name": "Update order status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2340,
+        260
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-03-21T10:09:15.616Z"
+  "updatedAt": "2023-05-24T09:25:57.155Z"
 }
