@@ -154,7 +154,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/orders?filter={\"_and\": [{\"e_invoice_status\":{\"_eq\":\"draft\"}},{\"order_status\":{\"_neq\":\"cancelled\"}}]}",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/orders?filter={\"_and\": [{\"id\":{\"_eq\":\"OD268759\"}},{\"order_status\":{\"_neq\":\"cancelled\"}}]}",
         "options": {}
       },
       "name": "Get the draft status invoices",
@@ -183,7 +183,7 @@
           "parameter": [
             {
               "name": "client_id",
-              "value": "1000.WBSVSVM7UXFERT32STIOQLG3CFWOKP"
+              "value": "1000.UF5SWAYP2AFJZY340NXOPSQEQ7RC8A"
             },
             {
               "name": "grant_type",
@@ -191,15 +191,15 @@
             },
             {
               "name": "redirect_uri",
-              "value": "http://localhost:5678/webhook-test/sd_invoice"
+              "value": "https://qan8n.shakedeal.com/webhook/get_invoice_zoho"
             },
             {
               "name": "client_secret",
-              "value": "71afde1862948a64f91e451cdfe7f8c78250d32f7e"
+              "value": "f17bf24f1a69269ca8134cd4771c4803505100ef2d"
             },
             {
               "name": "refresh_token",
-              "value": "1000.a3b74dbdef5b06742ba91af095be0b8a.9b0f601314aaa290268c2805ba24e812"
+              "value": "1000.77e0d632e4a1d8df6bb963794b7094fc.6ed78cf03d146b533f2c7d7524c6d752"
             }
           ]
         }
@@ -289,7 +289,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "=https://invoice.zoho.com/api/v3/invoices/{{$node[\"Split the items\"].json[\"e_invoice_id\"]}}?organization_id=685685414",
+        "url": "=https://books.zoho.com/api/v3/invoices/{{$node[\"Split the items\"].json[\"e_invoice_id\"]}}?organization_id=685685414",
         "options": {}
       },
       "name": "Get the invoice",
@@ -347,5 +347,5 @@
       "updatedAt": "2022-04-25T07:09:37.693Z"
     }
   ],
-  "updatedAt": "2023-02-22T10:10:49.968Z"
+  "updatedAt": "2023-05-24T07:36:14.148Z"
 }
