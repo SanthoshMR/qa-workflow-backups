@@ -5,7 +5,7 @@
       "main": [
         [
           {
-            "node": "Extracting the seimens po details",
+            "node": "Post the file",
             "type": "main",
             "index": 0
           }
@@ -28,6 +28,17 @@
         [
           {
             "node": "Post to the Seimens Pos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post the file": {
+      "main": [
+        [
+          {
+            "node": "Extracting the seimens po details",
             "type": "main",
             "index": 0
           }
@@ -86,13 +97,13 @@
     },
     {
       "parameters": {
-        "functionCode": "let area = {\n  pos:{\n    id:'',\n    po_value:'',\n    po_net_value:'',\n    po_date:'',\n    po_delivery_date:'',\n    shipment_address:'',\n    street_address:'',\n    gstin:'',\n    city:'',\n    country:'',\n    pincode:'',\n    ship_street_address:'',\n    ship_pincode:'',\n    ship_city:'',\n    ship_state:'',\n    ship_country:'',\n    poc_name:'',\n    poc_contact_number:'',\n    poc_email:'',\n    po_items:[\n  ]\n  },  \n}\n\nconst contentSubStringArray = items[0].json.text;\nconst lines = contentSubStringArray.split('\\n');\nlet gstin  = 0\nfor (i=0;i<lines.length;i++) {\n    if(lines[i].includes(\"PAN:\")){\n      let splitPanString = lines[i].split(\":\");\n      pan = splitPanString[1];\n      area.pan = pan;\n  }\n    else if(lines[i].includes(\"GSTN\")){\n      let splitGstnString = lines[i].split(\" \");\n      gstin = splitGstnString[1];\n      if (gstin) {\n        area.pos.gstin = gstin;\n      }else{\n      area.pos.gstin = null;\n      }\n  }\n    else if(lines[i].includes(\"Date\")){\n      let splitDateString = lines[i].split(\":\");\n      date = splitDateString[1];\n      splitdate = date.split(\".\");\n      joindate = splitdate.reverse().join(\"-\");\n      area.date = joindate;\n      area.pos.po_date = area.date;\n  }\n    else if(lines[i].includes(\"Delivery date:\")){\n      let splitDeliveryDateString = lines[i].split(\":\");\n      deliverydate = splitDeliveryDateString[1].trim(\" \");\n      splitdate = deliverydate.split(\".\");\n      joindeliverydate = splitdate.reverse().join(\"-\");\n      area.deliverydate = joindeliverydate;\n      area.pos.po_delivery_date = area.deliverydate;\n  }\n\n      \n   else if(lines[i].includes(\"Order no\")){\n      let splitOrderNoString = lines[i].split(\":\");\n     const regex = /-?\\d+(\\.\\d+)?/g;\n      order_no = splitOrderNoString[0].match(regex);\n      area.order_no = parseInt(order_no);\n        if(area.order_no){\n       area.pos.id = parseInt(area.order_no);\n     }\n     else{\n       area.pos.id = '' ;\n       area.pos.po_items[0].id = '';       \n     }\n  }\n   else if(lines[i].includes(\"ORG-ID\")){\n      let splitOrgIdString = lines[i].split(\":\");\n      org_id = splitOrgIdString[0].slice(9,16);\n      area.org_id = org_id;\n  }\n  else if(lines[i].includes(\"Name\")){\n      let splitNameString = lines[i].split(\":\");\n      name = splitNameString[0].slice(4,37);\n      area.pos.poc_name = name;\n  }\n  else if(lines[i].includes(\"E-mail\")){\n      let splitEmailString = lines[i].split(\":\");\n      email = splitEmailString[1];\n      area.pos.poc_email = email;\n  }  \n    // Shipping Addresss\n   // *********************\n    else if(lines[i].includes(\"Shipping address\")){\n      const startString = \"Shipping address\";\n      const endString = \"Please supply in accordance with the stipulated terms and conditions attached. Kindly send us your\";\n      const startIndex = lines.indexOf(startString);\n      const endIndex = lines.indexOf(endString);\n      const addr = /^(.*?)(?=\\b\\d{6}\\b)/;\n      shipping_address = lines.slice(startIndex + 1, endIndex).join();\n      area.shipping_address = shipping_address;\n      area.pos.shipment_address = area.shipping_address;\n      street_address = area.pos.shipment_address.match(addr);\n      area.pos.street_address = street_address[0];\n      area.pos.ship_street_address = street_address[0]\n      if(area.pos.shipment_address){\n        const regex = /-?\\d+(\\.\\d+)?/g;\n        const pin = /\\b\\d{6}\\b/;\n        billing_address = area.pos.shipment_address.split(\" \").reverse(\"\");\n         splitBillingaddress = billing_address;\n         city = splitBillingaddress[0].split(\",\");\n         area.pos.city = city[0];\n         area.pos.ship_city = city[0];\n         country = splitBillingaddress[0].split(\",\");\n        area.pos.country = country[1];\n        area.pos.ship_country = country[1];\n        pincode = area.pos.shipment_address.match(pin);\n        area.pos.pincode = parseInt(pincode[0]); \n        area.pos.ship_pincode = parseInt(pincode[0]);\n      }\n  }\n    // Extracting multiple PO-Items\n  else if (lines[i].includes(\"ItemMaterial/Description\")){ \n  const filteredArray = lines.map((element, index) => {\n  if (element.includes('Integrated')) {\n    return index;\n  }\n}).filter(element => element !== undefined)\n    const id  =  filteredArray.find(e =>  e >= i)\n    let obj = {   \n      id:'',\n      // product:'',\n      hsn:'',\n      sku_code:'',\n      ordered_qty:'',\n      unit_price:'',\n      net_price:'',\n      tax_percentage:'',\n      tax_value:'',\n    }\n    for(j = i + 1; j <= id + 1 ; j++)\n      {\n       let pattern = /^\\d{4}/;\n       let serialno =  pattern.test(lines[j]);\n        if(serialno && j !=  id + 1)\n        {\n          let a = lines[j].split(\"\")\n          let itemno =  a[0] + a[1] + a[2] + a[3]\n          let order  =  lines.find((e) =>  e.includes(\"Order no\"))\n            let splitOrderNoString = order.split(\":\");\n     const regex = /-?\\d+(\\.\\d+)?/g;\n      order_no = splitOrderNoString[0].match(regex);\n        obj.id = parseInt(order_no) + '-' + parseInt(itemno);\n        }\n        if (lines[j].includes(\"HSN/SAC Code\")){\n          let splitHsnCodeString = lines[j].split(\":\");\n          hsn = parseInt(splitHsnCodeString[1]);\n          obj.hsn = hsn;\n        }\n        else if(lines[j].includes(\"Integrated GST\")){\n          const regex = /-?\\d+(\\.\\d+)?/g;\n          let splitGSTstring = lines[j].split(\":\");\n          tax_percentage = splitGSTstring[0].match(regex);\n          obj.tax_percentage = parseFloat(tax_percentage[0]);\n          \n          let splitSKUstring = lines[j+1];\n          sku_code = splitSKUstring;\n          obj.sku_code = sku_code;\n\n          // let splitProductstring = lines[j-5];\n          // product = splitProductstring.replace(/^\\d+/, \"\");\n          // obj.product = product;\n\n          let splitUnitpricestring = lines[j-1];\n          unit = splitUnitpricestring.split(\" \").reverse();\n          unit_price = unit.filter(element => element.trim() !== '');\n          obj.unit_price = parseFloat(unit_price[1].replace(\",\", \"\"));\n  \n\n          let splitNetpricestring = lines[j-1];\n          net = splitNetpricestring.split(\" \").reverse();\n          net_price = net[1];\n          obj.net_price = parseFloat(net_price.replace(\",\", \"\"));\n          tax_value = tax_percentage[1]\n          obj.tax_value = parseFloat(tax_value.replace(\",\",\"\"));\n         \n        }\n        else if(lines[j].includes(\"PC\")){\n          const regex = /-?\\d+(\\.\\d+)?/g;\n          let splitOrderQTY = lines[j].split(\" \").reverse();\n          ordered_qty = splitOrderQTY[1].match(regex);\n          obj.ordered_qty = parseInt(ordered_qty[0]);\n        }\n      }\n    if(obj.id)\n    {\n          area.pos.po_items.push(obj)\n    }\n\n  }\n\n  else if(lines[i].includes(\"Company\")){\n      const startString = \"Company\";\n      const endString = \"PAN:    \";\n      const startIndex = lines.indexOf(startString);\n      const endIndex = lines.indexOf(endString);\n      company = lines.slice(startIndex + 1, endIndex).join();\n      area.company = company;\n  }\n  else if(lines[i].includes(\"Your supplier no.\")){\n      let splitSupplierNoString = lines[i].split(\":\");\n      const regex = /-?\\d+(\\.\\d+)?/g;\n      supplier_no = splitSupplierNoString[0].match(regex);\n      area.supplier_no = supplier_no;\n  }\n  else if(lines[i].includes(\"Terms of payment\")){\n      let splitTermsofPaymentString = lines[i+1].split(\":\");\n      terms_of_payment = splitTermsofPaymentString[0];\n      area.terms_of_payment = terms_of_payment;\n  }\n  else if(lines[i].includes(\"Telephone\")){\n      let splitTelephoneString = lines[i];\n      phone = splitTelephoneString[1];\n      area.pos.poc_contact_number = parseInt(phone)  || '9342525186';\n  }\n  \n  else if (lines[i].includes(\"Supplier Product Number\")){\n    const inputString = lines;\n    const startString = \"Your search\";\n    const endString = \"Total net value\";\n     material_description = /<p>(.*?)<\\/p>/.exec(lines)\n    if(material_description){\n    area.material_description = material_description[1];\n    }\n    else{\n      area.material_description = null;\n    }\n    \n  }\n   else if (lines[i].includes(\"Amount in words:\")){\n    let splitAmountInWordsString = lines[i+1].split(\":\");\n    amount_in_words = splitAmountInWordsString[0];\n    area.amount_in_words = amount_in_words;\n  }\n\n  else if (lines[i].includes(\"Integrated GST\")){\n    let splitIntegratedGSTString = lines[i].split(\" \");\n    integrated_gst = splitIntegratedGSTString[0];\n    area.pos.po_items.integrated_gst = integrated_gst;\n  }\n    \n  else if (lines[i].includes(\"Total net value\")){\n    if(lines[i].includes(\"Total net value incl. Tax INR \"))\n      {\n    let splitTotalPONetValueString = lines[i].split(\" \");\n     const regex = /[\\d,]+(?:\\.\\d+)?/;\n        for (let element of splitTotalPONetValueString) {\n         \n        const matches = element.match(regex);\n        if (matches) {\n          const gross_price = matches[0].replace(\",\",'');\n          if(gross_price){\n          area.pos.po_value = parseFloat(gross_price);\n         }else{\n          area.pos.gross_price = null;\n         }\n          break;\n        }\n      }\n    }\n    else{\n    let splitTotalPOGrossValueString = lines[i].split(\" \");\n    const regex = /-?\\d+(\\.\\d+)?/g;\n    net_price = splitTotalPOGrossValueString[2].replace(\",\",'');\n      net_price = net_price.match(regex);\n      if(net_price){\n        \n        area.pos.po_net_value = parseFloat(net_price);\n      }else{\n    area.pos.po_net_value = '';\n    }\n  }\n  }  \n}\nreturn area \n"
+        "functionCode": "let area = {\n  pos:{\n    id:'',\n    po_value:'',\n    po_net_value:'',\n    po_date:'',\n    po_delivery_date:'',\n    shipment_address:'',\n    street_address:'',\n    gstin:'',\n    city:'',\n    country:'',\n    pincode:'',\n    ship_street_address:'',\n    ship_pincode:'',\n    ship_city:'',\n    ship_state:'',\n    ship_country:'',\n    poc_name:'',\n    poc_contact_number:'',\n    poc_email:'',\n    po_document:\"\",\n    po_items:[\n  ]\n  },  \n}\n\nconst contentSubStringArray = $node[\"Read PDF\"].json[\"text\"];\nconst lines = contentSubStringArray.split('\\n');\nlet gstin  = 0\nfor (i=0;i<lines.length;i++) {\n    if(lines[i].includes(\"PAN:\")){\n      let splitPanString = lines[i].split(\":\");\n      pan = splitPanString[1];\n      area.pan = pan;\n  }\n    else if(lines[i].includes(\"GSTN\")){\n      let splitGstnString = lines[i].split(\" \");\n      gstin = splitGstnString[1];\n      if (gstin) {\n        area.pos.gstin = gstin;\n      }else{\n      area.pos.gstin = null;\n      }\n  }\n    else if(lines[i].includes(\"Date\")){\n      let splitDateString = lines[i].split(\":\");\n      date = splitDateString[1];\n      splitdate = date.split(\".\");\n      joindate = splitdate.reverse().join(\"-\");\n      area.date = joindate;\n      area.pos.po_date = area.date;\n  }\n    else if(lines[i].includes(\"Delivery date:\")){\n      let splitDeliveryDateString = lines[i].split(\":\");\n      deliverydate = splitDeliveryDateString[1].trim(\" \");\n      splitdate = deliverydate.split(\".\");\n      joindeliverydate = splitdate.reverse().join(\"-\");\n      area.deliverydate = joindeliverydate;\n      area.pos.po_delivery_date = area.deliverydate;\n  }\n\n      \n   else if(lines[i].includes(\"Order no\")){\n      let splitOrderNoString = lines[i].split(\":\");\n     const regex = /-?\\d+(\\.\\d+)?/g;\n      order_no = splitOrderNoString[0].match(regex);\n      area.order_no = parseInt(order_no);\n        if(area.order_no){\n       area.pos.id = parseInt(area.order_no);\n     }\n     else{\n       area.pos.id = '' ;\n       area.pos.po_items[0].id = '';       \n     }\n  }\n   else if(lines[i].includes(\"ORG-ID\")){\n      let splitOrgIdString = lines[i].split(\":\");\n      org_id = splitOrgIdString[0].slice(9,16);\n      area.org_id = org_id;\n  }\n  else if(lines[i].includes(\"Name\")){\n      let splitNameString = lines[i].split(\":\");\n      name = splitNameString[0].slice(4,37);\n      area.pos.poc_name = name;\n  }\n  else if(lines[i].includes(\"E-mail\")){\n      let splitEmailString = lines[i].split(\":\");\n      email = splitEmailString[1];\n      area.pos.poc_email = email;\n  }  \n    // Shipping Addresss\n   // *********************\n    else if(lines[i].includes(\"Shipping address\")){\n      const startString = \"Shipping address\";\n      const endString = \"Please supply in accordance with the stipulated terms and conditions attached. Kindly send us your\";\n      const startIndex = lines.indexOf(startString);\n      const endIndex = lines.indexOf(endString);\n      const addr = /^(.*?)(?=\\b\\d{6}\\b)/;\n      shipping_address = lines.slice(startIndex + 1, endIndex).join();\n      area.shipping_address = shipping_address;\n      area.pos.shipment_address = area.shipping_address;\n      street_address = area.pos.shipment_address.match(addr);\n      area.pos.street_address = street_address[0];\n      area.pos.ship_street_address = street_address[0]\n      if(area.pos.shipment_address){\n        const regex = /-?\\d+(\\.\\d+)?/g;\n        const pin = /\\b\\d{6}\\b/;\n        billing_address = area.pos.shipment_address.split(\" \").reverse(\"\");\n         splitBillingaddress = billing_address;\n         city = splitBillingaddress[0].split(\",\");\n         area.pos.city = city[0];\n         area.pos.ship_city = city[0];\n         country = splitBillingaddress[0].split(\",\");\n        area.pos.country = country[1];\n        area.pos.ship_country = country[1];\n        pincode = area.pos.shipment_address.match(pin);\n        area.pos.pincode = parseInt(pincode[0]); \n        area.pos.ship_pincode = parseInt(pincode[0]);\n      }\n  }\n    // Extracting multiple PO-Items\n  else if (lines[i].includes(\"ItemMaterial/Description\")){ \n  const filteredArray = lines.map((element, index) => {\n  if (element.includes('Integrated')) {\n    return index;\n  }\n}).filter(element => element !== undefined)\n    const id  =  filteredArray.find(e =>  e >= i)\n    let obj = {   \n      id:'',\n      // product:'',\n      hsn:'',\n      sku_code:'',\n      ordered_qty:'',\n      unit_price:'',\n      net_price:'',\n      tax_percentage:'',\n      tax_value:'',\n    }\n    for(j = i + 1; j <= id + 1 ; j++)\n      {\n       let pattern = /^\\d{4}/;\n       let serialno =  pattern.test(lines[j]);\n        if(serialno && j !=  id + 1)\n        {\n          let a = lines[j].split(\"\")\n          let itemno =  a[0] + a[1] + a[2] + a[3]\n          let order  =  lines.find((e) =>  e.includes(\"Order no\"))\n            let splitOrderNoString = order.split(\":\");\n     const regex = /-?\\d+(\\.\\d+)?/g;\n      order_no = splitOrderNoString[0].match(regex);\n        obj.id = parseInt(order_no) + '-' + parseInt(itemno);\n        }\n        if (lines[j].includes(\"HSN/SAC Code\")){\n          let splitHsnCodeString = lines[j].split(\":\");\n          hsn = parseInt(splitHsnCodeString[1]);\n          obj.hsn = hsn;\n        }\n        else if(lines[j].includes(\"Integrated GST\")){\n          const regex = /-?\\d+(\\.\\d+)?/g;\n          let splitGSTstring = lines[j].split(\":\");\n          tax_percentage = splitGSTstring[0].match(regex);\n          obj.tax_percentage = parseFloat(tax_percentage[0]);\n          \n          let splitSKUstring = lines[j+1];\n          sku_code = splitSKUstring;\n          obj.sku_code = sku_code;\n\n          // let splitProductstring = lines[j-5];\n          // product = splitProductstring.replace(/^\\d+/, \"\");\n          // obj.product = product;\n\n          let splitUnitpricestring = lines[j-1];\n          unit = splitUnitpricestring.split(\" \").reverse();\n          unit_price = unit.filter(element => element.trim() !== '');\n          obj.unit_price = parseFloat(unit_price[1].replace(\",\", \"\"));\n  \n\n          let splitNetpricestring = lines[j-1];\n          net = splitNetpricestring.split(\" \").reverse();\n          net_price = net[1];\n          obj.net_price = parseFloat(net_price.replace(\",\", \"\"));\n          tax_value = tax_percentage[1]\n          obj.tax_value = parseFloat(tax_value.replace(\",\",\"\"));\n         \n        }\n        else if(lines[j].includes(\"PC\")){\n          const regex = /-?\\d+(\\.\\d+)?/g;\n          let splitOrderQTY = lines[j].split(\" \").reverse();\n          ordered_qty = splitOrderQTY[1].match(regex);\n          obj.ordered_qty = parseInt(ordered_qty[0]);\n        }\n      }\n    if(obj.id)\n    {\n          area.pos.po_items.push(obj)\n    }\n\n  }\n\n  else if(lines[i].includes(\"Company\")){\n      const startString = \"Company\";\n      const endString = \"PAN:    \";\n      const startIndex = lines.indexOf(startString);\n      const endIndex = lines.indexOf(endString);\n      company = lines.slice(startIndex + 1, endIndex).join();\n      area.company = company;\n  }\n  else if(lines[i].includes(\"Your supplier no.\")){\n      let splitSupplierNoString = lines[i].split(\":\");\n      const regex = /-?\\d+(\\.\\d+)?/g;\n      supplier_no = splitSupplierNoString[0].match(regex);\n      area.supplier_no = supplier_no;\n  }\n  else if(lines[i].includes(\"Terms of payment\")){\n      let splitTermsofPaymentString = lines[i+1].split(\":\");\n      terms_of_payment = splitTermsofPaymentString[0];\n      area.terms_of_payment = terms_of_payment;\n  }\n  else if(lines[i].includes(\"Telephone\")){\n      let splitTelephoneString = lines[i];\n      phone = splitTelephoneString[1];\n      area.pos.poc_contact_number = parseInt(phone)  || '9342525186';\n  }\n  \n  else if (lines[i].includes(\"Supplier Product Number\")){\n    const inputString = lines;\n    const startString = \"Your search\";\n    const endString = \"Total net value\";\n    material_description = /<[^>]+>([^<]*)<\\/[^>]+>/g.exec(lines)\n    if(material_description){\n    area.material_description = material_description[1];\n    }\n    else{\n      area.material_description = null;\n    }\n    \n  }\n   else if (lines[i].includes(\"Amount in words:\")){\n    let splitAmountInWordsString = lines[i+1].split(\":\");\n    amount_in_words = splitAmountInWordsString[0];\n    area.amount_in_words = amount_in_words;\n  }\n\n  else if (lines[i].includes(\"Integrated GST\")){\n    let splitIntegratedGSTString = lines[i].split(\" \");\n    integrated_gst = splitIntegratedGSTString[0];\n    area.pos.po_items.integrated_gst = integrated_gst;\n  }\n    \n  else if (lines[i].includes(\"Total net value\")){\n    if(lines[i].includes(\"Total net value incl. Tax INR \"))\n      {\n    let splitTotalPONetValueString = lines[i].split(\" \");\n     const regex = /[\\d,]+(?:\\.\\d+)?/;\n        for (let element of splitTotalPONetValueString) {\n         \n        const matches = element.match(regex);\n        if (matches) {\n          const gross_price = matches[0].replace(\",\",'');\n          if(gross_price){\n          area.pos.po_value = parseFloat(gross_price);\n         }else{\n          area.pos.gross_price = null;\n         }\n          break;\n        }\n      }\n    }\n    else{\n    let splitTotalPOGrossValueString = lines[i].split(\" \");\n    const regex = /-?\\d+(\\.\\d+)?/g;\n    net_price = splitTotalPOGrossValueString[2].replace(\",\",'');\n      net_price = net_price.match(regex);\n      if(net_price){\n        \n        area.pos.po_net_value = parseFloat(net_price);\n      }else{\n    area.pos.po_net_value = '';\n    }\n  }\n  }  \n}\n//  items[0].json.attachmentIndex = items[0].binary ? Object.values(items[0].binary).findIndex(key => key.mimeType === \"application/pdf\") : -1;\n// if(items[0].json.attachmentIndex !== -1){\n//   items[0].json.data = items[0].binary[items[0].json.attachmentIndex];\n// }\n\narea.pos.po_document = $node[\"Post the file\"].json[\"data\"][\"id\"];\nreturn area; \n"
       },
       "name": "Extracting the seimens po details",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        660,
+        760,
         380
       ]
     },
@@ -112,13 +123,13 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        880,
+        1000,
         380
       ],
       "credentials": {
         "httpHeaderAuth": {
           "id": "89",
-          "name": "Header Auth account 2"
+          "name": "Seimens Noir PDF"
         }
       }
     },
@@ -126,54 +137,58 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "POST",
-        "url": "https://noirqa.shakedeal.com/items/sds_pos",
-        "allowUnauthorizedCerts": true,
-        "options": {
-          "bodyContentType": "json"
-        },
-        "bodyParametersUi": {
-          "parameter": [
-            {
-              "name": "id",
-              "value": "={{$json[\"pos\"][\"id\"]}}"
-            },
-            {
-              "name": "po_value",
-              "value": "={{$json[\"pos\"][\"po_value\"]}}"
-            },
-            {
-              "name": "street_address",
-              "value": "={{$json[\"pos\"][\"street_address\"]}}"
-            },
-            {
-              "name": "pincode",
-              "value": "={{$json[\"pos\"][\"pincode\"]}}"
-            }
-          ]
-        }
+        "url": "=",
+        "options": {}
       },
-      "name": "Post to the Seimens Pos2",
+      "name": "HTTP Request",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        780,
-        620
+        760,
+        600
       ],
       "credentials": {
         "httpHeaderAuth": {
           "id": "89",
-          "name": "Header Auth account 2"
+          "name": "Seimens Noir PDF"
         }
       },
       "disabled": true
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "https://noirqa.shakedeal.com/files",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {
+          "bodyContentType": "multipart-form-data"
+        },
+        "sendBinaryData": true,
+        "binaryPropertyName": "input_file:attachment_00"
+      },
+      "name": "Post the file",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        580,
+        380
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "89",
+          "name": "Seimens Noir PDF"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": {
     "node:Wait for Po Email": {
-      "lastMessageUid": 2211
+      "lastMessageUid": 2233
     }
   },
   "tags": [],
-  "updatedAt": "2023-05-23T13:52:30.773Z"
+  "updatedAt": "2023-05-24T13:54:04.246Z"
 }
