@@ -519,11 +519,11 @@
             },
             {
               "name": "rejected_qty",
-              "value": "={{$node[\"Function to get the splitted grn\"].json[\"movement_type\"] == \"accepted\"?$node[\"Get Shipment Items\"].json[\"data\"][0][\"rejected_qty\"]+parseFloat($node[\"Function to get the splitted grn\"].json[\"qty\"]):$node[\"Get Shipment Items\"].json[\"data\"][0][\"rejected_qty\"]}}"
+              "value": "={{$node[\"Function to get the splitted grn\"].json[\"movement_type\"] == \"rejected\"?$node[\"Get Shipment Items\"].json[\"data\"][0][\"rejected_qty\"]+parseFloat($node[\"Function to get the splitted grn\"].json[\"qty\"]):$node[\"Get Shipment Items\"].json[\"data\"][0][\"rejected_qty\"]}}"
             },
             {
               "name": "grn_status",
-              "value": "={{$node[\"Function to get the splitted grn\"].json[\"movement_type\"] == \"accepted\" && $node[\"Get Shipment Items\"].json[\"data\"][0][\"accepted_qty\"]+parseFloat($node[\"Function to get the splitted grn\"].json[\"qty\"])>=$node[\"Get Shipment Items\"].json[\"data\"][0][\"shipment_qty\"]?\"grn_accepted\":$node[\"Function to get the splitted grn\"].json[\"movement_type\"] == \"rejected\" && $node[\"Get Shipment Items\"].json[\"data\"][0][\"rejected_qty\"]+parseFloat($node[\"Function to get the splitted grn\"].json[\"qty\"])>=$node[\"Get Shipment Items\"].json[\"data\"][0][\"shipment_qty\"]?\"grn_rejected\":$node[\"Function to get the splitted grn\"].json[\"movement_type\"] == \"received\"?$node[\"Get Shipment Items\"].json[\"data\"][0][\"grn_status\"]:\"grn_partially_accepted\"}}"
+              "value": "={{$node[\"Function to get the splitted grn\"].json[\"movement_type\"] == \"accepted\" && $node[\"Get Shipment Items\"].json[\"data\"][0][\"accepted_qty\"]+parseFloat($node[\"Function to get the splitted grn\"].json[\"qty\"])>=$node[\"Get Shipment Items\"].json[\"data\"][0][\"shipment_qty\"]?\"grn_accepted\":$node[\"Function to get the splitted grn\"].json[\"movement_type\"] == \"rejected\" && $node[\"Get Shipment Items\"].json[\"data\"][0][\"rejected_qty\"]+parseFloat($node[\"Function to get the splitted grn\"].json[\"qty\"])>=$node[\"Get Shipment Items\"].json[\"data\"][0][\"shipment_qty\"]?\"grn_rejected\":$node[\"Function to get the splitted grn\"].json[\"movement_type\"] == \"received\"?$node[\"Get Shipment Items\"].json[\"data\"][0][\"grn_status\"]:$node[\"Function to get the splitted grn\"].json[\"movement_type\"] == \"rejected\" && $node[\"Get Shipment Items\"].json[\"data\"][0][\"rejected_qty\"]+parseFloat($node[\"Function to get the splitted grn\"].json[\"qty\"])<$node[\"Get Shipment Items\"].json[\"data\"][0][\"shipment_qty\"]?$node[\"Get Shipment Items\"].json[\"data\"][0][\"grn_status\"]:\"grn_partially_accepted\"}}"
             }
           ]
         }
@@ -666,6 +666,7 @@
     },
     {
       "parameters": {
+        "httpMethod": "POST",
         "path": "update-grn-data",
         "options": {}
       },
@@ -705,5 +706,5 @@
   },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-05-23T11:11:32.150Z"
+  "updatedAt": "2023-05-24T13:21:38.919Z"
 }
