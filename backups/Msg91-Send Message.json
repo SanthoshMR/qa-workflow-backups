@@ -238,7 +238,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let responseData = [];\n\nresponseData.push({\n    json: {\n        \"success\": true\n    }\t\t\t\n});\n\nreturn responseData;\n"
+        "functionCode": "let responseData = [];\n\nresponseData.push({\n    json: {\n        \"success\": true\n    }\t\t\t\n});\n\n// json: {\n//         \"success\": true,\n//         \"message_id\" : $node[\"Get Message ID\"].json[\"0\"][\"message_id\"]\n//     }\n\nreturn responseData;\n"
       },
       "name": "Response",
       "type": "n8n-nodes-base.function",
@@ -455,5 +455,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-05-17T04:05:25.353Z"
+  "updatedAt": "2023-05-25T09:52:32.578Z"
 }
