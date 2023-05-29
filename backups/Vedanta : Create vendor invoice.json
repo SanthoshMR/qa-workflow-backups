@@ -27,7 +27,7 @@
       "main": [
         [
           {
-            "node": "Get the plant details",
+            "node": "Get the vendor Invoice from vpanel",
             "type": "main",
             "index": 0
           }
@@ -89,22 +89,22 @@
         ]
       ]
     },
-    "Post the file to vpanel": {
+    "Get the vendor Invoice from vpanel": {
       "main": [
         [
           {
-            "node": "Get the vendor Invoice from vpanel",
+            "node": "Update shipment status",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Get the vendor Invoice from vpanel": {
+    "Update shipment status": {
       "main": [
         [
           {
-            "node": "Update SD Invoice",
+            "node": "Get the plant details",
             "type": "main",
             "index": 0
           }
@@ -209,7 +209,7 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1220,
+        1300,
         240
       ]
     },
@@ -223,7 +223,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1060,
+        1140,
         240
       ],
       "credentials": {
@@ -327,8 +327,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2260,
-        220
+        960,
+        -40
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -365,6 +365,35 @@
           "name": "VendorPanel DMS Token"
         }
       }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_shipments/{{$node[\"Get the vendor Invoice from vpanel\"].json[\"data\"][0][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "shipment_Status",
+              "value": "awaiting_irn"
+            }
+          ]
+        }
+      },
+      "name": "Update shipment status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1220,
+        -40
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
     }
   ],
   "settings": {
@@ -372,5 +401,5 @@
   },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-05-17T05:44:35.372Z"
+  "updatedAt": "2023-05-29T07:49:59.892Z"
 }
