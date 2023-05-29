@@ -68,7 +68,7 @@
       "type": "n8n-nodes-base.readPDF",
       "typeVersion": 1,
       "position": [
-        420,
+        380,
         380
       ]
     },
@@ -103,7 +103,7 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        760,
+        780,
         380
       ]
     },
@@ -186,9 +186,9 @@
   "settings": {},
   "staticData": {
     "node:Wait for Po Email": {
-      "lastMessageUid": 2250
+      "lastMessageUid": 2252
     }
   },
   "tags": [],
-  "updatedAt": "2023-05-28T04:24:15.778Z"
+  "updatedAt": "2023-05-29T05:01:13.967Z"
 }
