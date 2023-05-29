@@ -273,7 +273,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let inventoryData = $node[\"Function to split inventory items to batches\"].json[\"result\"];\nlet currentIndex = $node[\"Start Loop\"].json[\"index\"];\nlet currentInventory = inventoryData[currentIndex];\nlet returnItems = [];\n\ncurrentInventory.forEach(function(obj,index){  \n    returnItems.push({\n    json: {\n       id : obj.id,\n       current_stock:obj.current_stock,\n       dms_url : $node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]\n    }\n  });\n  \n})\n\nreturn returnItems;\n\n// items[0].json.currentStock= currentStock;\n\n// return items;"
+        "functionCode": "let inventoryData = $node[\"Function to split inventory items to batches\"].json[\"result\"];\nlet currentIndex = $node[\"Start Loop\"].json[\"index\"];\nlet currentInventory = inventoryData[currentIndex];\nlet returnItems = [];\n\ncurrentInventory.forEach(function(obj,index){  \n    returnItems.push({\n    json: {\n       id : obj.id,\n       current_stock:obj.current_stock,\n       vedanta_stock :obj.vedanta_stock,\n       sd_consignment_stock : obj.sd_consignment_stock,\n       dms_url : $node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]\n    }\n  });\n  \n})\n\nreturn returnItems;\n\n// items[0].json.currentStock= currentStock;\n\n// return items;"
       },
       "name": "Function to get the splitted inventory Item",
       "type": "n8n-nodes-base.function",
@@ -294,6 +294,14 @@
             {
               "name": "current_stock",
               "value": "={{$node[\"Function to get the splitted inventory Item\"].json[\"current_stock\"]}}"
+            },
+            {
+              "name": "sd_consignment_stock",
+              "value": "={{$node[\"Function to get the splitted inventory Item\"].json[\"sd_consignment_stock\"]}}"
+            },
+            {
+              "name": "vedanta_stock",
+              "value": "={{$node[\"Function to get the splitted inventory Item\"].json[\"vedanta_stock\"]}}"
             }
           ]
         }
@@ -316,5 +324,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-05-11T12:10:21.988Z"
+  "updatedAt": "2023-05-29T13:19:29.244Z"
 }
