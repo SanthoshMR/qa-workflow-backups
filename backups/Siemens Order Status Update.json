@@ -213,6 +213,13 @@
   ],
   "settings": {},
   "staticData": null,
-  "tags": [],
-  "updatedAt": "2023-05-19T09:18:07.697Z"
+  "tags": [
+    {
+      "id": "7",
+      "name": "Siemens",
+      "createdAt": "2023-05-30T07:00:01.982Z",
+      "updatedAt": "2023-05-30T07:00:01.982Z"
+    }
+  ],
+  "updatedAt": "2023-05-30T11:15:41.914Z"
 }
