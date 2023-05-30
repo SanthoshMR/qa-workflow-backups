@@ -1,5 +1,5 @@
 {
-  "active": false,
+  "active": true,
   "connections": {
     "Get Cloud Files": {
       "main": [
@@ -597,6 +597,10 @@
             {
               "name": "grn_status",
               "value": "={{$node[\"Function to get the splitted grn\"].json[\"movement_type\"] == \"accepted\" && $node[\"Get Shipment Items\"].json[\"data\"][0][\"accepted_qty\"]+parseFloat($node[\"Function to get the splitted grn\"].json[\"qty\"])>=$node[\"Get Shipment Items\"].json[\"data\"][0][\"shipment_qty\"]?\"grn_accepted\":$node[\"Function to get the splitted grn\"].json[\"movement_type\"] == \"rejected\" && $node[\"Get Shipment Items\"].json[\"data\"][0][\"rejected_qty\"]+parseFloat($node[\"Function to get the splitted grn\"].json[\"qty\"])>=$node[\"Get Shipment Items\"].json[\"data\"][0][\"shipment_qty\"]?\"grn_rejected\":$node[\"Function to get the splitted grn\"].json[\"movement_type\"] == \"received\"?$node[\"Get Shipment Items\"].json[\"data\"][0][\"grn_status\"]:$node[\"Function to get the splitted grn\"].json[\"movement_type\"] == \"rejected\" && $node[\"Get Shipment Items\"].json[\"data\"][0][\"rejected_qty\"]+parseFloat($node[\"Function to get the splitted grn\"].json[\"qty\"])<$node[\"Get Shipment Items\"].json[\"data\"][0][\"shipment_qty\"]?$node[\"Get Shipment Items\"].json[\"data\"][0][\"grn_status\"]:\"grn_partially_accepted\"}}"
+            },
+            {
+              "name": "remaining_qty",
+              "value": "={{$node[\"Function to get the splitted grn\"].json[\"movement_type\"] == \"accepted\"?$node[\"Get Shipment Items\"].json[\"data\"][0][\"remaining_qty\"]+parseFloat($node[\"Function to get the splitted grn\"].json[\"qty\"]):$node[\"Get Shipment Items\"].json[\"data\"][0][\"remaining_qty\"]}}"
             }
           ]
         }
@@ -889,5 +893,5 @@
   },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-05-29T13:01:47.434Z"
+  "updatedAt": "2023-05-30T12:08:28.481Z"
 }
