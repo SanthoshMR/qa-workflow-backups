@@ -1,0 +1,266 @@
+{
+  "active": true,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Data": {
+      "main": [
+        [
+          {
+            "node": "Update Vendor ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Vendor ID": {
+      "main": [
+        [
+          {
+            "node": "Success Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Vendor IDs": {
+      "main": [
+        [
+          {
+            "node": "Check Vendor ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Get Vendor IDs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Vendor ID": {
+      "main": [
+        [
+          {
+            "node": "Check available vendors count",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check available vendors count": {
+      "main": [
+        [
+          {
+            "node": "Prepare Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Failure Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-05-30T07:00:08.317Z",
+  "id": "316",
+  "name": "Siemens  - Vendor Update",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        -880,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "siemens/update-vendor",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -660,
+        300
+      ],
+      "webhookId": "78141e75-9374-475c-b6c2-cfb40d0a625a"
+    },
+    {
+      "parameters": {
+        "functionCode": "let vendors = $node[\"Webhook\"].json.body.vendors;\n\nlet available_vendors = $node[\"Check Vendor ID\"].json.data;\n\n\nlet update_data = [];\n\nfor (var key in vendors) {\n    if (vendors.hasOwnProperty(key)) {\n        var vendor = vendors[key];\n        \n        available_vendors.forEach((available_vendor,index)=>{\n\n            if(available_vendor.id == vendor.mozart_vendor_id){\n                let keys = [];\n                keys.push(vendor.mozart_vendor_id);\n\n                let data = {\n                    \"company_id\": vendor.sd_store_id\n                }\n\n                update_data.push({\n                    json: [{\n                        keys:keys,\n                        data:data,\n                    }]\n                });\n            }\n        });\n    }\n}\n\nreturn update_data;\n"
+      },
+      "name": "Prepare Data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        280,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "=https://noirqa.shakedeal.com/items/sds_vendors",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Prepare Data\"].json[\"0\"]}}"
+      },
+      "name": "Update Vendor ID",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        500,
+        120
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "90",
+          "name": "Simens Order Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let vendors = $node[\"Webhook\"].json.body.vendors;\n\nlet vendor_ids = [];\n\nfor (var key in vendors) {\n    if (vendors.hasOwnProperty(key)) {\n        var vendor = vendors[key];\n        vendor_ids.push(vendor.mozart_vendor_id);\n    }\n}\n\nitems[0].json.vendor_ids = vendor_ids;\n\nreturn items;"
+      },
+      "name": "Get Vendor IDs",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -300,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/{{$node[\"Globals\"].json[\"vendor_table_name\"]}}?filter={\"id\": {\"_in\":\"{{$node[\"Get Vendor IDs\"].json[\"vendor_ids\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Check Vendor ID",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        -140,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "91",
+          "name": "Siemens - Vendor"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "dms_url",
+              "value": "=https://noirqa.shakedeal.com"
+            },
+            {
+              "name": "vendor_table_name",
+              "value": "=sds_vendors"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let responseData = [];\n\nresponseData.push({\n    json: {\n        \"success\": true,\n        \"message\" : \"Vendor details updated successfully!\"\n    }\t\t\t\n});\n\nreturn responseData;\n"
+      },
+      "name": "Success Response",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        720,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let responseData = [];\n\nresponseData.push({\n    json: {\n        \"success\": true,\n        \"message\" : \"Vendor details not found!\"\n    }\t\t\t\n});\n\nreturn responseData;\n"
+      },
+      "name": "Failure Response",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        280,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Check Vendor ID\"].json[\"data\"].length}}",
+              "operation": "larger",
+              "value2": "={{0}}"
+            }
+          ]
+        }
+      },
+      "name": "Check available vendors count",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        40,
+        300
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [
+    {
+      "id": "7",
+      "name": "Siemens",
+      "createdAt": "2023-05-30T07:00:01.982Z",
+      "updatedAt": "2023-05-30T07:00:01.982Z"
+    }
+  ],
+  "updatedAt": "2023-05-30T11:14:47.623Z"
+}
