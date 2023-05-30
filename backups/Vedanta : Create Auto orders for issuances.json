@@ -1,5 +1,5 @@
 {
-  "active": false,
+  "active": true,
   "connections": {
     "Get Cloud Files": {
       "main": [
@@ -58,13 +58,7 @@
     },
     "Start": {
       "main": [
-        [
-          {
-            "node": "Get url and token",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Spreadsheet File": {
@@ -165,6 +159,28 @@
           }
         ]
       ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get url and token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Inventory Items": {
+      "main": [
+        [
+          {
+            "node": "Move All Files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2023-05-08T12:53:28.988Z",
@@ -177,8 +193,8 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        240,
-        300
+        260,
+        80
       ]
     },
     {
@@ -294,7 +310,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let issuanceData = [];\nlet products = [];\nlet vedantaIssuances = [];\nitems.forEach((item, index) => {\n  if(item.json[\"Movement type\"] == \"101\" && item.json[\"Storage location\"] == \"CNSD\"){\n    const orderDate = getFormattedDate(item.json[\"Posting Date\"]);\n    products.push(item.json[\"Material\"])\n    issuanceData.push({\n      po_number : item.json[\"Purchase order\"],\n      product : item.json[\"Material\"],\n      plant : item.json[\"Plant\"],\n      qty : item.json[\"Qty in unit of entry\"],\n      order_date : orderDate\n    })\n  }else if(item.json[\"Movement type\"] == \"101\" && item.json[\"Storage location\"] != \"CNSD\"){\n    products.push(item.json[\"Material\"])\n    vedantaIssuances.push({\n      po_number : item.json[\"Purchase order\"],\n      product : item.json[\"Material\"],\n      plant : item.json[\"Plant\"],\n      qty : item.json[\"Qty in unit of entry\"],\n      order_date : orderDate\n    })\n  }\n})\nfunction getFormattedDate(secs){\n  const millisecondsPerDay = 24 * 60 * 60 * 1000; // Number of milliseconds in a day\n\n  const date = new Date((secs-1) * millisecondsPerDay + Date.parse(\"1900-01-01\"));\n\n  const day = date.getDate();\n  const month = date.getMonth() + 1; // Months are zero-based, so we add 1\n  const year = date.getFullYear();\n  const formattedDate = `${year}-${month < 10 ? '0' : ''}${month}-${day < 10 ? '0' : ''}${day-1}`;\n  return formattedDate\n}\nlet uniqueProductArr = products.filter((value, index) => {\n    return products.indexOf(value) === index;\n  });\nreturn [{\n    json: {\n        issuanceData: issuanceData,\n        products : uniqueProductArr,\n        vedantaIssuances : vedantaIssuances\n    },\n}];\n"
+        "functionCode": "let issuanceData = [];\nlet products = [];\nlet vedantaIssuances = [];\nitems.forEach((item, index) => {\n  if(item.json[\"Movement type\"] == \"101\" && item.json[\"Storage location\"] == \"CNSD\"){\n    const orderDate = getFormattedDate(item.json[\"Posting Date\"]);\n    products.push(item.json[\"Material\"])\n    issuanceData.push({\n      po_number : item.json[\"Purchase order\"],\n      product : item.json[\"Material\"],\n      plant : item.json[\"Plant\"],\n      qty : item.json[\"Qty in unit of entry\"],\n      order_date : orderDate,\n      issuance_type : \"shakedeal\"\n    })\n  }else if(item.json[\"Movement type\"] == \"101\" && item.json[\"Storage location\"] != \"CNSD\"){\n    products.push(item.json[\"Material\"])\n    vedantaIssuances.push({\n      po_number : item.json[\"Purchase order\"]?item.json[\"Purchase order\"]:\"\",\n      product : item.json[\"Material\"],\n      plant : item.json[\"Plant\"],\n      qty : item.json[\"Qty in unit of entry\"],\n      order_date : orderDate,\n      issuance_type : \"vedanta\"\n    })\n  }\n})\nfunction getFormattedDate(secs){\n  const millisecondsPerDay = 24 * 60 * 60 * 1000; // Number of milliseconds in a day\n\n  const date = new Date((secs-1) * millisecondsPerDay + Date.parse(\"1900-01-01\"));\n\n  const day = date.getDate();\n  const month = date.getMonth() + 1; // Months are zero-based, so we add 1\n  const year = date.getFullYear();\n  const formattedDate = `${year}-${month < 10 ? '0' : ''}${month}-${day < 10 ? '0' : ''}${day-1}`;\n  return formattedDate\n}\nlet uniqueProductArr = products.filter((value, index) => {\n    return products.indexOf(value) === index;\n  });\nreturn [{\n    json: {\n        issuanceData: issuanceData,\n        products : uniqueProductArr,\n        vedantaIssuances : vedantaIssuances\n    },\n}];\n"
       },
       "name": "Function to get issuance data",
       "type": "n8n-nodes-base.function",
@@ -468,6 +484,42 @@
           "name": "SD Basic Auth"
         }
       }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "create-issuance-order",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ],
+      "webhookId": "57f56e6b-a270-483f-a88f-c1e3b3f0fe5d"
+    },
+    {
+      "parameters": {
+        "operation": "move",
+        "path": "=Vedanta-Issuances-qa/{{$node[\"Combine Items\"].json[\"excelData\"][0][\"file_name\"]}}",
+        "toPath": "=Vedanta-Issuances-qa-old/{{$node[\"Combine Items\"].json[\"excelData\"][0][\"file_name\"]}}"
+      },
+      "name": "Move All Files",
+      "type": "n8n-nodes-base.nextCloud",
+      "typeVersion": 1,
+      "position": [
+        4000,
+        300
+      ],
+      "executeOnce": true,
+      "credentials": {
+        "nextCloudApi": {
+          "id": "43",
+          "name": "SD Cloud"
+        }
+      }
     }
   ],
   "settings": {
@@ -475,5 +527,5 @@
   },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-05-29T13:21:01.575Z"
+  "updatedAt": "2023-05-30T10:11:24.403Z"
 }
