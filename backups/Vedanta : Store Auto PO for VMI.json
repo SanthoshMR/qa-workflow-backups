@@ -1,5 +1,5 @@
 {
-  "active": false,
+  "active": true,
   "connections": {
     "Get Cloud Files": {
       "main": [
@@ -69,13 +69,7 @@
     },
     "Start": {
       "main": [
-        [
-          {
-            "node": "Get url and token",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Function to get issuance data": {
@@ -110,6 +104,17 @@
           }
         ]
       ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get url and token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2023-05-05T10:43:53.405Z",
@@ -122,8 +127,8 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        -40,
-        340
+        -20,
+        80
       ]
     },
     {
@@ -303,10 +308,25 @@
           "name": "Mozart DMS Token"
         }
       }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "=store-auto-generated-po",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -40,
+        340
+      ],
+      "webhookId": "8b56ea84-5a4a-4df0-922e-70537458c513"
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-05-11T06:46:35.555Z"
+  "updatedAt": "2023-05-30T09:03:54.979Z"
 }
