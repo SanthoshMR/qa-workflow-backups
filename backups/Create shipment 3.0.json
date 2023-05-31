@@ -581,6 +581,14 @@
             {
               "name": "net_invoice_value",
               "value": "={{$node[\"Wait for shipment\"].json[\"body\"][\"payload\"][\"net_invoice_value\"]}}"
+            },
+            {
+              "name": "whether_tax_payable_on_reverse_charge",
+              "value": "={{$node[\"Wait for shipment\"].json[\"body\"][\"payload\"][\"whether_tax_payable_on_reverse_charge\"]}}"
+            },
+            {
+              "name": "e_way_bill_number",
+              "value": "={{$node[\"Wait for shipment\"].json[\"body\"][\"payload\"][\"e_way_bill_number\"]}}"
             }
           ]
         }
@@ -1198,5 +1206,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-04-25T06:46:04.538Z"
+  "updatedAt": "2023-05-31T11:55:58.070Z"
 }
