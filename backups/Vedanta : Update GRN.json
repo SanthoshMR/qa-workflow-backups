@@ -155,7 +155,7 @@
       "main": [
         [
           {
-            "node": "Function to get vendor invoices",
+            "node": "Update Shipment item grn status",
             "type": "main",
             "index": 0
           }
@@ -317,6 +317,17 @@
         [
           {
             "node": "Increment index",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Shipment item grn status": {
+      "main": [
+        [
+          {
+            "node": "Function to get vendor invoices",
             "type": "main",
             "index": 0
           }
@@ -544,7 +555,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let grnData = $node[\"Function to get grn data\"].json[\"result\"];\nlet currentIndex = $node[\"Start Loop\"].json[\"index\"];\nlet currentGrn = grnData[currentIndex];\nlet returnItems = [];\nuniqueArr = Object.create(null),\n    uniqueShipmentProductArr = currentGrn.filter(o => {\n        var key = ['product', 'vendor_invoice','vendor_po','movement_type'].map(k => o[k]).join('|');\n        if (!uniqueArr[key]) {\n            uniqueArr[key] = true;\n            return true;\n        }\n    });\nuniqueShipmentProductArr.forEach(function(obj,index){\n    let matchedShipmentProduct =   currentGrn.filter(grn=>grn.product == obj.product && grn.vendor_po == obj.vendor_po && grn.movement_type == obj.movement_type && grn.vendor_invoice==obj.vendor_invoice);\n    let totalQty = matchedShipmentProduct.reduce((total,obj)=>obj.qty+ total, 0)\n    returnItems.push({\n    json: {\n       product : obj.product,\n       vendor_invoice:obj.vendor_invoice,\n       vendor_po:obj.vendor_po,\n       plant : obj.plant,\n       qty : totalQty,\n       dms_url : $node[\"Get url and token\"].json[\"0\"][\"mozart_url\"],\n       movement_type : obj.movement_type\n    }\n  });\n  \n})\n\nreturn returnItems;\n"
+        "functionCode": "let grnData = $node[\"Function to get grn data\"].json[\"result\"];\nlet currentIndex = $node[\"Start Loop\"].json[\"index\"];\nlet currentGrn = grnData[currentIndex];\nlet returnItems = [];\nuniqueArr = Object.create(null),\n    uniqueShipmentProductArr = currentGrn.filter(o => {\n        var key = ['product', 'vendor_invoice','vendor_po'].map(k => o[k]).join('|');\n        if (!uniqueArr[key]) {\n            uniqueArr[key] = true;\n            return true;\n        }\n    });\nuniqueShipmentProductArr.forEach(function(obj,index){\n    let matchedShipmentProduct =   currentGrn.filter(grn=>grn.product == obj.product && grn.vendor_po == obj.vendor_po  && grn.vendor_invoice==obj.vendor_invoice);\n    let matchedRecievedProduct = matchedShipmentProduct.filter(msp=>msp.movement_type == \"received\");\n    let matchedAcceptedProduct = matchedShipmentProduct.filter(msp=>msp.movement_type == \"accepted\");\n    let matchedRejectedProduct = matchedShipmentProduct.filter(msp=>msp.movement_type == \"rejected\");\n    let receivedQty = matchedRecievedProduct.reduce((total,obj)=>obj.qty+ total, 0);\n    let acceptedQty = matchedAcceptedProduct.reduce((total,obj)=>obj.qty+ total, 0);\n    let rejectedQty = matchedRejectedProduct.reduce((total,obj)=>obj.qty+ total, 0);\n    let totalQty = matchedShipmentProduct.reduce((total,obj)=>obj.qty+ total, 0)\n    returnItems.push({\n    json: {\n       product : obj.product,\n       vendor_invoice:obj.vendor_invoice,\n       vendor_po:obj.vendor_po,\n       plant : obj.plant,\n       accepted_qty : acceptedQty,\n       rejected_qty : rejectedQty,\n       received_qty : receivedQty,\n       qty : totalQty,\n       dms_url : $node[\"Get url and token\"].json[\"0\"][\"mozart_url\"],\n       //movement_type : obj.movement_type\n    }\n  });\n  \n})\n\nreturn returnItems;\n"
       },
       "name": "Function to get the splitted grn",
       "type": "n8n-nodes-base.function",
@@ -584,23 +595,19 @@
           "parameter": [
             {
               "name": "received_qty",
-              "value": "={{$node[\"Function to get the splitted grn\"].json[\"movement_type\"] == \"received\"?$node[\"Get Shipment Items\"].json[\"data\"][0][\"received_qty\"]+parseFloat($node[\"Function to get the splitted grn\"].json[\"qty\"]):$node[\"Get Shipment Items\"].json[\"data\"][0][\"received_qty\"]}}"
+              "value": "={{$node[\"Function to get the splitted grn\"].json[\"received_qty\"] != 0?$node[\"Get Shipment Items\"].json[\"data\"][0][\"received_qty\"]+parseFloat($node[\"Function to get the splitted grn\"].json[\"received_qty\"]):$node[\"Get Shipment Items\"].json[\"data\"][0][\"received_qty\"]}}"
             },
             {
               "name": "accepted_qty",
-              "value": "={{$node[\"Function to get the splitted grn\"].json[\"movement_type\"] == \"accepted\"?$node[\"Get Shipment Items\"].json[\"data\"][0][\"accepted_qty\"]+parseFloat($node[\"Function to get the splitted grn\"].json[\"qty\"]):$node[\"Get Shipment Items\"].json[\"data\"][0][\"accepted_qty\"]}}"
+              "value": "={{$node[\"Function to get the splitted grn\"].json[\"accepted_qty\"] != 0?$node[\"Get Shipment Items\"].json[\"data\"][0][\"accepted_qty\"]+parseFloat($node[\"Function to get the splitted grn\"].json[\"accepted_qty\"]):$node[\"Get Shipment Items\"].json[\"data\"][0][\"accepted_qty\"]}}"
             },
             {
               "name": "rejected_qty",
-              "value": "={{$node[\"Function to get the splitted grn\"].json[\"movement_type\"] == \"rejected\"?$node[\"Get Shipment Items\"].json[\"data\"][0][\"rejected_qty\"]+parseFloat($node[\"Function to get the splitted grn\"].json[\"qty\"]):$node[\"Get Shipment Items\"].json[\"data\"][0][\"rejected_qty\"]}}"
-            },
-            {
-              "name": "grn_status",
-              "value": "={{$node[\"Function to get the splitted grn\"].json[\"movement_type\"] == \"accepted\" && $node[\"Get Shipment Items\"].json[\"data\"][0][\"accepted_qty\"]+parseFloat($node[\"Function to get the splitted grn\"].json[\"qty\"])>=$node[\"Get Shipment Items\"].json[\"data\"][0][\"shipment_qty\"]?\"grn_accepted\":$node[\"Function to get the splitted grn\"].json[\"movement_type\"] == \"rejected\" && $node[\"Get Shipment Items\"].json[\"data\"][0][\"rejected_qty\"]+parseFloat($node[\"Function to get the splitted grn\"].json[\"qty\"])>=$node[\"Get Shipment Items\"].json[\"data\"][0][\"shipment_qty\"]?\"grn_rejected\":$node[\"Function to get the splitted grn\"].json[\"movement_type\"] == \"received\"?$node[\"Get Shipment Items\"].json[\"data\"][0][\"grn_status\"]:$node[\"Function to get the splitted grn\"].json[\"movement_type\"] == \"rejected\" && $node[\"Get Shipment Items\"].json[\"data\"][0][\"rejected_qty\"]+parseFloat($node[\"Function to get the splitted grn\"].json[\"qty\"])<$node[\"Get Shipment Items\"].json[\"data\"][0][\"shipment_qty\"]?$node[\"Get Shipment Items\"].json[\"data\"][0][\"grn_status\"]:\"grn_partially_accepted\"}}"
+              "value": "={{$node[\"Function to get the splitted grn\"].json[\"rejected_qty\"] != 0?$node[\"Get Shipment Items\"].json[\"data\"][0][\"rejected_qty\"]+parseFloat($node[\"Function to get the splitted grn\"].json[\"rejected_qty\"]):$node[\"Get Shipment Items\"].json[\"data\"][0][\"rejected_qty\"]}}"
             },
             {
               "name": "remaining_qty",
-              "value": "={{$node[\"Function to get the splitted grn\"].json[\"movement_type\"] == \"accepted\"?$node[\"Get Shipment Items\"].json[\"data\"][0][\"remaining_qty\"]+parseFloat($node[\"Function to get the splitted grn\"].json[\"qty\"]):$node[\"Get Shipment Items\"].json[\"data\"][0][\"remaining_qty\"]}}"
+              "value": "={{$node[\"Function to get the splitted grn\"].json[\"accepted_qty\"] != 0?$node[\"Get Shipment Items\"].json[\"data\"][0][\"remaining_qty\"]+parseFloat($node[\"Function to get the splitted grn\"].json[\"accepted_qty\"]):$node[\"Get Shipment Items\"].json[\"data\"][0][\"remaining_qty\"]}}"
             }
           ]
         }
@@ -653,7 +660,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let currentGrn = $node[\"Function to get product ids\"].json[\"currentGrn\"];\nlet productIds = $node[\"Function to get product ids\"].json[\"productIds\"];\nlet inventoryItems = $node[\"Get the inventory items\"].json[\"data\"];\nlet updateInventoryObj = [];\nlet returnItems = [];\ninventoryItems.forEach(function(inventoryItem,index){\n    let matchedProductPlant = currentGrn.filter(grn=>inventoryItem.product == grn.product && inventoryItem.plant == grn.plant && grn.movement_type == \"accepted\");\n    if(matchedProductPlant.length>0){\n        let totalQty = matchedProductPlant.reduce((total,obj)=>obj.qty+ total, 0) \n        updateInventoryObj.push({\n            id:inventoryItem.id,\n            current_stock:parseFloat(inventoryItem.current_stock) + totalQty,\n            sd_consignment_stock : parseFloat(inventoryItem.current_stock) + totalQty,\n            item_status : \"po_not_generated\"\n        })\n    }\n    \n})\nupdateInventoryObj.forEach(function(obj,index){  \n    returnItems.push({\n    json: {\n       id:obj[\"id\"],\n       current_stock:obj[\"current_stock\"],\n       item_status:obj[\"item_status\"],\n       sd_consignment_stock:obj[\"sd_consignment_stock\"],\n       dms_url : $node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]\n    }\n  });\n  \n})\n\nreturn returnItems;"
+        "functionCode": "let currentGrn = $node[\"Function to get product ids\"].json[\"currentGrn\"];\nlet productIds = $node[\"Function to get product ids\"].json[\"productIds\"];\nlet inventoryItems = $node[\"Get the inventory items\"].json[\"data\"];\nlet updateInventoryObj = [];\nlet returnItems = [];\ninventoryItems.forEach(function(inventoryItem,index){\n    let matchedProductPlant = currentGrn.filter(grn=>inventoryItem.product == grn.product && inventoryItem.plant == grn.plant && grn.movement_type == \"accepted\");\n    if(matchedProductPlant.length>0){\n        let totalQty = matchedProductPlant.reduce((total,obj)=>obj.qty+ total, 0) \n        updateInventoryObj.push({\n            id:inventoryItem.id,\n            current_stock:parseFloat(inventoryItem.current_stock) + totalQty,\n            sd_consignment_stock : parseFloat(inventoryItem.sd_consignment_stock) + totalQty,\n            item_status : \"po_not_generated\"\n        })\n    }\n    \n})\nupdateInventoryObj.forEach(function(obj,index){  \n    returnItems.push({\n    json: {\n       id:obj[\"id\"],\n       current_stock:obj[\"current_stock\"],\n       item_status:obj[\"item_status\"],\n       sd_consignment_stock:obj[\"sd_consignment_stock\"],\n       dms_url : $node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]\n    }\n  });\n  \n})\n\nreturn returnItems;"
       },
       "name": "Function to return updated inventory stock",
       "type": "n8n-nodes-base.function",
@@ -886,6 +893,35 @@
         5500,
         240
       ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Function to get the splitted grn\"].json[\"dms_url\"]}}/items/sdm_shipment_items/{{$node[\"Update shipment Items\"].json[\"data\"][\"id\"]}}?fields= *,sdm_shipments_id.*,sdm_shipments_id.shipment_items.*",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "grn_status",
+              "value": "={{$node[\"Update shipment Items\"].json[\"data\"][\"accepted_qty\"] >= $node[\"Update shipment Items\"].json[\"data\"][\"shipment_qty\"]?\"grn_accepted\":$node[\"Update shipment Items\"].json[\"data\"][\"rejected_qty\"] >= $node[\"Update shipment Items\"].json[\"data\"][\"shipment_qty\"]?\"grn_rejected\":$node[\"Update shipment Items\"].json[\"data\"][\"accepted_qty\"]>0 && $node[\"Update shipment Items\"].json[\"data\"][\"accepted_qty\"]<$node[\"Update shipment Items\"].json[\"data\"][\"shipment_qty\"]?\"grn_partially_accepted\":$node[\"Update shipment Items\"].json[\"data\"][\"grn_status\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update Shipment item grn status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3060,
+        -160
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
     }
   ],
   "settings": {
@@ -893,5 +929,5 @@
   },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-05-30T12:08:28.481Z"
+  "updatedAt": "2023-05-31T13:48:23.545Z"
 }
