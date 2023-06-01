@@ -441,7 +441,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let request_params = $node[\"Webhook\"].json[\"body\"][\"params\"];\nlet template_details = $node[\"Get Template ID\"].json;\nlet message_data = [];\n\nlet data = {\n    \"template_id\" :template_details.template_id,\n    \"sender\":template_details.sender_id,\n    \"short_url\" : 0,\n    \"mobiles\":$node[\"Webhook\"].json[\"body\"][\"mobile\"],\n    \"amount\" : `${request_params[0]}`,\n    \"cardno\": `${request_params[1]}`,\n    \"refno\": `${request_params[2]}`\n}\n\nmessage_data.push({\n    json: {\n        data:data,\n    }\n});\n\nreturn message_data;"
+        "functionCode": "let request_params = $node[\"Webhook\"].json[\"body\"][\"params\"];\nlet template_details = $node[\"Get Template ID\"].json;\nlet message_data = [];\n\nlet data = {\n    \"template_id\" :template_details.template_id,\n    \"sender\":template_details.sender_id,\n    \"short_url\" : 0,\n    \"mobiles\":$node[\"Webhook\"].json[\"body\"][\"mobile\"],\n    \"amount\" : `${request_params[0]}`,\n    \"refno\": `${request_params[1]}`\n}\n\nmessage_data.push({\n    json: {\n        data:data,\n    }\n});\n\nreturn message_data;"
       },
       "name": "Function",
       "type": "n8n-nodes-base.function",
@@ -455,5 +455,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-05-25T09:52:32.578Z"
+  "updatedAt": "2023-06-01T07:32:34.973Z"
 }
