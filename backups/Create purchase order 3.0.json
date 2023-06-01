@@ -1559,7 +1559,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_vendors?filter={\"vendor\":{ \"email\": { \"_eq\": \"{{$node[\"Get po_details\"].json[\"data\"][0][\"vendor\"][\"id\"]}}\"}}}",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_vendors?filter={\"vendor\":{ \"email\": { \"_eq\": \"{{$node[\"Get po_details\"].json[\"data\"][0][\"vendor\"][\"id\"].trim()}}\"}}}",
         "options": {}
       },
       "name": "Check for vendor in vpanel",
@@ -1611,7 +1611,7 @@
             },
             {
               "name": "email",
-              "value": "={{$node[\"Get po_details\"].json[\"data\"][0][\"vendor\"][\"id\"]}}"
+              "value": "={{$node[\"Get po_details\"].json[\"data\"][0][\"vendor\"][\"id\"].trim()}}"
             },
             {
               "name": "password",
@@ -2058,7 +2058,8 @@
           "id": "50",
           "name": "Mozart DMS Token"
         }
-      }
+      },
+      "continueOnFail": true
     },
     {
       "parameters": {
@@ -2500,5 +2501,5 @@
   },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-05-31T06:57:18.294Z"
+  "updatedAt": "2023-06-01T09:07:16.725Z"
 }
