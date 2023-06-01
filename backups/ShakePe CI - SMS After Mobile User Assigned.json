@@ -136,7 +136,7 @@
             },
             {
               "name": "params",
-              "value": "={{[ $node[\"Get Details From Reference\"].json[\"data\"][0][\"amount\"],  $node[\"Get Details From Reference\"].json[\"data\"][0][\"card_number\"], $node[\"Webhook\"].json[\"body\"][\"id\"] ]}}"
+              "value": "={{[ $node[\"Get Details From Reference\"].json[\"data\"][0][\"amount\"],$node[\"Webhook\"].json[\"body\"][\"id\"] ]}}"
             }
           ]
         }
@@ -216,5 +216,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-05-15T13:46:14.632Z"
+  "updatedAt": "2023-06-01T07:33:59.680Z"
 }
