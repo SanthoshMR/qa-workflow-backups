@@ -1,0 +1,240 @@
+{
+  "active": false,
+  "connections": {
+    "Cron": {
+      "main": [
+        [
+          {
+            "node": "Get url and token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get url and token": {
+      "main": [
+        [
+          {
+            "node": "Get the order",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the order": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "Call SD store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to update order id": {
+      "main": [
+        [
+          {
+            "node": "Update order id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call SD store": {
+      "main": [
+        [
+          {
+            "node": "Function to update order id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-06-02T06:43:16.881Z",
+  "id": "320",
+  "name": "Vedanta : Cron for getting and updating the orders",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "mode": "everyX"
+            }
+          ]
+        }
+      },
+      "name": "Cron",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        460,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "=https://qan8n.shakedeal.com/webhook/get-url",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "client",
+              "value": "=vedanta"
+            },
+            {
+              "name": "env",
+              "value": "=qa"
+            }
+          ]
+        }
+      },
+      "name": "Get url and token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        640,
+        260
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_orders?filter={\"order_id\":{\"_null\":true}}&limit=10&sort=-date_created",
+        "options": {}
+      },
+      "name": "Get the order",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        860,
+        260
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let orderData = $node[\"Get the order\"].json[\"data\"];\nlet referenceNumbers = orderData.map(order=>order.reference_number);\n\nitems[0].json.referenceNumbers = referenceNumbers;\nreturn items;"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1080,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let sdOrderData = $node[\"Call SD store\"].json[\"order_details\"];\nlet orderData = $node[\"Get the order\"].json[\"data\"];\nlet returnItems = [];\n\nsdOrderData.forEach(function(order,index){\n  let updateId = orderData.filter(od =>od.reference_number == order.reference_number);\n  returnItems.push({\n    json:{\n      order_id : \"OD\"+order.order_id,\n      reference_number:order.reference_number,\n      id : updateId[0].id,\n      dms_url : $node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]\n    }\n  })\n})\nreturn returnItems;"
+      },
+      "name": "Function to update order id",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1420,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "=https://sdqa.shakedeal.com/index.php?dispatch=wfs_update.vedanta_order_details",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "hash",
+              "value": "=wfs%#hash"
+            },
+            {
+              "name": "reference_numbers",
+              "value": "={{$node[\"Function\"].json[\"referenceNumbers\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Call SD store",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1240,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Function to update order id\"].json[\"dms_url\"]}}/items/sdm_orders/{{$node[\"Function to update order id\"].json[\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "order_id",
+              "value": "={{$node[\"Function to update order id\"].json[\"order_id\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update order id",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1620,
+        260
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-06-03T01:54:01.938Z"
+}
