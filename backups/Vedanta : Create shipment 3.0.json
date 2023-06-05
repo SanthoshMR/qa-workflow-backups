@@ -1,0 +1,1210 @@
+{
+  "active": true,
+  "connections": {
+    "Wait for shipment": {
+      "main": [
+        [
+          {
+            "node": "Get url and token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Get the shipment file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the shipment file": {
+      "main": [
+        [
+          {
+            "node": "Move Binary Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Move Binary Data": {
+      "main": [
+        [
+          {
+            "node": "Upload shipment in mozart",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload shipment in mozart": {
+      "main": [
+        [
+          {
+            "node": "Get the po number",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the po number": {
+      "main": [
+        [
+          {
+            "node": "Get po_id from mozart",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get po_id from mozart": {
+      "main": [
+        [
+          {
+            "node": "Create shipment in mozart",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create shipment in mozart": {
+      "main": [
+        [
+          {
+            "node": "Get the shipment items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get url and token": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get pr_advance payment": {
+      "main": [
+        [
+          {
+            "node": "Function to create payment to vendors",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to create payment to vendors": {
+      "main": [
+        [
+          {
+            "node": "Create payment to vendors",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create payment to vendors": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to update advance payments": {
+      "main": [
+        [
+          {
+            "node": "Update the residual amounts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update the residual amounts": {
+      "main": [
+        [
+          {
+            "node": "IF1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Function to update advance payments",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the vendor payments id": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF1": {
+      "main": [
+        [
+          {
+            "node": "Create vendor payment residual amount record",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create vendor payment residual amount record": {
+      "main": [
+        [
+          {
+            "node": "Update residual amount",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NoOp": {
+      "main": [
+        [
+          {
+            "node": "Get the vendor payments id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update residual amount": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Get the vendor payments id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the shipment items": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request2": {
+      "main": [
+        [
+          {
+            "node": "Get pr_advance payment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email": {
+      "main": [
+        [
+          {
+            "node": "Function to update hsn",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to update hsn": {
+      "main": [
+        [
+          {
+            "node": "Update hsn",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NoOp1": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update hsn": {
+      "main": [
+        [
+          {
+            "node": "IF2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF2": {
+      "main": [
+        [
+          {
+            "node": "Function to create order",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to create order": {
+      "main": [
+        [
+          {
+            "node": "Create Order",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2022-09-14T06:59:46.778Z",
+  "id": "182",
+  "name": "Vedanta : Create shipment 3.0",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        180,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "=create_shipment",
+        "options": {}
+      },
+      "name": "Wait for shipment",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -300,
+        420
+      ],
+      "webhookId": "6068e010-29ce-48cd-bfa2-ed6de444d572",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "vpanel_dms_url",
+              "value": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}"
+            },
+            {
+              "name": "mozart_dms_url",
+              "value": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}"
+            },
+            {
+              "name": "send_from_email",
+              "value": "=handyalasairam9177@gmail.com"
+            },
+            {
+              "name": "accounts_email",
+              "value": "=sairam.reddy@shakedeal.com"
+            }
+          ],
+          "number": [
+            {
+              "name": "max_percentage",
+              "value": 90
+            },
+            {
+              "name": "min_percentage"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        60,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"vpanel_dms_url\"]}}/assets/{{$node[\"Wait for shipment\"].json[\"body\"][\"payload\"][\"shipment_file\"]}}",
+        "responseFormat": "file",
+        "options": {}
+      },
+      "name": "Get the shipment file",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        260,
+        420
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "setAllData": false,
+        "destinationKey": "shipment_file",
+        "options": {
+          "keepSource": true,
+          "keepAsBase64": true
+        }
+      },
+      "name": "Move Binary Data",
+      "type": "n8n-nodes-base.moveBinaryData",
+      "typeVersion": 1,
+      "position": [
+        480,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"mozart_dms_url\"]}}/files",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {
+          "bodyContentType": "multipart-form-data"
+        },
+        "sendBinaryData": true,
+        "binaryPropertyName": "=input_file:data"
+      },
+      "name": "Upload shipment in mozart",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        740,
+        420
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_vendor_pos/{{$node[\"Wait for shipment\"].json[\"body\"][\"payload\"][\"vendor_po_number\"]}}?fields = id,po_number,shipments.*",
+        "options": {}
+      },
+      "name": "Get the po number",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        420
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_pos?filter={\"id\":{\"_eq\":\"{{$node[\"Get the po number\"].json[\"data\"][\"po_number\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Get po_id from mozart",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1240,
+        420
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"mozart_dms_url\"]}}/items/sdm_shipments",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "vendor_invoice",
+              "value": "={{$node[\"Upload shipment in mozart\"].json[\"data\"][\"id\"]}}"
+            },
+            {
+              "name": "invoice_number",
+              "value": "={{$node[\"Wait for shipment\"].json[\"body\"][\"payload\"][\"invoice_number\"]}}"
+            },
+            {
+              "name": "invoice_date",
+              "value": "={{$node[\"Wait for shipment\"].json[\"body\"][\"payload\"][\"invoice_date\"]}}"
+            },
+            {
+              "name": "invoice_value",
+              "value": "={{$node[\"Wait for shipment\"].json[\"body\"][\"payload\"][\"invoice_value\"]}}"
+            },
+            {
+              "name": "shipment_status",
+              "value": "=open"
+            },
+            {
+              "name": "vendor_po_num",
+              "value": "={{$node[\"Get po_id from mozart\"].json[\"data\"][0][\"id\"]}}"
+            },
+            {
+              "name": "net_invoice_value",
+              "value": "={{$node[\"Wait for shipment\"].json[\"body\"][\"payload\"][\"net_invoice_value\"]}}"
+            },
+            {
+              "name": "whether_tax_payable_on_reverse_charge",
+              "value": "={{$node[\"Wait for shipment\"].json[\"body\"][\"payload\"][\"whether_tax_payable_on_reverse_charge\"]}}"
+            },
+            {
+              "name": "e_way_bill_number",
+              "value": "={{$node[\"Wait for shipment\"].json[\"body\"][\"payload\"][\"e_way_bill_number\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Create shipment in mozart",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1500,
+        420
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "=https://qan8n.shakedeal.com/webhook/get-url",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "client",
+              "value": "=vedanta"
+            },
+            {
+              "name": "env",
+              "value": "={{$node[\"Wait for shipment\"].json[\"headers\"][\"x-sd-env\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Get url and token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        -120,
+        420
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{$node[\"Globals\"].json[\"send_from_email\"]}}",
+        "toEmail": "={{$node[\"Globals\"].json[\"accounts_email\"]}}",
+        "subject": "=Shipment Created for invoice number: {{$node[\"Wait for shipment\"].json[\"body\"][\"payload\"][\"invoice_number\"]}}",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        4300,
+        420
+      ],
+      "executeOnce": true,
+      "credentials": {
+        "smtp": {
+          "id": "17",
+          "name": "smtp(sai)creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_invoice_details",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "shipment",
+              "value": "={{$node[\"Create shipment in mozart\"].json[\"data\"][\"id\"]}}"
+            },
+            {
+              "name": "total_paid_amount",
+              "value": "={{$node[\"Function to create payment to vendors\"].json[\"total_paid_amount\"]}}"
+            },
+            {
+              "name": "total_percentage_paid",
+              "value": "={{$node[\"Function to create payment to vendors\"].json[\"percentage_paid\"]}}"
+            },
+            {
+              "name": "remaining_to_pay",
+              "value": "={{$node[\"Function to create payment to vendors\"].json[\"remaining_order_value\"]}}"
+            },
+            {
+              "name": "vendor_payment",
+              "value": "={{$node[\"Function to create payment to vendors\"].json[\"payment_status\"]}}"
+            },
+            {
+              "name": "payable_amount",
+              "value": "={{$node[\"Wait for shipment\"].json[\"body\"][\"payload\"][\"invoice_value\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Create payment to vendors",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2480,
+        420
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_payments?filter={\"_and\": [{\"vendor_po_number\": {\"_eq\":\"{{$node[\"Get the po number\"].json[\"data\"][\"po_number\"]}}\"}},{\"vendor_payment_status\":{\"_eq\":true}},{\"residual_amount\":{\"_gt\":0}},{\"payment_type\":{\"_eq\":\"advance\"}}]}",
+        "options": {}
+      },
+      "name": "Get pr_advance payment",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2100,
+        420
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "31",
+          "name": "header auth creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let advance_payments = $node[\"Get pr_advance payment\"].json.data;\nlet order_value = parseInt($node[\"Wait for shipment\"].json[\"body\"][\"payload\"][\"invoice_value\"]);\nlet remaining_order_value = order_value;\nlet update_residual_amount_obj = [];\nlet payment_status = \"\";\nlet max_percentage = $node[\"Globals\"].json[\"max_percentage\"];\nlet min_percentage = $node[\"Globals\"].json[\"min_percentage\"];\nif(advance_payments.length>0){\n  advance_payments.forEach(function(payment,index){\n    if(remaining_order_value>0){\n      let residual_amount = remaining_order_value>=payment.residual_amount?0:(payment.residual_amount-remaining_order_value);\n      remaining_order_value= payment.residual_amount>=remaining_order_value?0:remaining_order_value-payment.residual_amount;\n      update_residual_amount_obj[index] = {};\n      update_residual_amount_obj[index].id = payment.id;\n      update_residual_amount_obj[index].residual_amount = residual_amount\n    }\n  })\n}\nlet total_paid_amount = order_value - remaining_order_value;\nlet percentage_paid = (total_paid_amount*100)/order_value;\nif(percentage_paid>=max_percentage){\n  payment_status=\"paymentreleased\"\n}else if(percentage_paid>min_percentage && percentage_paid<90){\n  payment_status=\"partiallypaid\"\n}else payment_status=\"paymentpending\"\n\n\n\nitems[0].json.total_paid_amount = total_paid_amount;\nitems[0].json.advance_payments = advance_payments;\nitems[0].json.order_value = order_value;\nitems[0].json.remaining_order_value = remaining_order_value;\nitems[0].json.update_residual_amount_obj = update_residual_amount_obj;\nitems[0].json.percentage_paid = percentage_paid;\nitems[0].json.payment_status = payment_status;\nreturn items;"
+      },
+      "name": "Function to create payment to vendors",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        2280,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Function to update advance payments\"].json[\"url\"]}}/items/sdm_vendor_payments/{{$node[\"Function to update advance payments\"].json[\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "residual_amount",
+              "value": "={{$node[\"Function to update advance payments\"].json[\"residual_amount\"]}}"
+            },
+            {
+              "name": "vendor_invoice",
+              "value": "={{$node[\"Function to update advance payments\"].json[\"vendor_invoice\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update the residual amounts",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3140,
+        60
+      ],
+      "retryOnFail": true,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "const update_residual_amount_obj = $node[\"Function to create payment to vendors\"].json[\"update_residual_amount_obj\"]\n\nlet returnItems =[]\n\nupdate_residual_amount_obj.forEach(function(obj,index){  \n    returnItems.push({\n    json: {\n       id : obj.id,\n       residual_amount : obj.residual_amount,\n       url : $node[\"Globals\"].json[\"0\"][\"mozart_url\"],\n       vendor_invoice : $node[\"Create payment to vendors\"].json[\"data\"][\"id\"]\n    }\n  });\n  \n})\n\nreturn returnItems;"
+      },
+      "name": "Function to update advance payments",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        2900,
+        60
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Function to create payment to vendors\"].json[\"advance_payments\"].length}}",
+              "operation": "larger"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        2680,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_vendor_payments?filter={\"_and\": [{\"vendor_po_number\": {\"po_number\":{\"_eq\":\"{{$node[\"Get the po number\"].json[\"data\"][\"po_number\"]}}\"}}},{\"vendor_invoice\":{\"_null\":true}}]}",
+        "options": {}
+      },
+      "name": "Get the vendor payments id",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        4000,
+        80
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_vendor_payments/{{$node[\"Get the vendor payments id\"].json[\"data\"][0][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "vendor_invoice",
+              "value": "={{$node[\"Wait for shipment\"].json[\"body\"][\"key\"]}}"
+            },
+            {
+              "name": "payment_amount",
+              "value": "={{$node[\"Get the vendor payments id\"].json[\"data\"][0][\"payment_amount\"]-$node[\"Update the residual amounts\"].json[\"data\"][\"residual_amount\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        4240,
+        80
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$node[\"Update the residual amounts\"].json[\"data\"][\"residual_amount\"]>0?true:false}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "IF1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        3340,
+        60
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Function to update advance payments\"].json[\"url\"]}}/items/sdm_vendor_payments",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "parent_id",
+              "value": "={{$node[\"Function to update advance payments\"].json[\"id\"]}}"
+            },
+            {
+              "name": "payment_amount",
+              "value": "={{$node[\"IF1\"].json[\"data\"][\"residual_amount\"]}}"
+            },
+            {
+              "name": "payment_description",
+              "value": "={{$node[\"IF1\"].json[\"data\"][\"payment_description\"]}}"
+            },
+            {
+              "name": "payment_utr",
+              "value": "={{$node[\"IF1\"].json[\"data\"][\"payment_utr\"]}}"
+            },
+            {
+              "name": "vendor_payment_status",
+              "value": "={{$node[\"Update the residual amounts\"].json[\"data\"][\"vendor_payment_status\"]}}"
+            },
+            {
+              "name": "vendor_po_number",
+              "value": "={{$node[\"Update the residual amounts\"].json[\"data\"][\"vendor_po_number\"]}}"
+            },
+            {
+              "name": "payment_type",
+              "value": "={{$node[\"Update the residual amounts\"].json[\"data\"][\"payment_type\"]}}"
+            },
+            {
+              "name": "residual_amount",
+              "value": "={{$node[\"Function to update advance payments\"].json[\"residual_amount\"]}}"
+            },
+            {
+              "name": "cancelled_cheque",
+              "value": "={{$node[\"IF1\"].json[\"data\"][\"cancelled_cheque\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Create vendor payment residual amount record",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3560,
+        -300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Function to update advance payments\"].json[\"url\"]}}/items/sdm_vendor_payments/{{$node[\"Function to update advance payments\"].json[\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "residual_amount",
+              "value": "0"
+            }
+          ]
+        }
+      },
+      "name": "Update residual amount",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3860,
+        -300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        3620,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_vendor_payments",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "vendor_po_number",
+              "value": "={{$node[\"Get the po number\"].json[\"data\"][\"id\"]}}"
+            },
+            {
+              "name": "payment_utr",
+              "value": "={{$node[\"IF1\"].json[\"data\"][\"payment_utr\"]}}"
+            },
+            {
+              "name": "payment_amount",
+              "value": "={{$node[\"IF1\"].json[\"data\"][\"residual_amount\"]}}"
+            },
+            {
+              "name": "payment_description",
+              "value": "={{$node[\"IF1\"].json[\"data\"][\"payment_description\"]}}"
+            },
+            {
+              "name": "vendor_payment_status",
+              "value": "={{$node[\"Update the residual amounts\"].json[\"data\"][\"vendor_payment_status\"]}}"
+            },
+            {
+              "name": "payment_type",
+              "value": "={{$node[\"Update the residual amounts\"].json[\"data\"][\"payment_type\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "HTTP Request1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        4160,
+        -280
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_shipments/{{$node[\"Wait for shipment\"].json[\"body\"][\"key\"]}}?fields=shipment_items.*.*",
+        "options": {}
+      },
+      "name": "Get the shipment items",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1720,
+        420
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let sdvShipmentItems = $node[\"Get the shipment items\"].json[\"data\"][\"shipment_items\"];\nlet sdmShipmentId = $node[\"Create shipment in mozart\"].json[\"data\"][\"id\"];\n\nlet sdmShipmentItems = [];\nsdvShipmentItems.forEach(function(shipmentItem,index){\n  sdmShipmentItems[index] ={};\n  sdmShipmentItems[index].sdm_shipments_id = sdmShipmentId;\n  sdmShipmentItems[index].sdm_po_items_id = shipmentItem.sdv_vendor_pos_sdv_products_id.po_items_id;\n  sdmShipmentItems[index].shipment_qty = shipmentItem.shipment_qty;\n  sdmShipmentItems[index].hsn = shipmentItem.sdv_vendor_pos_sdv_products_id.hsn;\n})\n\nitems[0].json.sdmShipmentItems = sdmShipmentItems\n\nreturn items;"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1840,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"mozart_dms_url\"]}}/items/sdm_shipment_items",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Function\"].json[\"sdmShipmentItems\"]}}"
+      },
+      "name": "HTTP Request2",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2080,
+        180
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let shipmentItems = $node[\"Function\"].json[\"sdmShipmentItems\"];\nlet returnItems =[];\nshipmentItems.forEach(function(item,index){\n  returnItems.push({\n    json: \n      {\n       poItemId : item.sdm_po_items_id,\n       hsn : item.hsn,\n       dms_url : $node[\"Globals\"].json[\"0\"][\"mozart_url\"]\n    }\n  });\n})\n\nreturn returnItems;"
+      },
+      "name": "Function to update hsn",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        4520,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Function to update hsn\"].json[\"dms_url\"]}}/items/sdm_po_items/{{$node[\"Function to update hsn\"].json[\"poItemId\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "hsn",
+              "value": "={{$node[\"Function to update hsn\"].json[\"hsn\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update hsn",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        4840,
+        420
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "name": "NoOp1",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        3400,
+        620
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let orderObj = {};\nlet orderItems = [];\nlet shipmentItems = $node[\"Function\"].json[\"sdmShipmentItems\"];\nshipmentItems.forEach(function(item,index){\n  orderItems[index]={};\n  orderItems[index].sdm_po_items_id = item.sdm_po_items_id;\n  orderItems[index].quantity  = item.shipment_qty;\n})\norderObj.order_value = $node[\"Create shipment in mozart\"].json[\"data\"][\"invoice_value\"];\norderObj.order_status = \"draft\";\norderObj.order_type = $node[\"Get po_id from mozart\"].json[\"data\"][0][\"po_type\"];\norderObj.order_date = new Date().toISOString();\n//orderObj.shipment = $node[\"Create shipment in mozart\"].json[\"data\"][\"id\"];\norderObj.order_items = orderItems;\n\nitems[0].json.orderObj = orderObj;\nitems[0].json.orderItems = orderItems;\nreturn items;"
+      },
+      "name": "Function to create order",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        5300,
+        300
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Get po_id from mozart\"].json[\"data\"][0][\"consignment_type\"] == \"non_consignmnet\"?true:false}}"
+            }
+          ]
+        }
+      },
+      "name": "IF2",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        5060,
+        420
+      ],
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"mozart_dms_url\"]}}/items/sdm_orders",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Function to create order\"].json[\"orderObj\"]}}"
+      },
+      "name": "Create Order",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        5520,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {},
+      "name": "NoOp2",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        5300,
+        580
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-06-04T17:20:22.504Z"
+}
