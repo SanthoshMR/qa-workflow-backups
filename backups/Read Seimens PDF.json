@@ -361,7 +361,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let poProducts = $node[\"Extracting the seimens po details\"].json[\"products\"];\nlet postOfficeDetails = $node[\"Get Details on Pincode\"].json[\"0\"][\"PostOffice\"][0];\nlet city = postOfficeDetails[\"District\"];\nlet state = postOfficeDetails[\"State\"];\nlet country = postOfficeDetails[\"Country\"]\n$node[\"Extracting the seimens po details\"].json[\"area\"][\"pos\"][\"city\"]= city;\n$node[\"Extracting the seimens po details\"].json[\"area\"][\"pos\"][\"state\"]= state;\n$node[\"Extracting the seimens po details\"].json[\"area\"][\"pos\"][\"country\"]= country;\n$node[\"Extracting the seimens po details\"].json[\"area\"][\"pos\"][\"ship_city\"]= city;\n$node[\"Extracting the seimens po details\"].json[\"area\"][\"pos\"][\"ship_state\"]= state;\n$node[\"Extracting the seimens po details\"].json[\"area\"][\"pos\"][\"ship_country\"]= country;\nlet poObj = $node[\"Extracting the seimens po details\"].json[\"area\"][\"pos\"];\nlet poItems =  $node[\"Get the po Item\"].json[\"data\"];\nlet existingProducts = $node[\"Get the products\"].json[\"data\"];\nlet createdProducts =$node[\"Function\"].json[\"productsToCreate\"].length>0?$node[\"Create products\"].json[\"data\"]:[];\nlet allProducts = [...existingProducts,...createdProducts]\npoProducts.forEach(function(poProduct,index){\n  let matchedPoItem = poItems.filter(poItem=>poItem.product == poProduct.product);\n  let matchedProduct = allProducts.filter(product=>product.id == poProduct.product);\n  poObj.po_items[index].main_category = matchedProduct[0].main_category;\n  if(matchedPoItem.length>0){\n    poObj.po_items[index].vendor = matchedPoItem[0].vendor.id;\n    poObj.po_items[index].shipment_type = matchedPoItem[0].vendor.shipment_type;\n  }\n})\n\n\nitems[0].json.poObj= poObj\nreturn items;"
+        "functionCode": "let poProducts = $node[\"Extracting the seimens po details\"].json[\"products\"];\nlet postOfficeDetails = $node[\"Get Details on Pincode\"].json[\"0\"][\"PostOffice\"][0];\nlet city = postOfficeDetails[\"District\"];\nlet state = postOfficeDetails[\"State\"];\nlet country = postOfficeDetails[\"Country\"]\n$node[\"Extracting the seimens po details\"].json[\"area\"][\"pos\"][\"city\"]= city;\n$node[\"Extracting the seimens po details\"].json[\"area\"][\"pos\"][\"state\"]= state;\n$node[\"Extracting the seimens po details\"].json[\"area\"][\"pos\"][\"country\"]= country;\n$node[\"Extracting the seimens po details\"].json[\"area\"][\"pos\"][\"ship_city\"]= city;\n$node[\"Extracting the seimens po details\"].json[\"area\"][\"pos\"][\"ship_state\"]= state;\n$node[\"Extracting the seimens po details\"].json[\"area\"][\"pos\"][\"ship_country\"]= country;\nlet poObj = $node[\"Extracting the seimens po details\"].json[\"area\"][\"pos\"];\nlet poItems =  $node[\"Get the po Item\"].json[\"data\"];\nlet existingProducts = $node[\"Get the products\"].json[\"data\"];\nlet createdProducts =$node[\"Function\"].json[\"productsToCreate\"].length>0?$node[\"Create products\"].json[\"data\"]:[];\nlet allProducts = [...existingProducts,...createdProducts]\npoProducts.forEach(function(poProduct,index){\n  let matchedPoItem = poItems.filter(poItem=>poItem.product == poProduct.product);\n  let matchedProduct = allProducts.filter(product=>product.id == poProduct.product);\n  poObj.po_items[index].category = matchedProduct[0].main_category;\n  if(matchedPoItem.length>0){\n    poObj.po_items[index].vendor = matchedPoItem[0].vendor.id;\n    poObj.po_items[index].shipment_type = matchedPoItem[0].vendor.shipment_type;\n  }\n})\n\n\nitems[0].json.poObj= poObj\nreturn items;"
       },
       "name": "Function to construct PO obj",
       "type": "n8n-nodes-base.function",
@@ -389,9 +389,9 @@
   "settings": {},
   "staticData": {
     "node:Wait for Po Email": {
-      "lastMessageUid": 2418
+      "lastMessageUid": 2439
     }
   },
   "tags": [],
-  "updatedAt": "2023-06-05T11:40:15.750Z"
+  "updatedAt": "2023-06-06T14:39:37.303Z"
 }
