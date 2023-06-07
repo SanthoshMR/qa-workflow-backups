@@ -103,7 +103,7 @@
             },
             {
               "name": "sender_id",
-              "value": "=SHAKDL"
+              "value": "=SHAKPE-OTP"
             }
           ]
         }
@@ -124,7 +124,7 @@
     },
     {
       "parameters": {
-        "functionCode": "const sourceName = {\n  name: \"Unknown\"\n};\n\nconst project_code = $node[\"Webhook\"].json[\"body\"][\"project_code\"];\n\nif(project_code) {\n  sourceName.name = project_code\n}\n\nswitch(project_code) {\n  case \"lima-proj-1\": sourceName.name = \"Limagrain QR App\"; break;\n  case \"sd-shakepe-proj\": sourceName.name = \"ShakePe QR App\"; break;\n  case \"polar_bear\": sourceName.name = \"Polar Bear\"; break;\n}\n\nreturn sourceName;"
+        "functionCode": "const sourceName = {\n  name: \"Unknown\"\n};\n\nconst project_code = $node[\"Webhook\"].json[\"body\"][\"project_code\"];\n\nif(project_code) {\n  sourceName.name = project_code\n}\n\nswitch(project_code) {\n  case \"lima-proj-1\": sourceName.name = \"Limagrain QR App\"; break;\n  case \"sd-shakepe-proj\": sourceName.name = \"ShakePe QR App\"; break;\n  case \"polar_bear\": sourceName.name = \"Polar Bear\"; break;\n  case \"shakepe-qr-rewards\": sourceName.name = \"ShakePe QR Rewards\"; break;\n}\n\nreturn sourceName;"
       },
       "name": "Source Name",
       "type": "n8n-nodes-base.function",
@@ -138,5 +138,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-05-05T07:43:14.106Z"
+  "updatedAt": "2023-06-07T05:50:46.433Z"
 }
