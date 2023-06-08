@@ -1051,7 +1051,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let sdvShipmentItems = $node[\"Get the shipment items\"].json[\"data\"][\"shipment_items\"];\nlet sdmShipmentId = $node[\"Create shipment in mozart\"].json[\"data\"][\"id\"];\n\nlet sdmShipmentItems = [];\nsdvShipmentItems.forEach(function(shipmentItem,index){\n  sdmShipmentItems[index] ={};\n  sdmShipmentItems[index].sdm_shipments_id = sdmShipmentId;\n  sdmShipmentItems[index].sdm_po_items_id = shipmentItem.sdv_vendor_pos_sdv_products_id.po_items_id;\n  sdmShipmentItems[index].shipment_qty = shipmentItem.shipment_qty;\n  sdmShipmentItems[index].hsn = shipmentItem.sdv_vendor_pos_sdv_products_id.hsn;\n})\n\nitems[0].json.sdmShipmentItems = sdmShipmentItems\n\nreturn items;"
+        "functionCode": "let sdvShipmentItems = $node[\"Get the shipment items\"].json[\"data\"][\"shipment_items\"];\nlet sdmShipmentId = $node[\"Create shipment in mozart\"].json[\"data\"][\"id\"];\n\nlet sdmShipmentItems = [];\nsdvShipmentItems.forEach(function(shipmentItem,index){\n  sdmShipmentItems[index] ={};\n  sdmShipmentItems[index].sdm_shipments_id = sdmShipmentId;\n  sdmShipmentItems[index].sdm_po_items_id = shipmentItem.sdv_vendor_pos_sdv_products_id.po_items_id;\n  sdmShipmentItems[index].shipment_qty = shipmentItem.shipment_qty;\n  sdmShipmentItems[index].hsn = shipmentItem.sdv_vendor_pos_sdv_products_id.hsn;\n  sdmShipmentItems[index].tax_percentage = shipmentItem.sdv_vendor_pos_sdv_products_id.tax_percentage;\n  sdmShipmentItems[index].uom = shipmentItem.sdv_vendor_pos_sdv_products_id.uom;\n})\n\nitems[0].json.sdmShipmentItems = sdmShipmentItems\n\nreturn items;"
       },
       "name": "Function",
       "type": "n8n-nodes-base.function",
@@ -1086,7 +1086,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let shipmentItems = $node[\"Function\"].json[\"sdmShipmentItems\"];\nlet returnItems =[];\nshipmentItems.forEach(function(item,index){\n  returnItems.push({\n    json: \n      {\n       poItemId : item.sdm_po_items_id,\n       hsn : item.hsn,\n       dms_url : $node[\"Globals\"].json[\"0\"][\"mozart_url\"]\n    }\n  });\n})\n\nreturn returnItems;"
+        "functionCode": "let shipmentItems = $node[\"Function\"].json[\"sdmShipmentItems\"];\nlet returnItems =[];\nshipmentItems.forEach(function(item,index){\n  returnItems.push({\n    json: \n      {\n       poItemId : item.sdm_po_items_id,\n       hsn : item.hsn,\n       tax_percentage:item.tax_percentage,\n       uom:item.uom,\n       dms_url : $node[\"Globals\"].json[\"0\"][\"mozart_url\"]\n    }\n  });\n})\n\nreturn returnItems;"
       },
       "name": "Function to update hsn",
       "type": "n8n-nodes-base.function",
@@ -1107,6 +1107,14 @@
             {
               "name": "hsn",
               "value": "={{$node[\"Function to update hsn\"].json[\"hsn\"]}}"
+            },
+            {
+              "name": "tax_percentage",
+              "value": "={{$node[\"Function to update hsn\"].json[\"tax_percentage\"]}}"
+            },
+            {
+              "name": "uom",
+              "value": "={{$node[\"Function to update hsn\"].json[\"uom\"]}}"
             }
           ]
         }
@@ -1206,5 +1214,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-06-04T17:20:22.504Z"
+  "updatedAt": "2023-06-08T07:31:47.622Z"
 }
