@@ -196,7 +196,7 @@
             },
             {
               "name": "to_email",
-              "value": "shakedeal.web@gmail.com"
+              "value": "susanth.kumar@shakedeal.com,satish.kounder@shakedeal.com,abhijeet.anand@shakedeal.com,chidanand@shakedeal.com,vinay.kumar@shakedeal.com,roshan.unnisa@shakedeal.com"
             }
           ]
         },
@@ -343,5 +343,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-05-23T08:27:17.925Z"
+  "updatedAt": "2023-06-08T10:00:06.180Z"
 }
