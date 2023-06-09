@@ -631,11 +631,12 @@
           "id": "50",
           "name": "Mozart DMS Token"
         }
-      }
+      },
+      "disabled": true
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-06-04T17:24:28.608Z"
+  "updatedAt": "2023-06-09T05:49:09.875Z"
 }
