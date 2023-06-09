@@ -543,7 +543,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let grnData = [];\n//let productIds = [];\nitems.forEach((item, index) => {\n  //productIds.push(item.json[\"Material\"])\n  grnData.push({\n    product : item.json[\"Material\"],\n    plant : item.json[\"Plant\"],\n    qty : item.json[\"Qty in OPUn\"],\n    vendor_invoice : item.json[\"Vendor Invoice\"],\n    vendor_po : item.json[\"Vendor PO Number\"],\n    plant : item.json[\"Plant\"],\n    movement_type : item.json[\"Movement type\"] == \"103\"?\"received\":item.json[\"Movement type\"] == \"105\"?\"accepted\":\"rejected\"\n  })\n})\nconst size = 10; // size of each subarray\n\nconst result = [];\nfor (let i = 0; i < grnData.length; i += size) {\n  result.push(grnData.slice(i, i + size));\n}\n\n//items[0].json.result= result;\n//items[0].json.resultlength = result.length;\n//return items;\nreturn [{\n    json: {\n        result: result,\n        resultlength : result.length\n    },\n}];\n"
+        "functionCode": "let grnData = [];\n//let productIds = [];\nitems.forEach((item, index) => {\n  //productIds.push(item.json[\"Material\"])\n  grnData.push({\n    product : item.json[\"Material\"],\n    plant : item.json[\"Plant\"],\n    qty : item.json[\"Qty in OPUn\"],\n    vendor_invoice : item.json[\"Vendor Invoice\"],\n    vendor_po : item.json[\"Vendor PO Number\"],\n    plant : item.json[\"Plant\"],\n    movement_type : item.json[\"Movement type\"] == \"103\" || item.json[\"Movement type\"] == \"503K\"?\"received\":item.json[\"Movement type\"] == \"105\" || item.json[\"Movement type\"] == \"321K\"?\"accepted\":\"rejected\"\n  })\n})\nconst size = 10; // size of each subarray\n\nconst result = [];\nfor (let i = 0; i < grnData.length; i += size) {\n  result.push(grnData.slice(i, i + size));\n}\n\n//items[0].json.result= result;\n//items[0].json.resultlength = result.length;\n//return items;\nreturn [{\n    json: {\n        result: result,\n        resultlength : result.length\n    },\n}];\n"
       },
       "name": "Function to get grn data",
       "type": "n8n-nodes-base.function",
@@ -929,5 +929,5 @@
   },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-05-31T13:48:23.545Z"
+  "updatedAt": "2023-06-09T10:22:46.849Z"
 }
