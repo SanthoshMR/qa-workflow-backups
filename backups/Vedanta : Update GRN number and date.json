@@ -1,0 +1,199 @@
+{
+  "active": false,
+  "connections": {
+    "Get url and token": {
+      "main": [
+        [
+          {
+            "node": "Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read HTML from Email": {
+      "main": [
+        [
+          {
+            "node": "Get url and token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set": {
+      "main": [
+        [
+          {
+            "node": "Extract HTML Table Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract HTML Table Data": {
+      "main": [
+        [
+          {
+            "node": "Get the order Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the order Items": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "Set1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-06-12T11:51:19.103Z",
+  "id": "321",
+  "name": "Vedanta : Update GRN number and date",
+  "nodes": [
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "=https://qan8n.shakedeal.com/webhook/get-url",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "client",
+              "value": "=vedanta"
+            },
+            {
+              "name": "env",
+              "value": "=qa"
+            }
+          ]
+        }
+      },
+      "name": "Get url and token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        420,
+        300
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "function extractTableData(tableContent) {\n  const cheerio = require('cheerio');\n  const $ = cheerio.load(tableContent);\n  var formatedData={};\n  var data=[];\n  var headerData=[];  \n  var pono_slno=[];\n  var rowData = $(\"table tr\");   \n  for(var i = 0 ; i < rowData.length ; i++) { \n  \tlet dataObject={};    \n    let columnData = $(rowData[i]).children('td');  \n    for(var j = 0 ; j < columnData.length ; j++) { \n      if(i == 0){\n        headerData.push($(columnData[j]).text().replace(/[^a-zA-Z0-9]/g, \"\"));\n      }\n      else{        \n        dataObject[headerData[j]]=$(columnData[j]).text();        \n      }\n    }\n    if(i > 0){\n      pono_slno.push(dataObject[\"PONO\"]+\"-\"+parseInt(dataObject[\"POSRNO\"], 10));\n    \tdata.push(dataObject);\n    }\n  }\n  formatedData[\"grn\"] = data;\n  formatedData[\"pono_slno\"] = pono_slno;\n  return formatedData;\n}\n\nvar htmlData=$node[\"Read HTML from Email\"].json[\"html\"];\nvar grnHtmlData = extractTableData(htmlData);\nlet poNumbers = [];\n\n//start :: to change the key of column as per database column\nfunction changeDateformat(poDate){\n  var splitDate=poDate.split(\"/\");\n  return new Date(splitDate[1]+\"-\"+splitDate[0]+\"-\"+splitDate[2]).toISOString();\n}\n\ngrnHtmlData['grn'] = grnHtmlData['grn'].map(item => {\n  poNumbers.push(item.PONO);\n  return { \n    company_code : item.COMPCODE, \n    po_number : item.PONO,\n    po_sr_no : item.POSRNO,\n    po_item : item[\"PONO\"]+\"-\"+parseInt(item[\"POSRNO\"], 10),\n    po_date : changeDateformat(item.PODATE),\n    material : item.MATERIAL,\n    description : item.DESCRIPTION,\n    grn_number : item.MIGONO,\n    posting_date : changeDateformat(item.POSTINGDT),\n    quantity : item.QTY,\n    uom : item.UOM\n  };\n});\n//End :: to change the key of column as per database column\n\n\nitems[0].json.grnData = grnHtmlData;\nitems[0].json.poNumbers = poNumbers;\nreturn items;\n"
+      },
+      "name": "Extract HTML Table Data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        780,
+        300
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "Read HTML from Email",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "options": {}
+      },
+      "name": "Set",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        620,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "value": "="
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1400,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_order_items?filter={\"sdm_po_items_id\":{\"id\":{\"_in\":\"{{$node[\"Extract HTML Table Data\"].json[\"grnData\"][\"pono_slno\"]}}\"}}}&fields=order_items.*",
+        "options": {}
+      },
+      "name": "Get the order Items",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        980,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let orderItems = $node[\"Get the order Items\"].json[\"data\"];\nlet grndata = $node[\"Extract HTML Table Data\"].json[\"grnData\"][\"grn\"];\nuniqueArr = Object.create(null),\n    uniquePoNumberArr = grndata.filter(o => {\n        var key = ['po_number','grn_number'].map(k => o[k]).join('|');\n        if (!uniqueArr[key]) {\n            uniqueArr[key] = true;\n            return true;\n        }\n    });\n\n\nreturn items;"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1160,
+        300
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-06-12T13:52:11.687Z"
+}
