@@ -1,0 +1,233 @@
+{
+  "active": true,
+  "connections": {
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Check for Order ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Success Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for Order ID": {
+      "main": [
+        [
+          {
+            "node": "Check Message ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Message ID": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Failure Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-05-18T09:25:02.429Z",
+  "id": "312",
+  "name": "Siemens - Order Status Update",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        -40,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "simens/order-status-update",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        180,
+        320
+      ],
+      "webhookId": "8258b118-a228-4aa8-a079-3e1081234d07",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "92",
+          "name": "Siemens Notification"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/{{$node[\"Globals\"].json[\"table_name\"]}}/{{$node[\"Check for Order ID\"].json[\"data\"][0][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "order_status",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"status\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1020,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "90",
+          "name": "Simens Order Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "dms_url",
+              "value": "=https://noirqa.shakedeal.com"
+            },
+            {
+              "name": "table_name",
+              "value": "=sds_orders"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        380,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Check for Order ID\"].json[\"data\"].length}}",
+              "operation": "larger",
+              "value2": "={{0}}"
+            }
+          ]
+        }
+      },
+      "name": "Check Message ID",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        760,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/{{$node[\"Globals\"].json[\"table_name\"]}}?filter={\"order_id\": {\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"order_id\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Check for Order ID",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        580,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "90",
+          "name": "Simens Order Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let responseData = [];\n\nresponseData.push({\n    json: {\n        \"success\": true,\n        \"message\" : \"Order Status updated successfully!\"\n    }\t\t\t\n});\n\nreturn responseData;\n"
+      },
+      "name": "Success Response",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1220,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let responseData = [];\n\nresponseData.push({\n    json: {\n        \"success\": false,\n        \"message\" : 'Order ID not available'\n    }\t\t\t\n});\n\nreturn responseData;\n"
+      },
+      "name": "Failure Response",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        960,
+        540
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [
+    {
+      "id": "7",
+      "name": "Siemens",
+      "createdAt": "2023-05-30T07:00:01.982Z",
+      "updatedAt": "2023-05-30T07:00:01.982Z"
+    }
+  ],
+  "updatedAt": "2023-06-12T05:59:56.083Z"
+}
