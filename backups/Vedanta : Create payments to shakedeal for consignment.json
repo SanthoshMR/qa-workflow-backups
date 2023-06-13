@@ -1,0 +1,37 @@
+{
+  "active": true,
+  "connections": {},
+  "createdAt": "2023-06-13T12:04:11.414Z",
+  "id": "324",
+  "name": "Vedanta : Create payments to shakedeal for consignment",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "path": "create-payment-to-shakedeal",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        540,
+        300
+      ],
+      "webhookId": "3c48f54a-ff7a-485d-9f29-cf03233912cf"
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-06-13T12:27:31.158Z"
+}
