@@ -1,0 +1,66 @@
+{
+  "active": false,
+  "connections": {
+    "Cron": {
+      "main": [
+        [
+          {
+            "node": "Postgres",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-06-14T02:20:31.034Z",
+  "id": "327",
+  "name": "Vedanta : ShakeDeal Payment Aging",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "Cron",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        480,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=UPDATE sdm_payment_advise SET payment_aging =CASE WHEN payment_due_date = CURRENT_DATE THEN 'Due today' WHEN payment_due_date < CURRENT_DATE THEN CONCAT('Overdue by ', CURRENT_DATE - payment_due_date, ' days') ELSE CONCAT('Due in ', payment_due_date - CURRENT_DATE, ' days') END WHERE payment_aging IS NOT NULL and payment_due_date IS NOT NULL and shakedeal_payment_status in ('grn_number_pending','dp_number_pending','pn_pending','paymentpending')",
+        "additionalFields": {}
+      },
+      "name": "Postgres",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        740,
+        300
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "78",
+          "name": "Vedanta postgres qa"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-06-14T05:31:50.741Z"
+}
