@@ -1,0 +1,143 @@
+{
+  "active": false,
+  "connections": {
+    "Cron": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Setting due day from present date",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Setting due day from present date": {
+      "main": [
+        [
+          {
+            "node": "Postgres",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-06-13T18:22:10.829Z",
+  "id": "326",
+  "name": "Vedanta : Update payment to vendors status to processed",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "hour": 10
+            }
+          ]
+        }
+      },
+      "name": "Cron",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        460,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "dms_url",
+              "value": "=https://balcoqa.mozart.shakedeal.com"
+            },
+            {
+              "name": "sales_agent_email",
+              "value": "=sairam.reddy@shakedeal.com"
+            },
+            {
+              "name": "operations_agent_email",
+              "value": "=handyalasairam9177@gmail.com"
+            }
+          ],
+          "number": [
+            {
+              "name": "due",
+              "value": 2
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        620,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=update sdm_vendor_invoice_details set vendor_payment='payment_to_process' where payment_due_date='{{$node[\"Setting due day from present date\"].json[\"date\"]}}' and vendor_payment =='paymentpending'",
+        "additionalFields": {}
+      },
+      "name": "Postgres",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        320
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "78",
+          "name": "Vedanta postgres qa"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "var someDate = new Date();\nvar numberOfDaysToAdd = $node[\"Globals\"].json[\"due\"]\nsomeDate.setDate(someDate.getDate() + numberOfDaysToAdd);\n\nvar dd =parseInt(someDate.getDate());\nvar day = dd < 10 ? '0' + dd : dd;\nvar mm =parseInt(someDate.getMonth() + 1);\nvar month = mm < 10 ? '0' + mm : mm;\nvar y = someDate.getFullYear();\n\nvar someFormattedDate = y+'-'+month +'-'+day;\n\nitems[0].json.date=someFormattedDate\nreturn items;\n"
+      },
+      "name": "Setting due day from present date",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        800,
+        320
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-06-14T05:33:26.500Z"
+}
