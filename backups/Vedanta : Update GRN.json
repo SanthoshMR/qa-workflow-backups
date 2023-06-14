@@ -71,7 +71,7 @@
       "main": [
         [
           {
-            "node": "Function to get the splitted grn",
+            "node": "Function to get non-consignment items",
             "type": "main",
             "index": 0
           }
@@ -333,6 +333,28 @@
           }
         ]
       ]
+    },
+    "Function to get non-consignment items": {
+      "main": [
+        [
+          {
+            "node": "Get the invoice and po",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the invoice and po": {
+      "main": [
+        [
+          {
+            "node": "Function to get the splitted grn",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2023-05-04T09:18:33.374Z",
@@ -543,7 +565,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let grnData = [];\n//let productIds = [];\nitems.forEach((item, index) => {\n  //productIds.push(item.json[\"Material\"])\n  grnData.push({\n    product : item.json[\"Material\"],\n    plant : item.json[\"Plant\"],\n    qty : item.json[\"Qty in OPUn\"],\n    vendor_invoice : item.json[\"Vendor Invoice\"],\n    vendor_po : item.json[\"Vendor PO Number\"],\n    plant : item.json[\"Plant\"],\n    movement_type : item.json[\"Movement type\"] == \"103\" || item.json[\"Movement type\"] == \"503K\"?\"received\":item.json[\"Movement type\"] == \"105\" || item.json[\"Movement type\"] == \"321K\"?\"accepted\":\"rejected\"\n  })\n})\nconst size = 10; // size of each subarray\n\nconst result = [];\nfor (let i = 0; i < grnData.length; i += size) {\n  result.push(grnData.slice(i, i + size));\n}\n\n//items[0].json.result= result;\n//items[0].json.resultlength = result.length;\n//return items;\nreturn [{\n    json: {\n        result: result,\n        resultlength : result.length\n    },\n}];\n"
+        "functionCode": "let grnData = [];\n//let productIds = [];\nitems.forEach((item, index) => {\n  //productIds.push(item.json[\"Material\"])\n  grnData.push({\n    product : item.json[\"Material\"],\n    plant : item.json[\"Plant\"],\n    qty : item.json[\"Qty in OPUn\"],\n    vendor_invoice : item.json[\"Vendor Invoice\"]?item.json[\"Vendor Invoice\"]:\"\",\n    vendor_po : item.json[\"Vendor PO Number\"]?item.json[\"Vendor PO Number\"]:\"\",\n    plant : item.json[\"Plant\"],\n    sd_invoice_nummber : item.json[\"Bill of Lading\"]?item.json[\"Bill of Lading\"]:\"\",\n    movement_type : item.json[\"Movement type\"] == \"103\" || item.json[\"Movement type\"] == \"503K\"?\"received\":item.json[\"Movement type\"] == \"105\" || item.json[\"Movement type\"] == \"321K\"?\"accepted\":\"rejected\"\n  })\n})\nconst size = 10; // size of each subarray\n\nconst result = [];\nfor (let i = 0; i < grnData.length; i += size) {\n  result.push(grnData.slice(i, i + size));\n}\n\n//items[0].json.result= result;\n//items[0].json.resultlength = result.length;\n//return items;\nreturn [{\n    json: {\n        result: result,\n        resultlength : result.length\n    },\n}];\n"
       },
       "name": "Function to get grn data",
       "type": "n8n-nodes-base.function",
@@ -555,13 +577,13 @@
     },
     {
       "parameters": {
-        "functionCode": "let grnData = $node[\"Function to get grn data\"].json[\"result\"];\nlet currentIndex = $node[\"Start Loop\"].json[\"index\"];\nlet currentGrn = grnData[currentIndex];\nlet returnItems = [];\nuniqueArr = Object.create(null),\n    uniqueShipmentProductArr = currentGrn.filter(o => {\n        var key = ['product', 'vendor_invoice','vendor_po'].map(k => o[k]).join('|');\n        if (!uniqueArr[key]) {\n            uniqueArr[key] = true;\n            return true;\n        }\n    });\nuniqueShipmentProductArr.forEach(function(obj,index){\n    let matchedShipmentProduct =   currentGrn.filter(grn=>grn.product == obj.product && grn.vendor_po == obj.vendor_po  && grn.vendor_invoice==obj.vendor_invoice);\n    let matchedRecievedProduct = matchedShipmentProduct.filter(msp=>msp.movement_type == \"received\");\n    let matchedAcceptedProduct = matchedShipmentProduct.filter(msp=>msp.movement_type == \"accepted\");\n    let matchedRejectedProduct = matchedShipmentProduct.filter(msp=>msp.movement_type == \"rejected\");\n    let receivedQty = matchedRecievedProduct.reduce((total,obj)=>obj.qty+ total, 0);\n    let acceptedQty = matchedAcceptedProduct.reduce((total,obj)=>obj.qty+ total, 0);\n    let rejectedQty = matchedRejectedProduct.reduce((total,obj)=>obj.qty+ total, 0);\n    let totalQty = matchedShipmentProduct.reduce((total,obj)=>obj.qty+ total, 0)\n    returnItems.push({\n    json: {\n       product : obj.product,\n       vendor_invoice:obj.vendor_invoice,\n       vendor_po:obj.vendor_po,\n       plant : obj.plant,\n       accepted_qty : acceptedQty,\n       rejected_qty : rejectedQty,\n       received_qty : receivedQty,\n       qty : totalQty,\n       dms_url : $node[\"Get url and token\"].json[\"0\"][\"mozart_url\"],\n       //movement_type : obj.movement_type\n    }\n  });\n  \n})\n\nreturn returnItems;\n"
+        "functionCode": "let grnData = $node[\"Function to get grn data\"].json[\"result\"];\nlet currentIndex = $node[\"Start Loop\"].json[\"index\"];\nlet currentGrn = grnData[currentIndex];\nlet returnItems = [];\nlet orderInvoices = $node[\"Get the invoice and po\"].json[\"data\"];\nfunction findAllIndex(array, value) {\n  return array.map((element, index) => element.sd_invoice_nummber === value ? index : -1)\n              .filter(index => index !== -1);\n}\norderInvoices.forEach(function(invoice,index){\n    //let findInvoiceIndex = currentGrn.findAllIndex((grn) => grn.sd_invoice_nummber == invoice.id);\n    let findInvoiceIndex = findAllIndex(currentGrn,invoice.id)\n    findInvoiceIndex.forEach(function(findIndex,index){\n       currentGrn[findIndex].vendor_invoice = invoice[\"order\"][\"shipments\"][0][\"sdm_shipments_id\"][\"invoice_number\"];\n        currentGrn[findIndex].vendor_po = invoice[\"order\"][\"shipments\"][0][\"sdm_shipments_id\"][\"vendor_po_num\"];\n    })  \n})\n   \nuniqueArr = Object.create(null),\n    uniqueShipmentProductArr = currentGrn.filter(o => {\n        var key = ['product', 'vendor_invoice','vendor_po'].map(k => o[k]).join('|');\n        if (!uniqueArr[key]) {\n            uniqueArr[key] = true;\n            return true;\n        }\n    });\nuniqueShipmentProductArr.forEach(function(obj,index){\n    let matchedShipmentProduct =   currentGrn.filter(grn=>grn.product == obj.product && grn.vendor_po == obj.vendor_po  && grn.vendor_invoice==obj.vendor_invoice);\n    let matchedRecievedProduct = matchedShipmentProduct.filter(msp=>msp.movement_type == \"received\");\n    let matchedAcceptedProduct = matchedShipmentProduct.filter(msp=>msp.movement_type == \"accepted\");\n    let matchedRejectedProduct = matchedShipmentProduct.filter(msp=>msp.movement_type == \"rejected\");\n    let receivedQty = matchedRecievedProduct.reduce((total,obj)=>obj.qty+ total, 0);\n    let acceptedQty = matchedAcceptedProduct.reduce((total,obj)=>obj.qty+ total, 0);\n    let rejectedQty = matchedRejectedProduct.reduce((total,obj)=>obj.qty+ total, 0);\n    let totalQty = matchedShipmentProduct.reduce((total,obj)=>obj.qty+ total, 0)\n    returnItems.push({\n    json: {\n       product : obj.product,\n       vendor_invoice:obj.vendor_invoice,\n       vendor_po:obj.vendor_po,\n       plant : obj.plant,\n       accepted_qty : acceptedQty,\n       rejected_qty : rejectedQty,\n       received_qty : receivedQty,\n       qty : totalQty,\n       dms_url : $node[\"Get url and token\"].json[\"0\"][\"mozart_url\"],\n       //movement_type : obj.movement_type\n    }\n  });\n  \n})\n\nreturn returnItems;\n"
       },
       "name": "Function to get the splitted grn",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        2420,
+        2680,
         220
       ]
     },
@@ -575,7 +597,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2620,
+        2840,
         220
       ],
       "credentials": {
@@ -616,7 +638,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2880,
+        3020,
         220
       ],
       "credentials": {
@@ -715,8 +737,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        3100,
-        220
+        3300,
+        200
       ]
     },
     {
@@ -792,7 +814,7 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        3300,
+        3480,
         200
       ]
     },
@@ -806,7 +828,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        3520,
+        3660,
         180
       ],
       "credentials": {
@@ -913,13 +935,45 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        3060,
+        3180,
         -160
       ],
       "credentials": {
         "httpHeaderAuth": {
           "id": "50",
           "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let grnData = $node[\"Function to get grn data\"].json[\"result\"];\nlet currentIndex = $node[\"Start Loop\"].json[\"index\"];\nlet currentGrn = grnData[currentIndex];\nlet orderInvoices = [];\nlet dms_url = $node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]\ncurrentGrn.forEach(function(grn,index){\n  if(!grn.vendor_invoice || !grn.vendor_po){\n    orderInvoices.push(grn.sd_invoice_nummber);\n  }\n})\n\nitems[0].json.dms_url = dms_url;\nitems[0].json.orderInvoices = orderInvoices;\nreturn items;"
+      },
+      "name": "Function to get non-consignment items",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        2400,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Function to get non-consignment items\"].json[\"dms_url\"]}}/items/sdm_order_invoices?filter={\"id\":{\"_in\":\"{{$node[\"Function to get non-consignment items\"].json[\"orderInvoices\"]}}\"}}&fields=*,order.*,order.shipments.sdm_shipments_id.*",
+        "options": {}
+      },
+      "name": "Get the invoice and po",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2560,
+        -40
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "80",
+          "name": "Mozart qa creds"
         }
       }
     }
@@ -929,5 +983,5 @@
   },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-06-09T10:22:46.849Z"
+  "updatedAt": "2023-06-14T11:27:52.563Z"
 }
