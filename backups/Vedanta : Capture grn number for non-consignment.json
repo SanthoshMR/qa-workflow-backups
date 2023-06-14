@@ -1,22 +1,11 @@
 {
-  "active": false,
+  "active": true,
   "connections": {
     "Get url and token": {
       "main": [
         [
           {
             "node": "Get Cloud Files",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Start": {
-      "main": [
-        [
-          {
-            "node": "Get url and token",
             "type": "main",
             "index": 0
           }
@@ -82,7 +71,7 @@
       "main": [
         [
           {
-            "node": "Set",
+            "node": "Move All Files",
             "type": "main",
             "index": 0
           }
@@ -172,6 +161,33 @@
           }
         ]
       ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get url and token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Move All Files": {
+      "main": [
+        [
+          {
+            "node": "Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        []
+      ]
     }
   },
   "createdAt": "2023-06-13T10:00:19.609Z",
@@ -184,12 +200,13 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        500,
-        300
+        380,
+        -160
       ]
     },
     {
       "parameters": {
+        "httpMethod": "POST",
         "path": "non-consignment-grn-capture",
         "options": {}
       },
@@ -197,11 +214,10 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        320,
-        140
+        520,
+        300
       ],
-      "webhookId": "a235a099-e617-4df5-b93e-51dc9aa2329e",
-      "disabled": true
+      "webhookId": "a235a099-e617-4df5-b93e-51dc9aa2329e"
     },
     {
       "parameters": {
@@ -475,10 +491,31 @@
           "name": "Mozart qa creds"
         }
       }
+    },
+    {
+      "parameters": {
+        "operation": "move",
+        "path": "=Non-Consignment-Grn-Number-qa/{{$node[\"Combine Items\"].json[\"excelData\"][0][\"file_name\"]}}",
+        "toPath": "=Non-Consignment-Grn-Number-old-qa/{{$node[\"Combine Items\"].json[\"excelData\"][0][\"file_name\"]}}"
+      },
+      "name": "Move All Files",
+      "type": "n8n-nodes-base.nextCloud",
+      "typeVersion": 1,
+      "position": [
+        2260,
+        120
+      ],
+      "executeOnce": true,
+      "credentials": {
+        "nextCloudApi": {
+          "id": "43",
+          "name": "SD Cloud"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-06-13T10:46:30.280Z"
+  "updatedAt": "2023-06-14T13:34:48.336Z"
 }
