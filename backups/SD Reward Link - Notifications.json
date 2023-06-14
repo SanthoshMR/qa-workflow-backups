@@ -327,7 +327,7 @@
             },
             {
               "name": "sender_id",
-              "value": "=SHAKDL"
+              "value": "=SHAKPE-OTP"
             }
           ]
         }
@@ -350,5 +350,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-05-29T13:01:52.997Z"
+  "updatedAt": "2023-06-14T11:07:28.278Z"
 }
