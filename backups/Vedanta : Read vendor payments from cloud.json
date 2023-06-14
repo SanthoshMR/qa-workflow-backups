@@ -60,18 +60,131 @@
       "main": [
         [
           {
-            "node": "update vendor payment",
+            "node": "Function to get payment data",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "update vendor payment": {
+    "Function to get payment data": {
       "main": [
         [
           {
             "node": "Move All Files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start Loop": {
+      "main": [
+        [
+          {
+            "node": "Function to get the splitted payment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set": {
+      "main": [
+        [
+          {
+            "node": "Start Loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to get the splitted payment": {
+      "main": [
+        [
+          {
+            "node": "Update vendor payments",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Increment index": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "End Loop",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Start Loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update vendor payments": {
+      "main": [
+        [
+          {
+            "node": "Check for partial payment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for partial payment": {
+      "main": [
+        [
+          {
+            "node": "Create partial vendor payment",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create partial vendor payment": {
+      "main": [
+        [
+          {
+            "node": "Increment index",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NoOp": {
+      "main": [
+        [
+          {
+            "node": "Increment index",
             "type": "main",
             "index": 0
           }
@@ -83,6 +196,17 @@
         [
           {
             "node": "Get url and token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Move All Files": {
+      "main": [
+        [
+          {
+            "node": "Set",
             "type": "main",
             "index": 0
           }
@@ -100,8 +224,8 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        -220,
-        60
+        -260,
+        -120
       ]
     },
     {
@@ -217,84 +341,6 @@
     },
     {
       "parameters": {
-        "authentication": "headerAuth",
-        "requestMethod": "PATCH",
-        "url": "=https://sdqa.mozart.shakedeal.com/items/sdm_vendor_payments/{{$node[\"Spreadsheet File\"].json[\"id\"]}}",
-        "options": {},
-        "bodyParametersUi": {
-          "parameter": [
-            {
-              "name": "actual_paid_amount",
-              "value": "={{$node[\"Spreadsheet File\"].json[\"actual_paid_amount\"]}}"
-            },
-            {
-              "name": "vendor_payment_status",
-              "value": "={{$node[\"Spreadsheet File\"].json[\"vendor_payment_status\"]}}"
-            },
-            {
-              "name": "payment_utr",
-              "value": "={{$node[\"Spreadsheet File\"].json[\"payment_utr\"]}}"
-            },
-            {
-              "name": "payment_description",
-              "value": "={{$node[\"Spreadsheet File\"].json[\"payment_description\"]}}"
-            },
-            {
-              "name": "tax_deducted",
-              "value": "={{$node[\"Spreadsheet File\"].json[\"tax_deducted\"]}}"
-            },
-            {
-              "name": "any_deductions",
-              "value": "={{$node[\"Spreadsheet File\"].json[\"any_deductions\"]}}"
-            },
-            {
-              "name": "payment_paid_to_vendor",
-              "value": "={{$node[\"Spreadsheet File\"].json[\"payment_paid_to_vendor\"]}}"
-            },
-            {
-              "name": "remarks",
-              "value": "={{$node[\"Spreadsheet File\"].json[\"remarks\"]}}"
-            }
-          ]
-        }
-      },
-      "name": "update vendor payment",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        1300,
-        340
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "50",
-          "name": "Mozart DMS Token"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "operation": "move",
-        "path": "=Vendor-payments-qa/{{$node[\"Combine Items\"].json[\"excelData\"][0][\"file_name\"]}}",
-        "toPath": "=Vedanta-old-payments-qa/{{$node[\"Combine Items\"].json[\"excelData\"][0][\"file_name\"]}}"
-      },
-      "name": "Move All Files",
-      "type": "n8n-nodes-base.nextCloud",
-      "typeVersion": 1,
-      "position": [
-        1540,
-        340
-      ],
-      "executeOnce": true,
-      "credentials": {
-        "nextCloudApi": {
-          "id": "43",
-          "name": "SD Cloud"
-        }
-      }
-    },
-    {
-      "parameters": {
         "httpMethod": "POST",
         "path": "vendor-payment-cloud-qa",
         "options": {}
@@ -303,14 +349,259 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        -260,
+        -240,
         320
       ],
       "webhookId": "cb60ae7e-2706-4f5f-b252-cea276383106"
+    },
+    {
+      "parameters": {
+        "functionCode": "let paymentsData = [];\nitems.forEach((item, index) => {\n  let paymentDate = getFormattedDate(item.json[\"payment_date\"])\n  if(item.json[\"payment_paid_to_vendor\"] == \"true\"){\n      paymentsData.push({\n      id : item.json[\"id\"],\n      payment_amount:item.json[\"payment_amount\"],\n      payment_utr : item.json[\"payment_utr\"],\n      payment_date:paymentDate,\n      payment_description:item.json[\"payment_description\"],\n      remarks:item.json[\"remarks\"],\n      actual_paid_amount:item.json[\"actual_paid_amount\"],\n      any_deductions:item.json[\"any_deductions\"],\n      payment_paid_to_vendor:item.json[\"payment_paid_to_vendor\"],\n    })\n  }\n\n})\nfunction getFormattedDate(secs){\n  const millisecondsPerDay = 24 * 60 * 60 * 1000; // Number of milliseconds in a day\n\n  const date = new Date((secs-1) * millisecondsPerDay + Date.parse(\"1900-01-01\"));\n\n  const day = date.getDate();\n  const month = date.getMonth() + 1; // Months are zero-based, so we add 1\n  const year = date.getFullYear();\n  const formattedDate = `${year}-${month < 10 ? '0' : ''}${month}-${day < 10 ? '0' : ''}${day-1}`;\n  return formattedDate\n}\nconst size = 10; // size of each subarray\n\nconst result = [];\nfor (let i = 0; i < paymentsData.length; i += size) {\n  result.push(paymentsData.slice(i, i + size));\n}\n\nreturn [{\n    json: {\n        result: result,\n        resultlength : result.length\n    },\n}];\n"
+      },
+      "name": "Function to get payment data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1320,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "number": [
+            {
+              "name": "index"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1540,
+        340
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "Start Loop",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1780,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let paymentData = $node[\"Function to get payment data\"].json[\"result\"];\nlet currentIndex = $node[\"Start Loop\"].json[\"index\"];\nlet currentPayment = paymentData[currentIndex];\nlet returnItems = [];\n\ncurrentPayment.forEach(function(obj,index){\n    let next_payable_amount = parseFloat(obj[\"payment_amount\"])-(parseFloat(obj[\"actual_paid_amount\"])+parseFloat(obj[\"any_deductions\"]));\n    returnItems.push({\n    json: {\n      id : obj[\"id\"],\n      payment_amount:obj[\"payment_amount\"],\n      payment_utr : obj[\"payment_utr\"],\n      payment_date:obj[\"payment_date\"],\n      payment_description:obj[\"payment_description\"],\n      remarks:obj[\"remarks\"],\n      actual_paid_amount:obj[\"actual_paid_amount\"],\n      any_deductions:obj[\"any_deductions\"],\n      payment_paid_to_vendor:obj[\"payment_paid_to_vendor\"],\n      next_payable_amount : next_payable_amount,\n      dms_url : $node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]\n    }\n  });\n  \n})\n\nreturn returnItems;\n"
+      },
+      "name": "Function to get the splitted payment",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1980,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "number": [
+            {
+              "name": "index",
+              "value": "={{$node[\"Start Loop\"].json[\"index\"]+1}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Increment index",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        2620,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Increment index\"].json[\"index\"]}}",
+              "operation": "equal",
+              "value2": "={{$node[\"Function to get payment data\"].json[\"resultlength\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        2740,
+        340
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "End Loop",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        2960,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Function to get the splitted payment\"].json[\"dms_url\"]}}/items/sdm_vendor_payments/{{$node[\"Function to get the splitted payment\"].json[\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "actual_paid_amount",
+              "value": "={{$node[\"Function to get the splitted payment\"].json[\"actual_paid_amount\"]}}"
+            },
+            {
+              "name": "payment_utr",
+              "value": "={{$node[\"Function to get the splitted payment\"].json[\"payment_utr\"]}}"
+            },
+            {
+              "name": "payment_description",
+              "value": "={{$node[\"Function to get the splitted payment\"].json[\"payment_description\"]}}"
+            },
+            {
+              "name": "remarks",
+              "value": "={{$node[\"Function to get the splitted payment\"].json[\"remarks\"]}}"
+            },
+            {
+              "name": "any_deductions",
+              "value": "={{$node[\"Function to get the splitted payment\"].json[\"any_deductions\"]}}"
+            },
+            {
+              "name": "vendor_payment_status",
+              "value": "={{true}}"
+            }
+          ]
+        }
+      },
+      "name": "Update vendor payments",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2220,
+        340
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "80",
+          "name": "Mozart qa creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Function to get the splitted payment\"].json[\"payment_paid_to_vendor\"]==\"partially_paid\"?true:false}}"
+            }
+          ]
+        }
+      },
+      "name": "Check for partial payment",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        2380,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Function to get the splitted payment\"].json[\"dms_url\"]}}/items/sdm_vendor_payments",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "vendor_po_number",
+              "value": "={{$node[\"Update vendor payments\"].json[\"data\"][\"vendor_po_number\"]}}"
+            },
+            {
+              "name": "payment_amount",
+              "value": "={{$node[\"Update vendor payments\"].json[\"data\"][\"payment_amount\"]}}"
+            },
+            {
+              "name": "payment_type",
+              "value": "invoice"
+            },
+            {
+              "name": "vendor_invoice",
+              "value": "={{$node[\"Update vendor payments\"].json[\"data\"][\"vendor_invoice\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Create partial vendor payment",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2420,
+        -20
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "80",
+          "name": "Mozart qa creds"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        2420,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "move",
+        "path": "=Vedanta-payments-qa/{{$node[\"Combine Items\"].json[\"excelData\"][0][\"file_name\"]}}",
+        "toPath": "=Vedanta-old-payments-qa/{{$node[\"Combine Items\"].json[\"excelData\"][0][\"file_name\"]}}"
+      },
+      "name": "Move All Files",
+      "type": "n8n-nodes-base.nextCloud",
+      "typeVersion": 1,
+      "position": [
+        1420,
+        180
+      ],
+      "executeOnce": true,
+      "credentials": {
+        "nextCloudApi": {
+          "id": "43",
+          "name": "SD Cloud"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-02-28T11:40:54.246Z"
+  "updatedAt": "2023-06-14T05:12:53.001Z"
 }
