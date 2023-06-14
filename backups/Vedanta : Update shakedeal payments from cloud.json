@@ -1,5 +1,5 @@
 {
-  "active": false,
+  "active": true,
   "connections": {
     "Get Cloud Files": {
       "main": [
@@ -56,17 +56,6 @@
         ]
       ]
     },
-    "Start": {
-      "main": [
-        [
-          {
-            "node": "Get url and token",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Spreadsheet File": {
       "main": [
         [
@@ -82,7 +71,7 @@
       "main": [
         [
           {
-            "node": "Set",
+            "node": "Move All Files",
             "type": "main",
             "index": 0
           }
@@ -144,7 +133,7 @@
       "main": [
         [
           {
-            "node": "Check for partially paid",
+            "node": "Update vendor payments",
             "type": "main",
             "index": 0
           }
@@ -156,6 +145,119 @@
         [
           {
             "node": "Create partial paid shakedeal payment",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NoOp": {
+      "main": [
+        [
+          {
+            "node": "Check for consignment type",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create partial paid shakedeal payment": {
+      "main": [
+        [
+          {
+            "node": "Check for consignment type",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for consignment type": {
+      "main": [
+        [
+          {
+            "node": "Get the payment to vendor",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the payment to vendor": {
+      "main": [
+        [
+          {
+            "node": "Update payment to vendors",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NoOp1": {
+      "main": [
+        [
+          {
+            "node": "Increment index",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update payment to vendors": {
+      "main": [
+        [
+          {
+            "node": "Increment index",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update vendor payments": {
+      "main": [
+        [
+          {
+            "node": "Check for partially paid",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get url and token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Move All Files": {
+      "main": [
+        [
+          {
+            "node": "Set",
             "type": "main",
             "index": 0
           }
@@ -173,8 +275,8 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        240,
-        300
+        160,
+        0
       ]
     },
     {
@@ -290,7 +392,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let paymentsData = [];\nitems.forEach((item, index) => {\n  let paymentDate = getFormattedDate(item.json[\"payment_date\"])\n  paymentsData.push({\n    id : item.json[\"id\"],\n    vedanta_po_number : item.json[\"vedanta_po_number\"],\n    invoice_number : item.json[\"invoice_number\"],\n    net_payable_amount : item.json[\"net_payable_amount\"],\n    payment_date : paymentDate,\n    ref_number : item.json[\"ref_number\"],\n    tax_percentage : item.json[\"tax_percentage\"],\n    tax_deduction : item.json[\"tax_deduction\"],\n    actual_tax_deducted_value : item.json[\"actual_tax_deducted_value\"],\n    payment_utr : item.json[\"payment_utr\"],\n    payment_paid : item.json[\"payment_paid\"],\n    sd_payment_description : item.json[\"sd_payment_description\"],\n    payment_paid_to_shakedeal : item.json[\"payment_paid_to_shakedeal\"],\n    other_deductions : item.json[\"other_deductions\"],\n    ld_charges : item.json[\"ld_charges\"]\n  })\n})\nfunction getFormattedDate(secs){\n  const millisecondsPerDay = 24 * 60 * 60 * 1000; // Number of milliseconds in a day\n\n  const date = new Date((secs-1) * millisecondsPerDay + Date.parse(\"1900-01-01\"));\n\n  const day = date.getDate();\n  const month = date.getMonth() + 1; // Months are zero-based, so we add 1\n  const year = date.getFullYear();\n  const formattedDate = `${year}-${month < 10 ? '0' : ''}${month}-${day < 10 ? '0' : ''}${day-1}`;\n  return formattedDate\n}\nconst size = 10; // size of each subarray\n\nconst result = [];\nfor (let i = 0; i < paymentsData.length; i += size) {\n  result.push(paymentsData.slice(i, i + size));\n}\n\nreturn [{\n    json: {\n        result: result,\n        resultlength : result.length\n    },\n}];\n"
+        "functionCode": "let paymentsData = [];\nitems.forEach((item, index) => {\n  let paymentDate = getFormattedDate(item.json[\"payment_date\"])\n  if(item.json[\"payment_status\"] == \"payment_verified\"){\n    paymentsData.push({\n      id : item.json[\"id\"],\n      vedanta_po_number : item.json[\"vedanta_po_number\"],\n      invoice_number : item.json[\"invoice_number\"],\n      net_payable_amount : item.json[\"net_payable_amount\"],\n      payment_date : paymentDate,\n      ref_number : item.json[\"ref_number\"],\n      tax_percentage : item.json[\"tax_percentage\"],\n      tax_deduction : item.json[\"tax_deduction\"],\n      actual_tax_deducted_value : item.json[\"actual_tax_deducted_value\"],\n      payment_utr : item.json[\"payment_utr\"],\n      payment_paid : item.json[\"payment_paid\"],\n      sd_payment_description : item.json[\"sd_payment_description\"],\n      payment_paid_to_shakedeal : item.json[\"payment_paid_to_shakedeal\"],\n      other_deductions : item.json[\"other_deductions\"],\n      ld_charges : item.json[\"ld_charges\"],\n      vendor_payment_ref:item.json[\"payment_advice.vendor_payment_ref\"],\n      consignment_type:item.json[\"payment_advice.order_id.consignment_type\"]\n    })\n  }\n  \n})\nfunction getFormattedDate(secs){\n  const millisecondsPerDay = 24 * 60 * 60 * 1000; // Number of milliseconds in a day\n\n  const date = new Date((secs-1) * millisecondsPerDay + Date.parse(\"1900-01-01\"));\n\n  const day = date.getDate();\n  const month = date.getMonth() + 1; // Months are zero-based, so we add 1\n  const year = date.getFullYear();\n  const formattedDate = `${year}-${month < 10 ? '0' : ''}${month}-${day < 10 ? '0' : ''}${day-1}`;\n  return formattedDate\n}\nconst size = 10; // size of each subarray\n\nconst result = [];\nfor (let i = 0; i < paymentsData.length; i += size) {\n  result.push(paymentsData.slice(i, i + size));\n}\n\nreturn [{\n    json: {\n        result: result,\n        resultlength : result.length\n    },\n}];\n"
       },
       "name": "Function to get payment data",
       "type": "n8n-nodes-base.function",
@@ -332,13 +434,13 @@
     },
     {
       "parameters": {
-        "functionCode": "let paymentData = $node[\"Function to get payment data\"].json[\"result\"];\nlet currentIndex = $node[\"Start Loop\"].json[\"index\"];\nlet currentPayment = paymentData[currentIndex];\nlet returnItems = [];\n\ncurrentPayment.forEach(function(obj,index){\n    let next_payable_amount = parseFloat(obj[\"net_payable_amount\"])-parseFloat(obj[\"actual_tax_deducted_value\"])-parseFloat(obj[\"other_deductions\"])-parseFloat(obj[\"ld_charges\"]);\n    returnItems.push({\n    json: {\n      id : obj[\"id\"],\n      vedanta_po_number : obj[\"vedanta_po_number\"],\n      invoice_number : obj[\"invoice_number\"],\n      net_payable_amount : obj[\"net_payable_amount\"],\n      payment_date : obj[\"payment_date\"],\n      ref_number : obj[\"ref_number\"],\n      tax_percentage : obj[\"tax_percentage\"],\n      tax_deduction : obj[\"tax_deduction\"],\n      actual_tax_deducted_value : obj[\"actual_tax_deducted_value\"],\n      payment_utr : obj[\"payment_utr\"],\n      payment_paid : obj[\"payment_paid\"],\n      sd_payment_description : obj[\"sd_payment_description\"],\n      payment_paid_to_shakedeal : obj[\"payment_paid_to_shakedeal\"],\n      other_deductions : obj[\"other_deductions\"],\n      ld_charges : obj[\"ld_charges\"],\n      next_payable_amount : next_payable_amount,\n      dms_url : $node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]\n    }\n  });\n  \n})\n\nreturn returnItems;\n"
+        "functionCode": "let paymentData = $node[\"Function to get payment data\"].json[\"result\"];\nlet currentIndex = $node[\"Start Loop\"].json[\"index\"];\nlet currentPayment = paymentData[currentIndex];\nlet returnItems = [];\n\ncurrentPayment.forEach(function(obj,index){\n    let next_payable_amount = parseFloat(obj[\"net_payable_amount\"])-(parseFloat(obj[\"payment_paid\"])+parseFloat(obj[\"actual_tax_deducted_value\"])+parseFloat(obj[\"other_deductions\"])+parseFloat(obj[\"ld_charges\"]));\n    returnItems.push({\n    json: {\n      id : obj[\"id\"],\n      vedanta_po_number : obj[\"vedanta_po_number\"],\n      invoice_number : obj[\"invoice_number\"],\n      net_payable_amount : obj[\"net_payable_amount\"],\n      payment_date : obj[\"payment_date\"],\n      ref_number : obj[\"ref_number\"],\n      tax_percentage : obj[\"tax_percentage\"],\n      tax_deduction : obj[\"tax_deduction\"],\n      actual_tax_deducted_value : obj[\"actual_tax_deducted_value\"],\n      payment_utr : obj[\"payment_utr\"],\n      payment_paid : obj[\"payment_paid\"],\n      sd_payment_description : obj[\"sd_payment_description\"],\n      payment_paid_to_shakedeal : obj[\"payment_paid_to_shakedeal\"],\n      other_deductions : obj[\"other_deductions\"],\n      ld_charges : obj[\"ld_charges\"],\n      next_payable_amount : next_payable_amount,\n      vendor_payment_ref:obj[\"vendor_payment_ref\"],\n      consignment_type:obj[\"consignment_type\"],\n      dms_url : $node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]\n    }\n  });\n  \n})\n\nreturn returnItems;\n"
       },
       "name": "Function to get the splitted payment",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        2460,
+        2380,
         300
       ]
     },
@@ -359,8 +461,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        2940,
-        300
+        3400,
+        280
       ]
     },
     {
@@ -379,8 +481,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        3100,
-        300
+        3560,
+        280
       ]
     },
     {
@@ -389,8 +491,8 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        3160,
-        100
+        3820,
+        -40
       ]
     },
     {
@@ -447,8 +549,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2720,
-        100
+        2820,
+        60
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -456,10 +558,207 @@
           "name": "Mozart qa creds"
         }
       }
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        2820,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Function to get the splitted payment\"].json[\"consignment_type\"]== \"non_consignment\"?true:false}}"
+            }
+          ]
+        }
+      },
+      "name": "Check for consignment type",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        3040,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Function to get the splitted payment\"].json[\"dms_url\"]}}/items/sdm_vendor_invoice_details/{{$node[\"Function to get the splitted payment\"].json[\"vendor_payment_ref\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "ld_charges",
+              "value": "={{$node[\"Get Shipment Items\"].json[\"data\"][0][\"ld_charges\"]+parseFloat($node[\"Function to get the splitted payment\"].json[\"ld_charges\"])}}"
+            },
+            {
+              "name": "tax_deducted",
+              "value": "={{$node[\"Get Shipment Items\"].json[\"data\"][0][\"tax_deducted\"]+parseFloat($node[\"Function to get the splitted payment\"].json[\"actual_tax_deducted_value\"])}}"
+            },
+            {
+              "name": "other_deductions",
+              "value": "={{$node[\"Get Shipment Items\"].json[\"data\"][0][\"tax_deducted\"]+parseFloat($node[\"Function to get the splitted payment\"].json[\"other_deductions\"])}}"
+            }
+          ]
+        }
+      },
+      "name": "Update payment to vendors",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3280,
+        20
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "80",
+          "name": "Mozart qa creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Function to get the splitted payment\"].json[\"dms_url\"]}}/items/sdm_vendor_invoice_details/{{$node[\"Function to get the splitted payment\"].json[\"vendor_payment_ref\"]}}",
+        "options": {}
+      },
+      "name": "Get the payment to vendor",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3100,
+        20
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "80",
+          "name": "Mozart qa creds"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "name": "NoOp1",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        3220,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Function to get the splitted payment\"].json[\"dms_url\"]}}/items/sdm_payments_to_shakedeal/{{$node[\"Function to get the splitted payment\"].json[\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "payment_date",
+              "value": "={{$node[\"Function to get the splitted payment\"].json[\"payment_date\"]}}"
+            },
+            {
+              "name": "ref_number",
+              "value": "={{$node[\"Function to get the splitted payment\"].json[\"ref_number\"]}}"
+            },
+            {
+              "name": "actual_tax_deducted_value",
+              "value": "={{parseFloat($node[\"Function to get the splitted payment\"].json[\"actual_tax_deducted_value\"])}}"
+            },
+            {
+              "name": "payment_utr",
+              "value": "={{$node[\"Function to get the splitted payment\"].json[\"payment_utr\"]}}"
+            },
+            {
+              "name": "payment_paid",
+              "value": "={{parseFloat($node[\"Function to get the splitted payment\"].json[\"payment_paid\"])}}"
+            },
+            {
+              "name": "sd_payment_description",
+              "value": "={{$node[\"Function to get the splitted payment\"].json[\"sd_payment_description\"]}}"
+            },
+            {
+              "name": "payment_status",
+              "value": "=payment_verified"
+            },
+            {
+              "name": "other_deductions",
+              "value": "={{parseFlost($node[\"Function to get the splitted payment\"].json[\"other_deductions\"])}}"
+            },
+            {
+              "name": "payment_paid_to_shakedeal",
+              "value": "={{$node[\"Function to get the splitted payment\"].json[\"payment_paid_to_shakedeal\"]}}"
+            },
+            {
+              "name": "ld_charges",
+              "value": "={{parseFloat($node[\"Function to get the splitted payment\"].json[\"ld_charges\"])}}"
+            }
+          ]
+        }
+      },
+      "name": "Update vendor payments",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2520,
+        140
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "80",
+          "name": "Mozart qa creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "update-shakedeal-payments",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        220,
+        300
+      ],
+      "webhookId": "712c3fd1-cc1a-4441-9253-cc9c5a698c89"
+    },
+    {
+      "parameters": {
+        "operation": "move",
+        "path": "=Shakedeal-payments-qa/{{$node[\"Combine Items\"].json[\"excelData\"][0][\"file_name\"]}}",
+        "toPath": "=Shakedeal-payments-old-qa/{{$node[\"Combine Items\"].json[\"excelData\"][0][\"file_name\"]}}"
+      },
+      "name": "Move All Files",
+      "type": "n8n-nodes-base.nextCloud",
+      "typeVersion": 1,
+      "position": [
+        1980,
+        40
+      ],
+      "executeOnce": true,
+      "credentials": {
+        "nextCloudApi": {
+          "id": "43",
+          "name": "SD Cloud"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-06-13T13:58:05.075Z"
+  "updatedAt": "2023-06-14T05:15:20.866Z"
 }
