@@ -1,0 +1,212 @@
+{
+  "active": false,
+  "connections": {
+    "Get url and token": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cron": {
+      "main": [
+        [
+          {
+            "node": "Get url and token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "Get the payment pending payments",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the payment pending payments": {
+      "main": [
+        [
+          {
+            "node": "Function to create table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to create table": {
+      "main": [
+        [
+          {
+            "node": "Send Email to OPs team and accounts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-06-14T08:25:32.013Z",
+  "id": "330",
+  "name": "Vedanta : Cron for payment pending and overdue payments",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        200,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "=https://qan8n.shakedeal.com/webhook/get-url",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "client",
+              "value": "=vedanta"
+            },
+            {
+              "name": "env",
+              "value": "=qa"
+            }
+          ]
+        }
+      },
+      "name": "Get url and token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        540,
+        300
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "name": "Cron",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        340,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_payment_advise?filter={\"_and\": [{\"shakedeal_payment_status\":{\"_eq\":\"paymentpending\"}},{\"payment_due_date\":{\"_lte\":\"{{$node[\"Function\"].json[\"date\"]}}\"}}]}&limit=-1&fields=*,order_id.po_number",
+        "options": {}
+      },
+      "name": "Get the payment pending payments",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "80",
+          "name": "Mozart qa creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "var someDate = new Date();\n\nsomeDate.setDate(someDate.getDate() + 0);\n\nvar dd =parseInt(someDate.getDate());\nvar day = dd < 10 ? '0' + dd : dd;\nvar mm =parseInt(someDate.getMonth() + 1);\nvar month = mm < 10 ? '0' + mm : mm;\nvar y = someDate.getFullYear();\n\nvar someFormattedDate = y+'-'+month +'-'+day;\n\nitems[0].json.date=someFormattedDate\n\nreturn items;"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        900,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        720,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let paymentData = $node[\"Get the payment pending payments\"].json[\"data\"];\nlet tableData = '';\nlet borderStyle = \"border: 1px solid black;border-collapse: collapse\"\npaymentData.forEach(function(payment,index){\n  let sdInvoiceNumber = payment.invoice;\n  let poNumber = payment.order_id? payment.order_id.po_number:\"\";\n  let grnNumber = payment.grn_number?payment.grn_number:\"\";\n  let paymentDue = payment.payment_aging?payment.payment_aging:\"\";\n  let amountDue = payment.total_outstanding;\n  let dpNumber = payment.dp_number;\n  tableData=tableData+\n      `<tr style='${borderStyle}'>`+\n      `<td style='${borderStyle}'>${poNumber}</td>`+\n      `<td style='${borderStyle}'>${sdInvoiceNumber}</td>`+\n      `<td style='${borderStyle}'>${amountDue}</td>`+\n      `<td style='${borderStyle}'>${paymentDue}</td>`+\n      `<td style='${borderStyle}'>${grnNumber}</td>`+\n      `<td style='${borderStyle}'>${dpNumber}</td>`+\n      `</tr>`;\n})\nlet tableHtml = `<table  style=\"color:#000000;width: auto;border: 1px solid black;border-collapse: collapse;\">`+\n    `<tr style='background-color:#dedfe0;border: 1px solid black;border-collapse: collapse'>`+\n    `<th style='${borderStyle}'>Vedanta PO Number</th>`+\n    `<th style='${borderStyle}'>Invoice Number</th>`+\n    `<th style='${borderStyle}'>Amount Due</th>`+\n    `<th style='${borderStyle}'>Overdue by</th>`+\n    `<th style='${borderStyle}'>GRN No.</th>`+\n    `<th style='${borderStyle}'>DP No.</th>`+\n    `</tr>${tableData}`+\n    `</table>`;\n\nitems[0].json.tableHtml = tableHtml;\nitems[0].json.overDueLink = `${$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}/admin/content/sdm_payment_advise?bookmark=416`\nreturn items;"
+      },
+      "name": "Function to create table",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "handyalasairam9177@gmail.com",
+        "toEmail": "sairam.reddy@shakedeal.com",
+        "subject": "=Payment Overdue Report || Vedanta",
+        "html": "=<p>Dear Team,</p>\n<p>Please be informed that the payment of the following invoices is overdue.Kindly take immediate action to address the outstanding payment for the below invoices.\n</p>\n{{$node[\"Function to create table\"].json[\"tableHtml\"]}}\n<p>If you need any further information please <a href=\"{{$node[\"Function to create table\"].json[\"overDueLink\"]}}\">click</a> here.</p>\n<p>Thanks</p>",
+        "options": {}
+      },
+      "name": "Send Email to OPs team and accounts",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        1580,
+        300
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "17",
+          "name": "smtp(sai)creds"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-06-14T08:49:12.489Z"
+}
