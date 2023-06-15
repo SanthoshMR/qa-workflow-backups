@@ -175,7 +175,7 @@
       "main": [
         [
           {
-            "node": "Update shipment status in mozart",
+            "node": "IF",
             "type": "main",
             "index": 0
           }
@@ -187,6 +187,68 @@
         [
           {
             "node": "ACC Informed that shakedeal invoice is available by WFS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the payment to shakedeal": {
+      "main": [
+        [
+          {
+            "node": "Update invoice in payment advice",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update invoice in payment advice": {
+      "main": [
+        [
+          {
+            "node": "Update invoice number in shakedeal payment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Get the payment to shakedeal",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NoOp": {
+      "main": [
+        [
+          {
+            "node": "Update shipment status in mozart",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update invoice number in shakedeal payment": {
+      "main": [
+        [
+          {
+            "node": "Update shipment status in mozart",
             "type": "main",
             "index": 0
           }
@@ -251,7 +313,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sdm_orders?filter={\"order_id\":{\"_eq\":\"{{$node[\"Add order_prefix\"].json[\"add_prefix\"]}}\"}}&fields=order_id,order_status,order_value,order_type,shipment.*,order_items.*,order_items.sdm_po_items_id.*,order_details.sdm_po_items_id.product.*,id,date_created",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sdm_orders?filter={\"order_id\":{\"_eq\":\"{{$node[\"Add order_prefix\"].json[\"add_prefix\"]}}\"}}&fields=consignment_type,order_id,order_status,order_value,order_type,shipment.*,order_items.*,order_items.sdm_po_items_id.*,order_details.sdm_po_items_id.product.*,id,date_created",
         "options": {}
       },
       "name": "Get the order_id",
@@ -400,7 +462,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2140,
+        2440,
         180
       ],
       "credentials": {
@@ -482,7 +544,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2460,
+        2620,
         180
       ],
       "credentials": {
@@ -633,10 +695,117 @@
         }
       },
       "disabled": true
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sdm_payment_advise?filter={\"order_id\":{\"id\":{\"_eq\":\"{{$node[\"Create order invoices\"].json[\"data\"][\"order\"]}}\"}}}",
+        "options": {}
+      },
+      "name": "Get the payment to shakedeal",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2160,
+        -100
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "80",
+          "name": "Mozart qa creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sdm_payment_advise/{{$node[\"Get the payment to shakedeal\"].json[\"data\"][0][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "invoice",
+              "value": "={{$node[\"Create order invoices\"].json[\"data\"][\"id\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update invoice in payment advice",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2360,
+        -100
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "80",
+          "name": "Mozart qa creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Get the order_id\"].json[\"data\"][0][\"consignment_type\"] == \"consignment\"}}"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        2020,
+        180
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        2280,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sdm_payments_to_shakedeal/{{$node[\"Get the payment to shakedeal\"].json[\"data\"][0][\"sdm_shakedeal_payments\"][0]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "invoice_number",
+              "value": "={{$node[\"Create order invoices\"].json[\"data\"][\"id\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update invoice number in shakedeal payment",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2540,
+        -100
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "80",
+          "name": "Mozart qa creds"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-06-09T05:49:09.875Z"
+  "updatedAt": "2023-06-15T11:14:07.103Z"
 }
