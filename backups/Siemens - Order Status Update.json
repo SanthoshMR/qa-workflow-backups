@@ -181,7 +181,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/{{$node[\"Globals\"].json[\"table_name\"]}}?filter={\"order_id\": {\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"order_id\"]}}\"}}",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/{{$node[\"Globals\"].json[\"table_name\"]}}?filter={\"order_id\": {\"_eq\":\"OD{{$node[\"Webhook\"].json[\"body\"][\"order_id\"]}}\"}}",
         "options": {}
       },
       "name": "Check for Order ID",
@@ -233,5 +233,5 @@
       "updatedAt": "2023-05-30T07:00:01.982Z"
     }
   ],
-  "updatedAt": "2023-06-13T05:02:56.569Z"
+  "updatedAt": "2023-06-15T01:40:27.830Z"
 }
