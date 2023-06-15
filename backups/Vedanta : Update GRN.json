@@ -445,7 +445,7 @@
     },
     {
       "parameters": {
-        "functionCode": "// return items;\nlet poFiles=[];\nlet excelFiles=[];\nitems.forEach((item) => {\n    const fullPath = item.json[\"path\"].split(\"/\");\n    const fileName = fullPath[fullPath.length - 1]\n    if(decodeURI(fileName).includes(\".csv\") || decodeURI(fileName).includes(\".xlsx\")){\n        excelFiles.push({\"file_name\":decodeURI(fileName)});\n    }\n});\n\nreturn [{\n     json: {\n         excelData:excelFiles\n    }\n}];"
+        "functionCode": "// return items;\nlet poFiles=[];\nlet excelFiles=[];\nitems.forEach((item) => {\n    const fullPath = item.json[\"path\"].split(\"/\");\n    const fileName = fullPath[fullPath.length - 1]\n    if(decodeURI(fileName).includes(\".csv\") || decodeURI(fileName).includes(\".xlsx\") || decodeURI(fileName).includes(\".xls\")){\n        excelFiles.push({\"file_name\":decodeURI(fileName)});\n    }\n});\n\nreturn [{\n     json: {\n         excelData:excelFiles\n    }\n}];"
       },
       "name": "Combine Items",
       "type": "n8n-nodes-base.function",
@@ -565,7 +565,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let grnData = [];\n//let productIds = [];\nitems.forEach((item, index) => {\n  //productIds.push(item.json[\"Material\"])\n  grnData.push({\n    product : item.json[\"Material\"],\n    plant : item.json[\"Plant\"],\n    qty : item.json[\"Qty in OPUn\"],\n    vendor_invoice : item.json[\"Vendor Invoice\"]?item.json[\"Vendor Invoice\"]:\"\",\n    vendor_po : item.json[\"Vendor PO Number\"]?item.json[\"Vendor PO Number\"]:\"\",\n    plant : item.json[\"Plant\"],\n    sd_invoice_nummber : item.json[\"Bill of Lading\"]?item.json[\"Bill of Lading\"]:\"\",\n    movement_type : item.json[\"Movement type\"] == \"103\" || item.json[\"Movement type\"] == \"503K\"?\"received\":item.json[\"Movement type\"] == \"105\" || item.json[\"Movement type\"] == \"321K\"?\"accepted\":\"rejected\"\n  })\n})\nconst size = 10; // size of each subarray\n\nconst result = [];\nfor (let i = 0; i < grnData.length; i += size) {\n  result.push(grnData.slice(i, i + size));\n}\n\n//items[0].json.result= result;\n//items[0].json.resultlength = result.length;\n//return items;\nreturn [{\n    json: {\n        result: result,\n        resultlength : result.length\n    },\n}];\n"
+        "functionCode": "let grnData = [];\n//let productIds = [];\nitems.forEach((item, index) => {\n  //productIds.push(item.json[\"Material\"])\n  grnData.push({\n    product : item.json[\"Material\"],\n    plant : item.json[\"Plant\"],\n    qty : item.json[\"Quantity\"],\n    vendor_invoice : item.json[\"Vendor Invoice\"]?item.json[\"Vendor Invoice\"]:\"\",\n    vendor_po : item.json[\"Vendor PO Number\"]?item.json[\"Vendor PO Number\"]:\"\",\n    plant : item.json[\"Plant\"],\n    sd_invoice_nummber : item.json[\"Bill of Lading\"]?item.json[\"Bill of Lading\"]:\"\",\n    movement_type : item.json[\"Movement type\"] == \"103\" || item.json[\"Movement type\"] == \"503K\" || item.json[\"Movement type\"] == \"503\"?\"received\":item.json[\"Movement type\"] == \"105\" || item.json[\"Movement type\"] == \"321K\" ||  item.json[\"Movement type\"] == \"321\"?\"accepted\":\"rejected\"\n  })\n})\nconst size = 10; // size of each subarray\n\nconst result = [];\nfor (let i = 0; i < grnData.length; i += size) {\n  result.push(grnData.slice(i, i + size));\n}\n\n//items[0].json.result= result;\n//items[0].json.resultlength = result.length;\n//return items;\nreturn [{\n    json: {\n        result: result,\n        resultlength : result.length\n    },\n}];\n"
       },
       "name": "Function to get grn data",
       "type": "n8n-nodes-base.function",
@@ -983,5 +983,5 @@
   },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-06-14T11:27:52.563Z"
+  "updatedAt": "2023-06-15T13:00:16.926Z"
 }
