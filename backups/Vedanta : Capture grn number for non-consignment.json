@@ -200,8 +200,8 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        380,
-        -160
+        360,
+        300
       ]
     },
     {
@@ -214,8 +214,8 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        520,
-        300
+        560,
+        200
       ],
       "webhookId": "a235a099-e617-4df5-b93e-51dc9aa2329e"
     },
@@ -517,5 +517,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-06-14T13:34:48.336Z"
+  "updatedAt": "2023-06-15T07:48:21.146Z"
 }
