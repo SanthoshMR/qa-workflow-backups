@@ -147,7 +147,7 @@
       "parameters": {
         "fromEmail": "handyalasairam9177@gmail.com",
         "toEmail": "sairam.reddy@shakedeal.com,bijan.krishna@shakedeal.com",
-        "subject": "=Urgent: Upload SD Invoice for DP Number Generation",
+        "subject": "=❗️Urgent: Upload SD Invoice for DP Number Generation",
         "html": "=<p>Dear Ops Team, </p>\n<p>We kindly request you to upload the below invoices on Ariba promptly, in order to initiate the DP number generation process.</p>\n{{$node[\"Function to create table\"].json[\"tableHtml\"]}}\n<p>Thanks</p>",
         "options": {}
       },
@@ -169,5 +169,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-06-15T05:44:44.506Z"
+  "updatedAt": "2023-06-16T06:07:31.610Z"
 }
