@@ -105,7 +105,7 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "=update sdm_vendor_invoice_details set vendor_payment='payment_to_process' where payment_due_date='{{$node[\"Setting due day from present date\"].json[\"date\"]}}' and vendor_payment =='paymentpending'",
+        "query": "=update sdm_vendor_invoice_details set vendor_payment='payment_to_process' where payment_due_date<='{{$node[\"Setting due day from present date\"].json[\"date\"]}}' and vendor_payment ='paymentpending'",
         "additionalFields": {}
       },
       "name": "Postgres",
@@ -139,5 +139,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-06-14T05:33:26.500Z"
+  "updatedAt": "2023-06-16T07:30:52.191Z"
 }
