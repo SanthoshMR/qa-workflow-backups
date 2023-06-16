@@ -23,17 +23,6 @@
         ]
       ]
     },
-    "HTTP Request": {
-      "main": [
-        [
-          {
-            "node": "Success Response",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Check for Order ID": {
       "main": [
         [
@@ -49,7 +38,7 @@
       "main": [
         [
           {
-            "node": "HTTP Request",
+            "node": "IF",
             "type": "main",
             "index": 0
           }
@@ -57,6 +46,46 @@
         [
           {
             "node": "Failure Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Order Update",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Status Update",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Order Update": {
+      "main": [
+        [
+          {
+            "node": "Order Success Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Status Update": {
+      "main": [
+        [
+          {
+            "node": "Success Response",
             "type": "main",
             "index": 0
           }
@@ -98,35 +127,6 @@
         "httpBasicAuth": {
           "id": "92",
           "name": "Siemens Notification"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "authentication": "headerAuth",
-        "requestMethod": "PATCH",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/{{$node[\"Globals\"].json[\"table_name\"]}}/{{$node[\"Check for Order ID\"].json[\"data\"][0][\"id\"]}}",
-        "options": {},
-        "bodyParametersUi": {
-          "parameter": [
-            {
-              "name": "order_status",
-              "value": "={{$node[\"Webhook\"].json[\"body\"][\"status\"]}}"
-            }
-          ]
-        }
-      },
-      "name": "HTTP Request",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        1020,
-        300
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "90",
-          "name": "Simens Order Token"
         }
       }
     },
@@ -206,8 +206,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1220,
-        300
+        1440,
+        440
       ]
     },
     {
@@ -221,6 +221,99 @@
         960,
         540
       ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Webhook\"].json[\"body\"][\"update_type\"]}}",
+              "value2": "=order"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        980,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let responseData = [];\n\nresponseData.push({\n    json: {\n        \"success\": true,\n        \"message\" : \"Order details updated successfully!\"\n    }\t\t\t\n});\n\nreturn responseData;\n"
+      },
+      "name": "Order Success Response",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1420,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/{{$node[\"Globals\"].json[\"table_name\"]}}/{{$node[\"Check for Order ID\"].json[\"data\"][0][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "invoice_number",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"invoice_no\"]}}"
+            },
+            {
+              "name": "sd_po_number",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"po_number\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Order Update",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1240,
+        240
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "90",
+          "name": "Simens Order Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/{{$node[\"Globals\"].json[\"table_name\"]}}/{{$node[\"Check for Order ID\"].json[\"data\"][0][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "order_status",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"status\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Status Update",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1240,
+        440
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "90",
+          "name": "Simens Order Token"
+        }
+      }
     }
   ],
   "settings": {},
@@ -233,5 +326,5 @@
       "updatedAt": "2023-05-30T07:00:01.982Z"
     }
   ],
-  "updatedAt": "2023-06-15T01:40:27.830Z"
+  "updatedAt": "2023-06-16T08:27:03.133Z"
 }
