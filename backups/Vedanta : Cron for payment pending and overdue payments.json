@@ -186,7 +186,7 @@
       "parameters": {
         "fromEmail": "handyalasairam9177@gmail.com",
         "toEmail": "sairam.reddy@shakedeal.com,bijan.krishna@shakedeal.com",
-        "subject": "=Payment Overdue Report || Vedanta",
+        "subject": "=❗️Payment Overdue Report || Vedanta",
         "html": "=<p>Dear Team,</p>\n<p>Please be informed that the payment of the following invoices is overdue.Kindly take immediate action to address the outstanding payment for the below invoices.\n</p>\n{{$node[\"Function to create table\"].json[\"tableHtml\"]}}\n<p>If you need any further information please <a href=\"{{$node[\"Function to create table\"].json[\"overDueLink\"]}}\">click</a> here.</p>\n<p>Thanks</p>",
         "options": {}
       },
@@ -208,5 +208,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-06-15T05:07:47.664Z"
+  "updatedAt": "2023-06-16T06:09:02.059Z"
 }
