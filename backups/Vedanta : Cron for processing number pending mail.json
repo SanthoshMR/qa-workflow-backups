@@ -194,7 +194,7 @@
       "parameters": {
         "fromEmail": "handyalasairam9177@gmail.com",
         "toEmail": "sairam.reddy@shakedeal.com,bijan.krishna@shakedeal.com",
-        "subject": "=Alert: Payment is Due but still Processing Number Pending",
+        "subject": "=⚠️ Alert: Payment is Due but still Processing Number Pending",
         "html": "=<p>Dear Ops Team, </p>\n<p>Alert! Payment is due for the below Invoices but we have not yet received the processing numbers. Please urgently follow up with the client to expedite the processing number generation. </p>\n{{$node[\"Function to create table\"].json[\"tableHtml\"]}}\n<p>Thanks</p>",
         "options": {}
       },
@@ -216,5 +216,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-06-15T06:27:18.624Z"
+  "updatedAt": "2023-06-16T06:08:41.729Z"
 }
