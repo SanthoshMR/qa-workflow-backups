@@ -315,7 +315,7 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "PATCH",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/{{$node[\"Globals\"].json[\"order_items_table_name\"]}}",
+        "url": "=https://noirqa.shakedeal.com/items/sds_order_items",
         "jsonParameters": true,
         "options": {},
         "bodyParametersJson": "={{$node[\"Prepare Split Order Items\"].json[\"0\"]}}"
@@ -528,5 +528,5 @@
       "updatedAt": "2023-05-30T07:00:01.982Z"
     }
   ],
-  "updatedAt": "2023-06-16T02:39:34.007Z"
+  "updatedAt": "2023-06-19T11:21:22.778Z"
 }
