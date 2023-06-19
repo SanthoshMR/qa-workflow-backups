@@ -136,7 +136,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_payment_advise?filter={\"_and\":[{\"_and\":[{\"shakedeal_payment_status\":{\"_eq\":\"pn_pending\"}}]},{\"_or\":[{\"payment_due_date\":{\"_lte\":\"{{new Date($node[\"Function\"].json[\"todayDate\"]).toISOString()}}\"}},{\"payment_due_date\":{\"_eq\":\"{{new Date($node[\"Function\"].json[\"dueInTwoDaysDate\"]).toISOString()}}\"}}]}]}&limit=-1&fields=*,order_id.po_number",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_payment_advise?filter={\"_and\":[{\"_and\":[{\"shakedeal_payment_status\":{\"_eq\":\"pn_pending\"}}]},{\"_or\":[{\"payment_due_date\":{\"_lte\":\"{{new Date($node[\"Function\"].json[\"todayDate\"]).toISOString()}}\"}},{\"payment_due_date\":{\"_lte\":\"{{new Date($node[\"Function\"].json[\"dueInTwoDaysDate\"]).toISOString()}}\"}}]}]}&limit=-1&fields=*,order_id.po_number",
         "options": {}
       },
       "name": "Get the processing number pending payments",
@@ -216,5 +216,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-06-16T06:08:41.729Z"
+  "updatedAt": "2023-06-19T07:43:44.463Z"
 }
