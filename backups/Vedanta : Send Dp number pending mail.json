@@ -133,7 +133,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let paymentData = $node[\"Get the dp number pending payments\"].json[\"data\"];\nlet tableData = '';\nlet borderStyle = \"border: 1px solid black;border-collapse: collapse\"\npaymentData.forEach(function(payment,index){\n  let sdInvoiceNumber = payment.invoice;\n  let poNumber = payment.order_id? payment.order_id.po_number:\"\";\n  let grnNumber = payment.grn_number?payment.grn_number:\"\";\n  let paymentDue = payment.payment_aging?payment.payment_aging:\"\";\n  tableData=tableData+\n      `<tr style='${borderStyle}'>`+\n      `<td style='${borderStyle}'>${sdInvoiceNumber}</td>`+\n      `<td style='${borderStyle}'>${poNumber}</td>`+\n      `<td style='${borderStyle}'>${grnNumber}</td>`+\n      `<td style='${borderStyle}'>${paymentDue}</td>`+\n      `</tr>`;\n})\nlet tableHtml = `<table  style=\"color:#000000;width: auto;border: 1px solid black;border-collapse: collapse;\">`+\n    `<tr style='background-color:#dedfe0;border: 1px solid black;border-collapse: collapse'>`+\n    `<th style='${borderStyle}'>SD Invoice Number</th>`+\n    `<th style='${borderStyle}'>PO Number</th>`+\n    `<th style='${borderStyle}'>GRN Number</th>`+\n    `<th style='${borderStyle}'>Payment Due</th>`+\n    `</tr>${tableData}`+\n    `</table>`;\n\nitems[0].json.tableHtml = tableHtml\nreturn items;"
+        "functionCode": "let paymentData = $node[\"Get the dp number pending payments\"].json[\"data\"];\nlet tableData = '';\nlet borderStyle = \"border: 1px solid black;border-collapse: collapse\"\npaymentData.forEach(function(payment,index){\n  let sdInvoiceNumber = payment.invoice;\n  let poNumber = payment.order_id? payment.order_id.po_number:\"\";\n  let grnNumber = payment.grn_number?payment.grn_number:\"\";\n  let paymentDue = payment.payment_aging?payment.payment_aging:\"\";\n  tableData=tableData+\n      `<tr style='${borderStyle}'>`+\n      `<td style='${borderStyle}'>${sdInvoiceNumber}</td>`+\n      `<td style='${borderStyle}'>${poNumber}</td>`+\n      `<td style='${borderStyle}'>${grnNumber}</td>`+\n      `</tr>`;\n})\nlet tableHtml = `<table  style=\"color:#000000;width: auto;border: 1px solid black;border-collapse: collapse;\">`+\n    `<tr style='background-color:#dedfe0;border: 1px solid black;border-collapse: collapse'>`+\n    `<th style='${borderStyle}'>SD Invoice Number</th>`+\n    `<th style='${borderStyle}'>PO Number</th>`+\n    `<th style='${borderStyle}'>GRN Number</th>`+\n    `</tr>${tableData}`+\n    `</table>`;\n\nitems[0].json.tableHtml = tableHtml\nreturn items;"
       },
       "name": "Function to create table",
       "type": "n8n-nodes-base.function",
@@ -169,5 +169,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-06-16T06:07:31.610Z"
+  "updatedAt": "2023-06-19T07:26:18.825Z"
 }
