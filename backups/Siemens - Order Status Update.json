@@ -85,7 +85,97 @@
       "main": [
         [
           {
-            "node": "Success Response",
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Order Success Response": {
+      "main": [
+        [
+          {
+            "node": "IF1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF1": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Check PO Status - Open",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Check PO Status - Process",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check PO Status - Open": {
+      "main": [
+        [
+          {
+            "node": "PO Status Update",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check PO Status - Process": {
+      "main": [
+        [
+          {
+            "node": "PO Status Update",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp",
             "type": "main",
             "index": 0
           }
@@ -104,12 +194,11 @@
       "typeVersion": 1,
       "position": [
         -40,
-        320
+        100
       ]
     },
     {
       "parameters": {
-        "authentication": "basicAuth",
         "httpMethod": "POST",
         "path": "siemens/order-status-update",
         "responseMode": "lastNode",
@@ -119,16 +208,10 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        180,
-        320
+        -40,
+        340
       ],
-      "webhookId": "8258b118-a228-4aa8-a079-3e1081234d07",
-      "credentials": {
-        "httpBasicAuth": {
-          "id": "92",
-          "name": "Siemens Notification"
-        }
-      }
+      "webhookId": "8258b118-a228-4aa8-a079-3e1081234d07"
     },
     {
       "parameters": {
@@ -145,6 +228,14 @@
             {
               "name": "log_table_name",
               "value": "sds_api_call_logs"
+            },
+            {
+              "name": "from_email",
+              "value": "noreply@shakedeal.com"
+            },
+            {
+              "name": "to_email",
+              "value": "parthiban.n@shakedeal.com"
             }
           ]
         },
@@ -154,8 +245,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        380,
-        320
+        160,
+        340
       ]
     },
     {
@@ -174,22 +265,22 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        760,
-        320
+        540,
+        340
       ]
     },
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/{{$node[\"Globals\"].json[\"table_name\"]}}?filter={\"order_id\": {\"_eq\":\"OD{{$node[\"Webhook\"].json[\"body\"][\"order_id\"]}}\"}}",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/{{$node[\"Globals\"].json[\"table_name\"]}}?filter={\"order_id\": {\"_eq\":\"OD{{$node[\"Webhook\"].json[\"body\"][\"order_id\"]}}\"}}&fields=*,po_num.*",
         "options": {}
       },
       "name": "Check for Order ID",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        580,
-        320
+        360,
+        340
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -200,26 +291,14 @@
     },
     {
       "parameters": {
-        "functionCode": "let responseData = [];\n\nresponseData.push({\n    json: {\n        \"success\": true,\n        \"message\" : \"Order Status updated successfully!\"\n    }\t\t\t\n});\n\nreturn responseData;\n"
-      },
-      "name": "Success Response",
-      "type": "n8n-nodes-base.function",
-      "typeVersion": 1,
-      "position": [
-        1440,
-        440
-      ]
-    },
-    {
-      "parameters": {
         "functionCode": "let responseData = [];\n\nresponseData.push({\n    json: {\n        \"success\": false,\n        \"message\" : 'Order ID not available'\n    }\t\t\t\n});\n\nreturn responseData;\n"
       },
       "name": "Failure Response",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        960,
-        540
+        500,
+        640
       ]
     },
     {
@@ -237,8 +316,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        980,
-        300
+        760,
+        320
       ]
     },
     {
@@ -249,8 +328,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1420,
-        240
+        1120,
+        120
       ]
     },
     {
@@ -276,8 +355,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1240,
-        240
+        920,
+        120
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -305,8 +384,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1240,
-        440
+        1000,
+        500
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -314,6 +393,153 @@
           "name": "Simens Order Token"
         }
       }
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{$node[\"Globals\"].json[\"from_email\"]}}",
+        "toEmail": "={{$node[\"Globals\"].json[\"to_email\"]}}",
+        "subject": "=Request to Upload Invoice for Completed Order ID {{$node[\"Status Update\"].json[\"data\"][\"order_id\"]}}",
+        "text": "=",
+        "html": "=<div>Dear Vinod Raj,</div><br>\n<div>Request you to upload the invoice for the completed order ID\n<b>{{$node[\"Status Update\"].json[\"data\"][\"order_id\"]}}</b> on the Siemens portal. This order has been marked as completed, and we await the invoice to be uploaded.</div><br/>\n<div>Thank you for your cooperation and prompt attention to this matter.</div><br/>\n<div><b>Note:</b> If you have already uploaded the invoice, please ignore this email.</div>",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        1680,
+        220
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "36",
+          "name": "SendGrid"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Status Update\"].json[\"data\"][\"order_status\"]==\"C\"?true:false}}"
+            }
+          ]
+        }
+      },
+      "name": "IF1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1420,
+        120
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1760,
+        700
+      ]
+    },
+    {
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{$node[\"Status Update\"].json[\"data\"][\"order_status\"]}}",
+        "rules": {
+          "rules": [
+            {
+              "value2": "O"
+            },
+            {
+              "value2": "P",
+              "output": 1
+            },
+            {
+              "value2": "C",
+              "output": 2
+            }
+          ]
+        }
+      },
+      "name": "Switch",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [
+        1160,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Check for Order ID\"].json[\"data\"][0][\"po_num\"][\"po_status\"] ==\"draft\"?true:false}}"
+            }
+          ]
+        }
+      },
+      "name": "Check PO Status - Open",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1440,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sds_pos/{{$node[\"Check for Order ID\"].json[\"data\"][0][\"po_num\"][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "po_status",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"status\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "PO Status Update",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1760,
+        400
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "90",
+          "name": "Simens Order Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Check for Order ID\"].json[\"data\"][0][\"po_num\"][\"po_status\"] ==\"O\"?true:false}}"
+            }
+          ]
+        }
+      },
+      "name": "Check PO Status - Process",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1460,
+        640
+      ]
     }
   ],
   "settings": {},
@@ -326,5 +552,5 @@
       "updatedAt": "2023-05-30T07:00:01.982Z"
     }
   ],
-  "updatedAt": "2023-06-16T08:27:03.133Z"
+  "updatedAt": "2023-06-19T14:43:13.358Z"
 }
