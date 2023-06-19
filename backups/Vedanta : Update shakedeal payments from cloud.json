@@ -263,11 +263,6 @@
           }
         ]
       ]
-    },
-    "Start": {
-      "main": [
-        []
-      ]
     }
   },
   "createdAt": "2023-06-13T13:24:13.389Z",
@@ -529,15 +524,15 @@
           "parameter": [
             {
               "name": "invoice_number",
-              "value": "={{$node[\"Function to get the splitted payment\"].json[\"invoice_number\"]}}"
+              "value": "={{$node[\"Check for partially paid\"].json[\"data\"][\"invoice_number\"]}}"
             },
             {
               "name": "vedanta_po_number",
-              "value": "={{$node[\"Function to get the splitted payment\"].json[\"vedanta_po_number\"]}}"
+              "value": "={{$node[\"Check for partially paid\"].json[\"data\"][\"vedanta_po_number\"]}}"
             },
             {
               "name": "net_payable_amount",
-              "value": "={{$node[\"Function to get the splitted payment\"].json[\"next_payable_amount\"]}}"
+              "value": "={{parseFloat($node[\"Check for partially paid\"].json[\"data\"][\"net_payable_amount\"])-(parseFloat($node[\"Check for partially paid\"].json[\"data\"][\"payment_paid\"])+parseFloat($node[\"Check for partially paid\"].json[\"data\"][\"actual_tax_deducted_value\"])+parseFloat($node[\"Check for partially paid\"].json[\"data\"][\"other_deductions\"])+parseFloat($node[\"Check for partially paid\"].json[\"data\"][\"ld_charges\"]))}}"
             },
             {
               "name": "tax_percentage",
@@ -545,15 +540,15 @@
             },
             {
               "name": "tax_deduction",
-              "value": "={{($node[\"Function to get the splitted payment\"].json[\"next_payable_amount\"]*0.1/100)}}"
+              "value": "={{(parseFloat($node[\"Check for partially paid\"].json[\"data\"][\"net_payable_amount\"])-(parseFloat($node[\"Check for partially paid\"].json[\"data\"][\"payment_paid\"])+parseFloat($node[\"Check for partially paid\"].json[\"data\"][\"actual_tax_deducted_value\"])+parseFloat($node[\"Check for partially paid\"].json[\"data\"][\"other_deductions\"])+parseFloat($node[\"Check for partially paid\"].json[\"data\"][\"ld_charges\"])))*0.1/100}}"
             },
             {
               "name": "actual_tax_deducted_value",
-              "value": "={{($node[\"Function to get the splitted payment\"].json[\"next_payable_amount\"]*0.1/100)}}"
+              "value": "={{(parseFloat($node[\"Check for partially paid\"].json[\"data\"][\"net_payable_amount\"])-(parseFloat($node[\"Check for partially paid\"].json[\"data\"][\"payment_paid\"])+parseFloat($node[\"Check for partially paid\"].json[\"data\"][\"actual_tax_deducted_value\"])+parseFloat($node[\"Check for partially paid\"].json[\"data\"][\"other_deductions\"])+parseFloat($node[\"Check for partially paid\"].json[\"data\"][\"ld_charges\"])))*0.1/100}}"
             },
             {
               "name": "payment_advice",
-              "value": "={{$node[\"Update vendor payments\"].json[\"data\"][\"payment_advice\"]}}"
+              "value": "={{$node[\"Check for partially paid\"].json[\"data\"][\"payment_advice\"]}}"
             }
           ]
         }
@@ -611,19 +606,19 @@
           "parameter": [
             {
               "name": "ld_charges",
-              "value": "={{$node[\"Get the payment to vendor\"].json[\"data\"][0][\"ld_charges\"]+parseFloat($node[\"Function to get the splitted payment\"].json[\"ld_charges\"])}}"
+              "value": "={{parseFloat($node[\"Get the payment to vendor\"].json[\"data\"][\"ld_charges\"])+parseFloat($node[\"Check for consignment type\"].json[\"data\"][\"ld_charges\"])}}"
             },
             {
               "name": "tax_deducted",
-              "value": "={{$node[\"Get the payment to vendor\"].json[\"data\"][0][\"tax_deducted\"]+parseFloat($node[\"Function to get the splitted payment\"].json[\"actual_tax_deducted_value\"])}}"
+              "value": "={{parseFloat($node[\"Get the payment to vendor\"].json[\"data\"][\"tax_deducted\"])+parseFloat($node[\"Check for consignment type\"].json[\"data\"][\"actual_tax_deducted_value\"])}}"
             },
             {
               "name": "other_deductions",
-              "value": "={{$node[\"Get the payment to vendor\"].json[\"data\"][0][\"tax_deducted\"]+parseFloat($node[\"Function to get the splitted payment\"].json[\"other_deductions\"])}}"
+              "value": "={{parseFloat($node[\"Get the payment to vendor\"].json[\"data\"][\"other_deductions\"])+parseFloat($node[\"Check for consignment type\"].json[\"data\"][\"other_deductions\"])}}"
             },
             {
               "name": "payment_received",
-              "value": "={{$node[\"Get the payment to vendor\"].json[\"data\"][0][\"payment_received\"]+parseFloat($node[\"Function to get the splitted payment\"].json[\"payment_paid\"])}}"
+              "value": "={{parseFloat($node[\"Get the payment to vendor\"].json[\"data\"][\"payment_received\"])+parseFloat($node[\"Check for consignment type\"].json[\"data\"][\"payment_paid\"])}}"
             }
           ]
         }
@@ -777,5 +772,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-06-16T13:24:25.805Z"
+  "updatedAt": "2023-06-19T13:50:51.362Z"
 }
