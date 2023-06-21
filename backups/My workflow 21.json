@@ -11,10 +11,21 @@
           }
         ]
       ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "Spreadsheet File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
-  "createdAt": "2023-05-05T10:43:53.405Z",
-  "id": "302",
+  "createdAt": "2023-06-19T17:02:39.969Z",
+  "id": "332",
   "name": "My workflow 21",
   "nodes": [
     {
@@ -29,13 +40,25 @@
     },
     {
       "parameters": {
-        "functionCode": "const pdf = require('html-pdf-node');\nconst htmlContent = `\n  <html>\n    <body>\n      <h1>Hello, world!</h1>\n    </body>\n  </html>\n`;\n\n// set the PDF options\nconst pdfOptions = { format: 'Letter' };\n\n// generate the PDF document and store it in a buffer\nconst pdfBuffer = await new Promise((resolve, reject) => {\n  pdf.create(htmlContent, pdfOptions).toBuffer((err, buffer) => {\n    if (err) {\n      reject(err);\n    } else {\n      resolve(buffer);\n    }\n  });\n});\n\nconst pdfBinary = new Binary(pdfBuffer);\n\n// set the binary data as the output of the function node\nreturn { binary: pdfBinary };\n\n//return items;"
+        "operation": "toFile",
+        "binaryPropertyName": "={{$node[\"Function\"].json[\"myNewField\"]}}",
+        "options": {}
       },
+      "name": "Spreadsheet File",
+      "type": "n8n-nodes-base.spreadsheetFile",
+      "typeVersion": 1,
+      "position": [
+        680,
+        300
+      ]
+    },
+    {
+      "parameters": {},
       "name": "Function",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        460,
+        440,
         300
       ]
     }
@@ -43,5 +66,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-05-05T12:08:08.281Z"
+  "updatedAt": "2023-06-19T17:02:39.969Z"
 }
