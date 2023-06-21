@@ -27,7 +27,7 @@
       "main": [
         [
           {
-            "node": "Function to create table",
+            "node": "IF",
             "type": "main",
             "index": 0
           }
@@ -39,6 +39,24 @@
         [
           {
             "node": "Send Email to OPs team",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Function to create table",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp",
             "type": "main",
             "index": 0
           }
@@ -139,7 +157,7 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1100,
+        1260,
         280
       ]
     },
@@ -147,6 +165,7 @@
       "parameters": {
         "fromEmail": "handyalasairam9177@gmail.com",
         "toEmail": "sairam.reddy@shakedeal.com,bijan.krishna@shakedeal.com",
+        "ccEmail": "anjali.jain@shakedeal.com",
         "subject": "=❗️Urgent: Upload SD Invoice for DP Number Generation",
         "html": "=<p>Dear Ops Team, </p>\n<p>We kindly request you to upload the below invoices on Ariba promptly, in order to initiate the DP number generation process.</p>\n{{$node[\"Function to create table\"].json[\"tableHtml\"]}}\n<p>Thanks</p>",
         "options": {}
@@ -155,7 +174,7 @@
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 1,
       "position": [
-        1340,
+        1500,
         280
       ],
       "credentials": {
@@ -164,10 +183,39 @@
           "name": "smtp(sai)creds"
         }
       }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Get the dp number pending payments\"].json[\"data\"].length>0?true:false}}"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        280
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        500
+      ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-06-19T07:26:18.825Z"
+  "updatedAt": "2023-06-20T07:27:21.056Z"
 }
