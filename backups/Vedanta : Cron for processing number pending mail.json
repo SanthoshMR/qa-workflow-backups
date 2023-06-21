@@ -49,7 +49,7 @@
       "main": [
         [
           {
-            "node": "Function to create table",
+            "node": "IF",
             "type": "main",
             "index": 0
           }
@@ -61,6 +61,24 @@
         [
           {
             "node": "Send Email to OPs team",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Function to create table",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp",
             "type": "main",
             "index": 0
           }
@@ -186,14 +204,15 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1440,
-        300
+        1620,
+        280
       ]
     },
     {
       "parameters": {
         "fromEmail": "handyalasairam9177@gmail.com",
         "toEmail": "sairam.reddy@shakedeal.com,bijan.krishna@shakedeal.com",
+        "ccEmail": "anjali.jain@shakedeal.com",
         "subject": "=⚠️ Alert: Payment is Due but still Processing Number Pending",
         "html": "=<p>Dear Ops Team, </p>\n<p>Alert! Payment is due for the below Invoices but we have not yet received the processing numbers. Please urgently follow up with the client to expedite the processing number generation. </p>\n{{$node[\"Function to create table\"].json[\"tableHtml\"]}}\n<p>Thanks</p>",
         "options": {}
@@ -202,8 +221,8 @@
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 1,
       "position": [
-        1680,
-        300
+        1860,
+        280
       ],
       "credentials": {
         "smtp": {
@@ -211,10 +230,39 @@
           "name": "smtp(sai)creds"
         }
       }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Get the processing number pending payments\"].json[\"data\"].length>0?true:false}}"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1380,
+        300
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1600,
+        460
+      ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-06-19T07:43:44.463Z"
+  "updatedAt": "2023-06-20T07:29:19.331Z"
 }
