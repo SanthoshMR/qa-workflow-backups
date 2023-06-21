@@ -49,7 +49,7 @@
       "main": [
         [
           {
-            "node": "Function to create table",
+            "node": "IF",
             "type": "main",
             "index": 0
           }
@@ -61,6 +61,24 @@
         [
           {
             "node": "Send Email to OPs team and accounts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Function to create table",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp",
             "type": "main",
             "index": 0
           }
@@ -178,7 +196,7 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1340,
+        1520,
         300
       ]
     },
@@ -186,6 +204,7 @@
       "parameters": {
         "fromEmail": "handyalasairam9177@gmail.com",
         "toEmail": "sairam.reddy@shakedeal.com,bijan.krishna@shakedeal.com",
+        "ccEmail": "anjali.jain@shakedeal.com",
         "subject": "=❗️Payment Overdue Report || Vedanta",
         "html": "=<p>Dear Team,</p>\n<p>Please be informed that the payment of the following invoices is overdue.Kindly take immediate action to address the outstanding payment for the below invoices.\n</p>\n{{$node[\"Function to create table\"].json[\"tableHtml\"]}}\n<p>If you need any further information please <a href=\"{{$node[\"Function to create table\"].json[\"overDueLink\"]}}\">click</a> here.</p>\n<p>Thanks</p>",
         "options": {}
@@ -194,7 +213,7 @@
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 1,
       "position": [
-        1580,
+        1760,
         300
       ],
       "credentials": {
@@ -203,10 +222,39 @@
           "name": "smtp(sai)creds"
         }
       }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Get the payment pending payments\"].json[\"data\"].length>0?true:false}}"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1300,
+        300
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1560,
+        460
+      ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-06-16T06:09:02.059Z"
+  "updatedAt": "2023-06-20T07:31:04.074Z"
 }
