@@ -25,13 +25,7 @@
     },
     "HTTP Request": {
       "main": [
-        [
-          {
-            "node": "Success Response",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Check for Order ID": {
@@ -49,7 +43,7 @@
       "main": [
         [
           {
-            "node": "HTTP Request",
+            "node": "Function",
             "type": "main",
             "index": 0
           }
@@ -57,6 +51,28 @@
         [
           {
             "node": "Failure Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Order Status": {
+      "main": [
+        [
+          {
+            "node": "Success Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
             "type": "main",
             "index": 0
           }
@@ -105,22 +121,16 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "PATCH",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/{{$node[\"Globals\"].json[\"table_name\"]}}/{{$node[\"Check for Order ID\"].json[\"data\"][0][\"id\"]}}",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/{{$node[\"Globals\"].json[\"table_name\"]}}",
+        "jsonParameters": true,
         "options": {},
-        "bodyParametersUi": {
-          "parameter": [
-            {
-              "name": "order_id",
-              "value": "=OD{{$node[\"Webhook\"].json[\"body\"][\"order_id\"]}}"
-            }
-          ]
-        }
+        "bodyParametersJson": "={{$node[\"Function\"].json[\"0\"]}}"
       },
       "name": "HTTP Request",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1020,
+        1140,
         300
       ],
       "credentials": {
@@ -186,7 +196,7 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1220,
+        1480,
         300
       ]
     },
@@ -221,8 +231,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1440,
-        300
+        1680,
+        280
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -250,6 +260,83 @@
         760,
         320
       ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "=https://qan8n.shakedeal.com/webhook/siemens/order-status-update",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "order_id",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"order_id\"]}}"
+            },
+            {
+              "name": "status",
+              "value": "=O"
+            },
+            {
+              "name": "order_date"
+            }
+          ]
+        }
+      },
+      "name": "Update Order Status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1300,
+        300
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "92",
+          "name": "Siemens Notification"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let order_detail = $node[\"Check for Order ID\"].json.data[0];\nlet response = $node[\"Webhook\"].json.body;\nlet order_update_data = [];\n\nlet order_key = [];\norder_key.push(order_detail.id);\n\n//Date\nconst date = new Date();\nlet currentDay= String(date.getDate()).padStart(2, '0');\nlet currentMonth = String(date.getMonth()+1).padStart(2,\"0\");\nlet currentYear = date.getFullYear();\nlet currentDate = `${currentYear}-${currentMonth}-${currentDay}`;\n\nlet order_data = {\n    \"order_status\" : \"O\",\n    \"order_id\" : \"OD\"+response.order_id,\n    \"order_date\" : currentDate\n}\n\norder_update_data.push({\n    json: [{\n        keys:order_key,\n        data:order_data,\n    }]\n}); \n\nreturn order_update_data;"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        960,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/{{$node[\"Globals\"].json[\"table_name\"]}}/{{$node[\"Check for Order ID\"].json[\"data\"][0][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "order_id",
+              "value": "=OD{{$node[\"Webhook\"].json[\"body\"][\"order_id\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "HTTP Request1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1320,
+        600
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "90",
+          "name": "Simens Order Token"
+        }
+      }
     }
   ],
   "settings": {},
@@ -262,5 +349,5 @@
       "updatedAt": "2023-05-30T07:00:01.982Z"
     }
   ],
-  "updatedAt": "2023-06-14T07:51:10.555Z"
+  "updatedAt": "2023-06-21T09:18:42.641Z"
 }
