@@ -1,0 +1,45 @@
+{
+  "active": true,
+  "connections": {},
+  "createdAt": "2023-06-23T11:08:10.407Z",
+  "id": "335",
+  "name": "Vedanta : Create Shakedeal Partial payments",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "=create-partial-shakedeal-payment",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        480,
+        280
+      ],
+      "webhookId": "4b47c735-8550-4375-8923-ab1d163df447",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-06-23T11:09:26.047Z"
+}
