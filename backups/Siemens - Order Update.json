@@ -23,11 +23,6 @@
         ]
       ]
     },
-    "HTTP Request": {
-      "main": [
-        []
-      ]
-    },
     "Check for Order ID": {
       "main": [
         [
@@ -57,7 +52,18 @@
         ]
       ]
     },
-    "Update Order Status": {
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "Update Order",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Log": {
       "main": [
         [
           {
@@ -68,11 +74,51 @@
         ]
       ]
     },
-    "Function": {
+    "Check for Order Reference Number": {
       "main": [
         [
           {
-            "node": "HTTP Request",
+            "node": "Check Reference Number",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Reference Number": {
+      "main": [
+        [
+          {
+            "node": "Update Log",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Success Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Order Status": {
+      "main": [
+        [
+          {
+            "node": "Check for Order Reference Number",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Order": {
+      "main": [
+        [
+          {
+            "node": "Update Order Status",
             "type": "main",
             "index": 0
           }
@@ -114,29 +160,6 @@
         "httpBasicAuth": {
           "id": "92",
           "name": "Siemens Notification"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "authentication": "headerAuth",
-        "requestMethod": "PATCH",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/{{$node[\"Globals\"].json[\"table_name\"]}}",
-        "jsonParameters": true,
-        "options": {},
-        "bodyParametersJson": "={{$node[\"Function\"].json[\"0\"]}}"
-      },
-      "name": "HTTP Request",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        1140,
-        300
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "90",
-          "name": "Simens Order Token"
         }
       }
     },
@@ -196,8 +219,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1480,
-        300
+        1900,
+        560
       ]
     },
     {
@@ -216,13 +239,13 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "PATCH",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/{{$node[\"Globals\"].json[\"log_table_name\"]}}",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/{{$node[\"Globals\"].json[\"log_table_name\"]}}/{{$node[\"Check for Order Reference Number\"].json[\"data\"][0][\"id\"]}}",
         "options": {},
         "bodyParametersUi": {
           "parameter": [
             {
-              "name": "order_status",
-              "value": "={{$node[\"Webhook\"].json[\"body\"][\"status\"]}}"
+              "name": "response",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"order_id\"]}}"
             }
           ]
         }
@@ -231,7 +254,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1680,
+        1860,
         280
       ],
       "credentials": {
@@ -287,7 +310,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1300,
+        1320,
         300
       ],
       "credentials": {
@@ -337,6 +360,69 @@
           "name": "Simens Order Token"
         }
       }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sds_api_call_logs?filter={\"order_ref_number\": {\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"reference_number\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Check for Order Reference Number",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1480,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "90",
+          "name": "Simens Order Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Check for Order Reference Number\"].json[\"data\"].length}}",
+              "operation": "larger",
+              "value2": "={{0}}"
+            }
+          ]
+        }
+      },
+      "name": "Check Reference Number",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1640,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/{{$node[\"Globals\"].json[\"table_name\"]}}",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Function\"].json[\"0\"]}}"
+      },
+      "name": "Update Order",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1140,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "90",
+          "name": "Simens Order Token"
+        }
+      }
     }
   ],
   "settings": {},
@@ -349,5 +435,5 @@
       "updatedAt": "2023-05-30T07:00:01.982Z"
     }
   ],
-  "updatedAt": "2023-06-21T09:18:42.641Z"
+  "updatedAt": "2023-06-23T12:37:55.821Z"
 }
