@@ -356,7 +356,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let paymentsData = [];\nitems.forEach((item, index) => {\n  let paymentDate = getFormattedDate(item.json[\"payment_date\"])\n  if(item.json[\"vendor_payment_status\"].toString().toLowerCase() == \"true\"){\n      paymentsData.push({\n      id : item.json[\"id\"],\n      payment_amount:item.json[\"payment_amount\"],\n      payment_utr : item.json[\"payment_utr\"],\n      payment_date:item.json[\"payment_date\"],\n      payment_description:item.json[\"payment_description\"],\n      remarks:item.json[\"remarks\"],\n      actual_paid_amount:item.json[\"actual_paid_amount\"],\n      any_deductions:item.json[\"any_deductions\"],\n      payment_paid_to_vendor:item.json[\"payment_paid_to_vendor\"],\n    })\n  }\n\n})\nfunction getFormattedDate(secs){\n  const millisecondsPerDay = 24 * 60 * 60 * 1000; // Number of milliseconds in a day\n\n  const date = new Date((secs-1) * millisecondsPerDay + Date.parse(\"1900-01-01\"));\n\n  const day = date.getDate();\n  const month = date.getMonth() + 1; // Months are zero-based, so we add 1\n  const year = date.getFullYear();\n  const formattedDate = `${year}-${month < 10 ? '0' : ''}${month}-${day < 10 ? '0' : ''}${day-1}`;\n  return formattedDate\n}\nconst size = 10; // size of each subarray\n\nconst result = [];\nfor (let i = 0; i < paymentsData.length; i += size) {\n  result.push(paymentsData.slice(i, i + size));\n}\n\nreturn [{\n    json: {\n        result: result,\n        resultlength : result.length\n    },\n}];\n"
+        "functionCode": "let paymentsData = [];\nitems.forEach((item, index) => {\n  let paymentDate = getFormattedDate(item.json[\"payment_date\"])\n  if(item.json[\"Payment Status (Make it TRUE if paid)\"].toString().toLowerCase() == \"true\"){\n      paymentsData.push({\n      id : item.json[\"id\"],\n      payment_amount:item.json[\"Payable Amount\"],\n      payment_utr : item.json[\"Payment UTR\"],\n      payment_date:item.json[\"Payment  Date (dd-mm-yyyy)\"],\n      payment_description:item.json[\"Payment Description\"],\n      remarks:item.json[\"remarks\"]?item.json[\"remarks\"]:'',\n      actual_paid_amount:item.json[\"Actual paid Amount to vendor\"],\n      any_deductions:item.json[\"Any Other Deductions\"],\n      tax_deducted :item.json[\"Tax Deducted\"],\n      payment_paid_to_vendor:item.json[\"Payment Paid Status (fully_paid/partially_paid)\"],\n    })\n  }\n\n})\nfunction getFormattedDate(secs){\n  const millisecondsPerDay = 24 * 60 * 60 * 1000; // Number of milliseconds in a day\n\n  const date = new Date((secs-1) * millisecondsPerDay + Date.parse(\"1900-01-01\"));\n\n  const day = date.getDate();\n  const month = date.getMonth() + 1; // Months are zero-based, so we add 1\n  const year = date.getFullYear();\n  const formattedDate = `${year}-${month < 10 ? '0' : ''}${month}-${day < 10 ? '0' : ''}${day-1}`;\n  return formattedDate\n}\nconst size = 10; // size of each subarray\n\nconst result = [];\nfor (let i = 0; i < paymentsData.length; i += size) {\n  result.push(paymentsData.slice(i, i + size));\n}\n\nreturn [{\n    json: {\n        result: result,\n        resultlength : result.length\n    },\n}];\n"
       },
       "name": "Function to get payment data",
       "type": "n8n-nodes-base.function",
@@ -398,7 +398,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let paymentData = $node[\"Function to get payment data\"].json[\"result\"];\nlet currentIndex = $node[\"Start Loop\"].json[\"index\"];\nlet currentPayment = paymentData[currentIndex];\nlet returnItems = [];\n\ncurrentPayment.forEach(function(obj,index){\n    let next_payable_amount = parseFloat(obj[\"payment_amount\"])-parseFloat(obj[\"actual_paid_amount\"]);\n     let [day, month, year] = obj[\"payment_date\"].split(\"-\");\n    returnItems.push({\n    json: {\n      id : obj[\"id\"],\n      payment_amount:obj[\"payment_amount\"],\n      payment_utr : obj[\"payment_utr\"],\n      payment_date:new Date(year, month - 1, day).toISOString(),\n      payment_description:obj[\"payment_description\"],\n      remarks:obj[\"remarks\"],\n      actual_paid_amount:obj[\"actual_paid_amount\"],\n      any_deductions:obj[\"any_deductions\"],\n      payment_paid_to_vendor:obj[\"payment_paid_to_vendor\"],\n      next_payable_amount : next_payable_amount,\n      dms_url : $node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]\n    }\n  });\n  \n})\n\nreturn returnItems;\n"
+        "functionCode": "let paymentData = $node[\"Function to get payment data\"].json[\"result\"];\nlet currentIndex = $node[\"Start Loop\"].json[\"index\"];\nlet currentPayment = paymentData[currentIndex];\nlet returnItems = [];\n\ncurrentPayment.forEach(function(obj,index){\n    let next_payable_amount = parseFloat(obj[\"payment_amount\"])-parseFloat(obj[\"actual_paid_amount\"]);\n     let [day, month, year] = obj[\"payment_date\"].split(\"-\");\n    returnItems.push({\n    json: {\n      id : obj[\"id\"],\n      payment_amount:obj[\"payment_amount\"],\n      payment_utr : obj[\"payment_utr\"],\n      payment_date:new Date(year, month - 1, day).toISOString(),\n      payment_description:obj[\"payment_description\"],\n      remarks:obj[\"remarks\"],\n      actual_paid_amount:obj[\"actual_paid_amount\"],\n      any_deductions:obj[\"any_deductions\"],\n      tax_deducted : obj[\"tax_deducted\"],\n      payment_paid_to_vendor:obj[\"payment_paid_to_vendor\"],\n      next_payable_amount : next_payable_amount,\n      dms_url : $node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]\n    }\n  });\n  \n})\n\nreturn returnItems;\n"
       },
       "name": "Function to get the splitted payment",
       "type": "n8n-nodes-base.function",
@@ -490,6 +490,14 @@
             {
               "name": "vendor_payment_status",
               "value": "={{true}}"
+            },
+            {
+              "name": "tax_deducted",
+              "value": "={{$node[\"Function to get the splitted payment\"].json[\"tax_deducted\"]}}"
+            },
+            {
+              "name": "payment_date",
+              "value": "={{$node[\"Function to get the splitted payment\"].json[\"payment_date\"]}}"
             }
           ]
         }
@@ -603,5 +611,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-06-19T13:15:03.741Z"
+  "updatedAt": "2023-06-23T11:33:55.744Z"
 }
