@@ -499,11 +499,12 @@
           "id": "50",
           "name": "Mozart DMS Token"
         }
-      }
+      },
+      "disabled": true
     },
     {
       "parameters": {
-        "functionCode": "let vendorPayments = $node[\"Get vendor payment\"].json[\"data\"][\"vendor_invoice\"][\"vendor_payments\"];\nlet payableAmount = $node[\"Get vendor payment\"].json[\"data\"][\"vendor_invoice\"].payable_amount\nlet paidVendorPayments = vendorPayments.filter(payment=>payment.vendor_payment_status )\nlet updateItem = {}\nconst sumOfPayment = paidVendorPayments.reduce(\n  (accumulator, payment) => accumulator + parseFloat(payment.actual_paid_amount),\n  0\n);\n\nlet totalPaidAmount = sumOfPayment;\nlet remainingToPay = parseFloat(payableAmount) - totalPaidAmount;\nlet totalPercentagePaid = (totalPaidAmount/payableAmount)*100;\nlet vendor_payment = \"paymentpending\"\nif(totalPercentagePaid >= 90){\n  vendor_payment = \"paymentreleased\"\n}else if(totalPercentagePaid<90 && totalPercentagePaid > 0){\n  vendor_payment = \"partiallypaid\"\n}\n\nupdateItem.total_paid_amount = totalPaidAmount;\nupdateItem.remaining_to_pay = remainingToPay;\nupdateItem.total_percentage_paid = totalPercentagePaid;\nupdateItem.vendor_payment = vendor_payment\n\nitems[0].json.paidVendorPayments= paidVendorPayments;\nitems[0].json.sumOfPayment= sumOfPayment;\nitems[0].json.updateItem= updateItem;\n\nreturn items;"
+        "functionCode": "let vendorPayments = $node[\"Get vendor payment\"].json[\"data\"][\"vendor_invoice\"][\"vendor_payments\"];\nlet payableAmount = $node[\"Get vendor payment\"].json[\"data\"][\"vendor_invoice\"].payable_amount\nlet paidVendorPayments = vendorPayments.filter(payment=>payment.vendor_payment_status )\nlet updateItem = {}\nconst sumOfPayment = paidVendorPayments.reduce(\n  (accumulator, payment) => accumulator + parseFloat(payment.actual_paid_amount),\n  0\n);\n\nlet totalPaidAmount = sumOfPayment;\nlet remainingToPay = parseFloat(payableAmount) - totalPaidAmount;\nlet totalPercentagePaid = (totalPaidAmount/payableAmount)*100;\nlet vendor_payment = \"paymentpending\"\nif(totalPercentagePaid >= 90){\n  vendor_payment = \"paymentreleased\"\n}else if(totalPercentagePaid<90 && totalPercentagePaid > 0){\n  vendor_payment = \"partiallypaid\"\n}\n\nupdateItem.total_paid_amount = totalPaidAmount;\n//updateItem.remaining_to_pay = remainingToPay;\nupdateItem.total_percentage_paid = totalPercentagePaid;\n//updateItem.vendor_payment = vendor_payment\n\nitems[0].json.paidVendorPayments= paidVendorPayments;\nitems[0].json.sumOfPayment= sumOfPayment;\nitems[0].json.updateItem= updateItem;\n\nreturn items;"
       },
       "name": "Function",
       "type": "n8n-nodes-base.function",
@@ -540,5 +541,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-02-21T12:01:51.286Z"
+  "updatedAt": "2023-06-28T13:12:08.356Z"
 }
