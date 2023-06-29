@@ -1,0 +1,48 @@
+{
+  "active": true,
+  "connections": {},
+  "createdAt": "2023-06-29T10:31:11.584Z",
+  "id": "338",
+  "name": "SD Mail Automation",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "format": "resolved",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "name": "IMAP Email",
+      "type": "n8n-nodes-base.emailReadImap",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ],
+      "credentials": {
+        "imap": {
+          "id": "93",
+          "name": "Siemens Imap Creds"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": {
+    "node:IMAP Email": {
+      "lastMessageUid": 55
+    }
+  },
+  "tags": [],
+  "updatedAt": "2023-06-29T12:37:13.189Z"
+}
