@@ -601,25 +601,25 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "PATCH",
-        "url": "={{$node[\"Function to get the splitted payment\"].json[\"dms_url\"]}}/items/sdm_vendor_invoice_details/{{$node[\"Function to get the splitted payment\"].json[\"vendor_payment_ref\"]}}",
+        "url": "={{$node[\"Function to get the splitted payment\"].json[\"dms_url\"]}}/items/sdm_vendor_invoice_details/{{$node[\"Check for consignment type\"].json[\"data\"][\"payment_advice\"][\"vendor_payment_ref\"]}}",
         "options": {},
         "bodyParametersUi": {
           "parameter": [
             {
               "name": "ld_charges",
-              "value": "={{parseFloat($node[\"Get the payment to vendor\"].json[\"data\"][\"ld_charges\"])+parseFloat($node[\"Function to get the splitted payment\"].json[\"ld_charges\"])}}"
+              "value": "={{parseFloat($node[\"Get the payment to vendor\"].json[\"data\"][\"ld_charges\"])+parseFloat($node[\"Check for consignment type\"].json[\"data\"][\"ld_charges\"])}}"
             },
             {
               "name": "tax_deducted",
-              "value": "={{parseFloat($node[\"Get the payment to vendor\"].json[\"data\"][\"tax_deducted\"])+parseFloat($node[\"Function to get the splitted payment\"].json[\"actual_tax_deducted_value\"])}}"
+              "value": "={{parseFloat($node[\"Get the payment to vendor\"].json[\"data\"][\"tax_deducted\"])+parseFloat($node[\"Check for consignment type\"].json[\"data\"][\"actual_tax_deducted_value\"])}}"
             },
             {
               "name": "other_deductions",
-              "value": "={{parseFloat($node[\"Get the payment to vendor\"].json[\"data\"][\"other_deductions\"])+parseFloat($node[\"Function to get the splitted payment\"].json[\"other_deductions\"])}}"
+              "value": "={{parseFloat($node[\"Get the payment to vendor\"].json[\"data\"][\"other_deductions\"])+parseFloat($node[\"Check for consignment type\"].json[\"data\"][\"other_deductions\"])}}"
             },
             {
               "name": "payment_received",
-              "value": "={{parseFloat($node[\"Get the payment to vendor\"].json[\"data\"][\"payment_received\"])+parseFloat($node[\"Function to get the splitted payment\"].json[\"payment_paid\"])}}"
+              "value": "={{parseFloat($node[\"Get the payment to vendor\"].json[\"data\"][\"payment_received\"])+parseFloat($node[\"Check for consignment type\"].json[\"data\"][\"payment_paid\"])}}"
             }
           ]
         }
@@ -636,12 +636,13 @@
           "id": "80",
           "name": "Mozart qa creds"
         }
-      }
+      },
+      "continueOnFail": true
     },
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Function to get the splitted payment\"].json[\"dms_url\"]}}/items/sdm_vendor_invoice_details/{{$node[\"Function to get the splitted payment\"].json[\"vendor_payment_ref\"]}}",
+        "url": "={{$node[\"Function to get the splitted payment\"].json[\"dms_url\"]}}/items/sdm_vendor_invoice_details/{{$node[\"Check for consignment type\"].json[\"data\"][\"payment_advice\"][\"vendor_payment_ref\"]}}",
         "options": {}
       },
       "name": "Get the payment to vendor",
@@ -672,7 +673,7 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "PATCH",
-        "url": "={{$node[\"Function to get the splitted payment\"].json[\"dms_url\"]}}/items/sdm_payments_to_shakedeal/{{$node[\"Function to get the splitted payment\"].json[\"id\"]}}",
+        "url": "={{$node[\"Function to get the splitted payment\"].json[\"dms_url\"]}}/items/sdm_payments_to_shakedeal/{{$node[\"Function to get the splitted payment\"].json[\"id\"]}}?fields=*,payment_advice.*",
         "options": {},
         "bodyParametersUi": {
           "parameter": [
@@ -773,5 +774,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-06-28T09:37:08.556Z"
+  "updatedAt": "2023-06-29T07:31:24.960Z"
 }
