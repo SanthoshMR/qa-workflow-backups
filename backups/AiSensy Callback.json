@@ -1,0 +1,38 @@
+{
+  "active": true,
+  "connections": {},
+  "createdAt": "2023-06-29T09:41:26.190Z",
+  "id": "337",
+  "name": "AiSensy Callback",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "aisensy-callback",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ],
+      "webhookId": "41b9e333-1821-44a0-a953-818d27d6f38e"
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-06-29T09:43:19.506Z"
+}
