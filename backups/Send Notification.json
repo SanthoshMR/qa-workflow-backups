@@ -405,10 +405,49 @@
           "name": "Notification"
         }
       }
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "=https://backend.aisensy.com/campaign/t1/api",
+        "responseFormat": "string",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "apiKey",
+              "value": "=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NjVmYTAxYzQ1MzJmMGMwMTQ2NDhiOCIsIm5hbWUiOiJTaGFrZWRlYWwgTWFya2V0aW5nIiwiYXBwTmFtZSI6IkFpU2Vuc3kiLCJjbGllbnRJZCI6IjY0NjVmYTAxYzc1MjIyN2RlNWI2MjZiNCIsImFjdGl2ZVBsYW4iOiJOT05FIiwiaWF0IjoxNjg0NDA0NzM3fQ.tOqY4HVzo2_eRl--JnoUioFlw7bGGAb2LPr98LO2_dI"
+            },
+            {
+              "name": "campaignName",
+              "value": "={{$node[\"Function to get params and templates\"].json[\"template\"]}}"
+            },
+            {
+              "name": "destination",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"mobile\"]}}"
+            },
+            {
+              "name": "userName",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"mobile\"]}}"
+            },
+            {
+              "name": "templateParams",
+              "value": "={{$node[\"Function to get params and templates\"].json[\"request_params\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "AiSensy Whatsapp",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        440,
+        400
+      ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-06-14T10:28:43.074Z"
+  "updatedAt": "2023-06-29T05:34:55.826Z"
 }
