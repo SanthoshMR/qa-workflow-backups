@@ -1,6 +1,62 @@
 {
   "active": true,
-  "connections": {},
+  "connections": {
+    "Check for message ID": {
+      "main": [
+        [
+          {
+            "node": "Check Message ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Data": {
+      "main": [
+        [
+          {
+            "node": "Update SES Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update SES Log": {
+      "main": [
+        [
+          {
+            "node": "Insert SES Log Details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Message ID": {
+      "main": [
+        [
+          {
+            "node": "Update Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Check for message ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
   "createdAt": "2023-06-29T09:41:26.190Z",
   "id": "337",
   "name": "AiSensy Callback",
@@ -11,7 +67,7 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        240,
+        -100,
         300
       ]
     },
@@ -25,14 +81,126 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        460,
+        120,
         300
       ],
       "webhookId": "41b9e333-1821-44a0-a953-818d27d6f38e"
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://zeusqa.shakedeal.com/items/sd_delivery_logs?filter={\"_and\": [{\"message_id\": {\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"data\"][\"message\"][\"submitted_message_id\"]}}\"}},{\"event_type\":{\"_eq\":\"WhatsApp\"}}]}",
+        "options": {}
+      },
+      "name": "Check for message ID",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        320,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "81",
+          "name": "SES Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let request = $node[\"Webhook\"].json.body\n\nlet keys = [];\nlet req_body = {};\n\nlet response = $node[\"Check for message ID\"].json.data\n\nresponse.forEach(function(obj,index){\n    keys.push(obj.log_id)\n})\n\nlet whatsapp_status = '';\nlet log_status = '';\nif(request.data.message.status == 'READ'){\n    whatsapp_status = 'Seen';\n}else if(request.data.message.status == 'DELIVERED'){\n    whatsapp_status = 'Delivered';\n}else if(request.data.message.status == 'FAILED'){\n    whatsapp_status = 'Failed';\n}else{\n    whatsapp_status = 'Send';\n}\n\nlet current_status = $node[\"Check for message ID\"].json.data[0].status;\n//Check log status. If status already set to seen, no need to update the status\nif(current_status == 'Seen'){\n    log_status = 'Seen';\n}else if(current_status == 'Delivered'){\n    if(whatsapp_status == 'Seen'){\n        log_status = 'Seen';\n    }else{\n        log_status = current_status;\n    }\n}else{\n    log_status = whatsapp_status;\n}\n\nlet data = {\n    \"status\" : log_status\n}\n\nreq_body.keys = keys;\nreq_body.data = data;\n\nitems[0].json.keys = keys;\nitems[0].json.status = log_status;\nitems[0].json.req_body = req_body;\nreturn items;"
+      },
+      "name": "Update Data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        740,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "=https://zeusqa.shakedeal.com/items/sd_delivery_logs",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Update Data\"].json[\"req_body\"]}}"
+      },
+      "name": "Update SES Log",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        960,
+        280
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "81",
+          "name": "SES Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "=https://zeusqa.shakedeal.com/items/sd_delivery_log_details",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "sd_delivery_log_id",
+              "value": "={{$node[\"Update SES Log\"].json[\"data\"][0][\"log_id\"]}}"
+            },
+            {
+              "name": "status",
+              "value": "={{$node[\"Update Data\"].json[\"status\"]}}"
+            },
+            {
+              "name": "message",
+              "value": "={{$node[\"Webhook\"].json[\"body\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Insert SES Log Details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1140,
+        280
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "81",
+          "name": "SES Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Check for message ID\"].json[\"data\"].length}}",
+              "operation": "larger",
+              "value2": "={{0}}"
+            }
+          ]
+        }
+      },
+      "name": "Check Message ID",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        520,
+        300
+      ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-06-29T09:43:19.506Z"
+  "updatedAt": "2023-06-30T11:39:18.675Z"
 }
