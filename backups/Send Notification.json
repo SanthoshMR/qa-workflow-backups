@@ -23,7 +23,7 @@
         ],
         [
           {
-            "node": "Call Kaleyra",
+            "node": "AiSensy Whatsapp",
             "type": "main",
             "index": 0
           }
@@ -86,6 +86,28 @@
       ]
     },
     "Send OTP-Msg91": {
+      "main": [
+        [
+          {
+            "node": "Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AiSensy Whatsapp": {
+      "main": [
+        [
+          {
+            "node": "Insert AiSensy Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert AiSensy Log": {
       "main": [
         [
           {
@@ -264,8 +286,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1180,
-        0
+        1280,
+        160
       ]
     },
     {
@@ -409,7 +431,99 @@
     {
       "parameters": {
         "requestMethod": "POST",
-        "url": "=https://backend.aisensy.com/campaign/t1/api",
+        "url": "=https://backend.aisensy.com/campaign/t1/api/v2",
+        "responseFormat": "string",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "apiKey",
+              "value": "=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NjVmYTAxYzQ1MzJmMGMwMTQ2NDhiOCIsIm5hbWUiOiJTaGFrZWRlYWwgTWFya2V0aW5nIiwiYXBwTmFtZSI6IkFpU2Vuc3kiLCJjbGllbnRJZCI6IjY0NjVmYTAxYzc1MjIyN2RlNWI2MjZiNCIsImFjdGl2ZVBsYW4iOiJOT05FIiwiaWF0IjoxNjg0NDA0NzM3fQ.tOqY4HVzo2_eRl--JnoUioFlw7bGGAb2LPr98LO2_dI"
+            },
+            {
+              "name": "campaignName",
+              "value": "=voucher1"
+            },
+            {
+              "name": "destination",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"mobile\"]}}"
+            },
+            {
+              "name": "userName",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"mobile\"]}}"
+            },
+            {
+              "name": "templateParams",
+              "value": "={{$node[\"Function to get params and templates\"].json[\"request_params\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "AiSensy Whatsapp",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        540,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "=https://zeusqa.shakedeal.com/items/sd_delivery_logs",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "order_id",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"order_id\"]}}"
+            },
+            {
+              "name": "message_id",
+              "value": "={{$node[\"AiSensy Whatsapp\"].json[\"data\"][\"submitted_message_id\"]}}"
+            },
+            {
+              "name": "recipient",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"mobile\"]}}"
+            },
+            {
+              "name": "event_type",
+              "value": "=WhatsApp"
+            },
+            {
+              "name": "template",
+              "value": "={{$node[\"Function to get params and templates\"].json[\"whatsapp_template\"]}}"
+            },
+            {
+              "name": "source",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"source\"]}}"
+            },
+            {
+              "name": "status",
+              "value": "=Send"
+            }
+          ]
+        }
+      },
+      "name": "Insert AiSensy Log",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        800,
+        400
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "81",
+          "name": "SES Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "=https://backend.aisensy.com/campaign/t1/api/v2",
         "responseFormat": "string",
         "options": {},
         "bodyParametersUi": {
@@ -437,11 +551,11 @@
           ]
         }
       },
-      "name": "AiSensy Whatsapp",
+      "name": "AiSensy Whatsapp1",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        440,
+        220,
         400
       ]
     }
@@ -449,5 +563,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-06-29T05:34:55.826Z"
+  "updatedAt": "2023-06-30T12:22:38.746Z"
 }
