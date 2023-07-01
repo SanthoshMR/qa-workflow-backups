@@ -376,6 +376,10 @@
             {
               "name": "sd_po_number",
               "value": "={{$node[\"Webhook\"].json[\"body\"][\"po_number\"]}}"
+            },
+            {
+              "name": "tracking_link",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"tracking_link\"]}}"
             }
           ]
         }
@@ -571,5 +575,5 @@
       "updatedAt": "2023-05-30T07:00:01.982Z"
     }
   ],
-  "updatedAt": "2023-06-22T09:37:08.424Z"
+  "updatedAt": "2023-06-30T11:57:37.046Z"
 }
