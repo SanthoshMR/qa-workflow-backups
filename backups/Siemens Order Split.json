@@ -318,7 +318,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let order_response = $node[\"Webhook\"].json.body;\nlet parent_order_detail = $node[\"Check for Parent Order ID\"].json.data[0];\n\nlet split_order_info = $node[\"Create Split Order\"].json.data;\n\nlet parent_order_products = parent_order_detail.order_items;\nlet products = order_response.products;\n\nlet split_order_product_data = [];\n\n//Product Details\nfor (var key in products) {\n    if (products.hasOwnProperty(key)) {\n        var product = products[key];\n\n        parent_order_products.forEach((parent_order_product,parent_order_product_index)=>{\n            let parent_product = parent_order_product.sds_po_items_id.product;\n            \n            if(parent_product.id == product.product_code){\n                \n                let order_item_keys = [];\n                order_item_keys.push(parent_order_product.id);\n\n                let new_order_data = {\n                    \"sds_orders_id\" : split_order_info.id,\n                    \"ordered_qty\" : product.amount\n                }\n\n                split_order_product_data.push({\n                    json: [{\n                        keys:order_item_keys,\n                        data:new_order_data,\n                    }]\n                }); \n            }\n        });\n    }\n}\n\nreturn split_order_product_data;"
+        "functionCode": "let order_response = $node[\"Webhook\"].json.body;\nlet parent_order_detail = $node[\"Check for Parent Order ID\"].json.data[0];\n\nlet split_order_info = $node[\"Create Split Order\"].json.data;\n\nlet parent_order_products = parent_order_detail.order_items;\nlet products = order_response.products;\n\nlet split_order_product_data = [];\n\n//Product Details\nfor (var key in products) {\n    if (products.hasOwnProperty(key)) {\n        var product = products[key];\n\n        parent_order_products.forEach((parent_order_product,parent_order_product_index)=>{\n            let parent_product = parent_order_product.sds_po_items_id.product;\n            \n            if(parent_product.id == product.product_code){\n                \n                let order_item_keys = [];\n                order_item_keys.push(parent_order_product.id);\n\n                let new_order_data = {\n                    \"sds_orders_id\" : split_order_info.id,\n                    // \"ordered_qty\" : product.amount\n                }\n\n                split_order_product_data.push({\n                    json: [{\n                        keys:order_item_keys,\n                        data:new_order_data,\n                    }]\n                }); \n            }\n        });\n    }\n}\n\nreturn split_order_product_data;"
       },
       "name": "Prepare Split Order Items",
       "type": "n8n-nodes-base.function",
@@ -587,5 +587,5 @@
       "updatedAt": "2023-05-30T07:00:01.982Z"
     }
   ],
-  "updatedAt": "2023-06-28T12:44:43.824Z"
+  "updatedAt": "2023-06-30T07:29:58.391Z"
 }
