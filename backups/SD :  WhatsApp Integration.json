@@ -5,7 +5,7 @@
       "main": [
         [
           {
-            "node": "HTTP Request",
+            "node": "Globals",
             "type": "main",
             "index": 0
           }
@@ -79,6 +79,17 @@
         [
           {
             "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Function",
             "type": "main",
             "index": 0
           }
@@ -185,7 +196,7 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        -200,
+        -340,
         460
       ],
       "webhookId": "7e8461a3-2b7c-40af-8a0f-56adc090374a",
@@ -259,7 +270,7 @@
     },
     {
       "parameters": {
-        "functionCode": "return $node[\"HTTP Request\"].json;"
+        "functionCode": "let default_whatsapp_provider = $node[\"Globals\"].json.default_whatsapp_provider;\n  // return $node[\"AiSensy Whatsapp\"].json.data;\nif(default_whatsapp_provider == 'kaleyra'){\n  return $node[\"HTTP Request\"].json; \n}else{\n  return $node[\"AiSensy Whatsapp\"].json.data;\n}"
       },
       "name": "Response Data",
       "type": "n8n-nodes-base.function",
@@ -283,7 +294,7 @@
             },
             {
               "name": "campaignName",
-              "value": "=intransit"
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"template_name\"]}}"
             },
             {
               "name": "destination",
@@ -296,6 +307,10 @@
             {
               "name": "templateParams",
               "value": "={{$node[\"Function\"].json[\"request_params\"]}}"
+            },
+            {
+              "name": "media",
+              "value": "={{$node[\"Function\"].json[\"media\"]}}"
             }
           ]
         }
@@ -304,13 +319,13 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        140,
+        160,
         680
       ]
     },
     {
       "parameters": {
-        "functionCode": "let request_params = $node[\"Webhook\"].json.body.params;\n\nlet params = JSON.parse(\"[\" + request_params + \"]\");\n\nitems[0].json.request_params = params;\nitems[0].json.request_params1 = request_params;\nreturn items;\n"
+        "functionCode": "let request_params = $node[\"Webhook\"].json.body.params;\n\nlet params = JSON.parse(\"[\" + request_params + \"]\");\n\nlet media_url = $node[\"Webhook\"].json.body.media_url;\nlet file_name = \"\";\nif(media_url){\n    let media_split_content = media_url.split(\"/\");\n    file_name = media_split_content[media_split_content.length - 1];\n}\n\nlet media = {\n    \"url\" : media_url,\n    \"filename\" : file_name\n}\n// items[0].json.test = media_split_content;\n// items[0].json.test1 = file_name;\nitems[0].json.media = media;\nitems[0].json.request_params = params;\n// items[0].json.request_params1 = request_params;\nreturn items;\n"
       },
       "name": "Function",
       "type": "n8n-nodes-base.function",
@@ -319,10 +334,30 @@
         -20,
         680
       ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "default_whatsapp_provider",
+              "value": "aisensy"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        -180,
+        460
+      ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-06-30T13:01:47.413Z"
+  "updatedAt": "2023-07-02T13:37:48.089Z"
 }
