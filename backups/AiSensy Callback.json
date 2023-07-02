@@ -42,10 +42,79 @@
             "type": "main",
             "index": 0
           }
+        ],
+        [
+          {
+            "node": "Distinguish Reply",
+            "type": "main",
+            "index": 0
+          }
         ]
       ]
     },
     "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Message ID1": {
+      "main": [
+        [
+          {
+            "node": "Check for message ID",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Distinguish Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Send the reply to SD store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Distinguish Reply": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert SES Log Details": {
+      "main": [
+        [
+          {
+            "node": "Distinguish Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
       "main": [
         [
           {
@@ -82,22 +151,22 @@
       "typeVersion": 1,
       "position": [
         120,
-        300
+        280
       ],
       "webhookId": "41b9e333-1821-44a0-a953-818d27d6f38e"
     },
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "=https://zeusqa.shakedeal.com/items/sd_delivery_logs?filter={\"_and\": [{\"message_id\": {\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"data\"][\"message\"][\"submitted_message_id\"]}}\"}},{\"event_type\":{\"_eq\":\"WhatsApp\"}}]}",
+        "url": "=https://zeusqa.shakedeal.com/items/sd_delivery_logs?filter={\"_and\": [{\"message_id\": {\"_eq\":\"{{$node[\"Function\"].json[\"message_id\"]}}\"}},{\"event_type\":{\"_eq\":\"WhatsApp\"}}]}",
         "options": {}
       },
       "name": "Check for message ID",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        320,
-        300
+        540,
+        280
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -114,8 +183,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        740,
-        280
+        960,
+        260
       ]
     },
     {
@@ -131,8 +200,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        960,
-        280
+        1180,
+        260
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -168,8 +237,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1140,
-        280
+        1360,
+        260
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -194,13 +263,129 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        520,
-        300
+        740,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Webhook\"].json[\"body\"][\"data\"][\"message\"][\"submitted_message_id\"]}}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      },
+      "name": "Check Message ID1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        300,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{[\"yes\",\"no\",\"stop\",\"start\"].includes($node[\"Webhook\"].json[\"body\"][\"data\"][\"message\"][\"message_content\"][\"text\"].toLowerCase())?true:false}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "Distinguish Reply",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        660,
+        540
+      ],
+      "notes": "SDStore : True\nShakePe : False"
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "hash",
+              "value": "=wfs%#hash"
+            },
+            {
+              "name": "sdStore_url",
+              "value": "=https://sdqa.shakedeal.com/index.php?dispatch=wfs_update.whatsapp_call_back"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        940,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"sdStore_url\"]}}",
+        "responseFormat": "string",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "body",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"data\"][\"message\"][\"message_content\"][\"text\"]}}"
+            },
+            {
+              "name": "from",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"data\"][\"message\"][\"phone_number\"]}}"
+            },
+            {
+              "name": "reply_to",
+              "value": "={{$node[\"Function\"].json[\"message_id\"]}}"
+            },
+            {
+              "name": "text",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"data\"][\"message\"][\"message_content\"][\"text\"]}}"
+            },
+            {
+              "name": "hash",
+              "value": "={{$node[\"Globals\"].json.hash}}"
+            }
+          ]
+        }
+      },
+      "name": "Send the reply to SD store",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1140,
+        520
+      ],
+      "alwaysOutputData": true,
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "functionCode": "let response = $node[\"Webhook\"].json.body;\n\nlet message_id = '';\n\nif(response.data.message.submitted_message_id){\n  message_id = response.data.message.submitted_message_id;\n}else if(response.data.message.context.submitted_message_id){\n  message_id = response.data.message.context.submitted_message_id;\n}\n\n\nitems[0].json.message_id = message_id;\n\nreturn items;\n\n"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        320,
+        280
       ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-06-30T11:39:18.675Z"
+  "updatedAt": "2023-07-02T14:34:00.468Z"
 }
