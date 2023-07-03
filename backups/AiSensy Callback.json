@@ -118,7 +118,7 @@
       "main": [
         [
           {
-            "node": "Check for message ID",
+            "node": "Check Message ID1",
             "type": "main",
             "index": 0
           }
@@ -136,8 +136,8 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        -100,
-        300
+        -180,
+        280
       ]
     },
     {
@@ -150,7 +150,7 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        120,
+        20,
         280
       ],
       "webhookId": "41b9e333-1821-44a0-a953-818d27d6f38e"
@@ -272,7 +272,7 @@
         "conditions": {
           "string": [
             {
-              "value1": "={{$node[\"Webhook\"].json[\"body\"][\"data\"][\"message\"][\"submitted_message_id\"]}}",
+              "value1": "={{$node[\"Function\"].json[\"message_id\"]}}",
               "operation": "isNotEmpty"
             }
           ]
@@ -282,8 +282,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        300,
-        560
+        340,
+        280
       ]
     },
     {
@@ -373,13 +373,13 @@
     },
     {
       "parameters": {
-        "functionCode": "let response = $node[\"Webhook\"].json.body;\n\nlet message_id = '';\n\nif(response.data.message.submitted_message_id){\n  message_id = response.data.message.submitted_message_id;\n}else if(response.data.message.context.submitted_message_id){\n  message_id = response.data.message.context.submitted_message_id;\n}\n\n\nitems[0].json.message_id = message_id;\n\nreturn items;\n\n"
+        "functionCode": "let response = $node[\"Webhook\"].json.body;\n\nlet message_id = '';\n\nif(response.data.message.submitted_message_id){\n  message_id = response.data.message.submitted_message_id;\n}else if(response.data.message.context && response.data.message.context.submitted_message_id){\n  message_id = response.data.message.context.submitted_message_id;\n}\n\n\nitems[0].json.message_id = message_id;\n\nreturn items;\n\n"
       },
       "name": "Function",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        320,
+        180,
         280
       ]
     }
@@ -387,5 +387,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-07-02T14:34:00.468Z"
+  "updatedAt": "2023-07-03T12:31:20.176Z"
 }
