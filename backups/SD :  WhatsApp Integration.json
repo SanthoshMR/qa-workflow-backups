@@ -270,7 +270,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let default_whatsapp_provider = $node[\"Globals\"].json.default_whatsapp_provider;\n  // return $node[\"AiSensy Whatsapp\"].json.data;\nif(default_whatsapp_provider == 'kaleyra'){\n  return $node[\"HTTP Request\"].json; \n}else{\n  return $node[\"AiSensy Whatsapp\"].json.data;\n}"
+        "functionCode": "let default_whatsapp_provider = $node[\"Globals\"].json.default_whatsapp_provider;\n  // return $node[\"AiSensy Whatsapp\"].json.data;\nif(default_whatsapp_provider == 'kaleyra'){\n  return $node[\"HTTP Request\"].json; \n}else{\n  return $node[\"AiSensy Whatsapp\"].json.data;\n}\n\n// let returnItems = [];\n// returnItems.push({\n//   json:{\n//     id:$node[\"AiSensy Whatsapp\"].json.data.submitted_message_id,\n//   }\n// })\n\n// return returnItems;"
       },
       "name": "Response Data",
       "type": "n8n-nodes-base.function",
@@ -359,5 +359,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-07-02T13:37:48.089Z"
+  "updatedAt": "2023-07-03T12:20:08.429Z"
 }
