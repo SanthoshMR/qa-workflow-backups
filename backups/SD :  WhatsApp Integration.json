@@ -212,7 +212,7 @@
         "conditions": {
           "boolean": [
             {
-              "value1": "={{[\"confirmed_order_1\",\"cancelled_order_customer_1\",\"cancelled_order_customer_2_\",\"confirmed_order_2\"].includes($node[\"Webhook\"].json[\"body\"][\"template_name\"])}}",
+              "value1": "={{[\"confirmed_order_1\",\"cancelled_order_customer_1\",\"cancelled_order_customer_2_\",\"confirmed_order_2\",\"orderconfirmation\"].includes($node[\"Webhook\"].json[\"body\"][\"template_name\"])}}",
               "value2": true
             }
           ]
@@ -359,5 +359,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-07-03T12:20:08.429Z"
+  "updatedAt": "2023-07-04T09:25:48.906Z"
 }
