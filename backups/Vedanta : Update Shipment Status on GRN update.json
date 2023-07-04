@@ -625,7 +625,7 @@
     },
     {
       "parameters": {
-        "functionCode": "const update_residual_amount_obj = $node[\"Function to create payment to vendors\"].json[\"update_residual_amount_obj\"]\n\nlet returnItems =[]\n\nupdate_residual_amount_obj.forEach(function(obj,index){  \n    returnItems.push({\n    json: {\n       id : obj.id,\n       residual_amount : obj.residual_amount,\n       url : $node[\"Get url and token\"].json[\"0\"][\"mozart_url\"],\n       vendor_invoice : $node[\"Create payment to vendors\"].json[\"data\"][\"id\"]\n    }\n  });\n  \n})\n\nreturn returnItems;"
+        "functionCode": "const update_residual_amount_obj = $node[\"Function to create payment to vendors\"].json[\"updateResidualAmountArr\"]\n\nlet returnItems =[]\n\nupdate_residual_amount_obj.forEach(function(obj,index){  \n    returnItems.push({\n    json: {\n       id : obj.id,\n       residual_amount : obj.residual_amount,\n       url : $node[\"Get url and token\"].json[\"0\"][\"mozart_url\"],\n       vendor_invoice : $node[\"Create payment to vendors\"].json[\"data\"][\"id\"]\n    }\n  });\n  \n})\n\nreturn returnItems;"
       },
       "name": "Function to update advance payments",
       "type": "n8n-nodes-base.function",
@@ -833,5 +833,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-06-22T07:08:28.658Z"
+  "updatedAt": "2023-07-04T07:30:46.723Z"
 }
