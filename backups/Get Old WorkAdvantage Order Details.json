@@ -1,0 +1,106 @@
+{
+  "active": false,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Get Order Details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-07-10T10:28:15.142Z",
+  "id": "340",
+  "name": "Get Old WorkAdvantage Order Details",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        220,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "httpMethod": "POST",
+        "path": "get-vendor-order-details",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        400,
+        420
+      ],
+      "webhookId": "90e5cec9-6b9c-46c8-94ec-e5efca641da1",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "75",
+          "name": "Vendor Partner Program Zeus QA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "const axios = require('axios');\n\nconst waClientId = $node[\"Globals\"].json[\"wa_client_id\"];\nconst waClientSecret = $node[\"Globals\"].json[\"wa_client_secret\"];\n\nconst vendorApiIntId = $node[\"Webhook\"].json[\"body\"][\"vendor_api_int_id\"];\nconst referenceId = $node[\"Webhook\"].json[\"body\"][\"reference_id\"];\n\nconst waRedirectURI = \"https://secure.workadvantage.in/in/api/v1/customerVerifier\";\n\nif(vendorApiIntId==\"WK_ADV\") {\n\tconst authCodeResponse = await axios.get(`https://secure.workadvantage.in/fetch_authorization_code`, {\n\t\tparams: {\n\t\t\tclient_id: waClientId,\n\t\t\tclient_secret: waClientSecret,\n\t\t\tredirect_uri: waRedirectURI\n\t\t}\n\t});\n\n\tconst { success, code } = authCodeResponse.data;\n\n\tif(success) {\n\t\tconst authOauthCodeResponse = await axios.post(`https://secure.workadvantage.in/oauth/token`,{}, {\n\t\t\tparams: {\n\t\t\t\tclient_id: waClientId,\n\t\t\t\tclient_secret: waClientSecret,\n\t\t\t\tredirect_uri: waRedirectURI,\n\t\t\t\tcode: code,\n\t\t\t\tgrant_type: \"authorization_code\"\n\t\t\t}\n\t\t});\n\n\t\tconst { access_token } = authOauthCodeResponse.data;\n\n\t\tif(access_token) {\n\t\t\t\t\tconst orderDetailsResponse = await axios.get(`https://secure.workadvantage.in/external_orders`, {\n\t\t\t\t\t\tparams: {\n\t\t\t\t\t\t\treference_id: referenceId,\n\t\t\t\t\t\t\taccess_token: access_token\n\t\t\t\t\t\t}, \n\t\t\t\t\t\theaders: {\n\t\t\t\t\t\t\t\"Authorization\": access_token\n\t\t\t\t\t\t}\n\t\t\t\t\t});\n\n\t\t\t\t\treturn { o: orderDetailsResponse.data }\n\t\t}\n\t} \n}\n"
+      },
+      "name": "Get Order Details",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        800,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "wa_client_id",
+              "value": "xO-v10Ip-wsjl6ltvmPj0bVK4bNio5DC1tebjxJMKWM"
+            },
+            {
+              "name": "wa_client_secret",
+              "value": "bXpvJnjrE-PGFL_gTvR-MO6JuXHjs2VIk6_RTle8ZOk"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        600,
+        420
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-07-10T13:00:50.199Z"
+}
