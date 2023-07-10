@@ -1,0 +1,79 @@
+{
+  "active": false,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-07-10T09:52:09.934Z",
+  "id": "339",
+  "name": "vendor onboard mails",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "c4408c94-e2f4-4559-a5ce-4404534633fb",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        320,
+        140
+      ],
+      "webhookId": "c4408c94-e2f4-4559-a5ce-4404534633fb",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "handyalasairam9177@gmail.com",
+        "toEmail": "tendul.kumar@shakedeal.com",
+        "subject": "Welcome to Shakedeal’s Vendor panel",
+        "text": "Dear <vendor name>,\n\n<p>This mail is to inform you that from <Date> onwards you need to track all your POs and relevant details in our vendor panel. Only after signing in to the vendor panel, you will be able to take all necessary actions like uploading invoices, providing tracking number & dispatch document, tracking your payment status, and a lot more.</p>\n\nPlease log in using the following credentials:\n\nLogin id: <>\n\nTemporary Password: <>\n\nVendor Panel: <link>\n\nVideo link to quickly guide you - on how to log in.\n\nIf you find any difficulty logging in, please contact your POC [POC Name] at [POC Email]\n\nPlease find links to all the videos which will guide you step by step about the different actions which can be taken by you on the vendor panel.\n\nStep 1 - How to log in?\n\nStep 2 - How to acknowledge and download PO?\n\nStep 3 - How to check PO details?\n\nStep 4 - How to create a shipment and upload an invoice?\n\nStep 5 - How to download our SD Invoice?\n\nStep 6 - How to upload the tracking number and dispatch document?\n\nStep 7 - How to Upload Proof of Delivery?\n\n \n\nSD Logo\n\nwww.shakedeal.com\n\nOpcommerce Online Pvt Ltd.\n\nDEDICATED PURCHASING PARTNER FOR:\n\nVedanta Global Logo",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        540,
+        140
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "17",
+          "name": "smtp(sai)creds"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-07-10T11:26:14.113Z"
+}
