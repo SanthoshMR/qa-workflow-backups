@@ -118,7 +118,7 @@
       "main": [
         [
           {
-            "node": "send gift card to sds",
+            "node": "IF UNIQUE REF ID",
             "type": "main",
             "index": 0
           }
@@ -130,6 +130,35 @@
         [
           {
             "node": "Get Voucher from VPP API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF UNIQUE REF ID": {
+      "main": [
+        [
+          {
+            "node": "send gift card to sds",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get Order Details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Order Details": {
+      "main": [
+        [
+          {
+            "node": "send gift card to sds1",
             "type": "main",
             "index": 0
           }
@@ -159,6 +188,10 @@
             {
               "name": "dms_url",
               "value": "={{$node[\"Wait for order\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ?\"https://zeus.shakedeal.com\":\"https://zeusqa.shakedeal.com\"}}"
+            },
+            {
+              "name": "n8n_url",
+              "value": "={{$node[\"Wait for order\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ?\"https://athena.shakedeal.com\":\"https://qan8n.shakedeal.com\"}}"
             }
           ]
         },
@@ -410,8 +443,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1920,
-        500
+        2360,
+        480
       ]
     },
     {
@@ -423,10 +456,90 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1620,
+        1660,
         760
       ],
       "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{!$node[\"Get Voucher from VPP API\"].json[0][\"message\"].toLowerCase().includes(\"unique reference id\")}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "IF UNIQUE REF ID",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1880,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let gift_card = [];\nconst isSuccess = $node[\"Get Order Details\"].json[\"success\"];\nconst message = $node[\"Get Voucher from VPP API\"].json[0][\"message\"].toLowerCase();\nconst isUniqueRefId = !message.includes(\"unique reference id\");\nconst try_qwikcilver = false\n\n// Below 3 variables required only for success case from work advantage\nconst vouchers = isSuccess? $node[\"Get Order Details\"].json[\"response\"]: [];\nconst amount = isSuccess? $node[\"Check for gift card amount\"].json[\"data\"][0][\"amount\"]*1: null;\nconst productCode = isSuccess? $node[\"Wait for order\"].json[\"body\"][\"product_code\"]: null;\n\nif(isSuccess){\n  vouchers.forEach((obj,index)=>{\n    gift_card[index]={};\n    gift_card[index].cardNumber = obj.code;\n    gift_card[index].validity = obj.expiry;\n    gift_card[index].cardPin = obj.pin;\n    gift_card[index].amount = amount\n    gift_card[index].sku = productCode;\n  });\n}\n\nitems[0].json[0].cards = gift_card;\nitems[0].json[0].try_qwikcilver = try_qwikcilver;\nreturn items[0].json;\n\n// items[0].json.cards = gift_card;\n// return items;"
+      },
+      "name": "send gift card to sds1",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        2360,
+        740
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{ $node[\"Globals\"].json[\"n8n_url\"] + \"/webhook/get-vendor-order-details\" }}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "vendor_api_int_id",
+              "value": "=WK_ADV"
+            },
+            {
+              "name": "reference_id",
+              "value": "={{$node[\"Wait for order\"].json[\"body\"][\"product_code\"]+\"-\"+$node[\"Wait for order\"].json[\"body\"][\"order_id\"]}}"
+            },
+            {
+              "name": "order_id",
+              "value": "={{$node[\"Wait for order\"].json[\"body\"][\"order_id\"]}}"
+            },
+            {
+              "name": "product_code",
+              "value": "={{$node[\"Wait for order\"].json[\"body\"][\"product_code\"]}}"
+            },
+            {
+              "name": "client",
+              "value": "={{$node[\"Wait for order\"].json[\"body\"][\"client\"]}}"
+            },
+            {
+              "name": "price",
+              "value": "={{$node[\"Check for gift card amount\"].json[\"data\"][0][\"amount\"]*1}}"
+            }
+          ]
+        }
+      },
+      "name": "Get Order Details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2100,
+        740
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "75",
+          "name": "Vendor Partner Program Zeus QA"
+        }
+      }
     }
   ],
   "settings": {},
@@ -439,5 +552,5 @@
       "updatedAt": "2022-06-27T13:07:10.771Z"
     }
   ],
-  "updatedAt": "2023-05-09T09:40:36.288Z"
+  "updatedAt": "2023-07-11T13:06:31.087Z"
 }
