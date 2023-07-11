@@ -11,6 +11,11 @@
           }
         ]
       ]
+    },
+    "Send Email": {
+      "main": [
+        []
+      ]
     }
   },
   "createdAt": "2023-07-10T09:52:09.934Z",
@@ -23,8 +28,8 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        240,
-        300
+        40,
+        140
       ]
     },
     {
@@ -38,7 +43,7 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        320,
+        240,
         140
       ],
       "webhookId": "c4408c94-e2f4-4559-a5ce-4404534633fb",
@@ -52,22 +57,22 @@
     {
       "parameters": {
         "fromEmail": "handyalasairam9177@gmail.com",
-        "toEmail": "tendul.kumar@shakedeal.com",
+        "toEmail": "={{$json[\"body\"][\"email\"]}}",
         "subject": "Welcome to Shakedeal’s Vendor panel",
-        "text": "Dear <vendor name>,\n\n<p>This mail is to inform you that from <Date> onwards you need to track all your POs and relevant details in our vendor panel. Only after signing in to the vendor panel, you will be able to take all necessary actions like uploading invoices, providing tracking number & dispatch document, tracking your payment status, and a lot more.</p>\n\nPlease log in using the following credentials:\n\nLogin id: <>\n\nTemporary Password: <>\n\nVendor Panel: <link>\n\nVideo link to quickly guide you - on how to log in.\n\nIf you find any difficulty logging in, please contact your POC [POC Name] at [POC Email]\n\nPlease find links to all the videos which will guide you step by step about the different actions which can be taken by you on the vendor panel.\n\nStep 1 - How to log in?\n\nStep 2 - How to acknowledge and download PO?\n\nStep 3 - How to check PO details?\n\nStep 4 - How to create a shipment and upload an invoice?\n\nStep 5 - How to download our SD Invoice?\n\nStep 6 - How to upload the tracking number and dispatch document?\n\nStep 7 - How to Upload Proof of Delivery?\n\n \n\nSD Logo\n\nwww.shakedeal.com\n\nOpcommerce Online Pvt Ltd.\n\nDEDICATED PURCHASING PARTNER FOR:\n\nVedanta Global Logo",
+        "html": "=<!DOCTYPE html>\n<html>\n<body>\n<p>Dear {{$json[\"body\"][\"first_name\"]}} {{$json[\"body\"][\"last_name\"]}},</p>\n\n<p>This mail is to inform you that from <Date> onwards you need to track all your POs and relevant details in our vendor panel. Only after signing in to the vendor panel, you will be able to take all necessary actions like uploading invoices, providing tracking number & dispatch document, tracking your payment status, and a lot more.</p>\n\n<p>Please log in using the following credentials:</p>\n\n<p>Login id: {{$json[\"body\"][\"email\"]}}</p>\n\n<p>Temporary Password: {{$json[\"body\"][\"password\"]}}</p>\n\n<p>Vendor Panel: <a href=\"https://sdqa.vpanel.shakedeal.com/\">Link</a></p> \n\n\n<p>Video link to quickly guide you - on how to log in.</p>\n\n<p>If you find any difficulty logging in, please contact your POC [POC Name] at [POC Email]</p>\n\n<p>Please find links to all the videos which will guide you step by step about the different actions which can be taken by you on the vendor panel.</p>\n\n<p>Step 1 - <a href=\"https://sdqa.vpanel.shakedeal.com/\">How to log in?</a></p>\n\n<p>Step 2 - <a href=\"https://sdqa.vpanel.shakedeal.com/\">How to acknowledge and download PO?</a></p>\n\n<p>Step 3 - <a href=\"https://sdqa.vpanel.shakedeal.com/\">How to check PO details?</a></p>\n\n<p>Step 4 - <a href=\"https://sdqa.vpanel.shakedeal.com/\">How to create a shipment and upload an invoice?</a></p>\n\n<p>Step 5 - <a href=\"https://sdqa.vpanel.shakedeal.com/\">How to download our SD Invoice?</a></p>\n\n<p>Step 6 - <a href=\"https://sdqa.vpanel.shakedeal.com/\">How to upload the tracking number and dispatch document?</a></p>\n\n<p>Step 7 - <a href=\"https://sdqa.vpanel.shakedeal.com/\">How to Upload Proof of Delivery?</a></p>\n\n \n<img src=\"https://sdqa.vpanel.shakedeal.com/assets/c5693191-0bde-45d6-a874-8ec8e1877951\">\n\n<p><a href=\"https://www.shakedeal.com/\">www.shakedeal.com</a></p>\n\n<p>Opcommerce Online Pvt Ltd.</p>\n\n<p>DEDICATED PURCHASING PARTNER FOR:</p>\n\nVedanta Global Logo\n</body>\n</html>",
         "options": {}
       },
       "name": "Send Email",
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 1,
       "position": [
-        540,
+        420,
         140
       ],
       "credentials": {
         "smtp": {
-          "id": "17",
-          "name": "smtp(sai)creds"
+          "id": "36",
+          "name": "SendGrid"
         }
       }
     }
@@ -75,5 +80,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-07-10T11:26:14.113Z"
+  "updatedAt": "2023-07-11T09:45:17.404Z"
 }
