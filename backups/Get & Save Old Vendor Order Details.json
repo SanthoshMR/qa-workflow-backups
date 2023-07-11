@@ -1,0 +1,147 @@
+{
+  "active": true,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Get Order Details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-07-10T10:28:15.142Z",
+  "id": "340",
+  "name": "Get & Save Old Vendor Order Details",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        140,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "httpMethod": "POST",
+        "path": "get-vendor-order-details",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        400,
+        420
+      ],
+      "webhookId": "90e5cec9-6b9c-46c8-94ec-e5efca641da1",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "75",
+          "name": "Vendor Partner Program Zeus QA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "const axios = require('axios');\n\nconst zeusToken = $node[\"Globals\"].json[\"zeus_token\"];\nconst zeusBaseUrl = $node[\"Globals\"].json[\"zeus_base_url\"];\n\nconst waClientId = $node[\"Globals\"].json[\"wa_client_id\"];\nconst waClientSecret = $node[\"Globals\"].json[\"wa_client_secret\"];\n\nconst vendorApiIntId = $node[\"Webhook\"].json[\"body\"][\"vendor_api_int_id\"];\nconst referenceId = $node[\"Webhook\"].json[\"body\"][\"reference_id\"];\n\nconst orderId = $node[\"Webhook\"].json[\"body\"][\"order_id\"];\nconst productCode = $node[\"Webhook\"].json[\"body\"][\"product_code\"];\nconst clientName = $node[\"Webhook\"].json[\"body\"][\"client\"];\nconst voucherPrice = $node[\"Webhook\"].json[\"body\"][\"price\"];\n\nconst waRedirectURI = \"https://secure.workadvantage.in/in/api/v1/customerVerifier\";\n\ntry {\n\tconst convertExpiryIstToTs = (exp) => {\n\t\ttry {\n\t\t\tconst [ yyyy, mm, dd ] = exp.split(\"-\");\n\t\t\tconst [ hh, mmm, ss ] = exp.split(\"-\")[3].split(\":\");\n\t\t\tconst istDate = new Date(Date.UTC(yyyy, mm, dd,hh, mmm, ss)).getTime();\n\t\t\tconst utcDate = istDate - (5*60+30)*60*1000;\n\t\t\treturn new Date(utcDate);\n\t\t} catch (e) {\n\t\t\treturn null;\n\t\t}\n\n\t}\n\n\tif(vendorApiIntId==\"WK_ADV\") {\n\t\tconst authCodeResponse = await axios.get(`https://secure.workadvantage.in/fetch_authorization_code`, {\n\t\t\tparams: {\n\t\t\t\tclient_id: waClientId,\n\t\t\t\tclient_secret: waClientSecret,\n\t\t\t\tredirect_uri: waRedirectURI\n\t\t\t}\n\t\t});\n\n\t\tconst { success, code } = authCodeResponse.data;\n\n\t\t\n\n\t\tif(success) {\n\t\t\tconst authOauthCodeResponse = await axios.post(`https://secure.workadvantage.in/oauth/token`,{}, {\n\t\t\t\tparams: {\n\t\t\t\t\tclient_id: waClientId,\n\t\t\t\t\tclient_secret: waClientSecret,\n\t\t\t\t\tredirect_uri: waRedirectURI,\n\t\t\t\t\tcode: code,\n\t\t\t\t\tgrant_type: \"authorization_code\"\n\t\t\t\t}\n\t\t\t});\n\n\t\t\tconst { access_token } = authOauthCodeResponse.data;\n\n\t\t\tif(access_token) {\n\t\t\t\tlet orderDetailsResponse = null;\n\n\t\t\t\ttry {\n\t\t\t\t\torderDetailsResponse = await axios.get(`https://secure.workadvantage.in/external_orders`, {\n\t\t\t\t\t\tparams: {\n\t\t\t\t\t\t\treference_id: referenceId,\n\t\t\t\t\t\t\taccess_token: access_token\n\t\t\t\t\t\t},\n\t\t\t\t\t\theaders: {\n\t\t\t\t\t\t\t\"Authorization\": access_token\n\t\t\t\t\t\t}\n\t\t\t\t\t});\n\t\t\t\t} catch (e) { \n\t\t\t\t\treturn {\n\t\t\t\t\t\tsuccess: false,\n\t\t\t\t\t\tmessage: \"Could not retrieve order details.\",\n\t\t\t\t\t\terror: \"Error: \" + e\n\t\t\t\t\t}\n\t\t\t\t}\n\n\t\t\t\tconst { success, result } = orderDetailsResponse.data;\n\t\t\t\tif(success) {\n\t\t\t\t\tconst { codes, order_id } = result;\n\n\t\t\t\t\t/* Saving to Zeus Gift Card Inventory */\n\t\t\t\t\tconst zeusGCIArr = [];\n\t\t\t\t\tconst codesArr = [];\n\t\t\t\t\tfor (let i = 0; i < codes.length; i++) {\n\t\t\t\t\t\tconst { cardnumber, pin_or_url, expiry } = codes[i];\n\t\t\t\t\t\tzeusGCIArr.push({\n\t\t\t\t\t\t\torder_id: orderId,\n\t\t\t\t\t\t\tproduct_code: productCode,\n\t\t\t\t\t\t\tclient: clientName,\n\t\t\t\t\t\t\tprice: voucherPrice,\n\t\t\t\t\t\t\tcode: cardnumber,\n\t\t\t\t\t\t\tpin: pin_or_url,\n\t\t\t\t\t\t\tvalidity: convertExpiryIstToTs(expiry),\n\t\t\t\t\t\t\tgift_card: true,\n\t\t\t\t\t\t\tvendors: 5,\n\t\t\t\t\t\t\tvendor_order_id: order_id,\n\t\t\t\t\t\t});\n\n\t\t\t\t\t\tcodesArr.push({\n\t\t\t\t\t\t\tcode: cardnumber,\n\t\t\t\t\t\t\tpin: pin_or_url,\n\t\t\t\t\t\t\texpiry: convertExpiryIstToTs(expiry)\n\t\t\t\t\t\t})\n\t\t\t\t\t}\n\n\t\t\t\t\ttry {\n\t\t\t\t\t\tconst addToInventory = await axios.post(zeusBaseUrl+\"/items/sd_gift_card_inventory\", zeusGCIArr, {\n\t\t\t\t\t\t\theaders: {\n\t\t\t\t\t\t\t\t\"Authorization\": zeusToken\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t});\n\n\t\t\t\t\t\tisSavedToInventory = true;\n\t\t\t\t\t} catch (e) {\n\t\t\t\t\t\tisSavedToInventory = false;\n\t\t\t\t\t}\n\n\t\t\t\t\treturn {\n\t\t\t\t\t\tsuccess: true,\n\t\t\t\t\t\tresponse: codesArr,\n\t\t\t\t\t\tisSavedToInventory\n\t\t\t\t\t}\n\t\t\t\t} else {\n\t\t\t\t\treturn {\n\t\t\t\t\t\tsuccess: false,\n\t\t\t\t\t\tmessage: \"Order could not be retrieved\"\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t} else {\n\t\t\t\treturn {\n\t\t\t\t\tsuccess: false,\n\t\t\t\t\tmessage: \"OAuth Failure\"\n\t\t\t\t}\n\t\t\t}\n\t\t} else {\n\t\t\treturn {\n\t\t\t\tsuccess: false,\n\t\t\t\tmessage: \"Auth Failure\"\n\t\t\t}\n\t\t}\n\t} else {\n\t\treturn {\n\t\t\tsuccess: false,\n\t\t\tmessage: \"Invalid Vendor\"\n\t\t}\n\t}\n} catch (e) {\n\treturn {\n\t\tsuccess: false,\n\t\tmessage: \"Error: \"+e\n\t}\n}\n"
+      },
+      "name": "Get Order Details",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        800,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "wa_client_id",
+              "value": "ehRz_iPYK19jU6Wte148dmnFG5sabZ0OoD8qDR0kjhQ"
+            },
+            {
+              "name": "wa_client_secret",
+              "value": "4WfH9n054oi226pEnQmMEk2hlLGwthJ9-ezPzWPASOQ"
+            },
+            {
+              "name": "zeus_token",
+              "value": "Bearer rUsIQnlFcp9ggSPyE6ec3aodVnchrBja"
+            },
+            {
+              "name": "zeus_base_url",
+              "value": "https://zeusqa.shakedeal.com"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        600,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "wa_client_id",
+              "value": "xO-v10Ip-wsjl6ltvmPj0bVK4bNio5DC1tebjxJMKWM"
+            },
+            {
+              "name": "wa_client_secret",
+              "value": "bXpvJnjrE-PGFL_gTvR-MO6JuXHjs2VIk6_RTle8ZOk"
+            },
+            {
+              "name": "zeus_token",
+              "value": "Bearer rUsIQnlFcp9ggSPyE6ec3aodVnchrBja"
+            },
+            {
+              "name": "zeus_base_url",
+              "value": "https://zeusqa.shakedeal.com/items/sd_gift_card_inventory"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        480,
+        200
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-07-11T12:58:18.252Z"
+}
