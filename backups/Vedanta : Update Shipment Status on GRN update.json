@@ -209,7 +209,7 @@
       "main": [
         [
           {
-            "node": "Check for consignment type",
+            "node": "HTTP Request1",
             "type": "main",
             "index": 0
           }
@@ -283,6 +283,17 @@
         [
           {
             "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Check for consignment type",
             "type": "main",
             "index": 0
           }
@@ -828,10 +839,59 @@
           "name": "Mozart DMS Token"
         }
       }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_vendor_payments",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "vendor_po_number",
+              "value": "={{$node[\"Get the po number\"].json[\"data\"][\"id\"]}}"
+            },
+            {
+              "name": "payment_utr",
+              "value": "={{$node[\"IF1\"].json[\"data\"][\"payment_utr\"]}}"
+            },
+            {
+              "name": "payment_amount",
+              "value": "={{$node[\"IF1\"].json[\"data\"][\"residual_amount\"]}}"
+            },
+            {
+              "name": "payment_description",
+              "value": "={{$node[\"IF1\"].json[\"data\"][\"payment_description\"]}}"
+            },
+            {
+              "name": "vendor_payment_status",
+              "value": "={{$node[\"Update the residual amounts\"].json[\"data\"][\"vendor_payment_status\"]}}"
+            },
+            {
+              "name": "payment_type",
+              "value": "={{$node[\"Update the residual amounts\"].json[\"data\"][\"payment_type\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "HTTP Request1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3600,
+        -200
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-07-04T07:30:46.723Z"
+  "updatedAt": "2023-07-11T10:46:16.533Z"
 }
