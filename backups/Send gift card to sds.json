@@ -114,17 +114,6 @@
         ]
       ]
     },
-    "Get Voucher from VPP API": {
-      "main": [
-        [
-          {
-            "node": "IF UNIQUE REF ID",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Check for gift card amount": {
       "main": [
         [
@@ -159,6 +148,46 @@
         [
           {
             "node": "send gift card to sds1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Voucher from VPP API": {
+      "main": [
+        [
+          {
+            "node": "IF SUCCESS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF SUCCESS": {
+      "main": [
+        [
+          {
+            "node": "IF UNIQUE REF ID",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Log Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Error": {
+      "main": [
+        [
+          {
+            "node": "IF UNIQUE REF ID",
             "type": "main",
             "index": 0
           }
@@ -437,14 +466,14 @@
     },
     {
       "parameters": {
-        "functionCode": "let gift_card = [];\nconst isSuccess = $node[\"Get Voucher from VPP API\"].json[0][\"success\"];\nconst isException = $node[\"Get Voucher from VPP API\"].json[0][\"exception\"];\nconst message = $node[\"Get Voucher from VPP API\"].json[0][\"message\"].toLowerCase();\nconst try_qwikcilver = (isSuccess==false && !isException && !message.includes(\"unique reference id\"))? true: false;\n\n// Below 3 variables required only for success case from work advantage\nconst vouchers = isSuccess? $node[\"Get Voucher from VPP API\"].json[0][\"response\"]: [];\nconst amount = isSuccess? $node[\"Check for gift card amount\"].json[\"data\"][0][\"amount\"]*1: null;\nconst productCode = isSuccess? $node[\"Wait for order\"].json[\"body\"][\"product_code\"]: null;\n\nif(isSuccess){\n  vouchers.forEach((obj,index)=>{\n    gift_card[index]={};\n    gift_card[index].cardNumber = obj.code;\n    gift_card[index].validity = obj.expiry;\n    gift_card[index].cardPin = obj.pin;\n    gift_card[index].amount = amount\n    gift_card[index].sku = productCode;\n  });\n}\n\nitems[0].json[0].cards = gift_card;\nitems[0].json[0].try_qwikcilver = try_qwikcilver;\nreturn items[0].json;\n\n// items[0].json.cards = gift_card;\n// return items;"
+        "functionCode": "let gift_card = [];\nconst isSuccess = $node[\"Get Voucher from VPP API\"].json[0][\"success\"];\nconst isException = $node[\"Get Voucher from VPP API\"].json[0][\"exception\"];\nconst message = $node[\"Get Voucher from VPP API\"].json[0][\"message\"].toLowerCase();\nconst try_qwikcilver = (isSuccess==false && !isException && !message.includes(\"unique reference id\"))? true: false;\n\n// Below 3 variables required only for success case from work advantage\nconst vouchers = isSuccess? $node[\"Get Voucher from VPP API\"].json[0][\"response\"]: [];\nconst amount = isSuccess? $node[\"Check for gift card amount\"].json[\"data\"][0][\"amount\"]*1: null;\nconst productCode = isSuccess? $node[\"Wait for order\"].json[\"body\"][\"product_code\"]: null;\n\nif(isSuccess){\n  vouchers.forEach((obj,index)=>{\n    gift_card[index]={};\n    gift_card[index].cardNumber = obj.code;\n    gift_card[index].validity = obj.expiry;\n    gift_card[index].cardPin = obj.pin;\n    gift_card[index].amount = amount\n    gift_card[index].sku = productCode;\n  });\n}\n\nif(!items[0].json || !items[0].json[0]) { items[0].json = []; items[0].json[0] = {} }\n\nitems[0].json[0].cards = gift_card;\nitems[0].json[0].try_qwikcilver = try_qwikcilver;\nreturn items[0].json;\n\n// items[0].json.cards = gift_card;\n// return items;"
       },
       "name": "send gift card to sds",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        2360,
-        480
+        2620,
+        460
       ]
     },
     {
@@ -476,20 +505,20 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        1880,
-        500
+        2200,
+        480
       ]
     },
     {
       "parameters": {
-        "functionCode": "let gift_card = [];\nconst isSuccess = $node[\"Get Order Details\"].json[\"success\"];\nconst message = $node[\"Get Voucher from VPP API\"].json[0][\"message\"].toLowerCase();\nconst isUniqueRefId = !message.includes(\"unique reference id\");\nconst try_qwikcilver = false\n\n// Below 3 variables required only for success case from work advantage\nconst vouchers = isSuccess? $node[\"Get Order Details\"].json[\"response\"]: [];\nconst amount = isSuccess? $node[\"Check for gift card amount\"].json[\"data\"][0][\"amount\"]*1: null;\nconst productCode = isSuccess? $node[\"Wait for order\"].json[\"body\"][\"product_code\"]: null;\n\nif(isSuccess){\n  vouchers.forEach((obj,index)=>{\n    gift_card[index]={};\n    gift_card[index].cardNumber = obj.code;\n    gift_card[index].validity = obj.expiry;\n    gift_card[index].cardPin = obj.pin;\n    gift_card[index].amount = amount\n    gift_card[index].sku = productCode;\n  });\n}\n\nitems[0].json[0].cards = gift_card;\nitems[0].json[0].try_qwikcilver = try_qwikcilver;\nreturn items[0].json;\n\n// items[0].json.cards = gift_card;\n// return items;"
+        "functionCode": "let gift_card = [];\nconst isSuccess = $node[\"Get Order Details\"].json[\"success\"];\nconst message = $node[\"Get Voucher from VPP API\"].json[0][\"message\"].toLowerCase();\nconst isUniqueRefId = !message.includes(\"unique reference id\");\nconst try_qwikcilver = false\n\n// Below 3 variables required only for success case from work advantage\nconst vouchers = isSuccess? $node[\"Get Order Details\"].json[\"response\"]: [];\nconst amount = isSuccess? $node[\"Check for gift card amount\"].json[\"data\"][0][\"amount\"]*1: null;\nconst productCode = isSuccess? $node[\"Wait for order\"].json[\"body\"][\"product_code\"]: null;\n\nif(isSuccess){\n  vouchers.forEach((obj,index)=>{\n    gift_card[index]={};\n    gift_card[index].cardNumber = obj.code;\n    gift_card[index].validity = obj.expiry;\n    gift_card[index].cardPin = obj.pin;\n    gift_card[index].amount = amount\n    gift_card[index].sku = productCode;\n  });\n}\n\nif(!items[0].json || !items[0].json[0]) { items[0].json = []; items[0].json[0] = {} }\n\nitems[0].json[0].cards = gift_card;\nitems[0].json[0].try_qwikcilver = try_qwikcilver;\nreturn items[0].json;"
       },
       "name": "send gift card to sds1",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        2360,
-        740
+        2620,
+        660
       ]
     },
     {
@@ -531,8 +560,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2100,
-        740
+        2400,
+        660
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -540,6 +569,51 @@
           "name": "Vendor Partner Program Zeus QA"
         }
       }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$node[\"Get Voucher from VPP API\"].json[0][\"success\"]}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "IF SUCCESS",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1860,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_error_log",
+        "jsonParameters": true,
+        "options": {
+          "bodyContentType": "json"
+        },
+        "bodyParametersJson": "={\n     \"collection_name\": \"NA\",\n     \"error\": \"Send Gift Card to SDS: OrderId: {{$node[\"Wait for order\"].json[\"body\"][\"order_id\"]}}, Msg: {{$node[\"Get Voucher from VPP API\"].json[0][\"message\"]}}, ExecId: {{$executionId}}\"\n}"
+      },
+      "name": "Log Error",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2040,
+        660
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "75",
+          "name": "Vendor Partner Program Zeus QA"
+        }
+      },
+      "continueOnFail": true
     }
   ],
   "settings": {},
@@ -552,5 +626,5 @@
       "updatedAt": "2022-06-27T13:07:10.771Z"
     }
   ],
-  "updatedAt": "2023-07-11T13:06:31.087Z"
+  "updatedAt": "2023-07-12T10:15:55.509Z"
 }
