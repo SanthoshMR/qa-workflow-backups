@@ -1,0 +1,200 @@
+{
+  "active": true,
+  "connections": {
+    "Get url and token": {
+      "main": [
+        [
+          {
+            "node": "Get the payment data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get url and token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the shipment from vpanel": {
+      "main": [
+        [
+          {
+            "node": "Update payment status in vpanel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the payment data": {
+      "main": [
+        [
+          {
+            "node": "Get the shipment from vpanel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-07-12T12:57:10.081Z",
+  "id": "342",
+  "name": "Vedanta : Update Payment data in vpanel",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "update-payment-data",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        520,
+        240
+      ],
+      "webhookId": "4a0bce07-fbc6-4e8a-92f9-7240cd29a4d4",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "=https://qan8n.shakedeal.com/webhook/get-url",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "client",
+              "value": "=vedanta"
+            },
+            {
+              "name": "env",
+              "value": "=qa"
+            }
+          ]
+        }
+      },
+      "name": "Get url and token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        720,
+        240
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_invoice_details/{{$node[\"Webhook\"].json[\"body\"][\"keys\"][0]}}?fields=*,shipment.*",
+        "options": {}
+      },
+      "name": "Get the payment data",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        940,
+        240
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_shipments?filter={\"_and\": [{\"invoice_number\":{\"_eq\":\"{{$node[\"Get the payment data\"].json[\"data\"][\"invoice_number\"]}}\"}},{\"vendor_po_num\":{\"id\":{\"_eq\":\"{{$node[\"Get the payment data\"].json[\"data\"][\"shipment\"][\"vendor_po_num\"]}}\"}}}]}",
+        "options": {}
+      },
+      "name": "Get the shipment from vpanel",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1140,
+        240
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_shipments/{{$node[\"Get the shipment from vpanel\"].json[\"data\"][0][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "=total_amount_received",
+              "value": "={{$node[\"Get the payment data\"].json[\"data\"][\"payment_received\"]}}"
+            },
+            {
+              "name": "total_tax_deducted",
+              "value": "={{$node[\"Get the payment data\"].json[\"data\"][\"tax_deducted\"]}}"
+            },
+            {
+              "name": "total_other_deductions",
+              "value": "={{parseFloat($node[\"Get the payment data\"].json[\"data\"][\"other_deductions\"]) + parseFloat($node[\"Get the payment data\"].json[\"data\"][\"ld_charges\"])}}"
+            }
+          ]
+        }
+      },
+      "name": "Update payment status in vpanel",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        240
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-07-12T13:44:43.154Z"
+}
