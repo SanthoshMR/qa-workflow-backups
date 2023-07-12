@@ -425,7 +425,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sdm_orders/{{$node[\"Wait for order\"].json[\"body\"][\"key\"]}}?fields=po_number.*.*,order_items.*,supplier.*,order_items.sdm_po_items_id.*.*,order_type,shipments.*,shipments.sdm_shipments_id.*,shipments.sdm_shipments_id.vendor_po_num.*,shipments.sdm_shipments_id.vendor_po_num.po_items.*,shipments.sdm_shipments_id.vendor_po_num.po_num.*,shipments.sdm_shipments_id.vendor_po_num.po_num.issuer_name.*,shipments.sdm_shipments_id.vendor_po_num.delivery_address.*,shipments.sdm_shipments_id.vendor_po_num.po_num.issuer_name.user.*,shipments.sdm_shipments_id.vendor_po_num.po_num.shakedeal_poc_details.*,shipments.sdm_shipments_id.vendor_po_num.delivery_address.state.*,po_items.*,shipments.sdm_shipments_id.vendor_po_num.po_items.*,po_items.product.*,shipments.sdm_shipments_id.vendor_po_num.po_items.product.*",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sdm_orders/{{$node[\"Wait for order\"].json[\"body\"][\"key\"]}}?fields=po_number.*.*,po_number.issuer_name.user.*,order_items.*,supplier.*,order_items.sdm_po_items_id.*.*,order_type,shipments.*,shipments.sdm_shipments_id.*,shipments.sdm_shipments_id.vendor_po_num.*,shipments.sdm_shipments_id.vendor_po_num.po_items.*,shipments.sdm_shipments_id.vendor_po_num.po_num.*,shipments.sdm_shipments_id.vendor_po_num.po_num.issuer_name.*,shipments.sdm_shipments_id.vendor_po_num.delivery_address.*,shipments.sdm_shipments_id.vendor_po_num.po_num.issuer_name.user.*,shipments.sdm_shipments_id.vendor_po_num.po_num.shakedeal_poc_details.*,shipments.sdm_shipments_id.vendor_po_num.delivery_address.state.*,po_items.*,shipments.sdm_shipments_id.vendor_po_num.po_items.*,po_items.product.*,shipments.sdm_shipments_id.vendor_po_num.po_items.product.*",
         "options": {}
       },
       "name": "Get the po_details",
@@ -1238,5 +1238,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-07-06T12:22:34.310Z"
+  "updatedAt": "2023-07-12T10:11:47.276Z"
 }
