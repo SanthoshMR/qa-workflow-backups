@@ -1,5 +1,5 @@
 {
-  "active": false,
+  "active": true,
   "connections": {
     "Webhook": {
       "main": [
@@ -10,11 +10,6 @@
             "index": 0
           }
         ]
-      ]
-    },
-    "Send Email": {
-      "main": [
-        []
       ]
     }
   },
@@ -36,7 +31,7 @@
       "parameters": {
         "authentication": "basicAuth",
         "httpMethod": "POST",
-        "path": "c4408c94-e2f4-4559-a5ce-4404534633fb",
+        "path": "vendor_onboard_email",
         "options": {}
       },
       "name": "Webhook",
@@ -59,7 +54,7 @@
         "fromEmail": "handyalasairam9177@gmail.com",
         "toEmail": "={{$json[\"body\"][\"email\"]}}",
         "subject": "Welcome to Shakedeal’s Vendor panel",
-        "html": "=<!DOCTYPE html>\n<html>\n<body>\n<p>Dear {{$json[\"body\"][\"first_name\"]}} {{$json[\"body\"][\"last_name\"]}},</p>\n\n<p>This mail is to inform you that from <Date> onwards you need to track all your POs and relevant details in our vendor panel. Only after signing in to the vendor panel, you will be able to take all necessary actions like uploading invoices, providing tracking number & dispatch document, tracking your payment status, and a lot more.</p>\n\n<p>Please log in using the following credentials:</p>\n\n<p>Login id: {{$json[\"body\"][\"email\"]}}</p>\n\n<p>Temporary Password: {{$json[\"body\"][\"password\"]}}</p>\n\n<p>Vendor Panel: <a href=\"https://sdqa.vpanel.shakedeal.com/\">Link</a></p> \n\n\n<p>Video link to quickly guide you - on how to log in.</p>\n\n<p>If you find any difficulty logging in, please contact your POC [POC Name] at [POC Email]</p>\n\n<p>Please find links to all the videos which will guide you step by step about the different actions which can be taken by you on the vendor panel.</p>\n\n<p>Step 1 - <a href=\"https://sdqa.vpanel.shakedeal.com/\">How to log in?</a></p>\n\n<p>Step 2 - <a href=\"https://sdqa.vpanel.shakedeal.com/\">How to acknowledge and download PO?</a></p>\n\n<p>Step 3 - <a href=\"https://sdqa.vpanel.shakedeal.com/\">How to check PO details?</a></p>\n\n<p>Step 4 - <a href=\"https://sdqa.vpanel.shakedeal.com/\">How to create a shipment and upload an invoice?</a></p>\n\n<p>Step 5 - <a href=\"https://sdqa.vpanel.shakedeal.com/\">How to download our SD Invoice?</a></p>\n\n<p>Step 6 - <a href=\"https://sdqa.vpanel.shakedeal.com/\">How to upload the tracking number and dispatch document?</a></p>\n\n<p>Step 7 - <a href=\"https://sdqa.vpanel.shakedeal.com/\">How to Upload Proof of Delivery?</a></p>\n\n \n<img src=\"https://sdqa.vpanel.shakedeal.com/assets/c5693191-0bde-45d6-a874-8ec8e1877951\">\n\n<p><a href=\"https://www.shakedeal.com/\">www.shakedeal.com</a></p>\n\n<p>Opcommerce Online Pvt Ltd.</p>\n\n<p>DEDICATED PURCHASING PARTNER FOR:</p>\n\nVedanta Global Logo\n</body>\n</html>",
+        "html": "=<!DOCTYPE html>\n<html>\n<body>\n<p>Dear {{$json[\"body\"][\"first_name\"]}} {{$json[\"body\"][\"last_name\"]}},</p>\n\n<p>This mail is to inform you that from <Date> onwards you need to track all your POs and relevant details in our vendor panel. Only after signing in to the vendor panel, you will be able to take all necessary actions like uploading invoices, providing tracking number & dispatch document, tracking your payment status, and a lot more.</p>\n\n<p>Please log in using the following credentials:</p>\n\n<p>Login id: {{$json[\"body\"][\"email\"]}}</p>\n\n<p>Temporary Password: {{$json[\"body\"][\"password\"]}}</p>\n\n<p>Vendor Panel: <a href=\"https://sdqa.vpanel.shakedeal.com/\">Link</a></p> \n\n\n<p>Video link to quickly guide you - on how to log in.</p>\n\n<p>If you find any difficulty logging in, please contact your POC [POC Name] at [POC Email]</p>\n\n<p>Please find links to all the videos which will guide you step by step about the different actions which can be taken by you on the vendor panel.</p>\n\n<p>Step 1 - <a href=\"https://sdqa.vpanel.shakedeal.com/\">How to log in?</a></p>\n\n<p>Step 2 - <a href=\"https://sdqa.vpanel.shakedeal.com/\">How to acknowledge and download PO?</a></p>\n\n<p>Step 3 - <a href=\"https://sdqa.vpanel.shakedeal.com/\">How to check PO details?</a></p>\n\n<p>Step 4 - <a href=\"https://sdqa.vpanel.shakedeal.com/\">How to create a shipment and upload an invoice?</a></p>\n\n<p>Step 5 - <a href=\"https://sdqa.vpanel.shakedeal.com/\">How to download our SD Invoice?</a></p>\n\n<p>Step 6 - <a href=\"https://sdqa.vpanel.shakedeal.com/\">How to upload the tracking number and dispatch document?</a></p>\n\n<p>Step 7 - <a href=\"https://sdqa.vpanel.shakedeal.com/\">How to Upload Proof of Delivery?</a></p>\n\n \n<img height=\"61\" width=\"231\" src=\"/zm/ImageSignature?fileName=1644226822839017_94904657.png&amp;accountId=7432088000000008002&amp;storeName=741374305&amp;frm=s\" style=\"cursor: pointer\">\n\n<p><a href=\"https://www.shakedeal.com/\">www.shakedeal.com</a></p>\n\n<p>Opcommerce Online Pvt Ltd.</p>\n\n<p>DEDICATED PURCHASING PARTNER FOR:</p>\n\nVedanta Global Logo\n</body>\n</html>",
         "options": {}
       },
       "name": "Send Email",
@@ -80,5 +75,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-07-11T09:45:17.404Z"
+  "updatedAt": "2023-07-13T07:34:24.243Z"
 }
