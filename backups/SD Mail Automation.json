@@ -1,5 +1,5 @@
 {
-  "active": true,
+  "active": false,
   "connections": {},
   "createdAt": "2023-06-29T10:31:11.584Z",
   "id": "338",
@@ -40,9 +40,9 @@
   "settings": {},
   "staticData": {
     "node:IMAP Email": {
-      "lastMessageUid": 215
+      "lastMessageUid": 237
     }
   },
   "tags": [],
-  "updatedAt": "2023-07-12T11:50:03.491Z"
+  "updatedAt": "2023-07-13T10:24:54.068Z"
 }
