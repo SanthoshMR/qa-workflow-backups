@@ -657,9 +657,16 @@
   "settings": {},
   "staticData": {
     "node:Wait for Po Email": {
-      "lastMessageUid": 2729
+      "lastMessageUid": 2739
     }
   },
-  "tags": [],
-  "updatedAt": "2023-07-12T14:12:55.525Z"
+  "tags": [
+    {
+      "id": "7",
+      "name": "Siemens",
+      "createdAt": "2023-05-30T07:00:01.982Z",
+      "updatedAt": "2023-05-30T07:00:01.982Z"
+    }
+  ],
+  "updatedAt": "2023-07-13T14:35:56.984Z"
 }
