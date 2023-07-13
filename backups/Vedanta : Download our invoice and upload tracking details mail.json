@@ -1,0 +1,23 @@
+{
+  "active": false,
+  "connections": {},
+  "createdAt": "2023-07-13T09:11:39.192Z",
+  "id": "344",
+  "name": "Vedanta : Download our invoice and upload tracking details mail",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-07-13T09:11:39.192Z"
+}
