@@ -104,7 +104,7 @@
       "main": [
         [
           {
-            "node": "Function to payment to shipment",
+            "node": "IF",
             "type": "main",
             "index": 0
           }
@@ -222,6 +222,35 @@
         [
           {
             "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Function to payment to shipment",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NoOp": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
             "type": "main",
             "index": 0
           }
@@ -545,7 +574,8 @@
           "id": "51",
           "name": "VendorPanel DMS Token"
         }
-      }
+      },
+      "disabled": true
     },
     {
       "parameters": {
@@ -558,6 +588,12 @@
             {
               "name": "vendor_invoice",
               "value": "={{$node[\"Function to payment to shipment\"].json[\"vendor_invoice\"]}}"
+            },
+            {
+              "name": "total_amount_received"
+            },
+            {
+              "name": "total_outstanding"
             }
           ]
         }
@@ -566,15 +602,16 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        3320,
-        440
+        3480,
+        160
       ],
       "credentials": {
         "httpHeaderAuth": {
           "id": "51",
           "name": "VendorPanel DMS Token"
         }
-      }
+      },
+      "disabled": true
     },
     {
       "parameters": {
@@ -755,13 +792,45 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
+        3260,
+        160
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Get the vendor payments id\"].json[\"data\"].length>0?true:false}}"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
         3020,
         420
-      ]
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        3340,
+        600
+      ],
+      "disabled": true
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-07-12T06:50:23.720Z"
+  "updatedAt": "2023-07-17T11:30:35.387Z"
 }
