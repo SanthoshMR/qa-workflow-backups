@@ -334,8 +334,8 @@
       ],
       "credentials": {
         "smtp": {
-          "id": "17",
-          "name": "smtp(sai)creds"
+          "id": "36",
+          "name": "SendGrid"
         }
       }
     },
@@ -358,8 +358,8 @@
       ],
       "credentials": {
         "smtp": {
-          "id": "17",
-          "name": "smtp(sai)creds"
+          "id": "36",
+          "name": "SendGrid"
         }
       }
     },
@@ -463,5 +463,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-04-12T05:39:57.429Z"
+  "updatedAt": "2023-07-17T12:29:40.148Z"
 }
