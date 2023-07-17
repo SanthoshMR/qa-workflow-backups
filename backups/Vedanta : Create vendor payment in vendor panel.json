@@ -157,6 +157,35 @@
           }
         ]
       ]
+    },
+    "Create vendor payment": {
+      "main": [
+        [
+          {
+            "node": "IF2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF2": {
+      "main": [
+        [
+          {
+            "node": "NoOp1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update shipment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2022-10-19T10:00:21.945Z",
@@ -264,7 +293,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_payments/{{$node[\"Get vendor_payment_status\"].json[\"body\"][\"keys\"][0]}}?fields=id,payment_amount,vendor_payment_status,vendor_po_number,payment_type,residual_amount,actual_paid_amount,payment_paid_to_vendor,vendor_invoice.*,payment_utr,payment_description,vendor_invoice.shipment.*,vendor_invoice.vendor_payments.*",
+        "url": "={{$node[\"Globals\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_payments/{{$node[\"Get vendor_payment_status\"].json[\"body\"][\"keys\"][0]}}?fields=id,payment_amount,payment_date,tax_deducted,any_deductions,vendor_payment_status,vendor_po_number,payment_type,residual_amount,actual_paid_amount,payment_paid_to_vendor,vendor_invoice.*,payment_utr,payment_description,vendor_invoice.shipment.*,vendor_invoice.vendor_payments.*",
         "options": {}
       },
       "name": "Get vendor payment",
@@ -338,7 +367,7 @@
             },
             {
               "name": "payment_amount",
-              "value": "={{$node[\"Get vendor payment\"].json[\"data\"][\"actual_paid_amount\"]}}"
+              "value": "={{$node[\"Get vendor payment\"].json[\"data\"][\"payment_amount\"]}}"
             },
             {
               "name": "payment_description",
@@ -355,6 +384,22 @@
             {
               "name": "vendor_invoice",
               "value": "={{$node[\"Get vendor payment\"].json[\"data\"][\"vendor_invoice\"]?$node[\"Get the shipment id\"].json[\"data\"][0][\"id\"]:null}}"
+            },
+            {
+              "name": "actual_amount_received",
+              "value": "={{$node[\"Get vendor payment\"].json[\"data\"][\"actual_paid_amount\"]}}"
+            },
+            {
+              "name": "payment_date",
+              "value": "={{$node[\"Get vendor payment\"].json[\"data\"][\"payment_date\"]}}"
+            },
+            {
+              "name": "tax_deducted",
+              "value": "={{$node[\"Get vendor payment\"].json[\"data\"][\"tax_deducted\"]}}"
+            },
+            {
+              "name": "any_deductions",
+              "value": "={{$node[\"Get vendor payment\"].json[\"data\"][\"any_deductions\"]}}"
             }
           ]
         }
@@ -536,10 +581,76 @@
           "name": "Mozart DMS Token"
         }
       }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Get vendor payment\"].json[\"data\"][\"payment_type\"]}}",
+              "value2": "=advance"
+            }
+          ]
+        }
+      },
+      "name": "IF2",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        2620,
+        440
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "NoOp1",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        2940,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_shipments/{{$node[\"Get the shipment id\"].json[\"data\"][0][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "total_amount_received",
+              "value": "={{$node[\"Get the shipment id\"].json[\"data\"][0][\"total_amount_received\"]+$node[\"Get vendor payment\"].json[\"data\"][\"actual_paid_amount\"]}}"
+            },
+            {
+              "name": "total_tax_deducted",
+              "value": "={{$node[\"Get the shipment id\"].json[\"data\"][0][\"total_amount_received\"]+$node[\"Get vendor payment\"].json[\"data\"][\"tax_deducted\"]}}"
+            },
+            {
+              "name": "total_other_deductions",
+              "value": "={{$node[\"Get the shipment id\"].json[\"data\"][0][\"total_amount_received\"]+$node[\"Get vendor payment\"].json[\"data\"][\"any_deductions\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update shipment",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2960,
+        540
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-06-28T13:12:08.356Z"
+  "updatedAt": "2023-07-17T11:37:46.505Z"
 }
