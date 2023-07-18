@@ -51,7 +51,7 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "=update sdv_shipments set payment_status='payment_to_process' where payment_due_date='{{$node[\"Setting due day from present date\"].json[\"date\"]}}' and payment_status ='payment_pending' and shipment_Status IN ('grn_partially_accepted', 'grn_completed') and total_amount_received IS NOT NULL",
+        "query": "=update sdv_shipments set payment_status='payment_to_process' where payment_due_date='{{$node[\"Setting due day from present date\"].json[\"date\"]}}' and payment_status ='payment_pending' and shipment_Status IN ('grn_partially_accepted', 'grn_completed') and payment_received_from_client",
         "additionalFields": {}
       },
       "name": "Postgres",
@@ -85,5 +85,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-07-12T13:57:02.201Z"
+  "updatedAt": "2023-07-18T13:23:23.840Z"
 }
