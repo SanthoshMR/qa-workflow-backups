@@ -400,6 +400,10 @@
             {
               "name": "any_deductions",
               "value": "={{$node[\"Get vendor payment\"].json[\"data\"][\"any_deductions\"]}}"
+            },
+            {
+              "name": "payment_ref",
+              "value": "={{$node[\"Get vendor payment\"].json[\"data\"][\"id\"]}}"
             }
           ]
         }
@@ -621,15 +625,15 @@
           "parameter": [
             {
               "name": "total_amount_received",
-              "value": "={{$node[\"Get the shipment id\"].json[\"data\"][0][\"total_amount_received\"]+$node[\"Get vendor payment\"].json[\"data\"][\"actual_paid_amount\"]}}"
+              "value": "={{parseFloat($node[\"Get the shipment id\"].json[\"data\"][0][\"total_amount_received\"])+parseFloat($node[\"Get vendor payment\"].json[\"data\"][\"actual_paid_amount\"])}}"
             },
             {
               "name": "total_tax_deducted",
-              "value": "={{$node[\"Get the shipment id\"].json[\"data\"][0][\"total_amount_received\"]+$node[\"Get vendor payment\"].json[\"data\"][\"tax_deducted\"]}}"
+              "value": "={{parseFloat($node[\"Get the shipment id\"].json[\"data\"][0][\"total_amount_received\"])+parseFloat($node[\"Get vendor payment\"].json[\"data\"][\"tax_deducted\"])}}"
             },
             {
               "name": "total_other_deductions",
-              "value": "={{$node[\"Get the shipment id\"].json[\"data\"][0][\"total_amount_received\"]+$node[\"Get vendor payment\"].json[\"data\"][\"any_deductions\"]}}"
+              "value": "={{parseFloat($node[\"Get the shipment id\"].json[\"data\"][0][\"total_amount_received\"])+parseFloat($node[\"Get vendor payment\"].json[\"data\"][\"any_deductions\"])}}"
             }
           ]
         }
@@ -652,5 +656,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-07-17T11:37:46.505Z"
+  "updatedAt": "2023-07-18T13:17:04.159Z"
 }
