@@ -1,5 +1,5 @@
 {
-  "active": false,
+  "active": true,
   "connections": {
     "Get url and token": {
       "main": [
@@ -164,16 +164,8 @@
         "bodyParametersUi": {
           "parameter": [
             {
-              "name": "=total_amount_received",
-              "value": "={{$node[\"Get the payment data\"].json[\"data\"][\"payment_received\"]}}"
-            },
-            {
-              "name": "total_tax_deducted",
-              "value": "={{$node[\"Get the payment data\"].json[\"data\"][\"tax_deducted\"]}}"
-            },
-            {
-              "name": "total_other_deductions",
-              "value": "={{parseFloat($node[\"Get the payment data\"].json[\"data\"][\"other_deductions\"]) + parseFloat($node[\"Get the payment data\"].json[\"data\"][\"ld_charges\"])}}"
+              "name": "payment_received_from_client",
+              "value": "={{true}}"
             }
           ]
         }
@@ -196,5 +188,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-07-17T11:31:22.801Z"
+  "updatedAt": "2023-07-18T13:23:34.736Z"
 }
