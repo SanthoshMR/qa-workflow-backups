@@ -629,11 +629,11 @@
             },
             {
               "name": "total_tax_deducted",
-              "value": "={{parseFloat($node[\"Get the shipment id\"].json[\"data\"][0][\"total_amount_received\"])+parseFloat($node[\"Get vendor payment\"].json[\"data\"][\"tax_deducted\"])}}"
+              "value": "={{parseFloat($node[\"Get the shipment id\"].json[\"data\"][0][\"total_tax_deducted\"])+parseFloat($node[\"Get vendor payment\"].json[\"data\"][\"tax_deducted\"])}}"
             },
             {
               "name": "total_other_deductions",
-              "value": "={{parseFloat($node[\"Get the shipment id\"].json[\"data\"][0][\"total_amount_received\"])+parseFloat($node[\"Get vendor payment\"].json[\"data\"][\"any_deductions\"])}}"
+              "value": "={{parseFloat($node[\"Get the shipment id\"].json[\"data\"][0][\"total_other_deductions\"])+parseFloat($node[\"Get vendor payment\"].json[\"data\"][\"any_deductions\"])}}"
             }
           ]
         }
@@ -656,5 +656,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-07-18T13:17:04.159Z"
+  "updatedAt": "2023-07-19T09:39:30.325Z"
 }
