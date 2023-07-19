@@ -780,6 +780,14 @@
             {
               "name": "proforma_invoice",
               "value": "={{$node[\"IF2\"].json[\"data\"][\"proforma_invoice\"]}}"
+            },
+            {
+              "name": "remarks",
+              "value": "={{$node[\"IF2\"].json[\"data\"][\"remarks\"]}}"
+            },
+            {
+              "name": "comments",
+              "value": "={{$node[\"IF2\"].json[\"data\"][\"comments\"]}}"
             }
           ]
         }
@@ -951,6 +959,10 @@
             {
               "name": "payment_ref",
               "value": "={{$node[\"Create vendor payment residual amount record\"].json[\"data\"][\"id\"]}}"
+            },
+            {
+              "name": "actual_amount_received",
+              "value": "={{$node[\"IF2\"].json[\"data\"][\"residual_amount\"]}}"
             }
           ]
         }
@@ -1083,5 +1095,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-07-18T13:06:27.971Z"
+  "updatedAt": "2023-07-19T09:07:48.437Z"
 }
