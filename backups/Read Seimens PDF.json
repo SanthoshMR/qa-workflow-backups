@@ -526,7 +526,7 @@
     {
       "parameters": {
         "fromEmail": "noreply@shakedeal.com",
-        "toEmail": "=vinay.kumar@shakedeal.com,surya.kc@shakedeal.com,sayali.kabade@shakedeal.com,aditya.darira@shakedeal.com,vinod.raj@shakedeal.com",
+        "toEmail": "=vinay.kumar@shakedeal.com,surya.kc@shakedeal.com,parthiban.n@shakedeal.com",
         "subject": "=Not able to read PO - {{$node[\"Extracting the seimens po details\"].json[\"area\"][\"pos\"][\"id\"]}}",
         "text": "=Hi Team,\n\nWe are not able to read PO as SKU is not present\n\nThanks",
         "options": {}
@@ -657,7 +657,7 @@
   "settings": {},
   "staticData": {
     "node:Wait for Po Email": {
-      "lastMessageUid": 2764
+      "lastMessageUid": 2771
     }
   },
   "tags": [
@@ -668,5 +668,5 @@
       "updatedAt": "2023-05-30T07:00:01.982Z"
     }
   ],
-  "updatedAt": "2023-07-18T10:16:45.282Z"
+  "updatedAt": "2023-07-19T13:20:41.511Z"
 }
