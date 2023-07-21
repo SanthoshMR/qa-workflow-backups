@@ -38,7 +38,7 @@
       "main": [
         [
           {
-            "node": "IF1",
+            "node": "Function",
             "type": "main",
             "index": 0
           }
@@ -49,7 +49,7 @@
       "main": [
         [
           {
-            "node": "Function",
+            "node": "IF",
             "type": "main",
             "index": 0
           }
@@ -78,7 +78,7 @@
       "main": [
         [
           {
-            "node": "IF",
+            "node": "IF2",
             "type": "main",
             "index": 0
           }
@@ -146,6 +146,35 @@
           }
         ]
       ]
+    },
+    "IF2": {
+      "main": [
+        [
+          {
+            "node": "Update revoked status",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "IF1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update revoked status": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2022-12-13T09:31:33.757Z",
@@ -172,8 +201,8 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        500,
-        240
+        200,
+        160
       ],
       "webhookId": "0d94b50b-5a86-4de7-9ede-9c7ec4b29a92"
     },
@@ -200,8 +229,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        740,
-        240
+        440,
+        160
       ],
       "credentials": {
         "httpBasicAuth": {
@@ -227,8 +256,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        940,
-        240
+        640,
+        160
       ]
     },
     {
@@ -241,8 +270,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1140,
-        240
+        840,
+        160
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -274,7 +303,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1440,
+        1600,
         240
       ],
       "credentials": {
@@ -311,8 +340,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1640,
-        240
+        1020,
+        180
       ]
     },
     {
@@ -445,8 +474,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        1340,
-        40
+        1440,
+        100
       ]
     },
     {
@@ -458,10 +487,88 @@
         1860,
         -140
       ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"revoke\"]?true:false}}"
+            }
+          ]
+        }
+      },
+      "name": "IF2",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_payments/{{$node[\"Get the advance approval data from zues\"].json[\"data\"][\"key\"]}}?fields= *.*",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "approval_status",
+              "value": "=declined"
+            },
+            {
+              "name": "revoke",
+              "value": "={{true}}"
+            },
+            {
+              "name": "revoke_reason",
+              "value": "={{$node[\"Get the advance approval data from zues\"].json[\"data\"][\"revoke_reason\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update revoked status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1240,
+        -200
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "=handyalasairam9177@gmail.com",
+        "toEmail": "=bijan.krishna@shakedeal.com,sairam.reddy@shakedeal.com",
+        "subject": "=❗️Revoked: Vedanta || Advance Payment Request Approval is revoked by Admin || #{{$node[\"Get the advance approval data from zues\"].json[\"data\"][\"vendor_po_number\"]}}",
+        "html": "=[ERROR}: Expression is not valid: Unexpected token '[']",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        1480,
+        -200
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "36",
+          "name": "SendGrid"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-07-17T12:29:40.148Z"
+  "updatedAt": "2023-07-21T12:28:06.052Z"
 }
