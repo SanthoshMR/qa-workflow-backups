@@ -1,0 +1,79 @@
+{
+  "active": false,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-07-10T09:52:09.934Z",
+  "id": "339",
+  "name": "vendor panel proof of delivery mails",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        40,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "proof_of_delivery_email",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        140
+      ],
+      "webhookId": "c4408c94-e2f4-4559-a5ce-4404534633fb",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "handyalasairam9177@gmail.com",
+        "toEmail": "={{$json[\"body\"][\"email\"]}}",
+        "subject": "Request to upload Proof of Delivery for following invoices | Opcommerce Online Pvt. Ltd.",
+        "html": "=<!DOCTYPE html>\n<html>\n<head>\n                  <style>\n    /* Set up the layout for the header */\n    .header {\n      display: flex;\n      justify-content: space-between;\n      background-color: #f2f2f2;\n    }\n\n    /* Style each column */\n    .column {\n      flex: 1;\n      text-align: center;\n    }\n\n    /* Set up the layout for the row */\n    .row {\n      display: flex;\n      justify-content: space-between;\n      background-color: #ddd;\n    }\n\n    /* Style each cell in the row */\n    .cell {\n      flex: 1;\n      text-align: center;\n    }\n  </style>\n  </head>\n<body>\n\n\t\t\t\t<p>Dear Sir/Madam,</p>\n\t<p>We kindly request that you upload the Proof of Delivery (POD) document in our vendor panel as soon as the order against the below Invoices is delivered. This is a mandatory step for tracking your payment status. To upload the POD, please log in to our vendor panel using the below link.</p>\t\n<div class=\"header\">\n    <div class=\"column\">\n      <h1>Invoice Number\n\n</h1>\n      <!-- Add content for column 1 here -->\n    </div>\n    <div class=\"column\">\n      <h1>PO Number</h1>\n      <!-- Add content for column 2 here -->\n    </div>\n    <div class=\"column\">\n      <h1>Link</h1>\n      <!-- Add content for column 3 here -->\n    </div>\n  </div>\n\n  <!-- Adding a single row below the header -->\n  <div class=\"row\">\n    <div class=\"cell\">\n      <h2>{{$json[\"body\"][\"invoice_number\"]}}</h2>\n      <!-- Add content for cell 1 here -->\n    </div>\n    <div class=\"cell\">\n      <h2>{{$json[\"body\"][\"vendor_po_number\"]}}</h2>\n      <!-- Add content for cell 2 here -->\n    </div>\n    <div class=\"cell\">\n      <h2><a href={{$json[\"body\"][\"SHIPMENT_LINK\"]}}>Link</a></h2>\n      <!-- Add content for cell 3 here -->\n    </div>\n  </div>\n\n\t\t\t\t<p>If you need assistance with uploading the POD, you can refer to the video guide we have provided at the following link:</p>\n\t\t\t\t\n\t\t\t\t<p> <a href={{$json[\"body\"][\"po_link\"]}}>Video link to quickly guide you on - how to upload Proof of Delivery (POD).</a></p>\n\t\t\t\t\n\t\t\t\t<p>Thank you for your cooperation. If you have any questions or concerns, please contact your POC {{$json[\"body\"][\"SD_MOZART_VPANEL_POC\"]}}  at {{$json[\"body\"][\"SD_MOZART_VPANEL_POC_EMAIL\"]}}</p>\n\n\n<img height=\"61\" width=\"231\" src=\"https://sdqa.shakedeal.com/images/logos/2/ShakeDealLogo.png\">\n\n\n<p><a href=\"https://www.shakedeal.com/\">www.shakedeal.com</a></p>\n\n<p>Opcommerce Online Pvt Ltd.</p>\n\n<p>DEDICATED PURCHASING PARTNER FOR:</p>\n\n<img height=\"61\" width=\"231\" src=\"https://sdqa.shakedeal.com/images/logos/2/vedantaLogo.jpg\">\n</body>\n</html>",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        420,
+        140
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "36",
+          "name": "SendGrid"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-07-23T12:40:53.225Z"
+}
