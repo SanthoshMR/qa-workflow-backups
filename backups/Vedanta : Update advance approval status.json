@@ -334,7 +334,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let id = $node[\"Update the approval status in mozart\"].json[\"data\"][\"id\"];\nlet mozart_url = $node[\"Get url and token\"].json[\"0\"][\"mozart_url\"];\nlet url = `${mozart_url}/admin/content/sdm_vendor_payments/${id}`\n\nitems[0].json.id = id;\nitems[0].json.url = url;\nreturn items;"
+        "functionCode": "let id = $node[\"Get the advance approval data from zues\"].json[\"data\"][\"key\"];\nlet mozart_url = $node[\"Get url and token\"].json[\"0\"][\"mozart_url\"];\nlet url = `${mozart_url}/admin/content/sdm_vendor_payments/${id}`\n\nitems[0].json.id = id;\nitems[0].json.url = url;\nreturn items;"
       },
       "name": "Function",
       "type": "n8n-nodes-base.function",
@@ -570,5 +570,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-07-21T12:28:06.052Z"
+  "updatedAt": "2023-07-24T09:05:04.510Z"
 }
