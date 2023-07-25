@@ -140,7 +140,7 @@
       "main": [
         [
           {
-            "node": "IF2",
+            "node": "Check for consignment type",
             "type": "main",
             "index": 0
           }
@@ -176,58 +176,7 @@
         ]
       ]
     },
-    "Create vendor payment residual amount record": {
-      "main": [
-        [
-          {
-            "node": "Update residual amount",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "IF2": {
-      "main": [
-        [
-          {
-            "node": "Create vendor payment residual amount record",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "NoOp2",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Update residual amount": {
-      "main": [
-        [
-          {
-            "node": "HTTP Request1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "NoOp3": {
-      "main": [
-        [
-          {
-            "node": "Check for consignment type",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "NoOp2": {
       "main": [
         [
           {
@@ -289,17 +238,6 @@
         ]
       ]
     },
-    "HTTP Request1": {
-      "main": [
-        [
-          {
-            "node": "Check for consignment type",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Update Payments Data in vpanel": {
       "main": [
         [
@@ -334,6 +272,17 @@
       ]
     },
     "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Tag shipment to payment in vpanel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tag shipment to payment in vpanel": {
       "main": [
         [
           {
@@ -563,7 +512,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let advancePayments = $node[\"Get pr_advance payment\"].json.data;\nlet vpanelAdvanvcePayments = $node[\"Get the payments from vpanel\"].json.data;\nlet orderValue = $node[\"Get the shipment\"].json[\"data\"][\"shipment_items\"].reduce((accumulator, current) => {\n  if (current.grn_status == \"grn_accepted\" || current.grn_status == \"grn_partially_accepted\") {\n    let netValue = current.accepted_qty * parseFloat(current.sdm_po_items_id.unit_price);\n    let grossValue = netValue+(netValue*parseFloat(current.sdm_po_items_id.tax_percentage))/100;\n    return accumulator + grossValue;\n  } else {\n    return accumulator;\n  }\n}, 0);\nlet vendorpaymentTerms = $node[\"Get the shipment\"].json[\"data\"][\"vendor_po_num\"][\"payment_terms\"];\nlet remainingOrderValue = orderValue;\nlet updateResidualAmountArr = [];\nlet vendorPayments = [];\nlet paymentStatus = \"\";\nlet maxPercentage = 100;\nlet minPercentage = 0;\nlet paymentToVendorsobj = {};\nif(advancePayments.length>0){\n  advancePayments.forEach(function(payment,index){\n    if(remainingOrderValue>0){\n      let uploadDocuments = [];\n      if(payment.upload_document.length>0){\n        payment.upload_document.forEach(function(document,index){\n          uploadDocuments.push({\n            directus_files_id : document.directus_files_id\n          })\n        })\n      }\n      let matchedVpanelPayment = vpanelAdvanvcePayments.filter(vpayment=>vpayment.payment_ref == payment.id );\n      let residual_amount = remainingOrderValue>=payment.residual_amount?0:(payment.residual_amount-remainingOrderValue);\n      remainingOrderValue= payment.residual_amount>=remainingOrderValue?0:remainingOrderValue-payment.residual_amount;\n      updateResidualAmountArr[index] = {};\n      updateResidualAmountArr[index].id = payment.id;\n      updateResidualAmountArr[index].vpanelId = matchedVpanelPayment[0].id;\n      updateResidualAmountArr[index].residual_amount = residual_amount;\n      updateResidualAmountArr[index].upload_document = uploadDocuments;\n    }\n  })\n}\nlet totalPaidAmount = orderValue - remainingOrderValue;\nlet percentagePaid = (totalPaidAmount*100)/orderValue;\nif(percentagePaid>=maxPercentage){\n  paymentStatus=\"paymentreleased\"\n}else if(percentagePaid>minPercentage && percentagePaid<100){\n  paymentStatus=\"partiallypaid\"\n}else paymentStatus=\"paymentpending\"\n\n// Get the current date\nfunction getFormattedDate(daysToAdd){\n  var today = new Date();\n\n  // Add 30 days to the current date\n  today.setDate(today.getDate() + parseInt(daysToAdd));\n\n  // Format the resulting date as YYYY-MM-DD\n  var year = today.getFullYear();\n  var month = String(today.getMonth() + 1).padStart(2, '0');\n  var day = String(today.getDate()).padStart(2, '0');\n  var formattedDate = year + '-' + month + '-' + day;\n  return formattedDate\n}\n\n//Construct obj for vendor payments\nif(remainingOrderValue){\n  vendorPayments.push({\n    vendor_po_number : $node[\"Get the shipment\"].json[\"data\"][\"vendor_po_num\"][\"id\"],\n    payment_amount : remainingOrderValue,\n    payment_type :  \"invoice\",\n  })\n}\n\n//construct obj for payment to vendors record\npaymentToVendorsobj.vendor_po_number = $node[\"Get the shipment\"].json[\"data\"][\"vendor_po_num\"][\"id\"];\npaymentToVendorsobj.vendor_invoice = $node[\"Get the shipment\"].json[\"data\"][\"vendor_invoice\"];\npaymentToVendorsobj.invoice_number = $node[\"Get the shipment\"].json[\"data\"][\"invoice_number\"];\npaymentToVendorsobj.payment_due_date = new Date(getFormattedDate(vendorpaymentTerms));\npaymentToVendorsobj.inward_date = new Date(getFormattedDate(5));\npaymentToVendorsobj.vendor_displayed_due_date = new Date(getFormattedDate(5+parseInt(vendorpaymentTerms)));\npaymentToVendorsobj.shipment = $node[\"Get the shipment\"].json[\"data\"][\"id\"];\npaymentToVendorsobj.payable_amount = orderValue;\npaymentToVendorsobj.total_paid_amount = totalPaidAmount;\npaymentToVendorsobj.total_percentage_paid = percentagePaid;\npaymentToVendorsobj.remaining_to_pay = remainingOrderValue;\npaymentToVendorsobj.vendor_payment = paymentStatus;\npaymentToVendorsobj.vendor_payments = vendorPayments;\npaymentToVendorsobj.ld_charges = 0;\npaymentToVendorsobj.tax_deducted = 0;\n//construct obj for payment to vendors record\n\nitems[0].json.totalPaidAmount = totalPaidAmount;\nitems[0].json.advancePayments = advancePayments;\nitems[0].json.order_value = orderValue;\nitems[0].json.remainingOrderValue = remainingOrderValue;\nitems[0].json.updateResidualAmountArr = updateResidualAmountArr;\nitems[0].json.percentagePaid = percentagePaid;\nitems[0].json.paymentStatus = paymentStatus;\nitems[0].json.paymentToVendorsobj = paymentToVendorsobj;\nreturn items;"
+        "functionCode": "let advancePayments = $node[\"Get pr_advance payment\"].json.data;\nlet vpanelAdvanvcePayments = $node[\"Get the payments from vpanel\"].json.data;\nlet orderValue = $node[\"Get the shipment\"].json[\"data\"][\"shipment_items\"].reduce((accumulator, current) => {\n  if (current.grn_status == \"grn_accepted\" || current.grn_status == \"grn_partially_accepted\") {\n    let netValue = current.accepted_qty * parseFloat(current.sdm_po_items_id.unit_price);\n    let grossValue = netValue+(netValue*parseFloat(current.sdm_po_items_id.tax_percentage))/100;\n    return accumulator + grossValue;\n  } else {\n    return accumulator;\n  }\n}, 0);\nlet vendorpaymentTerms = $node[\"Get the shipment\"].json[\"data\"][\"vendor_po_num\"][\"payment_terms\"];\nlet remainingOrderValue = orderValue;\nlet updateResidualAmountArr = [];\nlet vendorPayments = [];\nlet paymentStatus = \"\";\nlet maxPercentage = 100;\nlet minPercentage = 0;\nlet paymentToVendorsobj = {};\nif(advancePayments.length>0){\n  advancePayments.forEach(function(payment,index){\n    if(remainingOrderValue>0){\n      let matchedVpanelPayment = vpanelAdvanvcePayments.filter(vpayment=>vpayment.payment_ref == payment.id );\n      let residual_amount = remainingOrderValue>=payment.residual_amount?0:(payment.residual_amount-remainingOrderValue);\n      remainingOrderValue= payment.residual_amount>=remainingOrderValue?0:remainingOrderValue-payment.residual_amount;\n      updateResidualAmountArr[index] = {};\n      updateResidualAmountArr[index].id = payment.id;\n      updateResidualAmountArr[index].vpanelId = matchedVpanelPayment[0].id;\n      updateResidualAmountArr[index].residual_amount = residual_amount;\n      updateResidualAmountArr[index].consumed_amount = payment.residual_amount - residual_amount; \n    }\n  })\n}\nlet totalPaidAmount = orderValue - remainingOrderValue;\nlet percentagePaid = (totalPaidAmount*100)/orderValue;\nif(percentagePaid>=maxPercentage){\n  paymentStatus=\"paymentreleased\"\n}else if(percentagePaid>minPercentage && percentagePaid<100){\n  paymentStatus=\"partiallypaid\"\n}else paymentStatus=\"paymentpending\"\n\n// Get the current date\nfunction getFormattedDate(daysToAdd){\n  var today = new Date();\n\n  // Add 30 days to the current date\n  today.setDate(today.getDate() + parseInt(daysToAdd));\n\n  // Format the resulting date as YYYY-MM-DD\n  var year = today.getFullYear();\n  var month = String(today.getMonth() + 1).padStart(2, '0');\n  var day = String(today.getDate()).padStart(2, '0');\n  var formattedDate = year + '-' + month + '-' + day;\n  return formattedDate\n}\n\n//Construct obj for vendor payments\nif(remainingOrderValue){\n  vendorPayments.push(\n    {\n      sdm_vendor_payments_id:{\n        vendor_po_number : $node[\"Get the shipment\"].json[\"data\"][\"vendor_po_num\"][\"id\"],\n        payment_amount : remainingOrderValue,\n        payment_type :  \"invoice\",\n      }\n    }\n  )\n}\nif(updateResidualAmountArr.length>0){\n  updateResidualAmountArr.forEach(function(payment,index){\n    vendorPayments.push(\n      {\n        sdm_vendor_payments_id:payment.id\n      }\n    )\n  })\n}\n\n//construct obj for payment to vendors record\npaymentToVendorsobj.vendor_po_number = $node[\"Get the shipment\"].json[\"data\"][\"vendor_po_num\"][\"id\"];\npaymentToVendorsobj.vendor_invoice = $node[\"Get the shipment\"].json[\"data\"][\"vendor_invoice\"];\npaymentToVendorsobj.invoice_number = $node[\"Get the shipment\"].json[\"data\"][\"invoice_number\"];\npaymentToVendorsobj.payment_due_date = new Date(getFormattedDate(vendorpaymentTerms));\npaymentToVendorsobj.inward_date = new Date(getFormattedDate(5));\npaymentToVendorsobj.vendor_displayed_due_date = new Date(getFormattedDate(5+parseInt(vendorpaymentTerms)));\npaymentToVendorsobj.shipment = $node[\"Get the shipment\"].json[\"data\"][\"id\"];\npaymentToVendorsobj.payable_amount = orderValue;\npaymentToVendorsobj.total_paid_amount = totalPaidAmount;\npaymentToVendorsobj.total_percentage_paid = percentagePaid;\npaymentToVendorsobj.remaining_to_pay = remainingOrderValue;\npaymentToVendorsobj.vendor_payment = paymentStatus;\npaymentToVendorsobj.vendor_payments = vendorPayments;\npaymentToVendorsobj.ld_charges = 0;\npaymentToVendorsobj.tax_deducted = 0;\n//construct obj for payment to vendors record\n\nitems[0].json.totalPaidAmount = totalPaidAmount;\nitems[0].json.advancePayments = advancePayments;\nitems[0].json.order_value = orderValue;\nitems[0].json.remainingOrderValue = remainingOrderValue;\nitems[0].json.updateResidualAmountArr = updateResidualAmountArr;\nitems[0].json.percentagePaid = percentagePaid;\nitems[0].json.paymentStatus = paymentStatus;\nitems[0].json.paymentToVendorsobj = paymentToVendorsobj;\nreturn items;"
       },
       "name": "Function to create payment to vendors",
       "type": "n8n-nodes-base.function",
@@ -657,8 +606,8 @@
               "value": "={{$node[\"Function to update advance payments\"].json[\"residual_amount\"]}}"
             },
             {
-              "name": "vendor_invoice",
-              "value": "={{$node[\"Function to update advance payments\"].json[\"vendor_invoice\"]}}"
+              "name": "consumed_amount",
+              "value": "={{$node[\"Function to update advance payments\"].json[\"consumed_amount\"]}}"
             }
           ]
         }
@@ -667,8 +616,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2660,
-        20
+        3300,
+        -40
       ],
       "retryOnFail": true,
       "credentials": {
@@ -680,173 +629,14 @@
     },
     {
       "parameters": {
-        "functionCode": "const update_residual_amount_obj = $node[\"Function to create payment to vendors\"].json[\"updateResidualAmountArr\"]\n\nlet returnItems =[]\n\nupdate_residual_amount_obj.forEach(function(obj,index){  \n    returnItems.push({\n    json: {\n       id : obj.id,\n       vpanelId : obj.vpanelId,\n       residual_amount : obj.residual_amount,\n       url : $node[\"Get url and token\"].json[\"0\"][\"mozart_url\"],\n       vPanelUrl : $node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"],\n       vendor_invoice : $node[\"Create payment to vendors\"].json[\"data\"][\"id\"],\n       vpanel_vendor_invoice: $node[\"Get the shipment from vpanel\"].json[\"data\"][0][\"id\"],\n       upload_document : obj.upload_document\n    }\n  });\n  \n})\n\nreturn returnItems;"
+        "functionCode": "const update_residual_amount_obj = $node[\"Function to create payment to vendors\"].json[\"updateResidualAmountArr\"]\n\nlet returnItems =[]\n\nupdate_residual_amount_obj.forEach(function(obj,index){  \n    returnItems.push({\n    json: {\n       id : obj.id,\n       vpanelId : obj.vpanelId,\n       residual_amount : obj.residual_amount,\n       url : $node[\"Get url and token\"].json[\"0\"][\"mozart_url\"],\n       vPanelUrl : $node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"],\n       vendor_invoice : $node[\"Create payment to vendors\"].json[\"data\"][\"id\"],\n       vpanel_vendor_invoice: $node[\"Get the shipment from vpanel\"].json[\"data\"][0][\"id\"],\n       upload_document : obj.upload_document,\n       consumed_amount : obj.consumed_amount\n    }\n  });\n  \n})\n\nreturn returnItems;"
       },
       "name": "Function to update advance payments",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        2420,
-        20
-      ]
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "boolean": [
-            {
-              "value1": "={{$node[\"Update the residual amounts\"].json[\"data\"][\"residual_amount\"]>0?true:false}}",
-              "value2": true
-            }
-          ]
-        }
-      },
-      "name": "IF2",
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 1,
-      "position": [
-        2860,
-        20
-      ]
-    },
-    {
-      "parameters": {
-        "authentication": "headerAuth",
-        "requestMethod": "POST",
-        "url": "={{$node[\"Function to update advance payments\"].json[\"url\"]}}/items/sdm_vendor_payments",
-        "options": {},
-        "bodyParametersUi": {
-          "parameter": [
-            {
-              "name": "parent_id",
-              "value": "={{$node[\"Function to update advance payments\"].json[\"id\"]}}"
-            },
-            {
-              "name": "payment_amount",
-              "value": "={{$node[\"IF2\"].json[\"data\"][\"residual_amount\"]}}"
-            },
-            {
-              "name": "payment_description",
-              "value": "={{$node[\"IF2\"].json[\"data\"][\"payment_description\"]}}"
-            },
-            {
-              "name": "payment_utr",
-              "value": "={{$node[\"IF2\"].json[\"data\"][\"payment_utr\"]}}"
-            },
-            {
-              "name": "vendor_payment_status",
-              "value": "={{$node[\"Update the residual amounts\"].json[\"data\"][\"vendor_payment_status\"]}}"
-            },
-            {
-              "name": "vendor_po_number",
-              "value": "={{$node[\"Update the residual amounts\"].json[\"data\"][\"vendor_po_number\"]}}"
-            },
-            {
-              "name": "payment_type",
-              "value": "={{$node[\"Update the residual amounts\"].json[\"data\"][\"payment_type\"]}}"
-            },
-            {
-              "name": "residual_amount",
-              "value": "={{$node[\"Function to update advance payments\"].json[\"residual_amount\"]}}"
-            },
-            {
-              "name": "cancelled_cheque",
-              "value": "={{$node[\"IF2\"].json[\"data\"][\"cancelled_cheque\"]}}"
-            },
-            {
-              "name": "payment_date",
-              "value": "={{$node[\"IF2\"].json[\"data\"][\"payment_date\"]}}"
-            },
-            {
-              "name": "reason_for_advance",
-              "value": "={{$node[\"IF2\"].json[\"data\"][\"reason_for_advance\"]}}"
-            },
-            {
-              "name": "shipment_status",
-              "value": "={{$node[\"IF2\"].json[\"data\"][\"shipment_status\"]}}"
-            },
-            {
-              "name": "dispatch_in_days",
-              "value": "={{$node[\"IF2\"].json[\"data\"][\"dispatch_in_days\"]}}"
-            },
-            {
-              "name": "has_vendor_filled",
-              "value": "={{$node[\"IF2\"].json[\"data\"][\"has_vendor_filled\"]}}"
-            },
-            {
-              "name": "approval_status",
-              "value": "={{$node[\"IF2\"].json[\"data\"][\"approval_status\"]}}"
-            },
-            {
-              "name": "proforma_invoice",
-              "value": "={{$node[\"IF2\"].json[\"data\"][\"proforma_invoice\"]}}"
-            },
-            {
-              "name": "remarks",
-              "value": "={{$node[\"IF2\"].json[\"data\"][\"remarks\"]}}"
-            },
-            {
-              "name": "comments",
-              "value": "={{$node[\"IF2\"].json[\"data\"][\"comments\"]}}"
-            },
-            {
-              "name": "upload_document",
-              "value": "={{$node[\"Function to update advance payments\"].json[\"upload_document\"]}}"
-            }
-          ]
-        }
-      },
-      "name": "Create vendor payment residual amount record",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        2940,
-        -200
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "50",
-          "name": "Mozart DMS Token"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "authentication": "headerAuth",
-        "requestMethod": "PATCH",
-        "url": "={{$node[\"Function to update advance payments\"].json[\"url\"]}}/items/sdm_vendor_payments/{{$node[\"Function to update advance payments\"].json[\"id\"]}}",
-        "options": {},
-        "bodyParametersUi": {
-          "parameter": [
-            {
-              "name": "residual_amount",
-              "value": "0"
-            }
-          ]
-        }
-      },
-      "name": "Update residual amount",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        3380,
-        -200
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "50",
-          "name": "Mozart DMS Token"
-        }
-      }
-    },
-    {
-      "parameters": {},
-      "name": "NoOp2",
-      "type": "n8n-nodes-base.noOp",
-      "typeVersion": 1,
-      "position": [
-        3220,
-        20
+        2520,
+        -20
       ]
     },
     {
@@ -921,67 +711,6 @@
         "httpHeaderAuth": {
           "id": "50",
           "name": "Mozart DMS Token"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "authentication": "headerAuth",
-        "requestMethod": "POST",
-        "url": "={{$node[\"Function to update advance payments\"].json[\"vPanelUrl\"]}}/items/sdv_vendor_payments",
-        "options": {},
-        "bodyParametersUi": {
-          "parameter": [
-            {
-              "name": "vendor_po_number",
-              "value": "={{$node[\"Update shipment status in vpanel\"].json[\"data\"][\"vendor_po_number\"]}}"
-            },
-            {
-              "name": "payment_utr",
-              "value": "={{$node[\"IF2\"].json[\"data\"][\"payment_utr\"]}}"
-            },
-            {
-              "name": "payment_amount",
-              "value": "={{$node[\"IF2\"].json[\"data\"][\"residual_amount\"]}}"
-            },
-            {
-              "name": "payment_description",
-              "value": "={{$node[\"IF2\"].json[\"data\"][\"payment_description\"]}}"
-            },
-            {
-              "name": "vendor_payment_status",
-              "value": "={{$node[\"Update the residual amounts\"].json[\"data\"][\"vendor_payment_status\"]}}"
-            },
-            {
-              "name": "payment_type",
-              "value": "={{$node[\"Update the residual amounts\"].json[\"data\"][\"payment_type\"]}}"
-            },
-            {
-              "name": "payment_date",
-              "value": "={{$node[\"IF2\"].json[\"data\"][\"payment_date\"]}}"
-            },
-            {
-              "name": "payment_ref",
-              "value": "={{$node[\"Create vendor payment residual amount record\"].json[\"data\"][\"id\"]}}"
-            },
-            {
-              "name": "actual_amount_received",
-              "value": "={{$node[\"IF2\"].json[\"data\"][\"residual_amount\"]}}"
-            }
-          ]
-        }
-      },
-      "name": "HTTP Request1",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        3600,
-        -200
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "51",
-          "name": "VendorPanel DMS Token"
         }
       }
     },
@@ -1075,8 +804,8 @@
         "bodyParametersUi": {
           "parameter": [
             {
-              "name": "vendor_invoice",
-              "value": "={{$node[\"Function to update advance payments\"].json[\"vpanel_vendor_invoice\"]}}"
+              "name": "consumed_amount",
+              "value": "={{$node[\"Function to update advance payments\"].json[\"consumed_amount\"]}}"
             }
           ]
         }
@@ -1085,8 +814,41 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2560,
-        -260
+        2780,
+        -20
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Function to update advance payments\"].json[\"vPanelUrl\"]}}/items/sdv_shipments_sdv_vendor_payments",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "sdv_shipments_id",
+              "value": "={{$node[\"Function to update advance payments\"].json[\"vpanel_vendor_invoice\"]}}"
+            },
+            {
+              "name": "sdv_vendor_payments_id",
+              "value": "={{$node[\"Function to update advance payments\"].json[\"vpanelId\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Tag shipment to payment in vpanel",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3060,
+        -20
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -1099,5 +861,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-07-24T06:26:52.665Z"
+  "updatedAt": "2023-07-25T13:25:38.487Z"
 }
