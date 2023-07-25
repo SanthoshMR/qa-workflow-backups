@@ -89,7 +89,7 @@
       "main": [
         [
           {
-            "node": "Function",
+            "node": "HTTP Request",
             "type": "main",
             "index": 0
           }
@@ -359,5 +359,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-07-24T07:07:45.052Z"
+  "updatedAt": "2023-07-25T12:14:53.961Z"
 }
