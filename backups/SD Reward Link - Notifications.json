@@ -227,7 +227,7 @@
       "parameters": {
         "fromEmail": "={{$node[\"Webhook\"].json[\"body\"][\"email_from\"]}}",
         "toEmail": "={{$node[\"Webhook\"].json[\"body\"][\"email_to\"]}}",
-        "subject": "Diwali Voucher - OTP",
+        "subject": "Reward Link - OTP",
         "text": "=",
         "html": "={{$node[\"Email Templates\"].json[\"emailBody\"]}}",
         "options": {}
@@ -350,5 +350,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-06-14T11:07:28.278Z"
+  "updatedAt": "2023-07-26T13:00:56.255Z"
 }
