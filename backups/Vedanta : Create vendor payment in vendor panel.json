@@ -67,7 +67,7 @@
         ],
         [
           {
-            "node": "Function",
+            "node": "Get the payment to vendor data",
             "type": "main",
             "index": 0
           }
@@ -186,6 +186,17 @@
           }
         ]
       ]
+    },
+    "Get the payment to vendor data": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2022-10-19T10:00:21.945Z",
@@ -293,7 +304,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_payments/{{$node[\"Get vendor_payment_status\"].json[\"body\"][\"keys\"][0]}}?fields=id,payment_amount,payment_date,tax_deducted,any_deductions,vendor_payment_status,vendor_po_number,payment_type,residual_amount,actual_paid_amount,payment_paid_to_vendor,vendor_invoice.*,payment_utr,payment_description,vendor_invoice.shipment.*,vendor_invoice.vendor_payments.*",
+        "url": "={{$node[\"Globals\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_payments/{{$node[\"Get vendor_payment_status\"].json[\"body\"][\"keys\"][0]}}?fields=id,payment_amount,payment_date,tax_deducted,any_deductions,vendor_payment_status,vendor_po_number,payment_type,residual_amount,actual_paid_amount,payment_paid_to_vendor,payment_utr,payment_description",
         "options": {}
       },
       "name": "Get vendor payment",
@@ -382,10 +393,6 @@
               "value": "={{$node[\"Get vendor payment\"].json[\"data\"][\"payment_type\"]}}"
             },
             {
-              "name": "vendor_invoice",
-              "value": "={{$node[\"Get vendor payment\"].json[\"data\"][\"vendor_invoice\"]?$node[\"Get the shipment id\"].json[\"data\"][0][\"id\"]:null}}"
-            },
-            {
               "name": "actual_amount_received",
               "value": "={{$node[\"Get vendor payment\"].json[\"data\"][\"actual_paid_amount\"]}}"
             },
@@ -425,7 +432,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_shipments?filter={\"invoice_number\":{\"_eq\":\"{{$node[\"Get vendor payment\"].json[\"data\"][\"vendor_invoice\"][\"shipment\"][\"invoice_number\"]}}\"}}",
+        "url": "={{$node[\"Globals\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_shipments?filter={\"invoice_number\":{\"_eq\":\"{{$node[\"Get the payment to vendor data\"].json[\"data\"][0][\"sdm_vendor_invoice_details_id\"][\"shipment\"][\"invoice_number\"]}}\"}}",
         "options": {}
       },
       "name": "Get the shipment id",
@@ -452,7 +459,7 @@
           "parameter": [
             {
               "name": "residual_amount",
-              "value": "={{$node[\"Get vendor payment\"].json[\"data\"][\"actual_paid_amount\"]}}"
+              "value": "={{$node[\"Get vendor payment\"].json[\"data\"][0][\"sdm_vendor_payments_id\"][\"actual_paid_amount\"]}}"
             }
           ]
         }
@@ -553,21 +560,21 @@
     },
     {
       "parameters": {
-        "functionCode": "let vendorPayments = $node[\"Get vendor payment\"].json[\"data\"][\"vendor_invoice\"][\"vendor_payments\"];\nlet payableAmount = $node[\"Get vendor payment\"].json[\"data\"][\"vendor_invoice\"].payable_amount\nlet paidVendorPayments = vendorPayments.filter(payment=>payment.vendor_payment_status )\nlet updateItem = {}\nconst sumOfPayment = paidVendorPayments.reduce(\n  (accumulator, payment) => accumulator + parseFloat(payment.actual_paid_amount),\n  0\n);\n\nlet totalPaidAmount = sumOfPayment;\nlet remainingToPay = parseFloat(payableAmount) - totalPaidAmount;\nlet totalPercentagePaid = (totalPaidAmount/payableAmount)*100;\nlet vendor_payment = \"paymentpending\"\nif(totalPercentagePaid >= 90){\n  vendor_payment = \"paymentreleased\"\n}else if(totalPercentagePaid<90 && totalPercentagePaid > 0){\n  vendor_payment = \"partiallypaid\"\n}\n\nupdateItem.total_paid_amount = totalPaidAmount;\n//updateItem.remaining_to_pay = remainingToPay;\nupdateItem.total_percentage_paid = totalPercentagePaid;\n//updateItem.vendor_payment = vendor_payment\n\nitems[0].json.paidVendorPayments= paidVendorPayments;\nitems[0].json.sumOfPayment= sumOfPayment;\nitems[0].json.updateItem= updateItem;\n\nreturn items;"
+        "functionCode": "let vendorPayments = $node[\"Get the payment to vendor data\"].json[\"data\"][0][\"sdm_vendor_invoice_details_id\"][\"vendor_payments\"];\nlet payableAmount = $node[\"Get the payment to vendor data\"].json[\"data\"][0][\"sdm_vendor_invoice_details_id\"].payable_amount\nlet paidVendorPayments = vendorPayments.filter(payment=>payment.vendor_payment_status )\nlet updateItem = {}\nconst sumOfPayment = paidVendorPayments.reduce(\n  (accumulator, payment) => accumulator + parseFloat(payment.payment_type == \"advance\"?payment.consumed_amount:payment.actual_paid_amount),\n  0\n);\n\nlet totalPaidAmount = sumOfPayment;\nlet remainingToPay = parseFloat(payableAmount) - totalPaidAmount;\nlet totalPercentagePaid = (totalPaidAmount/payableAmount)*100;\nlet vendor_payment = \"paymentpending\"\nif(totalPercentagePaid >= 90){\n  vendor_payment = \"paymentreleased\"\n}else if(totalPercentagePaid<90 && totalPercentagePaid > 0){\n  vendor_payment = \"partiallypaid\"\n}\n\nupdateItem.total_paid_amount = totalPaidAmount;\n//updateItem.remaining_to_pay = remainingToPay;\nupdateItem.total_percentage_paid = totalPercentagePaid;\n//updateItem.vendor_payment = vendor_payment\n\nitems[0].json.paidVendorPayments= paidVendorPayments;\nitems[0].json.sumOfPayment= sumOfPayment;\nitems[0].json.updateItem= updateItem;\n\nreturn items;"
       },
       "name": "Function",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        960,
-        600
+        1040,
+        620
       ]
     },
     {
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "PATCH",
-        "url": "={{$node[\"Globals\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_invoice_details/{{$node[\"Get vendor payment\"].json[\"data\"][\"vendor_invoice\"][\"id\"]}}",
+        "url": "={{$node[\"Globals\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_invoice_details/{{$node[\"Get the payment to vendor data\"].json[\"data\"][0][\"sdm_vendor_invoice_details_id\"][\"id\"]}}",
         "jsonParameters": true,
         "options": {},
         "bodyParametersJson": "={{$node[\"Function\"].json[\"updateItem\"]}}"
@@ -651,10 +658,30 @@
           "name": "VendorPanel DMS Token"
         }
       }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_invoice_details_sdm_vendor_payments?filter={\"sdm_vendor_payments_id\":{\"_eq\":\"{{$node[\"Get vendor_payment_status\"].json[\"body\"][\"keys\"][0]}}\"}}&fields=sdm_vendor_invoice_details_id.*,sdm_vendor_invoice_details_id.shipment.*,sdm_vendor_invoice_details_id.vendor_payments.*",
+        "options": {}
+      },
+      "name": "Get the payment to vendor data",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        840,
+        620
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-07-19T09:39:30.325Z"
+  "updatedAt": "2023-07-26T09:18:42.607Z"
 }
