@@ -1,0 +1,276 @@
+{
+  "active": false,
+  "connections": {
+    "IMAP Email": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Spreadsheet File": {
+      "main": [
+        [
+          {
+            "node": "Get vendor codes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "Spreadsheet File1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Spreadsheet File1": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get vendor codes": {
+      "main": [
+        [
+          {
+            "node": "Get client Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get client Data": {
+      "main": [
+        [
+          {
+            "node": "Club client data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Club client data": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Spreadsheet File",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-07-28T05:49:35.534Z",
+  "id": "346",
+  "name": "Read and update excel",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        60
+      ]
+    },
+    {
+      "parameters": {
+        "binaryPropertyName": "attachment_0",
+        "options": {}
+      },
+      "name": "Spreadsheet File",
+      "type": "n8n-nodes-base.spreadsheetFile",
+      "typeVersion": 1,
+      "position": [
+        680,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "format": "resolved",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "name": "IMAP Email",
+      "type": "n8n-nodes-base.emailReadImap",
+      "typeVersion": 1,
+      "position": [
+        320,
+        260
+      ],
+      "credentials": {
+        "imap": {
+          "id": "18",
+          "name": "Imap creds(sai)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let returnItems =[];\nlet redemptionData = $node[\"Get vendor codes\"].json[\"redemption_data\"];\nlet vendorClientData = $node[\"Club client data\"].json[\"client_data\"];\nredemptionData.forEach(function(item,index){  \n    let matchedVendorOrder = vendorClientData.filter(vcd=>vcd.vendor_order_id == item.order_id);\n    returnItems.push({\n    json: {\n       order_id:item.order_id,\n       txn_status:item.txn_status,\n       denomination:item.denomination,\n       quantity:item.quantity,\n       txn_amount:item.txn_amount,\n       txn_date:item.txn_date,\n       vendor_id:item.vendor_id,\n       offer_id:item.offer_id,\n       brand:item.brand,\n       ShakeDeal_reference_id:item.ShakeDeal_reference_id,\n       discount:item.discount,\n       cashback_amount:item.cashback_amount,\n       vendor:matchedVendorOrder.length>0?matchedVendorOrder[0].entity:\"\",\n       client:matchedVendorOrder.length>0?matchedVendorOrder[0].client:\"\"\n    }\n  });\n  \n})\n\nreturn returnItems;"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1360,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "toFile",
+        "options": {
+          "fileName": "=SD_Work_Advantage_Purchase_Report_{{new Date().toISOString().split(\"T\")[0]}}"
+        }
+      },
+      "name": "Spreadsheet File1",
+      "type": "n8n-nodes-base.spreadsheetFile",
+      "typeVersion": 1,
+      "position": [
+        1520,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "handyalasairam9177@gmail.com",
+        "toEmail": "=sairam.reddy@shakedeal.com,chidanand@shakedeal.com",
+        "subject": "=Work Advantage - {{$node[\"IMAP Email\"].json[\"subject\"]}}",
+        "attachments": "data",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        1740,
+        280
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "36",
+          "name": "SendGrid"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let vendorOrderIds = [];\nlet vendorOrderIdString = \"\";\nlet redemptionData = [];\nitems.forEach(function(item,index){\n  vendorOrderIdString  = vendorOrderIdString?vendorOrderIdString+\",\"+`'${item.json.order_id}'`:vendorOrderIdString+`'${item.json.order_id}'`;\n  redemptionData.push({\n    order_id:item.json.order_id,\n    txn_status:item.json.txn_status,\n    denomination:item.json.denomination,\n    quantity:item.json.quantity,\n    txn_amount:item.json.txn_amount,\n    txn_date:item.json.txn_date,\n    vendor_id:item.json.vendor_id,\n    offer_id:item.json.offer_id,\n    brand:item.json.brand,\n    ShakeDeal_reference_id:item.json.ShakeDeal_reference_id,\n    discount:item.json[\"discount %\"],\n    cashback_amount:item.json.cashback_amount\n  })\n})\n\nreturn [{\n    json: {\n        vendor_order_ids: vendorOrderIdString,\n        redemption_data:redemptionData\n    },\n}];"
+      },
+      "name": "Get vendor codes",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        840,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=select  gci.client,gci.vendor_order_id,vd.entity_name from sd_gift_card_inventory gci  JOIN sd_vendor_details vd ON gci.vendors = vd.id where  gci.vendor_order_id IN ({{$node[\"Get vendor codes\"].json[\"vendor_order_ids\"]}})",
+        "additionalFields": {}
+      },
+      "name": "Get client Data",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        1020,
+        280
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "95",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let clientData = [];\nitems.forEach(function(item,index){\n  clientData.push({\n    entity:item.json.entity_name,\n    client:item.json.client,\n    vendor_order_id:item.json.vendor_order_id\n  })\n})\n\nreturn [{\n    json: {\n        client_data: clientData,\n    },\n}];"
+      },
+      "name": "Club client data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"IMAP Email\"].json[\"subject\"]}}",
+              "operation": "contains",
+              "value2": "=End of Day voucher purchase summary report"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        500,
+        260
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        720,
+        460
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-07-28T13:05:08.195Z"
+}
