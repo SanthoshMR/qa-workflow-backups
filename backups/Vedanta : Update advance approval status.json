@@ -394,7 +394,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let responseData = [];\nlet files = [];\nfiles.push($node[\"Function\"].json[\"data\"][\"proforma_invoice\"][\"id\"],$node[\"Function\"].json[\"data\"][\"cancelled_cheque\"][\"id\"]);\nlet uploadedDocument = $node[\"Update the approval status in mozart\"].json[\"data\"][\"upload_document\"];\nif(uploadedDocument){\n    uploadedDocument.forEach(function(file,index){\n        files.push(file.directus_files_id)\n    })\n}\nif(files){\n    files.forEach(function(upload_file,index){\n        responseData.push({\n            json: {\n                \"id\":upload_file,\n                \"index\":\"data\"+index,\n                \"dms_url\":$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]\n            }\t\t\t\n        });\n    })\n}\n\nreturn responseData;"
+        "functionCode": "let responseData = [];\nlet files = [];\nfiles.push($node[\"Update the approval status in mozart\"].json[\"data\"][\"proforma_invoice\"][\"id\"],$node[\"Update the approval status in mozart\"].json[\"data\"][\"cancelled_cheque\"][\"id\"]);\nlet uploadedDocument = $node[\"Update the approval status in mozart\"].json[\"data\"][\"upload_document\"];\nif(uploadedDocument){\n    uploadedDocument.forEach(function(file,index){\n        files.push(file.directus_files_id)\n    })\n}\nif(files){\n    files.forEach(function(upload_file,index){\n        responseData.push({\n            json: {\n                \"id\":upload_file,\n                \"index\":\"data\"+index,\n                \"dms_url\":$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]\n            }\t\t\t\n        });\n    })\n}\n\nreturn responseData;"
       },
       "name": "Function to split files",
       "type": "n8n-nodes-base.function",
@@ -570,5 +570,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-07-24T09:05:04.510Z"
+  "updatedAt": "2023-08-02T05:59:37.132Z"
 }
