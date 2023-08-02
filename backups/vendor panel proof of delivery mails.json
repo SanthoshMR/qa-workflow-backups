@@ -64,6 +64,8 @@
       "parameters": {
         "fromEmail": "handyalasairam9177@gmail.com",
         "toEmail": "={{$node[\"Webhook\"].json[\"body\"][\"email\"]}}",
+        "ccEmail": "={{$node[\"Webhook\"].json[\"body\"][\"SD_MOZART_VPANEL_CC_MAIL\"]}}",
+        "bccEmail": "={{$node[\"Webhook\"].json[\"body\"][\"SD_MOZART_VPANEL_BCC_MAIL\"]}}",
         "subject": "Request to upload Proof of Delivery for following invoices | Opcommerce Online Pvt. Ltd.",
         "html": "=<!DOCTYPE html>\n<html>\n<head>\n            \n  </head>\n<body>\n\n\t\t\t\t<p>Dear Sir/Madam,</p>\n\t<p>We kindly request that you upload the Proof of Delivery (POD) document in our vendor panel as soon as the order against the below Invoices is delivered. This is a mandatory step for tracking your payment status. To upload the POD, please log in to our vendor panel using the below link.</p>\t\n\n{{$node[\"Function\"].json[\"tableHtml\"]}}\n\t\t\t\t<p>If you need assistance with uploading the POD, you can refer to the video guide we have provided at the following link:</p>\n\t\t\t\t\n\t\t\t\t<p> <a href={{$json[\"body\"][\"SD_MOZART_VPANEL_DELIVERY_VIDEO\"]}}>Video link to quickly guide you on - how to upload Proof of Delivery (POD).</a></p>\n\t\t\t\t\n\t\t\t\t<p>Thank you for your cooperation. If you have any questions or concerns, please contact your POC   at {{$json[\"body\"][\"SD_MOZART_VPANEL_POC_EMAIL\"]}}</p>\n\n\n<img height=\"61\" width=\"231\" src=\"https://sdqa.shakedeal.com/images/logos/2/ShakeDealLogo.png\">\n\n\n<p><a href=\"https://www.shakedeal.com/\">www.shakedeal.com</a></p>\n\n<p>Opcommerce Online Pvt Ltd.</p>\n\n<p>DEDICATED PURCHASING PARTNER FOR:</p>\n\n<img height=\"61\" width=\"231\" src=\"https://sdqa.shakedeal.com/images/logos/2/vedantaLogo.jpg\">\n</body>\n</html>",
         "options": {}
@@ -98,5 +100,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-07-31T17:42:31.792Z"
+  "updatedAt": "2023-08-02T05:52:32.778Z"
 }
