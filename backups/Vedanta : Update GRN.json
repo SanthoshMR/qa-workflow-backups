@@ -760,6 +760,10 @@
             {
               "name": "shipment_status",
               "value": "={{$node[\"Function to update grn in mozart\"].json[\"shipment_status\"]}}"
+            },
+            {
+              "name": "grn_received",
+              "value": "={{true}}"
             }
           ]
         }
@@ -938,7 +942,7 @@
             },
             {
               "name": "resolution",
-              "value": "={{$node[\"Update shipment Items\"].json[\"data\"][\"accepted_qty\"] >= $node[\"Update shipment Items\"].json[\"data\"][\"shipment_qty\"]?null:$node[\"Update shipment Items\"].json[\"data\"][\"rejected_qty\"] >= $node[\"Update shipment Items\"].json[\"data\"][\"shipment_qty\"]?\"resolution_pending\":$node[\"Update shipment Items\"].json[\"data\"][\"accepted_qty\"]>0 && $node[\"Update shipment Items\"].json[\"data\"][\"accepted_qty\"]<$node[\"Update shipment Items\"].json[\"data\"][\"shipment_qty\"]?\"resolution_pending\":$node[\"Update shipment Items\"].json[\"data\"][\"resolution\"]}}"
+              "value": "={{$node[\"Update shipment Items\"].json[\"data\"][\"accepted_qty\"]==0 && $node[\"Update shipment Items\"].json[\"data\"][\"rejected_qty\"] ==0? $node[\"Update shipment Items\"].json[\"data\"][\"received_qty\"]<$node[\"Update shipment Items\"].json[\"data\"][\"shipment_qty\"]?$node[\"Update shipment Items\"].json[\"data\"][\"resolution\"]:$node[\"Update shipment Items\"].json[\"data\"][\"received_qty\"]== $node[\"Update shipment Items\"].json[\"data\"][\"shipment_qty\"]?null:$node[\"Update shipment Items\"].json[\"data\"][\"accepted_qty\"] == $node[\"Update shipment Items\"].json[\"data\"][\"shipment_qty\"]?null:$node[\"Update shipment Items\"].json[\"data\"][\"accepted_qty\"]<$node[\"Update shipment Items\"].json[\"data\"][\"received_qty\"]&&$node[\"Update shipment Items\"].json[\"data\"][\"resolution\"] == \"close_transaction\"?\"resolution_pending\":null:$node[\"Update shipment Items\"].json[\"data\"][\"resolution\"]}}"
             }
           ]
         }
@@ -995,5 +999,5 @@
   },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-07-27T13:03:23.356Z"
+  "updatedAt": "2023-08-03T09:27:05.755Z"
 }
