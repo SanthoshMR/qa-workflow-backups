@@ -118,7 +118,7 @@
       "main": [
         [
           {
-            "node": "Update Payments Data in vpanel",
+            "node": "Function",
             "type": "main",
             "index": 0
           }
@@ -298,6 +298,28 @@
         [
           {
             "node": "Tag shipment to payment in vpanel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "Update payments to vendors in payments",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update payments to vendors in payments": {
+      "main": [
+        [
+          {
+            "node": "Update Payments Data in vpanel",
             "type": "main",
             "index": 0
           }
@@ -537,7 +559,7 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "POST",
-        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_invoice_details",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_invoice_details?fields=*,vendor_payments.*",
         "jsonParameters": true,
         "options": {},
         "bodyParametersJson": "={{$node[\"Function to create payment to vendors\"].json[\"paymentToVendorsobj\"]}}"
@@ -600,8 +622,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        2200,
-        180
+        2300,
+        160
       ]
     },
     {
@@ -646,8 +668,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        2520,
-        -20
+        2440,
+        -40
       ]
     },
     {
@@ -764,8 +786,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2040,
-        -80
+        2220,
+        -20
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -908,10 +930,45 @@
           "name": "VendorPanel DMS Token"
         }
       }
+    },
+    {
+      "parameters": {
+        "functionCode": "let vendorPayments = $node[\"Create payment to vendors\"].json[\"data\"][\"vendor_payments\"];\nlet updateShipmentsToPayments = [];\nvendorPayments.forEach(function(payment,index){\n  updateShipmentsToPayments.push({\n    sdm_vendor_payments_id:payment.sdm_vendor_payments_id,\n    sdm_vendor_invoice_details_id:payment.sdm_vendor_invoice_details_id,\n    consumed_amount:payment.consumed_amount\n  })\n})\n\n\nitems[0].json.updateShipmentsToPayments = updateShipmentsToPayments;\nreturn items;"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        2020,
+        -200
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_payments_sdm_vendor_invoice_details",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Function\"].json[\"updateShipmentsToPayments\"]}}"
+      },
+      "name": "Update payments to vendors in payments",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2240,
+        -220
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-08-02T13:25:47.825Z"
+  "updatedAt": "2023-08-03T09:11:59.887Z"
 }
