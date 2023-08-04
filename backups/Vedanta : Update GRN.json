@@ -327,7 +327,7 @@
       "main": [
         [
           {
-            "node": "Function to get vendor invoices",
+            "node": "Update resolution status",
             "type": "main",
             "index": 0
           }
@@ -350,6 +350,17 @@
         [
           {
             "node": "Function to get the splitted grn",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update resolution status": {
+      "main": [
+        [
+          {
+            "node": "Function to get vendor invoices",
             "type": "main",
             "index": 0
           }
@@ -746,7 +757,7 @@
       "typeVersion": 1,
       "position": [
         3300,
-        200
+        220
       ]
     },
     {
@@ -939,10 +950,6 @@
             {
               "name": "grn_status",
               "value": "={{$node[\"Update shipment Items\"].json[\"data\"][\"accepted_qty\"] >= $node[\"Update shipment Items\"].json[\"data\"][\"shipment_qty\"]?\"grn_accepted\":$node[\"Update shipment Items\"].json[\"data\"][\"rejected_qty\"] >= $node[\"Update shipment Items\"].json[\"data\"][\"shipment_qty\"]?\"grn_rejected\":$node[\"Update shipment Items\"].json[\"data\"][\"accepted_qty\"]>0 && $node[\"Update shipment Items\"].json[\"data\"][\"accepted_qty\"]<$node[\"Update shipment Items\"].json[\"data\"][\"shipment_qty\"]?\"grn_partially_accepted\":$node[\"Update shipment Items\"].json[\"data\"][\"grn_status\"]}}"
-            },
-            {
-              "name": "resolution",
-              "value": "={{$node[\"Update shipment Items\"].json[\"data\"][\"accepted_qty\"]==0 && $node[\"Update shipment Items\"].json[\"data\"][\"rejected_qty\"] ==0? $node[\"Update shipment Items\"].json[\"data\"][\"received_qty\"]<$node[\"Update shipment Items\"].json[\"data\"][\"shipment_qty\"]?$node[\"Update shipment Items\"].json[\"data\"][\"resolution\"]:$node[\"Update shipment Items\"].json[\"data\"][\"received_qty\"]== $node[\"Update shipment Items\"].json[\"data\"][\"shipment_qty\"]?null:$node[\"Update shipment Items\"].json[\"data\"][\"accepted_qty\"] == $node[\"Update shipment Items\"].json[\"data\"][\"shipment_qty\"]?null:$node[\"Update shipment Items\"].json[\"data\"][\"accepted_qty\"]<$node[\"Update shipment Items\"].json[\"data\"][\"received_qty\"]&&$node[\"Update shipment Items\"].json[\"data\"][\"resolution\"] == \"close_transaction\"?\"resolution_pending\":null:$node[\"Update shipment Items\"].json[\"data\"][\"resolution\"]}}"
             }
           ]
         }
@@ -992,6 +999,35 @@
           "name": "Mozart qa creds"
         }
       }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Function to get the splitted grn\"].json[\"dms_url\"]}}/items/sdm_shipment_items/{{$node[\"Update Shipment item grn status\"].json[\"data\"][\"id\"]}}?fields= *,sdm_shipments_id.*,sdm_shipments_id.shipment_items.*",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "resolution",
+              "value": "={{$node[\"Update Shipment item grn status\"].json[\"data\"][\"grn_status\"] == \"grn_pending\" && $node[\"Update Shipment item grn status\"].json[\"data\"][\"received_qty\"] <  $node[\"Update Shipment item grn status\"].json[\"data\"][\"shipment_qty\"]?$node[\"Update Shipment item grn status\"].json[\"data\"][\"resolution\"]:$node[\"Update Shipment item grn status\"].json[\"data\"][\"grn_status\"] == \"grn_partially_accepted\" && $node[\"Update Shipment item grn status\"].json[\"data\"][\"accepted_qty\"] < $node[\"Update Shipment item grn status\"].json[\"data\"][\"received_qty\"]?\"resolution_pending\": $node[\"Update Shipment item grn status\"].json[\"data\"][\"grn_status\"] == \"grn_rejected\" ? $node[\"Update Shipment item grn status\"].json[\"data\"][\"resolution\"]:null}}"
+            }
+          ]
+        }
+      },
+      "name": "Update resolution status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3400,
+        -160
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
     }
   ],
   "settings": {
@@ -999,5 +1035,5 @@
   },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-08-03T09:27:05.755Z"
+  "updatedAt": "2023-08-04T12:37:12.713Z"
 }
