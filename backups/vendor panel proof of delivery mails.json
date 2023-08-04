@@ -1,11 +1,11 @@
 {
-  "active": true,
+  "active": false,
   "connections": {
     "Webhook": {
       "main": [
         [
           {
-            "node": "Function",
+            "node": "FunctionItem",
             "type": "main",
             "index": 0
           }
@@ -17,6 +17,17 @@
         [
           {
             "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FunctionItem": {
+      "main": [
+        [
+          {
+            "node": "Function",
             "type": "main",
             "index": 0
           }
@@ -74,7 +85,7 @@
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 1,
       "position": [
-        720,
+        880,
         140
       ],
       "credentials": {
@@ -82,7 +93,8 @@
           "id": "36",
           "name": "SendGrid"
         }
-      }
+      },
+      "disabled": true
     },
     {
       "parameters": {
@@ -92,13 +104,25 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        500,
+        640,
         140
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let vendorItems = $node[\"Webhook\"].json[\"body\"];\nconst mailItem = {};\nfor (let i = 0; i < vendorItems.length; i++) {\n\t\t\t\tmailItem.email = vendorItems[i].email;\n\t\t\t\tmailItem.SD_MOZART_VPANEL_POC_EMAIL= [];\n        mailItem.SD_MOZART_VPANEL_CC_MAIL = vendorItems[i].SD_MOZART_VPANEL_CC_MAIL;\n        mailItem.shipments = vendorItems[i].shipments;\n\t\t\t\tmailItem.vendor_po_number = vendorItems[i].ids;\n\t\t\t\tmailItem.SHIPMENT_LINK =  vendorItems[i].SD_MOZART_VPANEL_SHIPMENT_PAGE;\n\t\t\t\tmailItem.SD_MOZART_VPANEL_DELIVERY_VIDEO =  vendorItems[i].SD_MOZART_VPANEL_DELIVERY_VIDEO;\n\t\t\t\tvendorItems[i].shipments[0].vendor_po_number.buyer_ids !== null\n\t\t\t\t\t\t? mailItem.SD_MOZART_VPANEL_CC_MAIL.push(vendorItems[i].shipments[0].vendor_po_number.buyer_ids)\n\t\t\t\t\t\t: '';\n\t\t\t\tvendorItems[i].shipments[0].vendor_po_number.poc_id !== null\n\t\t\t\t\t\t? mailItem.SD_MOZART_VPANEL_CC_MAIL.push(vendorItems[i].shipments[0].vendor_po_number.poc_id)\n\t\t\t\t\t\t: '';\n\t\t\t\tvendorItems[i].shipments[0].poc_id !== null\n\t\t\t\t\t\t? mailItem.SD_MOZART_VPANEL_POC_EMAIL.push(vendorItems[i].shipments[0].vendor_po_number.poc_id)\n\t\t\t\t\t\t: '';\n\t\t\t}\n\nitems[0].json.mailItem= mailItem;\nreturn items[0];"
+      },
+      "name": "FunctionItem",
+      "type": "n8n-nodes-base.functionItem",
+      "typeVersion": 1,
+      "position": [
+        440,
+        0
       ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-08-02T05:52:32.778Z"
+  "updatedAt": "2023-08-04T13:01:49.707Z"
 }
