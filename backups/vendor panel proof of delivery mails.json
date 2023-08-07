@@ -5,7 +5,7 @@
       "main": [
         [
           {
-            "node": "FunctionItem",
+            "node": "Function",
             "type": "main",
             "index": 0
           }
@@ -23,11 +23,33 @@
         ]
       ]
     },
-    "FunctionItem": {
+    "Function1": {
       "main": [
         [
           {
-            "node": "Function",
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email": {
+      "main": [
+        [
+          {
+            "node": "Function2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function2": {
+      "main": [
+        [
+          {
+            "node": "Function1",
             "type": "main",
             "index": 0
           }
@@ -74,18 +96,18 @@
     {
       "parameters": {
         "fromEmail": "handyalasairam9177@gmail.com",
-        "toEmail": "={{$node[\"Webhook\"].json[\"body\"][\"email\"]}}",
-        "ccEmail": "={{$node[\"Webhook\"].json[\"body\"][\"SD_MOZART_VPANEL_CC_MAIL\"]}}",
-        "bccEmail": "={{$node[\"Webhook\"].json[\"body\"][\"SD_MOZART_VPANEL_BCC_MAIL\"]}}",
+        "toEmail": "={{$node[\"Function\"].json[\"email\"]}}",
+        "ccEmail": "={{$node[\"Function\"].json[\"SD_MOZART_VPANEL_CC_MAIL\"]}}",
+        "bccEmail": "=",
         "subject": "Request to upload Proof of Delivery for following invoices | Opcommerce Online Pvt. Ltd.",
-        "html": "=<!DOCTYPE html>\n<html>\n<head>\n            \n  </head>\n<body>\n\n\t\t\t\t<p>Dear Sir/Madam,</p>\n\t<p>We kindly request that you upload the Proof of Delivery (POD) document in our vendor panel as soon as the order against the below Invoices is delivered. This is a mandatory step for tracking your payment status. To upload the POD, please log in to our vendor panel using the below link.</p>\t\n\n{{$node[\"Function\"].json[\"tableHtml\"]}}\n\t\t\t\t<p>If you need assistance with uploading the POD, you can refer to the video guide we have provided at the following link:</p>\n\t\t\t\t\n\t\t\t\t<p> <a href={{$json[\"body\"][\"SD_MOZART_VPANEL_DELIVERY_VIDEO\"]}}>Video link to quickly guide you on - how to upload Proof of Delivery (POD).</a></p>\n\t\t\t\t\n\t\t\t\t<p>Thank you for your cooperation. If you have any questions or concerns, please contact your POC   at {{$json[\"body\"][\"SD_MOZART_VPANEL_POC_EMAIL\"]}}</p>\n\n\n<img height=\"61\" width=\"231\" src=\"https://sdqa.shakedeal.com/images/logos/2/ShakeDealLogo.png\">\n\n\n<p><a href=\"https://www.shakedeal.com/\">www.shakedeal.com</a></p>\n\n<p>Opcommerce Online Pvt Ltd.</p>\n\n<p>DEDICATED PURCHASING PARTNER FOR:</p>\n\n<img height=\"61\" width=\"231\" src=\"https://sdqa.shakedeal.com/images/logos/2/vedantaLogo.jpg\">\n</body>\n</html>",
+        "html": "=<!DOCTYPE html>\n<html>\n<head>\n            \n  </head>\n<body>\n\n\t\t\t\t<p>Dear Sir/Madam,</p>\n\t<p>We kindly request that you upload the Proof of Delivery (POD) document in our vendor panel as soon as the order against the below Invoices is delivered. This is a mandatory step for tracking your payment status. To upload the POD, please log in to our vendor panel using the below link.</p>\t\n{{$node[\"Function\"].json[\"tableHtml\"]}}\n\t\t\t\t<p>If you need assistance with uploading the POD, you can refer to the video guide we have provided at the following link:</p>\n\t\t\t\t<p> <a href={{$node[\"Function\"].json[\"SD_MOZART_VPANEL_DELIVERY_VIDEO\"]}}>Video link to quickly guide you on - how to upload Proof of Delivery (POD).</a></p>\n\t\t\t\t\n\t\t\t\t<p>Thank you for your cooperation. If you have any questions or concerns, please contact your POC   at {{$node[\"Function\"].json[\"SD_MOZART_VPANEL_POC_EMAIL\"]}}</p>\n\n\n<img height=\"61\" width=\"231\" src=\"https://sdqa.shakedeal.com/images/logos/2/ShakeDealLogo.png\">\n\n\n<p><a href=\"https://www.shakedeal.com/\">www.shakedeal.com</a></p>\n\n<p>Opcommerce Online Pvt Ltd.</p>\n\n<p>DEDICATED PURCHASING PARTNER FOR:</p>\n\n<img height=\"61\" width=\"231\" src=\"https://sdqa.shakedeal.com/images/logos/2/vedantaLogo.jpg\">\n</body>\n</html>",
         "options": {}
       },
       "name": "Send Email",
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 1,
       "position": [
-        880,
+        600,
         140
       ],
       "credentials": {
@@ -93,36 +115,70 @@
           "id": "36",
           "name": "SendGrid"
         }
-      },
-      "disabled": true
+      }
     },
     {
       "parameters": {
-        "functionCode": "let shipments =  $node[\"Webhook\"].json[\"body\"][\"shipments\"]\nlet shipmentLink = $node[\"Webhook\"].json[\"body\"][\"SHIPMENT_LINK\"];\nlet tableData = '';\nlet borderStyle = \"border: 1px solid black;border-collapse: collapse;text-align: center; vertical-align: middle;\"\nshipments.forEach(function(element,index){\n  let link = `${shipmentLink}${element.id}`\n  tableData=tableData+\n      `<tr style='${borderStyle}'>`+\n      `<td style='${borderStyle}'>${element.invoice_number}</td>`+\n      `<td style='${borderStyle}'>${element.vendor_po_number.po_number}</td>`+\n      `<td style='${borderStyle}'><a href=${link}>Link</a></td>`+\n      `</tr>`;\n})\nlet tableHtml = `<table  style=\"color:#000000;width: 100%;border: 1px solid black;border-collapse: collapse; height: 70px;\">`+\n    `<tr style='background-color:#dedfe0;border: 1px solid black;border-collapse: collapse;'>`+\n    `<th style='${borderStyle}'>Invoice Number</th>`+\n    `<th style='${borderStyle}'>PO Number</th>`+\n    `<th style='${borderStyle}'>Link</th>`+\n    `</tr>${tableData}`+\n    `</table>`;\n\nitems[0].json.tableHtml = tableHtml;\nreturn items;"
+        "functionCode": "let vendorItems = $node[\"Webhook\"].json[\"body\"];\nlet returnItems= [];\n// for (let i = 0; i < vendorItems.length; i++) {\n  vendorItems.forEach(function(obj,index){  \n    let mailItem = {};\n\t\t\t\tmailItem.email = obj.email;\n\t\t\t\tmailItem.SD_MOZART_VPANEL_POC_EMAIL= [];\n        mailItem.SD_MOZART_VPANEL_CC_MAIL = obj.SD_MOZART_VPANEL_CC_MAIL;\n        mailItem.shipments = obj.shipments;\n        mailItem.keys = obj.shipmentsids;\n        mailItem.status_change_date = obj.status_change_date;\n\n        \n\t\t\t\tmailItem.vendor_po_number = obj.ids;\n\n\t\t\t\tmailItem.SHIPMENT_LINK =  obj.SHIPMENT_LINK;\n\t\t\t\tmailItem.SD_MOZART_VPANEL_DELIVERY_VIDEO =  obj.SD_MOZART_VPANEL_DELIVERY_VIDEO;\n\t\t\t\tobj.shipments[0].vendor_po_number.buyer_ids !== null\n\t\t\t\t\t\t? mailItem.SD_MOZART_VPANEL_CC_MAIL.push(obj.shipments[0].vendor_po_number.buyer_ids)\n\t\t\t\t\t\t: '';\n\t\t\t\tobj.shipments[0].vendor_po_number.poc_id !== null\n\t\t\t\t\t\t? mailItem.SD_MOZART_VPANEL_CC_MAIL.push(obj.shipments[0].vendor_po_number.poc_id)\n\t\t\t\t\t\t: '';\n\t\t\t\tobj.shipments[0].poc_id !== null\n\t\t\t\t\t\t? mailItem.SD_MOZART_VPANEL_POC_EMAIL.push(obj.shipments[0].vendor_po_number.poc_id)\n\t\t\t\t\t\t: '';\n\n\n                let tableData = '';\nlet borderStyle = \"border: 1px solid black;border-collapse: collapse;text-align: center; vertical-align: middle;\"\nmailItem.shipments.forEach(function(element,index){\n  let link = `${mailItem.SHIPMENT_LINK}${element.id}`\n  tableData=tableData+\n      `<tr style='${borderStyle}'>`+\n      `<td style='${borderStyle}'>${element.invoice_number}</td>`+\n      `<td style='${borderStyle}'>${element.vendor_po_number.po_number}</td>`+\n      `<td style='${borderStyle}'><a href=${link}>Link</a></td>`+\n      `</tr>`;\n})\nlet tableHtml = `<table  style=\"color:#000000;width: 100%;border: 1px solid black;border-collapse: collapse; height: 70px;\">`+\n    `<tr style='background-color:#dedfe0;border: 1px solid black;border-collapse: collapse;'>`+\n    `<th style='${borderStyle}'>Invoice Number</th>`+\n    `<th style='${borderStyle}'>PO Number</th>`+\n    `<th style='${borderStyle}'>Link</th>`+\n    `</tr>${tableData}`+\n    `</table>`;\n\n    mailItem.tableHtml=tableHtml;\n    returnItems.push({\n        json:mailItem\n    });\n})\n\nreturn returnItems;"
       },
       "name": "Function",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        640,
+        400,
         140
       ]
     },
     {
       "parameters": {
-        "functionCode": "let vendorItems = $node[\"Webhook\"].json[\"body\"];\nconst mailItem = {};\nfor (let i = 0; i < vendorItems.length; i++) {\n\t\t\t\tmailItem.email = vendorItems[i].email;\n\t\t\t\tmailItem.SD_MOZART_VPANEL_POC_EMAIL= [];\n        mailItem.SD_MOZART_VPANEL_CC_MAIL = vendorItems[i].SD_MOZART_VPANEL_CC_MAIL;\n        mailItem.shipments = vendorItems[i].shipments;\n\t\t\t\tmailItem.vendor_po_number = vendorItems[i].ids;\n\t\t\t\tmailItem.SHIPMENT_LINK =  vendorItems[i].SD_MOZART_VPANEL_SHIPMENT_PAGE;\n\t\t\t\tmailItem.SD_MOZART_VPANEL_DELIVERY_VIDEO =  vendorItems[i].SD_MOZART_VPANEL_DELIVERY_VIDEO;\n\t\t\t\tvendorItems[i].shipments[0].vendor_po_number.buyer_ids !== null\n\t\t\t\t\t\t? mailItem.SD_MOZART_VPANEL_CC_MAIL.push(vendorItems[i].shipments[0].vendor_po_number.buyer_ids)\n\t\t\t\t\t\t: '';\n\t\t\t\tvendorItems[i].shipments[0].vendor_po_number.poc_id !== null\n\t\t\t\t\t\t? mailItem.SD_MOZART_VPANEL_CC_MAIL.push(vendorItems[i].shipments[0].vendor_po_number.poc_id)\n\t\t\t\t\t\t: '';\n\t\t\t\tvendorItems[i].shipments[0].poc_id !== null\n\t\t\t\t\t\t? mailItem.SD_MOZART_VPANEL_POC_EMAIL.push(vendorItems[i].shipments[0].vendor_po_number.poc_id)\n\t\t\t\t\t\t: '';\n\t\t\t}\n\nitems[0].json.mailItem= mailItem;\nreturn items[0];"
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "=https://sdqa.vpanel.shakedeal.com/items/sdv_shipments",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Function1\"].json}}"
       },
-      "name": "FunctionItem",
-      "type": "n8n-nodes-base.functionItem",
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        440,
-        0
+        760,
+        360
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "97",
+          "name": "mozart vendor panel auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let vendorItems = $node[\"Webhook\"].json[\"body\"];\nlet updateItems= [];\n\nvendorItems.forEach(function(obj,index){  \n    \n      let keys = obj.shipmentsids;\n\n      let data = {\n            'status_change_date' : obj.status_change_date\n      }\n\n    updateItems.push({\n        json:{\n              keys : keys,\n              data : data\n        }\n    });\n})\n\nreturn updateItems;"
+      },
+      "name": "Function1",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        520,
+        360
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let returnItems = [];\nlet message = [];\nreturnItems.push({\n  json:{\n    message\n  }\n})\nreturn returnItems;"
+      },
+      "name": "Function2",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        820,
+        140
       ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-08-04T13:01:49.707Z"
+  "updatedAt": "2023-08-07T13:16:57.154Z"
 }
