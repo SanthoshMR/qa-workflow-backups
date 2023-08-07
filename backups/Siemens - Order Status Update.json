@@ -264,7 +264,7 @@
             },
             {
               "name": "to_email",
-              "value": "surya.kc@shakedeal.com,parthiban.n@shakedeal.com,vinay.kumar@shakedeal.com,sayali.kabade@shakedeal.com,aditya.darira@shakedeal.com,vinod.raj@shakedeal.com"
+              "value": "surya.kc@shakedeal.com,parthiban.n@shakedeal.com,vinay.kumar@shakedeal.com"
             }
           ]
         },
@@ -575,5 +575,5 @@
       "updatedAt": "2023-05-30T07:00:01.982Z"
     }
   ],
-  "updatedAt": "2023-07-27T07:32:45.653Z"
+  "updatedAt": "2023-08-07T06:20:36.208Z"
 }
