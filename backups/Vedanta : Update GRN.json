@@ -221,7 +221,7 @@
       "main": [
         [
           {
-            "node": "Function to get product ids",
+            "node": "Update shipment Item status",
             "type": "main",
             "index": 0
           }
@@ -361,6 +361,17 @@
         [
           {
             "node": "Function to get vendor invoices",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update shipment Item status": {
+      "main": [
+        [
+          {
+            "node": "Function to get product ids",
             "type": "main",
             "index": 0
           }
@@ -771,6 +782,10 @@
             {
               "name": "grn_received",
               "value": "={{true}}"
+            },
+            {
+              "name": "resolution_updated",
+              "value": "={{true}}"
             }
           ]
         }
@@ -1006,7 +1021,7 @@
           "parameter": [
             {
               "name": "resolution",
-              "value": "={{$node[\"Update Shipment item grn status\"].json[\"data\"][\"grn_status\"] == \"grn_pending\" && $node[\"Update Shipment item grn status\"].json[\"data\"][\"received_qty\"] <  $node[\"Update Shipment item grn status\"].json[\"data\"][\"shipment_qty\"]?$node[\"Update Shipment item grn status\"].json[\"data\"][\"resolution\"]:$node[\"Update Shipment item grn status\"].json[\"data\"][\"grn_status\"] == \"grn_partially_accepted\" && $node[\"Update Shipment item grn status\"].json[\"data\"][\"accepted_qty\"] < $node[\"Update Shipment item grn status\"].json[\"data\"][\"received_qty\"]?\"resolution_pending\": $node[\"Update Shipment item grn status\"].json[\"data\"][\"grn_status\"] == \"grn_rejected\" ? \"resolution_pending\":$node[\"Update Shipment item grn status\"].json[\"data\"][\"grn_status\"] == \"grn_partially_accepted\" && $node[\"Update Shipment item grn status\"].json[\"data\"][\"accepted_qty\"] == $node[\"Update Shipment item grn status\"].json[\"data\"][\"received_qty\"]?null:$node[\"Update Shipment item grn status\"].json[\"data\"][\"grn_status\"] == \"grn_pending\" && $node[\"Update Shipment item grn status\"].json[\"data\"][\"resolution\"] == \"resolution_pending\"  && $node[\"Update Shipment item grn status\"].json[\"data\"][\"received_qty\"] == $node[\"Update Shipment item grn status\"].json[\"data\"][\"shipment_qty\"]?null:null}}"
+              "value": "={{$node[\"Update Shipment item grn status\"].json[\"data\"][\"grn_status\"] == \"grn_pending\" && $node[\"Update Shipment item grn status\"].json[\"data\"][\"received_qty\"] <  $node[\"Update Shipment item grn status\"].json[\"data\"][\"shipment_qty\"]?\"resolution_pending\":$node[\"Update Shipment item grn status\"].json[\"data\"][\"grn_status\"] == \"grn_partially_accepted\" && $node[\"Update Shipment item grn status\"].json[\"data\"][\"accepted_qty\"] < $node[\"Update Shipment item grn status\"].json[\"data\"][\"received_qty\"]?\"resolution_pending\": $node[\"Update Shipment item grn status\"].json[\"data\"][\"grn_status\"] == \"grn_rejected\" ? \"resolution_pending\":$node[\"Update Shipment item grn status\"].json[\"data\"][\"grn_status\"] == \"grn_partially_accepted\" && $node[\"Update Shipment item grn status\"].json[\"data\"][\"accepted_qty\"] == $node[\"Update Shipment item grn status\"].json[\"data\"][\"received_qty\"]?null:$node[\"Update Shipment item grn status\"].json[\"data\"][\"grn_status\"] == \"grn_pending\" && $node[\"Update Shipment item grn status\"].json[\"data\"][\"resolution\"] == \"resolution_pending\"  && $node[\"Update Shipment item grn status\"].json[\"data\"][\"received_qty\"] == $node[\"Update Shipment item grn status\"].json[\"data\"][\"shipment_qty\"]?null:null}}"
             }
           ]
         }
@@ -1024,6 +1039,35 @@
           "name": "Mozart DMS Token"
         }
       }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Function to update grn in mozart\"].json[\"dms_url\"]}}/items/sdm_shipment_items/{{$node[\"Update shipment status\"].json[\"data\"][\"shipment_items\"][0]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "resolution_updated",
+              "value": "={{true}}"
+            }
+          ]
+        }
+      },
+      "name": "Update shipment Item status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        4420,
+        -60
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
     }
   ],
   "settings": {
@@ -1031,5 +1075,5 @@
   },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-08-07T09:35:13.272Z"
+  "updatedAt": "2023-08-08T10:32:40.763Z"
 }
