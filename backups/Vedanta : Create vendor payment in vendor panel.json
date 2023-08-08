@@ -151,7 +151,7 @@
       "main": [
         [
           {
-            "node": "IF1",
+            "node": "Update consumed amount in shipmentPayment",
             "type": "main",
             "index": 0
           }
@@ -214,6 +214,39 @@
         [
           {
             "node": "Tag shipment to payment in vpanel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update consumed amount in shipmentPayment": {
+      "main": [
+        [
+          {
+            "node": "Update total consumed in vendor payment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update total consumed in vendor payment": {
+      "main": [
+        [
+          {
+            "node": "Update CA in shipment payment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update CA in shipment payment": {
+      "main": [
+        [
+          {
+            "node": "IF1",
             "type": "main",
             "index": 0
           }
@@ -326,7 +359,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_payments/{{$node[\"Get vendor_payment_status\"].json[\"body\"][\"keys\"][0]}}?fields=id,payment_amount,payment_date,tax_deducted,any_deductions,vendor_payment_status,vendor_po_number,payment_type,residual_amount,actual_paid_amount,payment_paid_to_vendor,payment_utr,payment_description,consumed_amount",
+        "url": "={{$node[\"Globals\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_payments/{{$node[\"Get vendor_payment_status\"].json[\"body\"][\"keys\"][0]}}?fields=id,payment_amount,payment_date,tax_deducted,any_deductions,vendor_payment_status,vendor_po_number,payment_type,residual_amount,actual_paid_amount,payment_paid_to_vendor,payment_utr,payment_description,consumed_amount,shipments.*",
         "options": {}
       },
       "name": "Get vendor payment",
@@ -441,7 +474,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2380,
+        2860,
         440
       ],
       "credentials": {
@@ -461,8 +494,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2080,
-        620
+        2520,
+        580
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -520,7 +553,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        1480,
+        2000,
         600
       ]
     },
@@ -530,8 +563,8 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        1800,
-        480
+        2280,
+        440
       ]
     },
     {
@@ -569,8 +602,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1800,
-        720
+        2260,
+        760
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -582,7 +615,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let vendorPayments = $node[\"Get the payment to vendor data\"].json[\"data\"][0][\"sdm_vendor_invoice_details_id\"][\"vendor_payments\"];\nlet payableAmount = $node[\"Get the payment to vendor data\"].json[\"data\"][0][\"sdm_vendor_invoice_details_id\"].payable_amount\nlet paidVendorPayments = vendorPayments.filter(payment=>payment.sdm_vendor_payments_id.vendor_payment_status )\nlet updateItem = {};\nlet taxDeducted = 0;\nlet anyDeductions = 0;\nconst sumOfPayment = paidVendorPayments.reduce(\n  (accumulator, payment) => accumulator + parseFloat(payment.sdm_vendor_payments_id.payment_type == \"advance\"?payment.consumed_amount:payment.sdm_vendor_payments_id.actual_paid_amount),\n  0\n);\n\npaidVendorPayments.forEach(function(payment,index){\n  taxDeducted=taxDeducted+parseFloat(payment.sdm_vendor_payments_id.tax_deducted);\n  anyDeductions= anyDeductions+parseFloat(payment.sdm_vendor_payments_id.any_deductions);\n})\n\nlet totalPaidAmount = sumOfPayment;\nlet remainingToPay = parseFloat(payableAmount) - totalPaidAmount-taxDeducted-anyDeductions;\nlet totalPercentagePaid = (totalPaidAmount/payableAmount)*100;\nlet vendor_payment = \"paymentpending\"\nif(totalPercentagePaid >= 100 || remainingToPay <= 5){\n  vendor_payment = \"paymentreleased\"\n}else if(totalPercentagePaid<100 && totalPercentagePaid > 0){\n  vendor_payment = \"partiallypaid\"\n}\n\nupdateItem.total_paid_amount = totalPaidAmount;\nupdateItem.remaining_to_pay = remainingToPay;\nupdateItem.total_percentage_paid = totalPercentagePaid;\n\nupdateItem.vendor_payment = vendor_payment\n\nitems[0].json.paidVendorPayments= paidVendorPayments;\nitems[0].json.sumOfPayment= sumOfPayment;\nitems[0].json.updateItem= updateItem;\n\nreturn items;"
+        "functionCode": "let vendorPayments = $node[\"Get the payment to vendor data\"].json[\"data\"][0][\"sdm_vendor_invoice_details_id\"][\"vendor_payments\"];\nlet payableAmount = $node[\"Get the payment to vendor data\"].json[\"data\"][0][\"sdm_vendor_invoice_details_id\"].payable_amount\nlet paymentShipments = $node[\"Get vendor payment\"].json[\"data\"][\"shipments\"];\nlet paidVendorPayments = vendorPayments.filter(payment=>payment.sdm_vendor_payments_id.vendor_payment_status )\nlet updateItem = {};\nlet taxDeducted = 0;\nlet anyDeductions = 0;\nconst sumOfPayment = paidVendorPayments.reduce(\n  (accumulator, payment) => accumulator + parseFloat(payment.sdm_vendor_payments_id.payment_type == \"advance\"?payment.consumed_amount:payment.sdm_vendor_payments_id.actual_paid_amount),\n  0\n);\n\npaidVendorPayments.forEach(function(payment,index){\n  taxDeducted=taxDeducted+parseFloat(payment.sdm_vendor_payments_id.tax_deducted);\n  anyDeductions= anyDeductions+parseFloat(payment.sdm_vendor_payments_id.any_deductions);\n})\n\nlet consumedAmount = 0;\nlet matchedShipmentPayment = vendorPayments.filter(vp=>vp.sdm_vendor_payments_id.id == $node[\"Get vendor_payment_status\"].json[\"body\"][\"keys\"][0]);\nlet matchedPaymentShipment = paymentShipments.filter(ps=>ps.sdm_vendor_payments_id == $node[\"Get vendor_payment_status\"].json[\"body\"][\"keys\"][0]);\nlet shipmentPaymentId = matchedShipmentPayment[0].id;\nlet paymentShipmentId = matchedPaymentShipment[0].id;\nif(parseFloat(matchedShipmentPayment[0].sdm_vendor_payments_id.actual_paid_amount) == 0){\n  consumedAmount = parseFloat(matchedShipmentPayment[0].sdm_vendor_payments_id.tax_deducted) + parseFloat(matchedShipmentPayment[0].sdm_vendor_payments_id.any_deductions);\n}else {\n  consumedAmount = parseFloat(matchedShipmentPayment[0].sdm_vendor_payments_id.actual_paid_amount);\n}\n\nlet totalPaidAmount = sumOfPayment;\nlet remainingToPay = parseFloat(payableAmount) - totalPaidAmount-taxDeducted-anyDeductions;\nlet totalPercentagePaid = (totalPaidAmount/payableAmount)*100;\nlet vendor_payment = \"paymentpending\"\nif(totalPercentagePaid >= 100 || remainingToPay <= 5){\n  vendor_payment = \"paymentreleased\"\n}else if(totalPercentagePaid<100 && totalPercentagePaid > 0){\n  vendor_payment = \"partiallypaid\"\n}\n\nupdateItem.total_paid_amount = totalPaidAmount;\nupdateItem.remaining_to_pay = remainingToPay;\nupdateItem.total_percentage_paid = totalPercentagePaid;\n\nupdateItem.vendor_payment = vendor_payment\n\nitems[0].json.paidVendorPayments= paidVendorPayments;\nitems[0].json.sumOfPayment= sumOfPayment;\nitems[0].json.updateItem= updateItem;\nitems[0].json.matchedShipmentPayment = matchedShipmentPayment;\nitems[0].json.shipmentPaymentId = shipmentPaymentId;\nitems[0].json.paymentShipmentId = paymentShipmentId;\nitems[0].json.consumedAmount = consumedAmount;\n\nreturn items;"
       },
       "name": "Function",
       "type": "n8n-nodes-base.function",
@@ -630,7 +663,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        2620,
+        3100,
         440
       ]
     },
@@ -640,8 +673,8 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        2940,
-        180
+        3400,
+        40
       ]
     },
     {
@@ -675,7 +708,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2960,
+        3440,
         540
       ],
       "credentials": {
@@ -688,7 +721,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_invoice_details_sdm_vendor_payments?filter={\"sdm_vendor_payments_id\":{\"_eq\":\"{{$node[\"Get vendor_payment_status\"].json[\"body\"][\"keys\"][0]}}\"}}&fields=sdm_vendor_invoice_details_id.*,sdm_vendor_invoice_details_id.shipment.*,sdm_vendor_invoice_details_id.vendor_payments.sdm_vendor_payments_id.*,sdm_vendor_invoice_details_id.vendor_payments.consumed_amount",
+        "url": "={{$node[\"Globals\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_invoice_details_sdm_vendor_payments?filter={\"sdm_vendor_payments_id\":{\"_eq\":\"{{$node[\"Get vendor_payment_status\"].json[\"body\"][\"keys\"][0]}}\"}}&fields=sdm_vendor_invoice_details_id.*,sdm_vendor_invoice_details_id.shipment.*,sdm_vendor_invoice_details_id.vendor_payments.sdm_vendor_payments_id.*,sdm_vendor_invoice_details_id.vendor_payments.consumed_amount,id",
         "options": {}
       },
       "name": "Get the payment to vendor data",
@@ -732,7 +765,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        3200,
+        3680,
         560
       ],
       "credentials": {
@@ -769,7 +802,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        3440,
+        3920,
         560
       ],
       "credentials": {
@@ -778,10 +811,97 @@
           "name": "VendorPanel DMS Token"
         }
       }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_invoice_details_sdm_vendor_payments/{{$node[\"Function\"].json[\"shipmentPaymentId\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "consumed_amount",
+              "value": "={{$node[\"Function\"].json[\"consumedAmount\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update consumed amount in shipmentPayment",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1400,
+        600
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_payments/{{$node[\"Get vendor_payment_status\"].json[\"body\"][\"keys\"][0]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "consumed_amount",
+              "value": "={{$node[\"Function\"].json[\"consumedAmount\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update total consumed in vendor payment",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1580,
+        600
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_payments_sdm_vendor_invoice_details/{{$node[\"Function\"].json[\"paymentShipmentId\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "consumed_amount",
+              "value": "={{$node[\"Function\"].json[\"consumedAmount\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update CA in shipment payment",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1800,
+        600
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-08-04T10:03:24.576Z"
+  "updatedAt": "2023-08-08T12:36:52.623Z"
 }
