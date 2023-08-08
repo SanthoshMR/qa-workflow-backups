@@ -657,7 +657,7 @@
   "settings": {},
   "staticData": {
     "node:Wait for Po Email": {
-      "lastMessageUid": 2825
+      "lastMessageUid": 2828
     }
   },
   "tags": [
@@ -668,5 +668,5 @@
       "updatedAt": "2023-05-30T07:00:01.982Z"
     }
   ],
-  "updatedAt": "2023-08-07T13:33:32.322Z"
+  "updatedAt": "2023-08-08T13:01:47.119Z"
 }
