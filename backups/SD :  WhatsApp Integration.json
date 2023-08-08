@@ -270,7 +270,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let default_whatsapp_provider = $node[\"Globals\"].json.default_whatsapp_provider;\n  // return $node[\"AiSensy Whatsapp\"].json.data;\nif(default_whatsapp_provider == 'kaleyra'){\n  return $node[\"HTTP Request\"].json; \n}else{\n  return $node[\"AiSensy Whatsapp\"].json.data;\n}\n\n// let returnItems = [];\n// returnItems.push({\n//   json:{\n//     id:$node[\"AiSensy Whatsapp\"].json.data.submitted_message_id,\n//   }\n// })\n\n// return returnItems;"
+        "functionCode": "// let default_whatsapp_provider = $node[\"Globals\"].json.default_whatsapp_provider;\n//   // return $node[\"AiSensy Whatsapp\"].json.data;\n// if(default_whatsapp_provider == 'kaleyra'){\n//   return $node[\"HTTP Request\"].json; \n// }else{\n//   return $node[\"AiSensy Whatsapp\"].json.data;\n// }\n\nlet whatsapp_response = $node[\"HTTP Request\"].json;\nlet returnItems = [];\nreturnItems.push({\n  json:{\n    submitted_message_id: whatsapp_response.id,\n  }\n})\n\nreturn returnItems;"
       },
       "name": "Response Data",
       "type": "n8n-nodes-base.function",
@@ -341,7 +341,7 @@
           "string": [
             {
               "name": "default_whatsapp_provider",
-              "value": "aisensy"
+              "value": "kaleyra"
             }
           ]
         },
@@ -359,5 +359,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-07-25T12:14:53.961Z"
+  "updatedAt": "2023-08-08T05:11:55.138Z"
 }
