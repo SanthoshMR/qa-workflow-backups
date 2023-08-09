@@ -252,6 +252,17 @@
           }
         ]
       ]
+    },
+    "Tag shipment to payment in vpanel": {
+      "main": [
+        [
+          {
+            "node": "Update consumed amount in payments",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2022-10-19T10:00:21.945Z",
@@ -721,7 +732,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_invoice_details_sdm_vendor_payments?filter={\"sdm_vendor_payments_id\":{\"_eq\":\"{{$node[\"Get vendor_payment_status\"].json[\"body\"][\"keys\"][0]}}\"}}&fields=sdm_vendor_invoice_details_id.*,sdm_vendor_invoice_details_id.shipment.*,sdm_vendor_invoice_details_id.vendor_payments.sdm_vendor_payments_id.*,sdm_vendor_invoice_details_id.vendor_payments.consumed_amount,id",
+        "url": "={{$node[\"Globals\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_invoice_details_sdm_vendor_payments?filter={\"sdm_vendor_payments_id\":{\"_eq\":\"{{$node[\"Get vendor_payment_status\"].json[\"body\"][\"keys\"][0]}}\"}}&fields=sdm_vendor_invoice_details_id.*,sdm_vendor_invoice_details_id.shipment.*,sdm_vendor_invoice_details_id.vendor_payments.sdm_vendor_payments_id.*,sdm_vendor_invoice_details_id.vendor_payments.consumed_amount,sdm_vendor_invoice_details_id.vendor_payments.id",
         "options": {}
       },
       "name": "Get the payment to vendor data",
@@ -898,10 +909,39 @@
           "name": "Mozart DMS Token"
         }
       }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_vendor_payments/{{$node[\"Create vendor payment\"].json[\"data\"][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "consumed_amount",
+              "value": "={{$node[\"Create vendor payment\"].json[\"data\"][\"actual_amount_received\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update consumed amount in payments",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        4140,
+        560
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-08-08T12:36:52.623Z"
+  "updatedAt": "2023-08-09T06:50:58.489Z"
 }
