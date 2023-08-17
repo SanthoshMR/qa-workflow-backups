@@ -49,7 +49,7 @@
       "main": [
         [
           {
-            "node": "Get the ASN document",
+            "node": "IF",
             "type": "main",
             "index": 0
           }
@@ -138,6 +138,35 @@
         [
           {
             "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Get the ASN document",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NoOp": {
+      "main": [
+        [
+          {
+            "node": "Update delivery info in mozart",
             "type": "main",
             "index": 0
           }
@@ -277,7 +306,7 @@
             },
             {
               "name": "asn_document",
-              "value": "={{$node[\"Upload asn_document in mozart\"].json[\"data\"][\"id\"]}}"
+              "value": "={{$node[\"Wait for delivery info\"].json[\"body\"][\"payload\"][\"asn_document\"]?$node[\"Upload asn_document in mozart\"].json[\"data\"][\"id\"]:null}}"
             }
           ]
         }
@@ -383,8 +412,8 @@
       "type": "n8n-nodes-base.moveBinaryData",
       "typeVersion": 1,
       "position": [
-        1660,
-        320
+        1800,
+        0
       ]
     },
     {
@@ -398,8 +427,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1440,
-        320
+        1580,
+        0
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -425,8 +454,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1920,
-        320
+        2060,
+        0
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -537,6 +566,35 @@
         }
       },
       "disabled": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Wait for delivery info\"].json[\"body\"][\"payload\"][\"asn_document\"]?true:false}}"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1480,
+        320
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1960,
+        540
+      ]
     }
   ],
   "settings": {},
@@ -549,5 +607,5 @@
       "updatedAt": "2022-05-30T07:16:52.136Z"
     }
   ],
-  "updatedAt": "2023-05-21T05:30:07.149Z"
+  "updatedAt": "2023-08-17T06:13:49.881Z"
 }
