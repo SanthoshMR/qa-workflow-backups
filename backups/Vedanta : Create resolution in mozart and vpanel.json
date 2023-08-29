@@ -1,0 +1,205 @@
+{
+  "active": false,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get url and token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get url and token": {
+      "main": [
+        [
+          {
+            "node": "Get the shipment items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the shipment items": {
+      "main": [
+        [
+          {
+            "node": "Get the shipment from vpanel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the shipment from vpanel": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-08-29T09:04:00.479Z",
+  "id": "348",
+  "name": "Vedanta : Create resolution in mozart and vpanel",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "create-resolution",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        540,
+        260
+      ],
+      "webhookId": "53b75851-4c8a-420b-9d92-f696a65ca6c5",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "=https://qan8n.shakedeal.com/webhook/get-url",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "client",
+              "value": "=vedanta"
+            },
+            {
+              "name": "env",
+              "value": "=qa"
+            }
+          ]
+        }
+      },
+      "name": "Get url and token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        740,
+        260
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_shipment_items?filter={\"_and\": [{\"sdm_shipments_id\":{\"id\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"keys\"][0]}}\"}}},{\"resolution\":{\"_eq\":\"resolution_pending\"}}]}&fields=*,sdm_shipments_id.*,sdm_po_items_id.*",
+        "options": {}
+      },
+      "name": "Get the shipment items",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        940,
+        260
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let shipmentItems = $node[\"Get the shipment items\"].json[\"data\"];\nlet resolutionItems = \nshipmentItems.forEach(function(sItem,index){\n\n})\n\nreturn items;"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "value": "={{$node[\"Get the shipment items\"].json[\"data\"]}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1380,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_shipments?filter={\"_and\": [{\"invoice_number\":{\"_eq\":\"{{$node[\"Get the shipment items\"].json[\"data\"][0][\"sdm_shipments_id\"][\"invoice_number\"]}}\"}},{\"vendor_po_num\":{\"po_number\":{\"_eq\":\"{{$node[\"Get the shipment items\"].json[\"data\"][0][\"sdm_po_items_id\"][\"vendor_po\"]}}\"}}}]}&fields=*,shipment_items.*,shipment_items.sdv_vendor_pos_sdv_products_id.*",
+        "options": {}
+      },
+      "name": "Get the shipment from vpanel",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1080,
+        80
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-08-29T10:49:59.253Z"
+}
