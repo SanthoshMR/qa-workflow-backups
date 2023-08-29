@@ -144,7 +144,7 @@
       "main": [
         [
           {
-            "node": "Update shipment Items",
+            "node": "Update grn history",
             "type": "main",
             "index": 0
           }
@@ -372,6 +372,17 @@
         [
           {
             "node": "Function to get product ids",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update grn history": {
+      "main": [
+        [
+          {
+            "node": "Update shipment Items",
             "type": "main",
             "index": 0
           }
@@ -782,10 +793,6 @@
             {
               "name": "grn_received",
               "value": "={{true}}"
-            },
-            {
-              "name": "resolution_updated",
-              "value": "={{true}}"
             }
           ]
         }
@@ -1068,6 +1075,44 @@
           "name": "Mozart DMS Token"
         }
       }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Function to get the splitted grn\"].json[\"dms_url\"]}}/items/sdm_grn_history",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "movement_type",
+              "value": "={{$node[\"Function to get the splitted grn\"].json[\"movement_type\"]}}"
+            },
+            {
+              "name": "qty",
+              "value": "={{parseFloat($node[\"Function to get the splitted grn\"].json[\"qty\"])}}"
+            },
+            {
+              "name": "shipment_item",
+              "value": "={{$node[\"Get Shipment Items\"].json[\"data\"][0][\"id\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update grn history",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2900,
+        -20
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "80",
+          "name": "Mozart qa creds"
+        }
+      },
+      "disabled": true
     }
   ],
   "settings": {
@@ -1075,5 +1120,5 @@
   },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-08-08T10:32:40.763Z"
+  "updatedAt": "2023-08-29T12:16:22.566Z"
 }
