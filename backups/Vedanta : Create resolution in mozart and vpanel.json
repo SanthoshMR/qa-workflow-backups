@@ -148,7 +148,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let shipmentItems = $node[\"Get the shipment items\"].json[\"data\"];\nlet resolutionItems = \nshipmentItems.forEach(function(sItem,index){\n\n})\n\nreturn items;"
+        "functionCode": "let shipmentItems = $node[\"Get the shipment items\"].json[\"data\"];\nlet vendorShipment = $node[\"Get the shipment from vpanel\"].json[\"data\"];\nlet sdmResolution = [];\nlet sdvResolution = [];\nshipmentItems.forEach(function(sItem,index){\n  let issue = sItem.grn_status == \"grn_pending\"?\"short_supply\":\"rejection\";\n  let rejected_qty = sItem.grn_status == \"grn_pending\"?sItem.shipment_qty - sItem.received_qty :sItem.shipment_qty - sItem.accepted_qty;\n  let sdmResolutionItems = [];\n  let sdvResolutionItems = [];\n  sdmResolutionItems.push({\n    shipment_item : sItem.id,\n    issue : issue,\n    rejected_qty : rejected_qty\n  });\n  sdvResolutionItems.push({\n    \n  })\n  sdmResolution.push({\n    shipment:sItem.sdm_shipments_id.id,\n    resolution_items:sdmResolutionItems\n  })\n})\n\nreturn items;"
       },
       "name": "Function",
       "type": "n8n-nodes-base.function",
@@ -163,7 +163,7 @@
         "values": {
           "string": [
             {
-              "value": "={{$node[\"Get the shipment items\"].json[\"data\"]}}"
+              "value": "={{$node[\"Get the shipment items\"].json[\"data\"]}}{{$node[\"Get the shipment from vpanel\"].json[\"data\"]}}"
             }
           ]
         },
@@ -201,5 +201,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-08-29T10:49:59.253Z"
+  "updatedAt": "2023-08-30T07:07:40.493Z"
 }
