@@ -1,0 +1,617 @@
+{
+  "active": false,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get url and token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get url and token": {
+      "main": [
+        [
+          {
+            "node": "Function to split po details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set": {
+      "main": [
+        [
+          {
+            "node": "Start Loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start Loop": {
+      "main": [
+        [
+          {
+            "node": "Function to get the splitted po",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to split po details": {
+      "main": [
+        [
+          {
+            "node": "Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to get the splitted po": {
+      "main": [
+        [
+          {
+            "node": "Nextcloud",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nextcloud": {
+      "main": [
+        [
+          {
+            "node": "IF1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload PO document in mozart": {
+      "main": [
+        [
+          {
+            "node": "Update PO Document title",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update PO Document title": {
+      "main": [
+        [
+          {
+            "node": "Update PO in vendor pos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update PO in vendor pos": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "call workflow to update po in vpanel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Increment index": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "End Loop",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Start Loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "End Loop": {
+      "main": [
+        [
+          {
+            "node": "Postgres",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres": {
+      "main": [
+        [
+          {
+            "node": "Respond to webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF1": {
+      "main": [
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Upload PO document in mozart",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "call workflow to update po in vpanel": {
+      "main": [
+        [
+          {
+            "node": "Increment index",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-08-30T07:19:25.316Z",
+  "id": "349",
+  "name": "Tally : Update PO Document",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "po-details",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        500,
+        320
+      ],
+      "webhookId": "1348fd26-529e-468f-abc3-d4ee3aeb0067",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "86",
+          "name": "Tally Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "=https://qan8n.shakedeal.com/webhook/get-url",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "client",
+              "value": "=vedanta"
+            },
+            {
+              "name": "env",
+              "value": "=qa"
+            }
+          ]
+        }
+      },
+      "name": "Get url and token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        740,
+        320
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "number": [
+            {
+              "name": "index"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        320
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "Start Loop",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1440,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let poData = $node[\"Function to split po details\"].json[\"result\"];\nlet currentIndex = $node[\"Start Loop\"].json[\"index\"];\nlet currentPO = poData[currentIndex];\nlet returnItems = [];\n\ncurrentPO.forEach(function(obj,index){\n    returnItems.push({\n    json: {\n       vpanel_url : $node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"],\n       dms_url : $node[\"Get url and token\"].json[\"0\"][\"mozart_url\"],\n       po_number : obj.po_number\n    }\n  });\n  \n})\n\nreturn returnItems;\n"
+      },
+      "name": "Function to get the splitted po",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1680,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let poDetails = $node[\"Webhook\"].json[\"body\"][\"po_details\"];\nlet poNumbersString = \"\";\n\n\nconst size = 5; // size of each subarray\n\nconst result = [];\npoDetails.forEach(function(po,index){\n  poNumbersString  = poNumbersString?poNumbersString+\",\"+`'${po.po_number}'`:poNumbersString+`'${po.po_number}'`;\n})\nfor (let i = 0; i < poDetails.length; i += size) {\n  \n  result.push(poDetails.slice(i, i + size));\n}\n\n\nreturn [{\n    json: {\n        result: result,\n        resultlength : result.length,\n        po_numbers : poNumbersString\n    },\n}];\n"
+      },
+      "name": "Function to split po details",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        960,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "path": "=Tally-qa/PO/{{$node[\"Function to get the splitted po\"].json[\"po_number\"]+\".pdf\"}}"
+      },
+      "name": "Nextcloud",
+      "type": "n8n-nodes-base.nextCloud",
+      "typeVersion": 1,
+      "position": [
+        1880,
+        300
+      ],
+      "credentials": {
+        "nextCloudApi": {
+          "id": "43",
+          "name": "SD Cloud"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "=https://sdqa.mozart.shakedeal.com/files",
+        "jsonParameters": true,
+        "options": {
+          "bodyContentType": "multipart-form-data"
+        },
+        "sendBinaryData": true,
+        "binaryPropertyName": "=input_file:data"
+      },
+      "name": "Upload PO document in mozart",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2140,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "=https://sdqa.mozart.shakedeal.com/items/sdm_vendor_pos/{{$node[\"Update PO Document title\"].json[\"data\"][\"title\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "po_file",
+              "value": "={{$node[\"Update PO Document title\"].json[\"data\"][\"id\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update PO in vendor pos",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2460,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "=https://sdqa.mozart.shakedeal.com/files/{{$node[\"Upload PO document in mozart\"].json[\"data\"][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "title",
+              "value": "={{$node[\"Upload PO document in mozart\"].json[\"data\"][\"filename_download\"].split(\".pdf\")[0]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update PO Document title",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2280,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "=https://zeusqa.shakedeal.com/items/tally_pos/{{$node[\"Update PO in vendor pos\"].json[\"data\"][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "po_document",
+              "value": "={{true}}"
+            }
+          ]
+        }
+      },
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2680,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "10",
+          "name": "SD-Dms-Token"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "number": [
+            {
+              "name": "index",
+              "value": "={{$node[\"Start Loop\"].json[\"index\"]+1}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Increment index",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        2940,
+        300
+      ],
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Increment index\"].json[\"index\"]}}",
+              "operation": "equal",
+              "value2": "={{$node[\"Function to split po details\"].json[\"resultlength\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        3080,
+        300
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "End Loop",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        3240,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=select po_document,id from tally_pos where id IN ({{$node[\"Function to split po details\"].json[\"po_numbers\"]}})",
+        "additionalFields": {}
+      },
+      "name": "Postgres",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        3500,
+        140
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "13",
+          "name": "Dms - QA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let returnItems =[]\nlet pos = [];\n\n\nitems.forEach(function(obj,index){  \n    // returnItems.push({\n    // json: {\n    //   purchase_orders : obj[\"po_data\"]\n    // }\n\n       \n   \n  //});\n  pos.push({\n    po_number:obj.json.id,\n    status:obj.json.po_document?\"Updated\":\"File not found\"\n  })\n  \n})\n    \n returnItems.push({\n   json:{\n     po_details : pos\n   }\n }) \n\n\nreturn returnItems;"
+      },
+      "name": "Respond to webhook",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        3720,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Nextcloud\"].json.hasOwnProperty('error')}}"
+            }
+          ]
+        }
+      },
+      "name": "IF1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        2020,
+        80
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        2400,
+        -180
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "=https://qan8n.shakedeal.com/webhook/vendor-po-document",
+        "options": {
+          "batchInterval": 3000,
+          "batchSize": 1
+        },
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "po_number",
+              "value": "={{$node[\"HTTP Request\"].json[\"data\"][\"id\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "call workflow to update po in vpanel",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2980,
+        80
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-08-30T13:25:18.275Z"
+}
