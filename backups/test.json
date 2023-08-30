@@ -1,0 +1,37 @@
+{
+  "active": true,
+  "connections": {},
+  "createdAt": "2023-08-30T09:08:34.733Z",
+  "id": "350",
+  "name": "test",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "path": "c5bb5b1c-15b4-4140-a50f-bce7e2c7d1cc",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        460,
+        180
+      ],
+      "webhookId": "c5bb5b1c-15b4-4140-a50f-bce7e2c7d1cc"
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-08-30T09:09:31.439Z"
+}
