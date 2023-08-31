@@ -11,6 +11,72 @@
           }
         ]
       ]
+    },
+    "Get url and token": {
+      "main": [
+        [
+          {
+            "node": "Get the vendor PO",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the vendor PO": {
+      "main": [
+        [
+          {
+            "node": "Get the po file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the po file": {
+      "main": [
+        [
+          {
+            "node": "Upload po file in vpanel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload po file in vpanel": {
+      "main": [
+        [
+          {
+            "node": "Update title and file name download",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update title and file name download": {
+      "main": [
+        [
+          {
+            "node": "Get the vendor po from vpanel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the vendor po from vpanel": {
+      "main": [
+        [
+          {
+            "node": "Update po file in vendor po in vpanel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2023-08-30T13:14:59.978Z",
@@ -81,10 +147,160 @@
           "name": "SD Basic Auth"
         }
       }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_pos/{{$node[\"Webhook\"].json[\"body\"][\"po_number\"]}}",
+        "options": {}
+      },
+      "name": "Get the vendor PO",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        940,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/assets/{{$node[\"Get the vendor PO\"].json[\"data\"][\"po_file\"]+\".pdf\"}}",
+        "allowUnauthorizedCerts": true,
+        "responseFormat": "file",
+        "options": {}
+      },
+      "name": "Get the po file",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1160,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/files",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {
+          "bodyContentType": "multipart-form-data"
+        },
+        "sendBinaryData": true
+      },
+      "name": "Upload po file in vpanel",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1380,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/files/{{$node[\"Upload po file in vpanel\"].json[\"data\"][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "title",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"po_number\"]}}"
+            },
+            {
+              "name": "filename_download",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"po_number\"]+\".pdf\"}}"
+            }
+          ]
+        }
+      },
+      "name": "Update title and file name download",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1600,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_vendor_pos?filter={\"po_number\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"po_number\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Get the vendor po from vpanel",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1820,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_vendor_pos/{{$node[\"Get the vendor po from vpanel\"].json[\"data\"][0][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "po_file",
+              "value": "={{$node[\"Update title and file name download\"].json[\"data\"][\"id\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update po file in vendor po in vpanel",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2040,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-08-30T13:19:58.779Z"
+  "updatedAt": "2023-08-31T07:19:03.813Z"
 }
