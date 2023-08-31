@@ -1,0 +1,441 @@
+{
+  "active": false,
+  "connections": {
+    "Get url and token": {
+      "main": [
+        [
+          {
+            "node": "Get Cloud Files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cron": {
+      "main": [
+        [
+          {
+            "node": "Get url and token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Cloud Files": {
+      "main": [
+        [
+          {
+            "node": "Function to get irn data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to get irn data": {
+      "main": [
+        [
+          {
+            "node": "Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set": {
+      "main": [
+        [
+          {
+            "node": "Start Loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start Loop": {
+      "main": [
+        [
+          {
+            "node": "Function to get the splitted irn Item",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to get the splitted irn Item": {
+      "main": [
+        [
+          {
+            "node": "Nextcloud",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nextcloud": {
+      "main": [
+        [
+          {
+            "node": "Send the irn data to SD store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send the irn data to SD store": {
+      "main": [
+        [
+          {
+            "node": "Update status in mozart",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Move All Files": {
+      "main": [
+        [
+          {
+            "node": "Increment index",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update status in mozart": {
+      "main": [
+        [
+          {
+            "node": "Move All Files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Increment index": {
+      "main": [
+        [
+          {
+            "node": "IF1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF1": {
+      "main": [
+        [
+          {
+            "node": "End Loop",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Start Loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-08-31T10:26:46.324Z",
+  "id": "352",
+  "name": "Vedanta : Update IRN Digital signed invoices (3.0)",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "operation": "list",
+        "path": "IRN-digitally-signed-qa/"
+      },
+      "name": "Get Cloud Files",
+      "type": "n8n-nodes-base.nextCloud",
+      "typeVersion": 1,
+      "position": [
+        860,
+        300
+      ],
+      "credentials": {
+        "nextCloudApi": {
+          "id": "43",
+          "name": "SD Cloud"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "=https://qan8n.shakedeal.com/webhook/get-url",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "client",
+              "value": "=vedanta"
+            },
+            {
+              "name": "env",
+              "value": "=qa"
+            }
+          ]
+        }
+      },
+      "name": "Get url and token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        660,
+        300
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "mode": "everyX"
+            }
+          ]
+        }
+      },
+      "name": "Cron",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        440,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let irnData = [];\n//let productIds = [];\nitems.forEach((item, index) => {\n  //productIds.push(item.json[\"Material\"])\n      let sdInvoiceNumber = item.json.path.replace('es/santhosh/IRN-digitally-signed-qa/','').replace('.pdf','').trim();\n      if(sdInvoiceNumber.includes(\"pdf\")){\n        irnData.push({\n          sd_invoice_number : sdInvoiceNumber\n        })\n      }\n      \n})\nconst size = 10; // size of each subarray\n\nconst result = [];\nfor (let i = 0; i < irnData.length; i += size) {\n  result.push(irnData.slice(i, i + size));\n}\n\n//items[0].json.result= result;\n//items[0].json.resultlength = result.length;\n//return items;\nreturn [{\n    json: {\n        result: result,\n        resultlength : result.length\n    },\n}];\n"
+      },
+      "name": "Function to get irn data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1060,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "number": [
+            {
+              "name": "index"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1260,
+        300
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "Start Loop",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let irnData = $node[\"Function to get irn data\"].json[\"result\"];\nlet currentIndex = $node[\"Start Loop\"].json[\"index\"];\nlet currentIrn = irnData[currentIndex];\nlet returnItems = [];\n\ncurrentIrn.forEach(function(obj,index){  \n    returnItems.push({\n    json: {\n       invoice_number : obj.sd_invoice_number,\n       dms_url : $node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]\n    }\n  });\n  \n})\n\nreturn returnItems;\n\n// items[0].json.currentStock= currentStock;\n\n// return items;"
+      },
+      "name": "Function to get the splitted irn Item",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1640,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "path": "=IRN-digitally-signed-qa/{{$node[\"Function to get the splitted irn Item\"].json[\"invoice_number\"]}}"
+      },
+      "name": "Nextcloud",
+      "type": "n8n-nodes-base.nextCloud",
+      "typeVersion": 1,
+      "position": [
+        1840,
+        300
+      ],
+      "credentials": {
+        "nextCloudApi": {
+          "id": "43",
+          "name": "SD Cloud"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "=https://sdqa.shakedeal.com/index.php?dispatch=wfs_update.retrieve_irn_invoice",
+        "jsonParameters": true,
+        "options": {
+          "timeout": 3000
+        },
+        "sendBinaryData": true
+      },
+      "name": "Send the irn data to SD store",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2060,
+        300
+      ],
+      "alwaysOutputData": true,
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "=https://sdqa.mozart.shakedeal.com/items/sdm_order_invoices/{{$node[\"Send the irn data to SD store\"].json.rdata.invoice_number}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "sd_irn_sent",
+              "value": "={{true}}"
+            }
+          ]
+        }
+      },
+      "name": "Update status in mozart",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2280,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "operation": "move",
+        "path": "=IRN-digitally-signed-qa/{{$node[\"Function to get the splitted irn Item\"].json[\"invoice_number\"]}}",
+        "toPath": "=IRN-old-digitally-signed-qa/{{$node[\"Function to get the splitted irn Item\"].json[\"invoice_number\"]}}"
+      },
+      "name": "Move All Files",
+      "type": "n8n-nodes-base.nextCloud",
+      "typeVersion": 1,
+      "position": [
+        2480,
+        300
+      ],
+      "executeOnce": false,
+      "credentials": {
+        "nextCloudApi": {
+          "id": "43",
+          "name": "SD Cloud"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "number": [
+            {
+              "name": "index",
+              "value": "={{$node[\"Start Loop\"].json[\"index\"]+1}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Increment index",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        2660,
+        300
+      ],
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Increment index\"].json[\"index\"]}}",
+              "operation": "equal",
+              "value2": "={{$node[\"Function to get irn data\"].json[\"resultlength\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "IF1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        2840,
+        300
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "End Loop",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        3000,
+        160
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-08-31T13:07:50.904Z"
+}
