@@ -133,11 +133,15 @@
             },
             {
               "name": "designation",
-              "value": "={{$node[\"Wait for Personal details\"].json[\"body\"][\"designation\"]}}"
+              "value": "={{$node[\"Wait for Personal details\"].json[\"body\"][\"jobtitle\"]}}"
             },
             {
               "name": "size_of_company",
               "value": "={{$node[\"Wait for Personal details\"].json[\"body\"][\"size\"]}}"
+            },
+            {
+              "name": "enquiry_type",
+              "value": "={{$node[\"Wait for Personal details\"].json[\"body\"][\"enquirytype\"]}}"
             }
           ]
         },
@@ -154,8 +158,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
+          "id": "10",
+          "name": "SD-Dms-Token"
         }
       }
     },
@@ -165,11 +169,11 @@
           "string": [
             {
               "name": "dms_url",
-              "value": "=https://dmsqa.shakedeal.com"
+              "value": "=https://zeusqa.shakedeal.com"
             },
             {
               "name": "to_email",
-              "value": "=sairam.reddy@shakedeal.com,chidanand@shakedeal.com,shreyas.ananth@shakedeal.com,vinay.kumar@shakedeal.com"
+              "value": "=sairam.reddy@shakedeal.com,chidanand@shakedeal.com,hari.v@shakedeal.com,vinay.kumar@shakedeal.com"
             },
             {
               "name": "from_email",
@@ -177,7 +181,7 @@
             },
             {
               "name": "recaptcha_secret",
-              "value": "=6LeKBxoeAAAAALK_Y4uvyWi5LGSn0decasHg82F2"
+              "value": "=6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe"
             }
           ]
         },
@@ -196,7 +200,7 @@
         "fromEmail": "={{$node[\"Globals\"].json[\"from_email\"]}}",
         "toEmail": "={{$node[\"Globals\"].json[\"to_email\"]}}",
         "subject": "=ShakePe Enquiry Details",
-        "text": "=Hi Team,\n\nPlease find the requirements :\n\nCompany Name : {{$node[\"Wait for Personal details\"].json[\"body\"][\"company\"]}}\nName : {{$node[\"Wait for Personal details\"].json[\"body\"][\"name\"]}}\nWork email : {{$node[\"Wait for Personal details\"].json[\"body\"][\"email\"]}}\nMob no : {{parseInt($node[\"Wait for Personal details\"].json[\"body\"][\"phone\"])}}\nComments : {{$node[\"Wait for Personal details\"].json[\"body\"][\"message\"]}}",
+        "text": "=Hi Team,\n\nPlease find the requirements :\n\nCompany Name : {{$node[\"Wait for Personal details\"].json[\"body\"][\"company\"]}}\nName : {{$node[\"Wait for Personal details\"].json[\"body\"][\"name\"]}}\nJob Title : {{$node[\"Wait for Personal details\"].json[\"body\"][\"jobtitle\"]}}\nEnquiry Type : {{$node[\"Wait for Personal details\"].json[\"body\"][\"enquirytype\"]}}\nWork email : {{$node[\"Wait for Personal details\"].json[\"body\"][\"email\"]}}\nMob no : {{parseInt($node[\"Wait for Personal details\"].json[\"body\"][\"phone\"])}}\nComments : {{$node[\"Wait for Personal details\"].json[\"body\"][\"message\"]}}",
         "options": {}
       },
       "name": "Send Email",
@@ -275,5 +279,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-01-18T06:10:50.152Z"
+  "updatedAt": "2023-09-04T07:39:40.065Z"
 }
