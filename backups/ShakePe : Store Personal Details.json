@@ -173,7 +173,7 @@
             },
             {
               "name": "to_email",
-              "value": "=sairam.reddy@shakedeal.com,chidanand@shakedeal.com,hari.v@shakedeal.com,vinay.kumar@shakedeal.com"
+              "value": "=hari.v@shakedeal.com,vinay.kumar@shakedeal.com,tendul.kumar@shakedeal.com,surya.kc@shakedeal.com"
             },
             {
               "name": "from_email",
@@ -191,8 +191,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        570,
-        310
+        560,
+        300
       ]
     },
     {
@@ -208,7 +208,7 @@
       "typeVersion": 1,
       "position": [
         1320,
-        210
+        200
       ],
       "credentials": {
         "smtp": {
@@ -279,5 +279,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-09-04T07:39:40.065Z"
+  "updatedAt": "2023-09-05T05:48:11.287Z"
 }
