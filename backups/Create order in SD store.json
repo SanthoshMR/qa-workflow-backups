@@ -5,7 +5,7 @@
       "main": [
         [
           {
-            "node": "Get url and token",
+            "node": "Globals",
             "type": "main",
             "index": 0
           }
@@ -71,273 +71,6 @@
       "main": [
         [
           {
-            "node": "Get pr_advance payment",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Update the order details in order": {
-      "main": [
-        [
-          {
-            "node": "Get the shipment id from vpanel",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Get the shipment id from vpanel": {
-      "main": [
-        [
-          {
-            "node": "Update the shipment status in vpanel",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Update the shipment status in vpanel": {
-      "main": [
-        [
-          {
-            "node": "Update shipment status in mozart",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Get url and token": {
-      "main": [
-        [
-          {
-            "node": "Globals",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Get the order_id": {
-      "main": [
-        [
-          {
-            "node": "Get the shipment id",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Function to get product codes": {
-      "main": [
-        [
-          {
-            "node": "Get the products based on product codes",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Get the products based on product codes": {
-      "main": [
-        [
-          {
-            "node": "Function to create product",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Condition for creating product or not": {
-      "main": [
-        [
-          {
-            "node": "Create the products in vpanel",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "NoOp",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Function to create product": {
-      "main": [
-        [
-          {
-            "node": "Condition for creating product or not",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Create the products in vpanel": {
-      "main": [
-        [
-          {
-            "node": "Function to create order obj",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "NoOp": {
-      "main": [
-        [
-          {
-            "node": "Function to create order obj",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Function to create order obj": {
-      "main": [
-        [
-          {
-            "node": "Create order in vpanel",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Get the shipment id": {
-      "main": [
-        [
-          {
-            "node": "Function to get product codes",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Create order in vpanel": {
-      "main": [
-        [
-          {
-            "node": "ACC Informed that shakedeal invoice is available by WFS",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Update shipment status in mozart": {
-      "main": [
-        [
-          {
-            "node": "Get the order_id",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Create payment to vendors": {
-      "main": [
-        [
-          {
-            "node": "IF",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Get pr_advance payment": {
-      "main": [
-        [
-          {
-            "node": "Function to create payment to vendors",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Function to create payment to vendors": {
-      "main": [
-        [
-          {
-            "node": "Create payment to vendors",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "IF": {
-      "main": [
-        [
-          {
-            "node": "Function to update advance payments",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "NoOp1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Update the residual amounts": {
-      "main": [
-        [
-          {
-            "node": "Set",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "NoOp1": {
-      "main": [
-        [
-          {
-            "node": "Set",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Function to update advance payments": {
-      "main": [
-        [
-          {
-            "node": "Update the residual amounts",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Set": {
-      "main": [
-        [
-          {
             "node": "Update the order details in order",
             "type": "main",
             "index": 0
@@ -346,8 +79,8 @@
       ]
     }
   },
-  "createdAt": "2022-06-14T05:22:31.448Z",
-  "id": "135",
+  "createdAt": "2022-07-19T08:58:40.138Z",
+  "id": "155",
   "name": "Create order in SD store",
   "nodes": [
     {
@@ -356,8 +89,8 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        -240,
-        80
+        -60,
+        140
       ]
     },
     {
@@ -371,7 +104,7 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        -300,
+        -60,
         320
       ],
       "webhookId": "1551211b-b856-41c1-ab75-dcebbf03ce9d",
@@ -385,31 +118,30 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_orders/{{$node[\"Wait for order\"].json[\"body\"][\"key\"]}}?fields=order_details.*,order_type,vendor_invoice_number.*,vendor_invoice_number.vendor_po_num.*,vendor_invoice_number.vendor_po_num.product_details.*,vendor_invoice_number.vendor_po_num.po_num.*,vendor_invoice_number.vendor_po_num.po_num.issuer_name.*,vendor_invoice_number.vendor_po_num.delivery_address.*,vendor_invoice_number.vendor_po_num.po_num.issuer_name.user.*,vendor_invoice_number.vendor_po_num.po_num.shakedeal_poc_details.*,vendor_invoice_number.vendor_po_num.delivery_address.state.*,order_details.sd_mozart_vendor_product_mapping_id.*,vendor_invoice_number.vendor_po_num.product_details.sd_mozart_vendor_product_mapping_id.*,order_details.sd_mozart_vendor_product_mapping_id.product.*,vendor_invoice_number.vendor_po_num.product_details.sd_mozart_vendor_product_mapping_id.product.*",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_orders/{{$node[\"Wait for order\"].json[\"body\"][\"key\"]}}?fields=order_details.*,order_type,vendor_invoice_number.*,vendor_invoice_number.vendor_po_num.*,vendor_invoice_number.vendor_po_num.product_details.*,vendor_invoice_number.vendor_po_num.po_num.*,vendor_invoice_number.vendor_po_num.po_num.issuer_name.*,vendor_invoice_number.vendor_po_num.delivery_address.*,vendor_invoice_number.vendor_po_num.po_num.issuer_name.user.*,vendor_invoice_number.vendor_po_num.po_num.shakedeal_poc_details.*,vendor_invoice_number.vendor_po_num.delivery_address.state.*,order_details.sd_mozart_vendor_product_mapping_id.*,vendor_invoice_number.vendor_po_num.product_details.sd_mozart_vendor_product_mapping_id.*,order_details.sd_mozart_vendor_product_mapping_id.product.*",
         "options": {}
       },
       "name": "Get the po_details",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        260,
+        340,
         320
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "50",
-          "name": "Mozart DMS Token"
+          "id": "31",
+          "name": "header auth creds"
         }
       }
     },
     {
       "parameters": {
-        "keepOnlySet": true,
         "values": {
           "string": [
             {
               "name": "dms_url",
-              "value": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}"
+              "value": "={{$node[\"Wait for order\"].json[\"headers\"][\"x-sd-env\"] === \"prod\" ?\"https://mozart.shakedeal.com\":\"https://sdqa.mozart.shakedeal.com\"}}"
             },
             {
               "name": "hash",
@@ -434,27 +166,12 @@
             {
               "name": "order_prefix",
               "value": "=OD"
-            },
-            {
-              "name": "vpanel_url",
-              "value": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}"
-            },
-            {
-              "name": "sd_store_url",
-              "value": "=https://vinay.kumar%40shakedeal.com:9kle94lA95TkHX2gFBD4Z9T34E7hdN3M@sdqa.shakedeal.com/api/QocOrders/"
             }
           ],
           "number": [
             {
               "name": "company_id",
               "value": "={{98}}"
-            },
-            {
-              "name": "max_percentage",
-              "value": 90
-            },
-            {
-              "name": "min_percentage"
             }
           ]
         },
@@ -464,39 +181,39 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        80,
+        140,
         320
       ]
     },
     {
       "parameters": {
-        "functionCode": "let order_obj = {};\nlet user_details = {};\nlet order_details = $node[\"Get the po_details\"].json[\"data\"][\"order_details\"];\nlet product_details = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"].product_details;\nlet order_total = 0;\nlet sub_total = 0;\nlet products = [];\nlet firstname = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"company_name\"];\nlet lastname = \"\";\nlet vendor_id = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"vendor\"];\n\n//function to get the round value with precision\nfunction round(value, precision) {\n    var multiplier = Math.pow(10, precision || 0);\n    return Math.ceil(value * multiplier) / multiplier;\n}\n\norder_details.forEach(function(product,index){\n    let matched_product = product_details.filter(obj=>product.sd_mozart_vendor_product_mapping_id.product.product_code == obj.sd_mozart_vendor_product_mapping_id.product.product_code);\n    let product_price = matched_product[0].rate*product.qty_placed + (matched_product[0].rate*product.qty_placed*matched_product[0].tax_percentage)/100;\n    order_total = order_total+ product_price;\n    sub_total = sub_total + matched_product[0].rate*product.qty_placed;\n    products[index]={};\n    products[index].product = product.sd_mozart_vendor_product_mapping_id.product.product_name;\n    products[index].productsku = product.sd_mozart_vendor_product_mapping_id.product.product_code;\n    //products[index].hsn_code = product.sd_mozart_vendor_product_mapping_id.product.hsn;\n    products[index].hsn_code = \"12345678\"\n    products[index].tax_ids = \"\";\n    //products[index].price = product_price;\n    products[index].price = (matched_product[0].rate*matched_product[0].tax_percentage/100)+parseFloat(matched_product[0].rate);\n    //products[index].pri = matched_product[0].rate;\n    //products[index].rate_value = matched_product[0].tax_percentage.toString();\n    products[index].rate_value = \"18.000\";\n    products[index].pricecalculation = \"on\";\n    products[index].amount = product.qty_placed.toString();\n    products[index].status=\"D\";\n    products[index].main_category = \"3622\";\n    products[index].tax_ids = \"13\"\n    //update the order details obj to update the order details in order\n    product.rate = matched_product[0].rate;\n    product.product_total = product_price;\n    product.tax_value = matched_product[0].tax_percentage;\n    product.sub_total = matched_product[0].rate*product.qty_placed;\n    product.plant = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"product_details\"][0][\"plant\"];\n    product.sd_mozart_vendor_product_mapping_id.vendor = vendor_id;\n}); \nuser_details.b_firstname = firstname;\nuser_details.b_lastname = lastname;\nuser_details.b_phone = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"mobile\"];\nuser_details.b_state = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"destination_of_supply\"];\n//user_details.b_zipcode = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"delivery_address\"][\"zip_code\"];\nuser_details.b_address = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"delivery_address\"];\n// user_details.b_address_2 = \"\";\n// user_details.b_city = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"delivery_address\"][\"city\"];\nuser_details.b_country = \"IN\"\nuser_details.email = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"po_num\"][\"issuer_name\"][\"user\"][\"email\"];\nuser_details.cname = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"company_name\"];\nuser_details.company_name = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"company_name\"];\n user_details.passwrod = $node[\"Globals\"].json[\"password\"];\nuser_details.s_firstname = firstname;\nuser_details.s_lastname = lastname;\nuser_details.s_phone = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"mobile\"];\nuser_details.s_state = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"destination_of_supply\"];\n// user_details.s_zipcode = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"delivery_address\"][\"zip_code\"];\nuser_details.s_address = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"delivery_address\"];\n// user_details.s_address_2 = \"\";\n//user_details.s_city = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"delivery_address\"][\"city\"];\nuser_details.s_country = \"IN\";\n\norder_obj.buyer_gsttin = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"gst\"]\norder_obj.hash = $node[\"Globals\"].json[\"hash\"];\norder_obj.company_id = $node[\"Globals\"].json[\"company_id\"];\norder_obj.custom_order = $node[\"Globals\"].json[\"custom_order\"];\norder_obj.invoice_no = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"invoice_number\"];\norder_obj.purchase_order_no = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"vendor_po_number\"];\norder_obj.invoice_date = new Date().toISOString().slice(0, 10);\norder_obj.start_date = '';\n//order_obj.buyer_gsttin =  $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"delivery_address\"][\"gstin\"]\norder_obj.po_date =  $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"po_num\"][\"po_date\"]\norder_obj.sales_person = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"po_num\"][\"shakedeal_poc_details\"][\"email\"]\norder_obj.reference_number = $node[\"Wait for order\"].json[\"body\"][\"key\"];\norder_obj.user_data = user_details;\norder_obj.ship_to_another = \"1\";\norder_obj.payment_id = \"12\";\norder_obj.payment_terms= $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"po_num\"][\"payment_terms\"];\norder_obj.shipping_cost = \"\";\norder_obj.advance_amount = round(order_total,1).toFixed(2).toString();\norder_obj.custom_order_type = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"po_num\"][\"po_type\"] == \"routing\"?\"1\":\"2\"\norder_obj.custom_client_type = \"2\"\norder_obj.product_data = products;\norder_obj.ajax_subtotal = sub_total.toString();\norder_obj.ajax_total = order_total.toString();\norder_obj.security_hash = $node[\"Globals\"].json[\"security_hash\"];\norder_obj.dispatch = $node[\"Globals\"].json[\"dispatch\"];\n\n\nitems[0].json.order_obj = order_obj;\n\nitems[0].json.updated_order_details_obj =  order_details;\nreturn items;"
+        "functionCode": "let order_obj = {};\nlet user_details = {};\nlet order_details = $node[\"Get the po_details\"].json[\"data\"][\"order_details\"];\nlet product_details = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"].product_details;\nlet order_total = 0;\nlet sub_total = 0;\nlet products = [];\nlet firstname = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"company_name\"];\nlet lastname = \"\";\nlet vendor_id = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"vendor\"];\n\n//function to get the round value with precision\nfunction round(value, precision) {\n    var multiplier = Math.pow(10, precision || 0);\n    return Math.ceil(value * multiplier) / multiplier;\n}\n\norder_details.forEach(function(product,index){\n    let matched_product = product_details.filter(obj=>product.sd_mozart_vendor_product_mapping_id.product.id == obj.sd_mozart_vendor_product_mapping_id.product);\n    let product_price = matched_product[0].rate*product.qty_placed + (matched_product[0].rate*product.qty_placed*matched_product[0].tax_percentage)/100;\n    order_total = order_total+ product_price;\n    sub_total = sub_total + matched_product[0].rate*product.qty_placed;\n    products[index]={};\n    products[index].product = product.sd_mozart_vendor_product_mapping_id.product.product_name;\n    products[index].productsku = product.sd_mozart_vendor_product_mapping_id.product.product_code;\n    //products[index].hsn_code = product.sd_mozart_vendor_product_mapping_id.product.hsn;\n    products[index].hsn_code = \"12345678\"\n    products[index].tax_ids = \"\";\n    //products[index].price = product_price;\n    products[index].price = (matched_product[0].rate*matched_product[0].tax_percentage/100)+parseFloat(matched_product[0].rate);\n    //products[index].pri = matched_product[0].rate;\n    //products[index].rate_value = matched_product[0].tax_percentage.toString();\n    products[index].rate_value = \"18.000\";\n    products[index].pricecalculation = \"on\";\n    products[index].amount = product.qty_placed.toString();\n    products[index].status=\"D\";\n    products[index].main_category = \"3622\";\n    products[index].tax_ids = \"13\"\n    //update the order details obj to update the order details in order\n    product.rate = matched_product[0].rate;\n    product.product_total = product_price;\n    product.tax_value = matched_product[0].tax_percentage;\n    product.sub_total = matched_product[0].rate*product.qty_placed;\n    product.plant = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"product_details\"][0][\"plant\"];\n    product.sd_mozart_vendor_product_mapping_id.vendor = vendor_id;\n}); \nuser_details.b_firstname = firstname;\nuser_details.b_lastname = lastname;\nuser_details.b_phone = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"mobile\"];\nuser_details.b_state = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"destination_of_supply\"];\n//user_details.b_zipcode = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"delivery_address\"][\"zip_code\"];\nuser_details.b_address = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"delivery_address\"];\n// user_details.b_address_2 = \"\";\n// user_details.b_city = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"delivery_address\"][\"city\"];\nuser_details.b_country = \"IN\"\nuser_details.email = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"po_num\"][\"issuer_name\"][\"user\"][\"email\"];\nuser_details.cname = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"company_name\"];\nuser_details.company_name = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"company_name\"];\n user_details.passwrod = $node[\"Globals\"].json[\"password\"];\nuser_details.s_firstname = firstname;\nuser_details.s_lastname = lastname;\nuser_details.s_phone = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"mobile\"];\nuser_details.s_state = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"destination_of_supply\"];\n// user_details.s_zipcode = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"delivery_address\"][\"zip_code\"];\nuser_details.s_address = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"delivery_address\"];\n// user_details.s_address_2 = \"\";\n//user_details.s_city = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"delivery_address\"][\"city\"];\nuser_details.s_country = \"IN\";\n\n\norder_obj.hash = $node[\"Globals\"].json[\"hash\"];\norder_obj.company_id = $node[\"Globals\"].json[\"company_id\"];\norder_obj.custom_order = $node[\"Globals\"].json[\"custom_order\"];\norder_obj.invoice_no = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"invoice_number\"];\norder_obj.purchase_order_no = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"vendor_po_number\"];\norder_obj.invoice_date = new Date().toISOString().slice(0, 10);\norder_obj.start_date = '';\n//order_obj.buyer_gsttin =  $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"delivery_address\"][\"gstin\"]\norder_obj.po_date =  $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"po_num\"][\"po_date\"]\norder_obj.sales_person = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"po_num\"][\"shakedeal_poc_details\"][\"email\"]\norder_obj.reference_number = $node[\"Wait for order\"].json[\"body\"][\"key\"];\norder_obj.user_data = user_details;\norder_obj.ship_to_another = \"1\";\norder_obj.payment_id = \"12\";\norder_obj.payment_terms= $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"po_num\"][\"payment_terms\"];\norder_obj.shipping_cost = \"\";\norder_obj.advance_amount = round(order_total,1).toFixed(2).toString();\norder_obj.custom_order_type = $node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"po_num\"][\"po_type\"] == \"routing\"?\"1\":\"2\"\norder_obj.custom_client_type = \"2\"\norder_obj.product_data = products;\norder_obj.ajax_subtotal = sub_total.toString();\norder_obj.ajax_total = order_total.toString();\norder_obj.security_hash = $node[\"Globals\"].json[\"security_hash\"];\norder_obj.dispatch = $node[\"Globals\"].json[\"dispatch\"];\n\n\nitems[0].json.order_obj = order_obj;\n\nitems[0].json.updated_order_details_obj =  order_details;\nreturn items;"
       },
       "name": "Function for creating order details object",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        700,
+        780,
         320
       ]
     },
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sdm_plants?filter={\"plant\":{\"_eq\":\"{{$node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"product_details\"][0][\"plant\"]}}\"}}",
+        "url": "=https://sdqa.mozart.shakedeal.com/items/sdm_plants?filter={\"plant\":{\"_eq\":\"{{$node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"product_details\"][0][\"plant\"]}}\"}}",
         "options": {}
       },
       "name": "Get contact details based on plant",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        500,
+        580,
         320
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "50",
-          "name": "Mozart DMS Token"
+          "id": "31",
+          "name": "header auth creds"
         }
       }
     },
@@ -504,7 +221,7 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "PATCH",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_orders/{{$node[\"Wait for order\"].json[\"body\"][\"key\"]}}",
+        "url": "=https://sdqa.mozart.shakedeal.com/items/sd_mozart_orders/{{$node[\"Wait for order\"].json[\"body\"][\"key\"]}}",
         "options": {},
         "bodyParametersUi": {
           "parameter": [
@@ -539,20 +256,20 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2240,
-        340
+        1600,
+        320
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "50",
-          "name": "Mozart DMS Token"
+          "id": "31",
+          "name": "header auth creds"
         }
       }
     },
     {
       "parameters": {
         "requestMethod": "POST",
-        "url": "={{$node[\"Globals\"].json[\"sd_store_url\"]}}",
+        "url": "=https://vinay.kumar%40shakedeal.com:9kle94lA95TkHX2gFBD4Z9T34E7hdN3M@sdqa.shakedeal.com/api/QocOrders/",
         "jsonParameters": true,
         "options": {},
         "bodyParametersJson": "={{$node[\"Function for creating order details object\"].json[\"order_obj\"]}}"
@@ -561,7 +278,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        900,
+        1060,
         320
       ]
     },
@@ -592,398 +309,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1080,
-        320
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "50",
-          "name": "Mozart DMS Token"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "authentication": "headerAuth",
-        "requestMethod": "PATCH",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sdm_shipments/{{$node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"id\"]}}",
-        "options": {},
-        "bodyParametersUi": {
-          "parameter": [
-            {
-              "name": "shipment_status",
-              "value": "=awaiting_irn"
-            }
-          ]
-        }
-      },
-      "name": "Update shipment status in mozart",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        2840,
-        340
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "50",
-          "name": "Mozart DMS Token"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"vpanel_url\"]}}/items/sdv_shipments?filter={\"invoice_number\":{\"_eq\":\"{{$node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"invoice_number\"]}}\"}}",
-        "options": {}
-      },
-      "name": "Get the shipment id from vpanel",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        2400,
-        340
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "51",
-          "name": "VendorPanel DMS Token"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "authentication": "headerAuth",
-        "requestMethod": "PATCH",
-        "url": "={{$node[\"Globals\"].json[\"vpanel_url\"]}}/items/sdv_shipments/{{$node[\"Get the shipment id from vpanel\"].json[\"data\"][0][\"id\"]}}",
-        "options": {},
-        "bodyParametersUi": {
-          "parameter": [
-            {
-              "name": "shipment_Status",
-              "value": "=awaiting_irn"
-            }
-          ]
-        }
-      },
-      "name": "Update the shipment status in vpanel",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        2620,
-        340
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "51",
-          "name": "VendorPanel DMS Token"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "authentication": "basicAuth",
-        "requestMethod": "POST",
-        "url": "=https://qan8n.shakedeal.com/webhook/get-url",
-        "options": {},
-        "bodyParametersUi": {
-          "parameter": [
-            {
-              "name": "client",
-              "value": "={{$node[\"Wait for order\"].json[\"headers\"][\"client\"]}}"
-            },
-            {
-              "name": "env",
-              "value": "={{$node[\"Wait for order\"].json[\"headers\"][\"x-sd-env\"]}}"
-            }
-          ]
-        }
-      },
-      "name": "Get url and token",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        -120,
-        320
-      ],
-      "credentials": {
-        "httpBasicAuth": {
-          "id": "2",
-          "name": "SD Basic Auth"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_orders?filter={\"order_id\":{\"_eq\":\"{{$node[\"Update the order details in order\"].json[\"data\"][\"order_id\"]}}\"}}&fields=order_id,order_status,order_value,order_type,vendor_invoice_number.*,order_details.*,order_details.sd_mozart_vendor_product_mapping_id.*,order_details.sd_mozart_vendor_product_mapping_id.product.*,id,date_created",
-        "options": {}
-      },
-      "name": "Get the order_id",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        3040,
-        340
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "50",
-          "name": "Mozart DMS Token"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "fromEmail": "handyalasairam9177@gmail.com",
-        "toEmail": "sairam.reddy@shakedeal.com",
-        "subject": "=Balco: ShakeDeal invoice received for PO: {{$node[\"Get po_number\"].json[\"data\"][0][\"po_num\"][\"po_num\"]}}",
-        "html": "=<!DoCtYPe html><html lang=\"en\"><head><style id=\"stndzstyle\"></style>\n <meta http-equiv=\"Content-Type\" content=\"text\n/html; charset=UTF-8\">\n <meta name=\"viewport\" content=\"width=device-width,\ninitial-scale=1, shrink-to-fit=no\">\n <meta name=\"description\" content=\"\">\n <meta name=\"author\" content=\"Mark Otto, Jacob\nThornton, and Bootstrap contributors\">\n <meta name=\"generator\" content=\"\nAcelleSystemLayouts\">\n\n <!-- Bootstrap core CSS -->\n <link href=\"https://marketing.shakedeal.com/assets\n/templates/60584da7bdf65/css/bootstrap.min.css\" rel=\"\nstylesheet\">\n <script id=\"spHTMLFormElementPrototypeScript\">\n(function()\n {\n try\n {\n var sp_old_HTMLFormElementPrototype_submit = \nHTMLFormElement.prototype.submit;\n HTMLFormElement.prototype.submit = function\n(AEvent)\n {\n try\n {\n var spEvent = document.createEvent('Event');\n spEvent.initEvent('sp_submit', true, true);\n this.dispatchEvent(spEvent);\n }\n catch(ErrorMessage)\n {\n console.error('spFormElementPrototype()\nError sending \"sp_submit\" event from HTMLFormElement.\nprototype.submit: ' + ErrorMessage);\n }\n sp_old_HTMLFormElementPrototype_submit.apply\n(this);\n };\n }\n catch(ErrorMessage)\n {\n console.error('spFormElementPrototype() Error\nattaching to HTMLFormElement.prototype.submit: ' +\nErrorMessage);\n }\n try\n {\n if (typeof __doPostBack == 'function')\n {\n var sp_old__doPostBack = __doPostBack;\n __doPostBack = function(eventTarget,\neventArgument)\n {\n try\n {\n var spEvent = document.createEvent\n('Event');\n spEvent.initEvent('sp_submit', true, true);\n window.dispatchEvent(spEvent);\n }\n catch(ErrorMessage)\n {\n console.error('spFormElementPrototype()\nError sending \"sp_submit\" event from __doPostBack(): '\n+ ErrorMessage);\n }\n sp_old__doPostBack(eventTarget,\neventArgument);\n };\n }\n }\n catch(ErrorMessage)\n {\n console.error('spFormElementPrototype() Error\nattaching to __doPostBack(): ' + ErrorMessage);\n }\n })();</script><link href=\"https://fonts.googleapis.\ncom/icon?family=Material+Icons\" rel=\"stylesheet\"><link\nhref=\"https://fonts.googleapis.com/icon?\nfamily=Material+Icons+Outlined\" rel=\"stylesheet\"></head>\n\n <body data-new-gr-c-s-check-loaded=\"14.990.0\" datagr-ext-installed=\"\">\n<main role=\"main\">\n<div class=\"py-5 bg-light\">\n<div class=\"container\">\n<h1 class=\"my-4 display-4 text-center\">Shakedeal invoice for PO : {{$node[\"Get po_number\"].json[\"data\"][0][\"po_num\"][\"po_num\"]}} and Order: {{$node[\"Get Invoice Details\"].json[\"body\"][\"order_id\"]}} has been received </h1>\n<p class=\"lead text-center\">Please check the shakedeal invoice for  PO : {{$node[\"Get po_number\"].json[\"data\"][0][\"po_num\"][\"po_num\"]}} and Order : {{$node[\"Get Invoice Details\"].json[\"body\"][\"order_id\"]}},Check if funds have been received.</p>\n<div><img class=\"my-2\" src=\"\" width=\"100%\" /></div>\n</div>\n</div>\n</main><footer class=\"text-muted py-5\">\n<div class=\"container\">\n<div class=\"row\">\n<div class=\"col-md-8\">\n<p class=\"mb-1\">Copyright &copy; OpCommerce Online PVT\nLTD, All rights reserved.</p>\n<p class=\"mb-0\">Please email us on <a href=\"\nsupport@shakedeal.com\">support@shakedeal.com</a> in\ncase of any queries.\n</div>\n<div class=\"col-md-4\">\n<p class=\"float-right\"><a href=\"#\">Back to top</a></p>\n</div>\n</div>\n</div>\n</footer>\n</body></html>",
-        "options": {}
-      },
-      "name": "ACC Informed that shakedeal invoice is available by WFS",
-      "type": "n8n-nodes-base.emailSend",
-      "typeVersion": 1,
-      "position": [
-        4960,
-        340
-      ],
-      "credentials": {
-        "smtp": {
-          "id": "17",
-          "name": "smtp(sai)creds"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "functionCode": "let order_details = Array.isArray($node[\"Get the order_id\"].json.data)? $node[\"Get the order_id\"].json.data[0].order_details:$node[\"Get the order_id\"].json.data.order_details;\nlet product_codes = [];\norder_details.forEach(function(order,index){\n  product_codes.push(order.sd_mozart_vendor_product_mapping_id.product.product_code);\n})\n\nitems[0].json.order_details = order_details;\nitems[0].json.product_codes = product_codes;\nreturn items;"
-      },
-      "name": "Function to get product codes",
-      "type": "n8n-nodes-base.function",
-      "typeVersion": 1,
-      "position": [
-        3480,
-        340
-      ]
-    },
-    {
-      "parameters": {
-        "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"vpanel_url\"]}}/items/sdv_products?filter={ \"product_code\": { \"_in\": \"{{$node[\"Function to get product codes\"].json[\"product_codes\"]}}\"}}",
-        "options": {}
-      },
-      "name": "Get the products based on product codes",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        3780,
-        340
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "51",
-          "name": "VendorPanel DMS Token"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "string": [
-            {
-              "value1": "={{$node[\"Function to create product\"].json[\"action\"]}}",
-              "value2": "=post the products"
-            }
-          ]
-        }
-      },
-      "name": "Condition for creating product or not",
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 1,
-      "position": [
-        4220,
-        340
-      ]
-    },
-    {
-      "parameters": {
-        "functionCode": "let order_details = Array.isArray($node[\"Get the order_id\"].json.data)? $node[\"Get the order_id\"].json.data[0].order_details:$node[\"Get the order_id\"].json.data.order_details;\nlet product_codes  =  $node[\"Function to get product codes\"].json[\"product_codes\"];\nlet existing_products = $node[\"Get the products based on product codes\"].json.data;\nlet resultFilter = [];\nlet action = \"\";\nvar toFindDuplicates = product_codes.reduce(function(acc, el, i, arr) {\n  if (arr.indexOf(el) !== i && acc.indexOf(el) < 0) acc.push(el); return acc;\n}, []);\n\ntoFindDuplicates.forEach(function(code,index){\n  let filterProducts = order_details.filter(prod => prod[\"sd_mozart_vendor_product_mapping_id\"][\"product\"][\"product_code\"] == code);\n  let filterExistingProducts = existing_products.filter(prod=>prod.product_code == code);\n  if(filterProducts.length>filterExistingProducts.length){\n    for(i=0;i<=filterProducts.length-filterExistingProducts.length;i++){\n        resultFilter.push(filterProducts[i]);\n    }\n  }\n});\n\nlet products_to_create = []\nitems[0].json.length= resultFilter .length;\nif(resultFilter.length>0){\n   action=\"post the products\";\n   resultFilter.forEach(function(obj,index){\n     products_to_create[index]={};\n     products_to_create[index].product_name = obj[\"sd_mozart_vendor_product_mapping_id\"][\"product\"][\"product_name\"]\n     products_to_create[index].product_code = obj[\"sd_mozart_vendor_product_mapping_id\"][\"product\"][\"product_code\"]\n     products_to_create[index].hsn = obj[\"sd_mozart_vendor_product_mapping_id\"][\"product\"][\"hsn\"]\n     products_to_create[index].description = obj[\"sd_mozart_vendor_product_mapping_id\"][\"product\"][\"description\"]\n   })\n\n}else action = \"no products to post\";\n\nitems[0].json.resultFilter = resultFilter;\nitems[0].json.action = action;\nitems[0].json.products_to_create = products_to_create;\nreturn items;"
-      },
-      "name": "Function to create product",
-      "type": "n8n-nodes-base.function",
-      "typeVersion": 1,
-      "position": [
-        4020,
-        340
-      ]
-    },
-    {
-      "parameters": {
-        "authentication": "headerAuth",
-        "requestMethod": "POST",
-        "url": "={{$node[\"Globals\"].json[\"vpanel_url\"]}}/items/sdv_products",
-        "allowUnauthorizedCerts": true,
-        "jsonParameters": true,
-        "options": {},
-        "bodyParametersJson": "={{$node[\"Function to create product\"].json[\"products_to_create\"]}}"
-      },
-      "name": "Create the products in vpanel",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        4420,
-        120
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "51",
-          "name": "VendorPanel DMS Token"
-        }
-      }
-    },
-    {
-      "parameters": {},
-      "name": "NoOp",
-      "type": "n8n-nodes-base.noOp",
-      "typeVersion": 1,
-      "position": [
-        4460,
-        540
-      ]
-    },
-    {
-      "parameters": {
-        "functionCode": "let order_to_products = [];\nlet concat_products = $node[\"Function to create product\"].json.action == \"post the products\"?[...$node[\"Create the products in vpanel\"].json.data,...$node[\"Get the products based on product codes\"].json.data]:$node[\"Get the products based on product codes\"].json.data;\nconcat_products.map((obj, i) => ({ ...obj, isMapped: false }));\nlet product_details = Array.isArray($node[\"Get the order_id\"].json.data)? $node[\"Get the order_id\"].json.data[0].order_details:$node[\"Get the order_id\"].json.data.order_details;\nproduct_details.forEach(function(obj,index){\n  let product = concat_products.filter(prod=>prod.product_code == obj[\"sd_mozart_vendor_product_mapping_id\"][\"product\"][\"product_code\"] && !prod[\"isMapped\"]);\n  concat_products[concat_products.findIndex(prod=>prod.product_code == obj[\"sd_mozart_vendor_product_mapping_id\"][\"product\"][\"product_code\"]&& !prod[\"isMapped\"])].isMapped = true;\n  order_to_products[index]={};\n  order_to_products[index].sdv_products_id = product[0].id;\n  order_to_products[index].qty = obj.qty_placed\n  order_to_products[index].product_total = obj.product_total\n})\n\norder_obj = {};\n//order_obj.invoice_file = $node[\"Post the file to vpanel\"].json.data.id;\norder_obj.order_id = $node[\"Update the order details in order\"].json[\"data\"][\"order_id\"];\norder_obj.order_value = $node[\"Get the order_id\"].json.data[0].order_value;\norder_obj.order_date = $node[\"Get the order_id\"].json.data[0].date_created;\norder_obj.order_status = $node[\"Get the order_id\"].json.data[0].order_status;\norder_obj.invoice_number = Array.isArray($node[\"Get the shipment id\"].json.data)?$node[\"Get the shipment id\"].json.data[0].id:$node[\"Get the shipment id\"].json.data.id;\norder_obj.products = order_to_products\n\nitems[0].json.order_obj = order_obj;\nitems[0].json.order_to_products= order_to_products;\nitems[0].json.concat_products= concat_products;\nitems[0].json.product_details= product_details;\nreturn items;"
-      },
-      "name": "Function to create order obj",
-      "type": "n8n-nodes-base.function",
-      "typeVersion": 1,
-      "position": [
-        4600,
-        340
-      ]
-    },
-    {
-      "parameters": {
-        "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"vpanel_url\"]}}/items/sdv_shipments?filter={\"invoice_number\":{\"_eq\":\"{{$node[\"Get the order_id\"].json[\"data\"][0][\"vendor_invoice_number\"][\"invoice_number\"]}}\"}}",
-        "options": {}
-      },
-      "name": "Get the shipment id",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        3280,
-        340
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "51",
-          "name": "VendorPanel DMS Token"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "authentication": "headerAuth",
-        "requestMethod": "POST",
-        "url": "={{$node[\"Globals\"].json[\"vpanel_url\"]}}/items/sdv_orders",
-        "allowUnauthorizedCerts": true,
-        "jsonParameters": true,
-        "options": {},
-        "bodyParametersJson": "={{$node[\"Function to create order obj\"].json[\"order_obj\"]}}"
-      },
-      "name": "Create order in vpanel",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        4780,
-        340
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "51",
-          "name": "VendorPanel DMS Token"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "authentication": "headerAuth",
-        "requestMethod": "POST",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_mozart_vendor_invoice_details",
-        "options": {},
-        "bodyParametersUi": {
-          "parameter": [
-            {
-              "name": "vendor_po_number",
-              "value": "={{$node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"id\"]}}"
-            },
-            {
-              "name": "order",
-              "value": "={{$node[\"Wait for order\"].json[\"body\"][\"key\"]}}"
-            },
-            {
-              "name": "vendor_invoice",
-              "value": "={{$node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_invoice\"]}}"
-            },
-            {
-              "name": "invoice_number",
-              "value": "={{$node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"invoice_number\"]}}"
-            },
-            {
-              "name": "invoice_date",
-              "value": "={{$node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"invoice_date\"]}}"
-            },
-            {
-              "name": "invoice_value",
-              "value": "={{$node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"invoice_value\"]}}"
-            },
-            {
-              "name": "total_paid_amount",
-              "value": "={{$node[\"Function to create payment to vendors\"].json[\"total_paid_amount\"]}}"
-            },
-            {
-              "name": "total_percentage_paid",
-              "value": "={{$node[\"Function to create payment to vendors\"].json[\"percentage_paid\"]}}"
-            },
-            {
-              "name": "remaining_to_pay",
-              "value": "={{$node[\"Function to create payment to vendors\"].json[\"remaining_order_value\"]}}"
-            },
-            {
-              "name": "vendor_payment",
-              "value": "={{$node[\"Function to create payment to vendors\"].json[\"payment_status\"]}}"
-            }
-          ]
-        }
-      },
-      "name": "Create payment to vendors",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        1600,
-        320
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "50",
-          "name": "Mozart DMS Token"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/pr_vendor_advance?filter={\"_and\": [{\"vendor_po_number\": {\"_eq\":\"{{$node[\"Get the po_details\"].json[\"data\"][\"vendor_invoice_number\"][\"vendor_po_num\"][\"id\"]}}\"}},{\"payment_status\":{\"_eq\":\"payment_released\"}},{\"residual_amount\":{\"_gt\":0}}]}",
-        "options": {}
-      },
-      "name": "Get pr_advance payment",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        1240,
+        1320,
         320
       ],
       "credentials": {
@@ -992,116 +318,10 @@
           "name": "header auth creds"
         }
       }
-    },
-    {
-      "parameters": {
-        "functionCode": "let advance_payments = $node[\"Get pr_advance payment\"].json.data;\nlet order_value = parseInt($node[\"Function for creating order details object\"].json[\"order_obj\"][\"ajax_total\"]);\nlet remaining_order_value = order_value;\nlet update_residual_amount_obj = [];\nlet payment_status = \"\";\nlet max_percentage = $node[\"Globals\"].json[\"max_percentage\"];\nlet min_percentage = $node[\"Globals\"].json[\"min_percentage\"];\nif(advance_payments.length>0){\n  advance_payments.forEach(function(payment,index){\n    if(remaining_order_value>0){\n      let residual_amount = remaining_order_value>=payment.residual_amount?0:(payment.residual_amount-remaining_order_value);\n      remaining_order_value= payment.residual_amount>=remaining_order_value?0:remaining_order_value-payment.residual_amount;\n      update_residual_amount_obj[index] = {};\n      update_residual_amount_obj[index].id = payment.id;\n      update_residual_amount_obj[index].residual_amount = residual_amount\n    }\n  })\n}\nlet total_paid_amount = order_value - remaining_order_value;\nlet percentage_paid = (total_paid_amount*100)/order_value;\nif(percentage_paid>=max_percentage){\n  payment_status=\"paymentreleased\"\n}else if(percentage_paid>min_percentage && percentage_paid<90){\n  payment_status=\"partiallypaid\"\n}else payment_status=\"paymentpending\"\n\n\n\nitems[0].json.total_paid_amount = total_paid_amount;\nitems[0].json.advance_payments = advance_payments;\nitems[0].json.order_value = order_value;\nitems[0].json.remaining_order_value = remaining_order_value;\nitems[0].json.update_residual_amount_obj = update_residual_amount_obj;\nitems[0].json.percentage_paid = percentage_paid;\nitems[0].json.payment_status = payment_status;\nreturn items;"
-      },
-      "name": "Function to create payment to vendors",
-      "type": "n8n-nodes-base.function",
-      "typeVersion": 1,
-      "position": [
-        1420,
-        320
-      ]
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "number": [
-            {
-              "value1": "={{$node[\"Function to create payment to vendors\"].json[\"advance_payments\"].length}}",
-              "operation": "larger"
-            }
-          ]
-        }
-      },
-      "name": "IF",
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 1,
-      "position": [
-        1740,
-        320
-      ]
-    },
-    {
-      "parameters": {
-        "authentication": "headerAuth",
-        "requestMethod": "PATCH",
-        "url": "={{$node[\"Function to update advance payments\"].json[\"url\"]}}/items/pr_vendor_advance/{{$node[\"Function to update advance payments\"].json[\"id\"]}}",
-        "options": {},
-        "bodyParametersUi": {
-          "parameter": [
-            {
-              "name": "residual_amount",
-              "value": "={{$node[\"Function to update advance payments\"].json[\"residual_amount\"]}}"
-            }
-          ]
-        }
-      },
-      "name": "Update the residual amounts",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        2080,
-        -100
-      ],
-      "retryOnFail": true,
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "50",
-          "name": "Mozart DMS Token"
-        }
-      }
-    },
-    {
-      "parameters": {},
-      "name": "NoOp1",
-      "type": "n8n-nodes-base.noOp",
-      "typeVersion": 1,
-      "position": [
-        2000,
-        520
-      ]
-    },
-    {
-      "parameters": {
-        "functionCode": "const update_residual_amount_obj = $node[\"Function to create payment to vendors\"].json[\"update_residual_amount_obj\"]\n\nlet returnItems =[]\n\nupdate_residual_amount_obj.forEach(function(obj,index){  \n    returnItems.push({\n    json: {\n       id : obj.id,\n       residual_amount : obj.residual_amount,\n       url : $node[\"Globals\"].json[\"dms_url\"]\n    }\n  });\n  \n})\n\nreturn returnItems;"
-      },
-      "name": "Function to update advance payments",
-      "type": "n8n-nodes-base.function",
-      "typeVersion": 1,
-      "position": [
-        1780,
-        -100
-      ]
-    },
-    {
-      "parameters": {
-        "options": {}
-      },
-      "name": "Set",
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 1,
-      "position": [
-        2040,
-        300
-      ],
-      "executeOnce": true
     }
   ],
-  "settings": {
-    "timezone": "Asia/Calcutta",
-    "saveManualExecutions": true
-  },
+  "settings": {},
   "staticData": null,
-  "tags": [
-    {
-      "id": "5",
-      "name": "Mozart",
-      "createdAt": "2022-05-30T07:16:52.136Z",
-      "updatedAt": "2022-05-30T07:16:52.136Z"
-    }
-  ],
-  "updatedAt": "2022-09-14T07:27:01.104Z"
+  "tags": [],
+  "updatedAt": "2022-07-19T08:58:40.138Z"
 }
