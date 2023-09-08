@@ -1,0 +1,80 @@
+{
+  "active": true,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-09-08T12:18:44.406Z",
+  "id": "354",
+  "name": "ICICI Vouchers EMAIL",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "order-update@shakepe.com",
+        "toEmail": "={{$node[\"Webhook\"].json[\"body\"][\"to\"]}}",
+        "subject": "Test HTML",
+        "html": "=<!DOCTYPE html>\n<html xmlns=\"http://www.w3.org/1999/xhtml\">\n<head>\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"/>\n<style type=\"text/css\">\n    .main {\n      border: 1px solid #cccccc;\n      border-collapse: collapse;\n    }\n    .logo {\n      position: relative;\n      padding: 15px 30px 15px 30px;\n      display: inline-flex;\n      width: 90%;\n    }\n</style>\n</head>\n<body style=\"margin: 0; padding: 0;\">\n    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"> \n        <tr>\n            <td>\n                <table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"600\" class=\"main\">\n                    <tr>\n                        <td class=\"logo\">\n                            <img src=\"https://sdqa.shakedeal.com/images/shake_deal/adani/ShakePeLogo.png\" alt=\"ShakePe Logo\" width=\"200\" style=\"display: inline-block;\" />\n                            <span style=\"font-size:12px; color: #424143;display: flex;width: 100%;padding-top: 18px;\"><a style=\"color: #3866df; text-decoration: none;width: 100%;text-align: right;\" href=\"https://www.shakepe.com\" target=\"_blank\">shakepe.com</a></span>\n                        </td>\n                    </tr>\n                    <tr>\n                        <td align=\"center\">\n                            <img src=\"https://shakedeal.com/images/shake_deal/egift/mail-banner.png\" alt=\"Shakedeal Gift Card\" width=\"600\" height=\"210\" style=\"display: block;\" />\n                        </td>\n                    </tr>\n                    <tr>\n                        <td bgcolor=\"#ffffff\" style=\"padding: 8px 30px 40px 30px;\">\n                            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\n                                <tr>\n                                    <td style=\"padding: 20px 0 30px 0; color: #153643; font-family: Arial, sans-serif; font-size: 12px; line-height: 20px;\">\n                                        <span><b>Hey,</b></span><br><br>\n                                        <span>Here are your Gift Card.</span><br>\n                                        <span>Thank You for shopping with ShakePe</span>\n                                    </td>\n                                </tr>\n                                <tr>\n                                    <td style=\"padding-left: 30px;\">\n                                        <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\n                                            <tr>\n                                                <td width=\"260\" valign=\"top\">\n                                                    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\n                                                        <tr>\n                                                            <td>\n                                                                <img src=\"https://cdn.shakedeal.com/images/thumbnails/330/330/detailed/899/SDCOP0118300.jpg\" width=\"100%\" style=\"display: block;\" />\n                                                            </td>\n                                                        </tr>\n                                                    </table>\n                                                </td>\n                                                <td width=\"20\">\n                                                    &nbsp;\n                                                </td>\n                                                <td width=\"260\" valign=\"top\">\n                                                    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\n                                                        <tr>\n                                                            <td style=\"padding: 0 0 0 0; color: #153643; font-family: Arial, sans-serif; font-size: 12px; line-height: 20px;\">\n                                                                <span><b>Amazon - ₹{{$node[\"Webhook\"].json[\"body\"][\"amount\"]}} E-Gift Voucher</b></span><br> \n                                                                <span><b>₹{{$node[\"Webhook\"].json[\"body\"][\"amount\"]}}</b></span><br><br>\n                                                                <span><b>Gift Card No</b></span><br>\n                                                                <span><b>{{$node[\"Webhook\"].json[\"body\"][\"voucher\"]}}</b></span><br><br>\n                                                                <span><b>Gift Card Pin</b></span><br>\n                                                                <span><b>{{$node[\"Webhook\"].json[\"body\"][\"pin\"]}}</b></span><br><br>\n                                                                    Valid uptill <span>{{new Date($node[\"Webhook\"].json[\"body\"][\"valid_till\"]).toLocaleString() }}</span><br><br>\n                                                                <span><a style=\"font-size: 8px;color: #424143;\" href=\"{$OD.tnc}\">Terms & Conditions</a></span><br><br>\n                                                            </td>\n                                                        </tr>\n                                                    </table>\n                                                </td>\n                                            </tr>\n                                        </table>\n                                    </td>\n                                </tr>\n                            </table>\n                        </td>\n                    </tr>\n                    <tr bgcolor=\"#f1f3f6\">\n                        <td style=\"padding: 13px 30px 13px 30px;\">\n                            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" height=\"135px\" >\n                                <tr>\n                                    <td align=\"center\" style=\"font-family: Arial, sans-serif; font-size: 14px;\" width=\"100%\">\n                                      <h4>Need any assistance?</h4>\n                                    </td>\n                                </tr>\n                                <tr>\n                                    <td style=\"font-family: Arial, sans-serif; font-size: 14px;\">\n                                      <table style=\"width:100%; height:70px; border: 1px solid #b2bbd2;border-collapse: collapse;padding: 25px; text-align: center;\" rules=\"all\">\n                                        <tr>\n                                          <td style=\"border: 1px solid #f1f3f6; border-right: 1px solid #b2bbd2;\">  </td>\n                                          <td colspan=\"1\" width=\"40%\" style=\"background:#fff;\"><span style=\"font-weight: 600;color:#3866df\">CALL</span>\n                                            <table style=\"margin-top:4px;width:100%; height:20px;border-radius:1px; border-collapse: collapse;text-align: center;\" rules=\"all\">\n                                              <tr>\n                                                <td style=\"font-size:10px\">+91-6366532173</td>\n                                              </tr>\n                                            </table>\n                                          </td>\n                                          <td style=\"border: 1px solid #f1f3f6; border-right: 1px solid #b2bbd2;\">  </td>\n                                          <td colspan=\"1\" width=\"40%\" style=\"background:#fff;\"><span style=\"font-weight: 600;color:#3866df\">EMAIL</span>\n                                            <table style=\"margin-top:4px;width:100%; height:20px;border-collapse: collapse;text-align: center;\" rules=\"all\">\n                                              <tr>\n                                                <td style=\"font-size:10px\">support@shakepe.com</td>\n                                              </tr>\n                                            </table>\n                                          </td>\n                                          <td style=\"border: 1px solid #f1f3f6; border-right: 1px solid #f1f3f6;\">  </td>\n                                        </tr>\n                                      </table>\n                                    </td>\n                                </tr>\n                            </table>\n                        </td>\n                    </tr>\n                    <tr>\n                        <td style=\"padding: 5px 30px 5px 30px;\">\n                            <table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" height=\"60px\">\n                                <tr>\n                                    <td>\n                                      <table style=\"width:100%; height:70px;padding: 25px; text-align: center;border: 1px #fff;\" rules=\"all\">\n                                        <tr>\n                                          <td>  </td>\n                                          <td colspan=\"1\" width=\"10%\" style=\"background:#fff;\">\n                                            <table style=\"margin-top:4px;width:100%; height:20px;text-align: center;\" rules=\"all\">\n                                              <tr>\n                                                <td>\n                                                  <a target=\"_blank\" href=\"https://www.facebook.com/profile.php?id=100086514859621\"><img src=\"https://shakedeal.com/images/shake_deal/social-icons/facebook.png\" alt=\"Shakepe Facebook\" width=\"100%\"></a>\n                                                </td>\n                                              </tr>\n                                            </table>\n                                          </td>\n                                          <td>  </td>\n                                          <td colspan=\"1\" width=\"10%\" style=\"background:#fff;\">\n                                            <table style=\"margin-top:4px;width:100%; height:20px;text-align: center;\" rules=\"all\">\n                                              <tr>\n                                                <td>\n                                                  <a target=\"_blank\"><img src=\"https://shakedeal.com/images/shake_deal/social-icons/instagram.png\" alt=\"Shakedeal Instagram\" width=\"100%\"></a>\n                                                </td>\n                                              </tr>\n                                            </table>\n                                          </td>\n                                          <td>  </td>\n                                          <td colspan=\"1\" width=\"10%\" style=\"background:#fff;\">\n                                            <table style=\"margin-top:4px;width:100%; height:20px;text-align: center;\" rules=\"all\">\n                                              <tr>\n                                                <td>\n                                                  <a target=\"_blank\"><img src=\"https://shakedeal.com/images/shake_deal/social-icons/twitter.png\" alt=\"Shakedeal Twitter\" width=\"100%\"></a>\n                                                </td>\n                                              </tr>\n                                            </table>\n                                          </td>\n                                          <td>  </td>\n                                        </tr>\n                                      </table>\n                                    </td>\n                                </tr>\n                            </table>\n                        </td>\n                    </tr>\n                    <tr bgcolor=\"#f1f3f6\">\n                        <td style=\"padding: 5px 30px 5px 30px;\">\n                            <table border=\"0\" cellpadding=\"0\" height=\"45px\" cellspacing=\"0\" width=\"100%\">\n                                <tr>\n                                    <td align=\"center\" style=\"color:#404553; font-family: Arial, sans-serif; font-size: 10px;\" width=\"75%\">\n                                      If you're not the intended recipient of this email, please delete it immediately.\n                                    </td>\n                                </tr>\n                            </table>\n                        </td>\n                    </tr>\n                </table>\n            </td>\n        </tr>\n    </table>\n</body>\n</html>",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        920,
+        460
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "7",
+          "name": "AWS SES Creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "httpMethod": "POST",
+        "path": "mail-icici-reward-voucher",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        560,
+        460
+      ],
+      "webhookId": "e84e3214-328d-48c3-ade7-3c59522f5ef7",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "98",
+          "name": "ICICI Mailing Credentials"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-09-08T13:13:10.033Z"
+}
