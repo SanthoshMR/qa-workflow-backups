@@ -598,7 +598,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let grnData = [];\n//let productIds = [];\nitems.forEach((item, index) => {\n  //productIds.push(item.json[\"Material\"])\n  let postingDate = item.json[\"Posting Date\"]?item.json[\"Posting Date\"]:\"\";\n  let grnDate = \"\";\n  if(typeof postingDate == \"string\"){\n    grnDate = item.json[\"Posting Date\"];\n  }else{\n    grnDate = getFormattedDate(item.json[\"Posting Date\"]);\n  }\n  grnData.push({\n    product : item.json[\"Material\"],\n    plant : item.json[\"Plant\"],\n    qty : item.json[\"Quantity\"],\n    vendor_invoice : item.json[\"Vendor Invoice\"]?item.json[\"Vendor Invoice\"]:\"\",\n    vendor_po : item.json[\"Vendor PO Number\"]?item.json[\"Vendor PO Number\"]:\"\",\n    plant : item.json[\"Plant\"],\n    grn_number : item.json[\"Material Document\"]?item.json[\"Material Document\"]:\"\",\n    grn_date : grnDate,\n    sd_invoice_nummber : item.json[\"Bill of Lading\"]?item.json[\"Bill of Lading\"]:\"\",\n    po_item_id : `${item.json[\"Purchase order\"]}-${item.json[\"Item\"]}`,\n    file_name : $node[\"Combine Items\"].json[\"excelData\"][0][\"file_name\"],\n    movement_type : item.json[\"Movement type\"] == \"103\" || item.json[\"Movement type\"] == \"503K\" || item.json[\"Movement type\"] == \"503\"?\"received\":item.json[\"Movement type\"] == \"105\" || item.json[\"Movement type\"] == \"321K\" ||  item.json[\"Movement type\"] == \"321\" || item.json[\"Movement type\"] == \"321k\"?\"accepted\":\"rejected\"\n  })\n})\n\nfunction getFormattedDate(secs){\n  const millisecondsPerDay = 24 * 60 * 60 * 1000; // Number of milliseconds in a day\n\n  const date = new Date((secs-1) * millisecondsPerDay + Date.parse(\"1900-01-01\"));\n\n  const day = date.getDate();\n  const month = date.getMonth() + 1; // Months are zero-based, so we add 1\n  const year = date.getFullYear();\n  const formattedDate = `${day < 10 ? '0' : ''}${day-1}-${month < 10 ? '0' : ''}${month}-${year}`;\n  return formattedDate\n}\n\nconst size = 10; // size of each subarray\n\nconst result = [];\nfor (let i = 0; i < grnData.length; i += size) {\n  result.push(grnData.slice(i, i + size));\n}\n\n//items[0].json.result= result;\n//items[0].json.resultlength = result.length;\n//return items;\nreturn [{\n    json: {\n        result: result,\n        resultlength : result.length\n    },\n}];\n"
+        "functionCode": "let grnData = [];\n//let productIds = [];\nitems.forEach((item, index) => {\n  //productIds.push(item.json[\"Material\"])\n  let postingDate = item.json[\"Posting Date\"]?item.json[\"Posting Date\"]:\"\";\n  let grnDate = \"\";\n  if(typeof postingDate == \"string\"){\n    grnDate = item.json[\"Posting Date\"];\n  }else{\n    grnDate = getFormattedDate(item.json[\"Posting Date\"]);\n  }\n  grnData.push({\n    product : item.json[\"Material\"],\n    plant : item.json[\"Plant\"],\n    qty : item.json[\"Quantity\"],\n    vendor_invoice : item.json[\"Vendor Invoice\"]?item.json[\"Vendor Invoice\"]:\"\",\n    vendor_po : item.json[\"Vendor PO Number\"]?item.json[\"Vendor PO Number\"]:\"\",\n    plant : item.json[\"Plant\"],\n    grn_number : item.json[\"Material Document\"]?item.json[\"Material Document\"]:\"\",\n    grn_date : grnDate,\n    sd_invoice_nummber : item.json[\"Bill of Lading\"]?item.json[\"Bill of Lading\"]:\"\",\n    po_item_id : `${item.json[\"Purchase order\"]}-${item.json[\"Item\"]}`,\n    file_name : $node[\"Combine Items\"].json[\"excelData\"][0][\"file_name\"],\n    item_index:index,\n    movement_type : item.json[\"Movement type\"] == \"103\" || item.json[\"Movement type\"] == \"503K\" || item.json[\"Movement type\"] == \"503\"?\"received\":item.json[\"Movement type\"] == \"105\" || item.json[\"Movement type\"] == \"321K\" ||  item.json[\"Movement type\"] == \"321\" || item.json[\"Movement type\"] == \"321k\"?\"accepted\":\"rejected\"\n  })\n})\n\nfunction getFormattedDate(secs){\n  const millisecondsPerDay = 24 * 60 * 60 * 1000; // Number of milliseconds in a day\n\n  const date = new Date((secs-1) * millisecondsPerDay + Date.parse(\"1900-01-01\"));\n\n  const day = date.getDate();\n  const month = date.getMonth() + 1; // Months are zero-based, so we add 1\n  const year = date.getFullYear();\n  const formattedDate = `${day < 10 ? '0' : ''}${day-1}-${month < 10 ? '0' : ''}${month}-${year}`;\n  return formattedDate\n}\n\nconst size = 10; // size of each subarray\n\nconst result = [];\nfor (let i = 0; i < grnData.length; i += size) {\n  result.push(grnData.slice(i, i + size));\n}\n\n//items[0].json.result= result;\n//items[0].json.resultlength = result.length;\n//return items;\nreturn [{\n    json: {\n        result: result,\n        resultlength : result.length\n    },\n}];\n"
       },
       "name": "Function to get grn data",
       "type": "n8n-nodes-base.function",
@@ -610,7 +610,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let grnData = $node[\"Function to get grn data\"].json[\"result\"];\nlet currentIndex = $node[\"Start Loop\"].json[\"index\"];\nlet currentGrn = grnData[currentIndex];\nlet returnItems = [];\nlet orderInvoices = $node[\"Get the invoice and po\"].json[\"data\"];\nfunction findAllIndex(array, value) {\n  return array.map((element, index) => element.sd_invoice_nummber === value ? index : -1)\n              .filter(index => index !== -1);\n}\norderInvoices.forEach(function(invoice,index){\n    //let findInvoiceIndex = currentGrn.findAllIndex((grn) => grn.sd_invoice_nummber == invoice.id);\n    let findInvoiceIndex = findAllIndex(currentGrn,invoice.id)\n    findInvoiceIndex.forEach(function(findIndex,index){\n       currentGrn[findIndex].vendor_invoice = invoice[\"order\"][\"shipments\"][0][\"sdm_shipments_id\"][\"invoice_number\"];\n        currentGrn[findIndex].vendor_po = invoice[\"order\"][\"shipments\"][0][\"sdm_shipments_id\"][\"vendor_po_num\"];\n    })  \n})\n   \nuniqueArr = Object.create(null),\n    uniqueShipmentProductArr = currentGrn.filter(o => {\n        var key = ['product', 'vendor_invoice','vendor_po','po_item_id'].map(k => o[k]).join('|');\n        if (!uniqueArr[key]) {\n            uniqueArr[key] = true;\n            return true;\n        }\n    });\nuniqueShipmentProductArr.forEach(function(obj,index){\n    let matchedShipmentProduct =   currentGrn.filter(grn=>grn.product == obj.product && grn.vendor_po == obj.vendor_po  && grn.vendor_invoice==obj.vendor_invoice && grn.po_item_id == obj.po_item_id);\n    let matchedRecievedProduct = matchedShipmentProduct.filter(msp=>msp.movement_type == \"received\");\n    let matchedAcceptedProduct = matchedShipmentProduct.filter(msp=>msp.movement_type == \"accepted\");\n    let matchedRejectedProduct = matchedShipmentProduct.filter(msp=>msp.movement_type == \"rejected\");\n    let receivedQty = matchedRecievedProduct.reduce((total,obj)=>obj.qty+ total, 0);\n    let acceptedQty = matchedAcceptedProduct.reduce((total,obj)=>obj.qty+ total, 0);\n    let rejectedQty = matchedRejectedProduct.reduce((total,obj)=>obj.qty+ total, 0);\n    let totalQty = matchedShipmentProduct.reduce((total,obj)=>obj.qty+ total, 0);\n    let [day, month, year] = obj[\"grn_date\"].split(\"-\");\n    returnItems.push({\n    json: {\n       product : obj.product,\n       vendor_invoice:obj.vendor_invoice,\n       vendor_po:obj.vendor_po,\n       plant : obj.plant,\n       accepted_qty : acceptedQty,\n       rejected_qty : rejectedQty,\n       received_qty : receivedQty,\n       qty : totalQty,\n       grn_number :obj[\"grn_number\"],\n       grn_date :new Date(year, month - 1, day).toISOString(),\n       po_item_id:obj.po_item_id,\n       dms_url : $node[\"Get url and token\"].json[\"0\"][\"mozart_url\"],\n       file_name:obj.file_name,\n       movement_type :obj.movement_type\n       //movement_type : obj.movement_type\n    }\n  });\n  \n})\n\nreturn returnItems;\n"
+        "functionCode": "let grnData = $node[\"Function to get grn data\"].json[\"result\"];\nlet currentIndex = $node[\"Start Loop\"].json[\"index\"];\nlet currentGrn = grnData[currentIndex];\nlet returnItems = [];\nlet orderInvoices = $node[\"Get the invoice and po\"].json[\"data\"];\nfunction findAllIndex(array, value) {\n  return array.map((element, index) => element.sd_invoice_nummber === value ? index : -1)\n              .filter(index => index !== -1);\n}\norderInvoices.forEach(function(invoice,index){\n    //let findInvoiceIndex = currentGrn.findAllIndex((grn) => grn.sd_invoice_nummber == invoice.id);\n    let findInvoiceIndex = findAllIndex(currentGrn,invoice.id)\n    findInvoiceIndex.forEach(function(findIndex,index){\n       currentGrn[findIndex].vendor_invoice = invoice[\"order\"][\"shipments\"][0][\"sdm_shipments_id\"][\"invoice_number\"];\n        currentGrn[findIndex].vendor_po = invoice[\"order\"][\"shipments\"][0][\"sdm_shipments_id\"][\"vendor_po_num\"];\n    })  \n})\n   \nuniqueArr = Object.create(null),\n    uniqueShipmentProductArr = currentGrn.filter(o => {\n        var key = ['product', 'vendor_invoice','vendor_po','po_item_id'].map(k => o[k]).join('|');\n        if (!uniqueArr[key]) {\n            uniqueArr[key] = true;\n            return true;\n        }\n    });\nuniqueShipmentProductArr.forEach(function(obj,index){\n    let matchedShipmentProduct =   currentGrn.filter(grn=>grn.product == obj.product && grn.vendor_po == obj.vendor_po  && grn.vendor_invoice==obj.vendor_invoice && grn.po_item_id == obj.po_item_id);\n    let matchedRecievedProduct = matchedShipmentProduct.filter(msp=>msp.movement_type == \"received\");\n    let matchedAcceptedProduct = matchedShipmentProduct.filter(msp=>msp.movement_type == \"accepted\");\n    let matchedRejectedProduct = matchedShipmentProduct.filter(msp=>msp.movement_type == \"rejected\");\n    let receivedQty = matchedRecievedProduct.reduce((total,obj)=>obj.qty+ total, 0);\n    let acceptedQty = matchedAcceptedProduct.reduce((total,obj)=>obj.qty+ total, 0);\n    let rejectedQty = matchedRejectedProduct.reduce((total,obj)=>obj.qty+ total, 0);\n    let totalQty = matchedShipmentProduct.reduce((total,obj)=>obj.qty+ total, 0);\n    let [day, month, year] = obj[\"grn_date\"].split(\"-\");\n    returnItems.push({\n    json: {\n       product : obj.product,\n       vendor_invoice:obj.vendor_invoice,\n       vendor_po:obj.vendor_po,\n       plant : obj.plant,\n       accepted_qty : acceptedQty,\n       rejected_qty : rejectedQty,\n       received_qty : receivedQty,\n       qty : totalQty,\n       grn_number :obj[\"grn_number\"],\n       grn_date :new Date(year, month - 1, day).toISOString(),\n       po_item_id:obj.po_item_id,\n       dms_url : $node[\"Get url and token\"].json[\"0\"][\"mozart_url\"],\n       file_name:obj.file_name,\n       item_index:obj.item_index,\n       movement_type :obj.movement_type,\n       history_id:`${obj.file_name}-${obj.movement_type}-${obj.product}-${obj.item_index}`\n       //movement_type : obj.movement_type\n    }\n  });\n  \n})\n\nreturn returnItems;\n"
       },
       "name": "Function to get the splitted grn",
       "type": "n8n-nodes-base.function",
@@ -650,19 +650,19 @@
           "parameter": [
             {
               "name": "received_qty",
-              "value": "={{$node[\"Function to get the splitted grn\"].json[\"received_qty\"] != 0 && $node[\"Get Shipment Items\"].json[\"data\"][0][\"file_name\"] != $node[\"Function to get the splitted grn\"].json[\"file_name\"] && $node[\"Get Shipment Items\"].json[\"data\"][0][\"movement_type\"] != $node[\"Function to get the splitted grn\"].json[\"movement_type\"]?$node[\"Get Shipment Items\"].json[\"data\"][0][\"received_qty\"]+parseFloat($node[\"Function to get the splitted grn\"].json[\"received_qty\"]):$node[\"Get Shipment Items\"].json[\"data\"][0][\"received_qty\"]}}"
+              "value": "={{$node[\"Function to get the splitted grn\"].json[\"received_qty\"] != 0 && $node[\"Get Shipment Items\"].json[\"data\"][0][\"file_name\"] != $node[\"Function to get the splitted grn\"].json[\"file_name\"] && $node[\"Get Shipment Items\"].json[\"data\"][0][\"movement_type\"] != $node[\"Function to get the splitted grn\"].json[\"movement_type\"] && $node[\"Get Shipment Items\"].json[\"data\"][0][\"item_index\"] != $node[\"Function to get the splitted grn\"].json[\"item_index\"]?$node[\"Get Shipment Items\"].json[\"data\"][0][\"received_qty\"]+parseFloat($node[\"Function to get the splitted grn\"].json[\"received_qty\"]):$node[\"Get Shipment Items\"].json[\"data\"][0][\"received_qty\"]}}"
             },
             {
               "name": "accepted_qty",
-              "value": "={{$node[\"Function to get the splitted grn\"].json[\"accepted_qty\"] != 0 && $node[\"Get Shipment Items\"].json[\"data\"][0][\"file_name\"] != $node[\"Function to get the splitted grn\"].json[\"file_name\"] && $node[\"Get Shipment Items\"].json[\"data\"][0][\"movement_type\"] != $node[\"Function to get the splitted grn\"].json[\"movement_type\"]?$node[\"Get Shipment Items\"].json[\"data\"][0][\"accepted_qty\"]+parseFloat($node[\"Function to get the splitted grn\"].json[\"accepted_qty\"]):$node[\"Get Shipment Items\"].json[\"data\"][0][\"accepted_qty\"]}}"
+              "value": "={{$node[\"Function to get the splitted grn\"].json[\"accepted_qty\"] != 0 && $node[\"Get Shipment Items\"].json[\"data\"][0][\"file_name\"] != $node[\"Function to get the splitted grn\"].json[\"file_name\"] && $node[\"Get Shipment Items\"].json[\"data\"][0][\"movement_type\"] != $node[\"Function to get the splitted grn\"].json[\"movement_type\"]&& $node[\"Get Shipment Items\"].json[\"data\"][0][\"item_index\"] != $node[\"Function to get the splitted grn\"].json[\"item_index\"]?$node[\"Get Shipment Items\"].json[\"data\"][0][\"accepted_qty\"]+parseFloat($node[\"Function to get the splitted grn\"].json[\"accepted_qty\"]):$node[\"Get Shipment Items\"].json[\"data\"][0][\"accepted_qty\"]}}"
             },
             {
               "name": "rejected_qty",
-              "value": "={{$node[\"Function to get the splitted grn\"].json[\"rejected_qty\"] != 0 && $node[\"Get Shipment Items\"].json[\"data\"][0][\"file_name\"] != $node[\"Function to get the splitted grn\"].json[\"file_name\"] && $node[\"Get Shipment Items\"].json[\"data\"][0][\"movement_type\"] != $node[\"Function to get the splitted grn\"].json[\"movement_type\"]?$node[\"Get Shipment Items\"].json[\"data\"][0][\"rejected_qty\"]+parseFloat($node[\"Function to get the splitted grn\"].json[\"rejected_qty\"]):$node[\"Get Shipment Items\"].json[\"data\"][0][\"rejected_qty\"]}}"
+              "value": "={{$node[\"Function to get the splitted grn\"].json[\"rejected_qty\"] != 0 && $node[\"Get Shipment Items\"].json[\"data\"][0][\"file_name\"] != $node[\"Function to get the splitted grn\"].json[\"file_name\"] && $node[\"Get Shipment Items\"].json[\"data\"][0][\"movement_type\"] != $node[\"Function to get the splitted grn\"].json[\"movement_type\"] && $node[\"Get Shipment Items\"].json[\"data\"][0][\"item_index\"] != $node[\"Function to get the splitted grn\"].json[\"item_index\"]?$node[\"Get Shipment Items\"].json[\"data\"][0][\"rejected_qty\"]+parseFloat($node[\"Function to get the splitted grn\"].json[\"rejected_qty\"]):$node[\"Get Shipment Items\"].json[\"data\"][0][\"rejected_qty\"]}}"
             },
             {
               "name": "remaining_qty",
-              "value": "={{$node[\"Function to get the splitted grn\"].json[\"accepted_qty\"] != 0 && $node[\"Get Shipment Items\"].json[\"data\"][0][\"file_name\"] != $node[\"Function to get the splitted grn\"].json[\"file_name\"] && $node[\"Get Shipment Items\"].json[\"data\"][0][\"movement_type\"] != $node[\"Function to get the splitted grn\"].json[\"movement_type\"]?$node[\"Get Shipment Items\"].json[\"data\"][0][\"remaining_qty\"]+parseFloat($node[\"Function to get the splitted grn\"].json[\"accepted_qty\"]):$node[\"Get Shipment Items\"].json[\"data\"][0][\"remaining_qty\"]}}"
+              "value": "={{$node[\"Function to get the splitted grn\"].json[\"accepted_qty\"] != 0 && $node[\"Get Shipment Items\"].json[\"data\"][0][\"file_name\"] != $node[\"Function to get the splitted grn\"].json[\"file_name\"] && $node[\"Get Shipment Items\"].json[\"data\"][0][\"movement_type\"] != $node[\"Function to get the splitted grn\"].json[\"movement_type\"] && $node[\"Get Shipment Items\"].json[\"data\"][0][\"item_index\"] != $node[\"Function to get the splitted grn\"].json[\"item_index\"]?$node[\"Get Shipment Items\"].json[\"data\"][0][\"remaining_qty\"]+parseFloat($node[\"Function to get the splitted grn\"].json[\"accepted_qty\"]):$node[\"Get Shipment Items\"].json[\"data\"][0][\"remaining_qty\"]}}"
             },
             {
               "name": "grn_number",
@@ -679,6 +679,10 @@
             {
               "name": "movement_type",
               "value": "={{$node[\"Function to get the splitted grn\"].json[\"movement_type\"]}}"
+            },
+            {
+              "name": "item_index",
+              "value": "={{$node[\"Function to get the splitted grn\"].json[\"item_index\"]}}"
             }
           ]
         }
@@ -1103,6 +1107,26 @@
             {
               "name": "shipment_item",
               "value": "={{$node[\"Get Shipment Items\"].json[\"data\"][0][\"id\"]}}"
+            },
+            {
+              "name": "file_name",
+              "value": "={{$node[\"Function to get the splitted grn\"].json[\"file_name\"]}}"
+            },
+            {
+              "name": "grn_number",
+              "value": "={{$node[\"Function to get the splitted grn\"].json[\"grn_number\"]}}"
+            },
+            {
+              "name": "grn_date",
+              "value": "={{$node[\"Function to get the splitted grn\"].json[\"grn_date\"]}}"
+            },
+            {
+              "name": "id",
+              "value": "={{$node[\"Function to get the splitted grn\"].json[\"history_id\"]}}"
+            },
+            {
+              "name": "shipment",
+              "value": "={{$node[\"Get Shipment Items\"].json[\"data\"][0][\"sdm_shipments_id\"]}}"
             }
           ]
         }
@@ -1120,7 +1144,7 @@
           "name": "Mozart qa creds"
         }
       },
-      "disabled": true
+      "continueOnFail": true
     }
   ],
   "settings": {
@@ -1128,5 +1152,5 @@
   },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-09-07T07:10:58.415Z"
+  "updatedAt": "2023-09-08T10:18:12.987Z"
 }
