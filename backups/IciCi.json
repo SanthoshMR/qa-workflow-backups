@@ -1,0 +1,185 @@
+{
+  "active": true,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-09-11T09:44:51.714Z",
+  "id": "356",
+  "name": "IciCi",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        20,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "icici-send-mail",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        280,
+        260
+      ],
+      "webhookId": "76035231-b7e7-4b11-a5ab-15405fb3a076"
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "value": "={{$node[\"Webhook\"].json[\"body\"]}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        500,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "order-update@shakepe.com",
+        "toEmail": "={{$node[\"Webhook\"].json[\"body\"][\"trigger\"][\"body\"][\"config\"][\"to\"][0]}}",
+        "subject": "={{$node[\"Function\"].json[\"mailSubject\"]}}",
+        "html": "={{$node[\"Function\"].json[\"mailText\"]}}",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        880,
+        280
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "7",
+          "name": "AWS SES Creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let mailCase = $node[\"Webhook\"].json[\"body\"][\"trigger\"][\"body\"][\"case\"];\nlet mailText = \"\";\nlet mailSubject = \"\";\nswitch(mailCase){\n  case 1:\n    mailText = `Dear ${$node[\"Webhook\"].json[\"body\"][\"trigger\"][\"body\"][\"config\"][\"approver_name\"]},<br><br>`+\n    `You have received a new request to approve the set of codes that have been created by the ${$node[\"Webhook\"].json.body.trigger.body.config.requester_name}<br><br>`+\n    `Kindly review the details provided below:<br><br>`+\n    `Request Details:<br>`+\n    `${$node[\"Webhook\"].json[\"body\"][\"table_html\"]}<br>`+\n    `Requestor's Name: ${$node[\"Webhook\"].json.body.trigger.body.config.requester_name}<br>`+\n    `Total Codes: ${$node[\"Webhook\"].json.body.trigger.body.config.links_count}<br>`+\n    `Total Value: ${$node[\"Webhook\"].json.body.trigger.body.config.campaign_value}<br><br>`+\n    `To take action on this request, please log in to the portal using the following link: ${$node[\"Webhook\"].json.body.trigger.body.config.request_link}<br><br>`+\n    `Your prompt attention to this matter would be greatly appreciated.<br><br>`+\n    `Best regards,<br><br>`+\n    `Team ShakePe`;\n    mailSubject = \"Action Required: Codes Approval Request\"\n    break;\n  case 2:\n    mailText = `Dear ${$node[\"Webhook\"].json.body.trigger.body.config.approver_name},<br><br>`+\n    `We are writing to inform you that the codes request, which was previously reviewed and approved by ${$node[\"Webhook\"].json.body.trigger.body.config.approver_name} , is now awaiting your final approval.<br><br>`+ \n    `Kindly review the details provided below:<br><br>`+\n    `Request Details:<br>`+\n    `${$node[\"Webhook\"].json[\"body\"][\"table_html\"]}<br>`+\n    `Requestor's Name: ${$node[\"Webhook\"].json.body.trigger.body.config.requester_name}<br> `+\n    `Total Codes: ${$node[\"Webhook\"].json.body.trigger.body.config.links_count}<br>`+\n    `Total Value: ${$node[\"Webhook\"].json.body.trigger.body.config.campaign_value}<br>`+\n    `Approver’s Name: ${$node[\"Webhook\"].json.body.trigger.body.config.approver_name}<br><br>`+\n    `To take action on this request, please log in to the portal using the following link: ${$node[\"Webhook\"].json.body.trigger.body.config.request_link}<br><br>`+\n    `Your prompt attention to this matter would be greatly appreciated.<br><br>`+\n    `Best regards,<br><br>`+\n    `Team ShakePe`\n    mailSubject=\"Action Required: Codes Approval Request - Final Approval\"\n    break;\n  case 3:\n    mailText= `Dear ${$node[\"Webhook\"].json.body.trigger.body.config.requester_name},<br><br>`+\n    `Your request (${$node[\"Webhook\"].json.body.trigger.body.config.request_id}) has been reviewed and approved by ${$node[\"Webhook\"].json.body.trigger.body.config.approver_name} and now your request is pending final approval from our admin, ${$node[\"Webhook\"].json.body.trigger.body.config.admin_name}.<br><br>`+\n    `We will keep you informed of any updates and actions taken by the admin.<br><br>`+\n    `Best regards,<br><br>`+\n    `Team ShakePe`\n    mailSubject= `Update on Your Codes Request (${$node[\"Webhook\"].json.body.trigger.body.config.request_id})`\n    break;\n  case 4:\n    mailText=`Dear ${$node[\"Webhook\"].json.body.trigger.body.config.requester_name},<br><br>`+\n    `We regret to inform you that your request has been reviewed by ${$node[\"Webhook\"].json.body.trigger.body.config.approver_name}, and unfortunately, it has been declined.<br><br>`+\n    `Comments: ${$node[\"Webhook\"].json.body.trigger.body.config.approver_comments}<br><br>`+\n    `If you have any questions or would like to discuss the feedback in more detail, please reach out to the ${$node[\"Webhook\"].json.body.trigger.body.config.approver_name}.<br><br>` +\n    `Best regards,<br><br>`+\n    `Team ShakePe`\n    mailSubject=`Decline of New Codes Request (${$node[\"Webhook\"].json.body.trigger.body.config.request_id})`\n    break;\n  case 5:\n    mailText = `Dear ${$node[\"Webhook\"].json.body.trigger.body.config.requester_name},<br><br>`+\n    `Your codes request has been reviewed and approved by our admin, ${$node[\"Webhook\"].json.body.trigger.body.config.admin_name}. Codes have been generated and are ready for distribution.<br><br>`+\n    `You can access them through our portal<br>`+\n    `${$node[\"Webhook\"].json.body.trigger.body.config.request_link}<br><br>`+\n    `Once you have downloaded the reward links, you can send them across to the intended recipients to recognize and motivate them for their outstanding contributions, efforts, or achievements.<br><br>`+\n    `Best regards,<br><br>`+\n    `Team ShakePe`\n    mailSubject=`Approval of Your Codes`\n    break;\n  case 6:\n    mailText=`Dear ${$node[\"Webhook\"].json.body.trigger.body.config.requester_name},<br><br>`+\n    `We regret to inform you that your request has been reviewed by ${$node[\"Webhook\"].json.body.trigger.body.config.admin_name}, and unfortunately, it has been declined.<br><br>`+\n    `Comments: ${$node[\"Webhook\"].json.body.trigger.body.config.admin_comments}<br><br>`+\n    `If you have any questions or would like to discuss the feedback in more detail, please reach out to ${$node[\"Webhook\"].json.body.trigger.body.config.admin_name}.<br><br>`+\n    ` Best regards,<br><br>`+\n    `Team ShakePe`\n    mailSubject=`Decline of New Codes Request (${$node[\"Webhook\"].json.body.trigger.body.config.request_id})`\n    break;\n  default:\n    break;\n}\n\nitems[0].json.mailText = mailText;\nitems[0].json.mailSubject= mailSubject;\n\nreturn items;"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        640,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Webhook\"].json[\"body\"][\"trigger\"][\"body\"][\"case\"] == 7?true:false}}"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        780,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "=https://qan8n.shakedeal.com/webhook/mail-icici-reward-voucher",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Webhook\"].json.body.trigger.body.config}}"
+      },
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        40
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "98",
+          "name": "ICICI Mailing Credentials"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-09-11T13:00:04.082Z"
+}
