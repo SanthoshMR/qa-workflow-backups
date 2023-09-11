@@ -1,5 +1,5 @@
 {
-  "active": false,
+  "active": true,
   "connections": {
     "Webhook": {
       "main": [
@@ -159,7 +159,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let shipmentItems = $node[\"Get the shipment items\"].json[\"data\"];\nlet vendorShipment = $node[\"Get the shipment from vpanel\"].json[\"data\"];\nlet sdmResolution = [];\nlet sdvResolution = [];\nshipmentItems.forEach(function(sItem,index){\n  let issue = sItem.grn_status == \"grn_pending\"?\"short_supply\":\"rejection\";\n  let rejected_qty = sItem.grn_status == \"grn_pending\"?sItem.shipment_qty - sItem.received_qty :sItem.shipment_qty - sItem.accepted_qty;\n  let vendorShipmentItemId = vendorShipment[0].shipment_items.filter(vsi=>vsi.sdv_vendor_pos_sdv_products_id.po_items_id == sItem.sdm_po_items_id.id)\n  let sdmResolutionItems = [];\n  let sdvResolutionItems = [];\n  sdmResolutionItems.push({\n    shipment_item : sItem.id,\n    issue : issue,\n    rejected_qty : rejected_qty\n  });\n  sdvResolutionItems.push({\n    shipment_item : vendorShipmentItemId.id,\n    issue : issue,\n    rejected_qty : rejected_qty\n  })\n  sdmResolution.push({\n    shipment:sItem.sdm_shipments_id.id,\n    resolution_items:sdmResolutionItems\n  })\n  sdvResolution.push({\n    shipment:vendorShipment[0].id,\n    resolution_items:sdvResolutionItems\n  })\n})\n\n\nitems[0].json.sdmResolution= sdmResolution;\nitems[0].json.sdvResolution= sdvResolution;\nreturn items;"
+        "functionCode": "let shipmentItems = $node[\"Get the shipment items\"].json[\"data\"];\nlet vendorShipment = $node[\"Get the shipment from vpanel\"].json[\"data\"];\nlet sdmResolution = {};\nlet sdvResolution = {};\nlet sdmResolutionItems = [];\nlet sdvResolutionItems = [];\nshipmentItems.forEach(function(sItem,index){\n  let issue = sItem.grn_status == \"grn_pending\"?\"short_supply\":\"rejection\";\n  let rejected_qty = sItem.grn_status == \"grn_pending\"?sItem.shipment_qty - sItem.received_qty :sItem.shipment_qty - sItem.accepted_qty;\n  let vendorShipmentItemId = vendorShipment[0].shipment_items.filter(vsi=>vsi.sdv_vendor_pos_sdv_products_id.po_items_id == sItem.sdm_po_items_id.id)\n  \n  sdmResolutionItems.push({\n    shipment_item : sItem.id,\n    issue : issue,\n    rejected_qty : rejected_qty\n  });\n  sdvResolutionItems.push({\n    shipment_item : vendorShipmentItemId[0].id,\n    issue : issue,\n    rejected_qty : rejected_qty,\n    mozart_item_id:sItem.id\n  })\n})\n\nsdmResolution.shipment = shipmentItems[0].sdm_shipments_id.id;\nsdmResolution.resolution_items = sdmResolutionItems\n\nsdvResolution.shipment= vendorShipment[0].id;\nsdvResolution.resolution_items=sdvResolutionItems\n\n\n\nitems[0].json.sdmResolution= sdmResolution;\nitems[0].json.sdvResolution= sdvResolution;\nreturn items;"
       },
       "name": "Function",
       "type": "n8n-nodes-base.function",
@@ -239,5 +239,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-09-08T11:50:58.850Z"
+  "updatedAt": "2023-09-11T09:20:57.992Z"
 }
