@@ -66,6 +66,17 @@
           }
         ]
       ]
+    },
+    "Create resolution in vpanel": {
+      "main": [
+        [
+          {
+            "node": "Update resolution id in vpanel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2023-08-29T09:04:00.479Z",
@@ -234,10 +245,39 @@
           "name": "VendorPanel DMS Token"
         }
       }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_grn_resolutions/{{$node[\"Create resolution in vpanel\"].json[\"data\"][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "mozart_resolution_id",
+              "value": "={{$node[\"Create resolution in mozart\"].json[\"data\"][\"id\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update resolution id in vpanel",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2040,
+        260
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-09-11T09:20:57.992Z"
+  "updatedAt": "2023-09-12T06:37:39.047Z"
 }
