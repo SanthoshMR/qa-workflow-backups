@@ -11,6 +11,123 @@
           }
         ]
       ]
+    },
+    "Get url and token": {
+      "main": [
+        [
+          {
+            "node": "Get the resolution from vpanel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the resolution from vpanel": {
+      "main": [
+        [
+          {
+            "node": "Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "Update resolution status in mozart",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update resolution status in mozart": {
+      "main": [
+        [
+          {
+            "node": "Postgres",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres": {
+      "main": [
+        [
+          {
+            "node": "Update resolution in shipment item",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update resolution in shipment item": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Get the close transaction file from vpanel",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the close transaction file from vpanel": {
+      "main": [
+        [
+          {
+            "node": "Update credit note in mozart",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update credit note in mozart": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2023-09-11T07:22:26.693Z",
@@ -74,10 +191,242 @@
           "name": "SD Basic Auth"
         }
       }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_grn_resolutions/{{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"resolution_id\"]}}?fields=*,resolution_items.*",
+        "options": {}
+      },
+      "name": "Get the resolution from vpanel",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        920,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "value": "={{$node[\"Get the resolution from vpanel\"].json[\"data\"][\"resolution_items\"]}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1140,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let resolutionItems = $node[\"Get the resolution from vpanel\"].json[\"data\"][\"resolution_items\"];\nlet mozartResolutionId = $node[\"Get the resolution from vpanel\"].json[\"data\"][\"mozart_resolution_id\"];\nlet updateResolutionItemQuery = \"\";\nlet updateShipmentItemQuery = \"\";\nlet isCloseTransaction = false;\nresolutionItems.forEach(function(rItem,index){\n  updateResolutionItemQuery=updateResolutionItemQuery+`update sdm_resolution_items set resolution = '${rItem.resolution}' where shipment_item = ${rItem.mozart_item_id} and grn_resolution = ${mozartResolutionId};`+\" \";\n  updateShipmentItemQuery=updateShipmentItemQuery+`update sdm_shipment_items set resolution = '${rItem.resolution}' where id = ${rItem.mozart_item_id};`+\" \";\n  if(rItem.resolution == \"close_transaction\"){\n    isCloseTransaction =  true;\n  }\n})\n\nitems[0].json.updateResolutionItemQuery = updateResolutionItemQuery.trim();\nitems[0].json.updateShipmentItemQuery= updateShipmentItemQuery.trim();\nitems[0].json.isCloseTransaction = isCloseTransaction;\nreturn items;"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1360,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_grn_resolutions/{{$node[\"Get the resolution from vpanel\"].json[\"data\"][\"mozart_resolution_id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "resolution_status",
+              "value": "=resolved"
+            }
+          ]
+        }
+      },
+      "name": "Update resolution status in mozart",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1580,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "={{$node[\"Function\"].json[\"updateResolutionItemQuery\"]}}",
+        "additionalFields": {}
+      },
+      "name": "Postgres",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        1800,
+        300
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "78",
+          "name": "Vedanta postgres qa"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "={{$node[\"Function\"].json[\"updateShipmentItemQuery\"]}}",
+        "additionalFields": {}
+      },
+      "name": "Update resolution in shipment item",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        2020,
+        300
+      ],
+      "executeOnce": false,
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "78",
+          "name": "Vedanta postgres qa"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Function\"].json[\"isCloseTransaction\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        2240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/assets/{{$node[\"Get the resolution from vpanel\"].json[\"data\"][\"credit_note_file\"]}}",
+        "options": {}
+      },
+      "name": "Get the close transaction file from vpanel",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2380,
+        180
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/files",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {
+          "bodyContentType": "multipart-form-data"
+        },
+        "sendBinaryData": true,
+        "binaryPropertyName": "=input_file:data"
+      },
+      "name": "Update credit note in mozart",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2600,
+        180
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        2440,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_grn_resolutions/{{$node[\"Get the resolution from vpanel\"].json[\"data\"][\"mozart_resolution_id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "credit_note_file",
+              "value": "={{$node[\"Update credit note in mozart\"].json[\"data\"][\"id\"]}}"
+            },
+            {
+              "name": "credit_note_number",
+              "value": "={{$node[\"Get the resolution from vpanel\"].json[\"data\"][\"credit_note_number\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2820,
+        180
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-09-11T09:23:40.372Z"
+  "updatedAt": "2023-09-12T07:46:09.740Z"
 }
