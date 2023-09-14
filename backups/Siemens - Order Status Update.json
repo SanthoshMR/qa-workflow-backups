@@ -121,7 +121,7 @@
         ],
         [
           {
-            "node": "Send Email",
+            "node": "Check Site ID",
             "type": "main",
             "index": 0
           }
@@ -193,7 +193,36 @@
         ]
       ]
     },
-    "Send Email": {
+    "Check Site ID": {
+      "main": [
+        [
+          {
+            "node": "Siemens - Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Adani  - Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Siemens - Send Email": {
+      "main": [
+        [
+          {
+            "node": "Success Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Adani  - Send Email": {
       "main": [
         [
           {
@@ -248,7 +277,7 @@
           "string": [
             {
               "name": "dms_url",
-              "value": "=https://noirqa.shakedeal.com"
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"enterprise_company_id\"] === '904' ? \"https://adaniqa.shakedeal.com\" : \"https://noirqa.shakedeal.com\" }}"
             },
             {
               "name": "table_name",
@@ -263,8 +292,12 @@
               "value": "noreply@shakedeal.com"
             },
             {
-              "name": "to_email",
+              "name": "siemens_to_email",
               "value": "surya.kc@shakedeal.com,parthiban.n@shakedeal.com,vinay.kumar@shakedeal.com"
+            },
+            {
+              "name": "adani_to_email",
+              "value": "vinay.kumar@shakedeal.com,surya.kc@shakedeal.com,parthiban.n@shakedeal.com"
             }
           ]
         },
@@ -429,29 +462,6 @@
     },
     {
       "parameters": {
-        "fromEmail": "={{$node[\"Globals\"].json[\"from_email\"]}}",
-        "toEmail": "={{$node[\"Globals\"].json[\"to_email\"]}}",
-        "subject": "=QA : Request to Upload Invoice for Completed Order ID {{$node[\"Status Update\"].json[\"data\"][\"order_id\"]}}",
-        "text": "=",
-        "html": "=<div>Dear Vinod Raj,</div><br>\n<div>Request you to upload the invoice for the completed order ID\n<b>{{$node[\"Status Update\"].json[\"data\"][\"order_id\"]}}</b> on the Siemens portal. This order has been marked as completed, and we await the invoice to be uploaded.</div><br/>\n<div>Thank you for your cooperation and prompt attention to this matter.</div><br/>\n<div><b>Note:</b> If you have already uploaded the invoice, please ignore this email.</div>",
-        "options": {}
-      },
-      "name": "Send Email",
-      "type": "n8n-nodes-base.emailSend",
-      "typeVersion": 1,
-      "position": [
-        1440,
-        720
-      ],
-      "credentials": {
-        "smtp": {
-          "id": "36",
-          "name": "SendGrid"
-        }
-      }
-    },
-    {
-      "parameters": {
         "dataType": "string",
         "value1": "={{$node[\"Status Update\"].json[\"data\"][\"order_status\"]}}",
         "rules": {
@@ -563,6 +573,73 @@
         2140,
         180
       ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Globals\"].json[\"body\"][\"enterprise_company_id\"]}}",
+              "value2": "={{'19'}}"
+            }
+          ]
+        }
+      },
+      "name": "Check Site ID",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1240,
+        660
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{$node[\"Globals\"].json[\"from_email\"]}}",
+        "toEmail": "={{$node[\"Webhook\"].json[\"body\"][\"enterprise_company_id\"] === '904' ? $node[\"Globals\"].json[\"adani_to_email\"]: $node[\"Globals\"].json[\"siemens_to_email\"] }}",
+        "subject": "=QA : Request to Upload Invoice for Completed Order ID {{$node[\"Status Update\"].json[\"data\"][\"order_id\"]}}",
+        "text": "=",
+        "html": "=<div>Dear Vinod Raj,</div><br>\n<div>Request you to upload the invoice for the completed order ID\n<b>{{$node[\"Status Update\"].json[\"data\"][\"order_id\"]}}</b> on the Siemens portal. This order has been marked as completed, and we await the invoice to be uploaded.</div><br/>\n<div>Thank you for your cooperation and prompt attention to this matter.</div><br/>\n<div><b>Note:</b> If you have already uploaded the invoice, please ignore this email.</div>",
+        "options": {}
+      },
+      "name": "Siemens - Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        1480,
+        640
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "36",
+          "name": "SendGrid"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{$node[\"Globals\"].json[\"from_email\"]}}",
+        "toEmail": "={{$node[\"Globals\"].json[\"adani_to_email\"]}}",
+        "subject": "=QA : Request to Upload Invoice for Completed Order ID {{$node[\"Status Update\"].json[\"data\"][\"order_id\"]}}",
+        "text": "=",
+        "html": "=<div>Dear Vinod Raj,</div><br>\n<div>Request you to upload the invoice for the completed order ID\n<b>{{$node[\"Status Update\"].json[\"data\"][\"order_id\"]}}</b> on the Siemens portal. This order has been marked as completed, and we await the invoice to be uploaded.</div><br/>\n<div>Thank you for your cooperation and prompt attention to this matter.</div><br/>\n<div><b>Note:</b> If you have already uploaded the invoice, please ignore this email.</div>",
+        "options": {}
+      },
+      "name": "Adani  - Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        1480,
+        820
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "36",
+          "name": "SendGrid"
+        }
+      },
+      "disabled": true
     }
   ],
   "settings": {},
@@ -575,5 +652,5 @@
       "updatedAt": "2023-05-30T07:00:01.982Z"
     }
   ],
-  "updatedAt": "2023-08-07T06:20:36.208Z"
+  "updatedAt": "2023-09-14T12:24:03.214Z"
 }
