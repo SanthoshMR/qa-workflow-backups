@@ -96,7 +96,7 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        -880,
+        -960,
         300
       ]
     },
@@ -111,38 +111,38 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        -660,
+        -740,
         300
       ],
       "webhookId": "78141e75-9374-475c-b6c2-cfb40d0a625a"
     },
     {
       "parameters": {
-        "functionCode": "let vendors = $node[\"Webhook\"].json.body.vendors;\n\nlet available_vendors = $node[\"Check Vendor ID\"].json.data;\n\n\nlet update_data = [];\n\nfor (var key in vendors) {\n    if (vendors.hasOwnProperty(key)) {\n        var vendor = vendors[key];\n        \n        available_vendors.forEach((available_vendor,index)=>{\n\n            if(available_vendor.id == vendor.siemens_vendor_id){\n                let keys = [];\n                keys.push(vendor.siemens_vendor_id);\n\n                let data = {\n                    \"company_id\": vendor.sd_store_id\n                }\n\n                update_data.push({\n                    json: [{\n                        keys:keys,\n                        data:data,\n                    }]\n                });\n            }\n        });\n    }\n}\n\nreturn update_data;\n"
+        "functionCode": "let vendors = $node[\"Webhook\"].json.body.vendors;\n\nlet available_vendors = $node[\"Check Vendor ID\"].json.data;\n\nlet update_data = [];\n\nfor (var key in vendors) {\n    if (vendors.hasOwnProperty(key)) {\n        var vendor = vendors[key];\n        \n        available_vendors.forEach((available_vendor,index)=>{\n\n            if(available_vendor.id == vendor.siemens_vendor_id){\n                let keys = [];\n                keys.push(vendor.siemens_vendor_id);\n\n                let data = {\n                    \"company_id\": vendor.sd_store_id,\n                    \"url\": $node[\"Globals\"].json.dms_url\n                }\n\n                update_data.push({\n                    json: {\n                        keys:keys,\n                        data:data,\n                    }\n                });\n            }\n        });\n    }\n}\n\nreturn update_data;\n"
       },
       "name": "Prepare Data",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
         280,
-        120
+        280
       ]
     },
     {
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "PATCH",
-        "url": "=https://noirqa.shakedeal.com/items/sds_vendors",
+        "url": "= {{$node[\"Prepare Data\"].json[\"data\"][\"url\"]}}/items/sds_vendors",
         "jsonParameters": true,
         "options": {},
-        "bodyParametersJson": "={{$node[\"Prepare Data\"].json[\"0\"]}}"
+        "bodyParametersJson": "={{$node[\"Prepare Data\"].json}}"
       },
       "name": "Update Vendor ID",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        500,
-        120
+        480,
+        280
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -153,13 +153,13 @@
     },
     {
       "parameters": {
-        "functionCode": "let vendors = $node[\"Webhook\"].json.body.vendors;\n\nlet vendor_ids = [];\n\nfor (var key in vendors) {\n    if (vendors.hasOwnProperty(key)) {\n        var vendor = vendors[key];\n        vendor_ids.push(vendor.siemens_vendor_id);\n    }\n}\n\nitems[0].json.vendor_ids = vendor_ids;\n\nreturn items;"
+        "functionCode": "let vendors = $node[\"Webhook\"].json.body.vendors;\n\nlet vendor_ids = [];\n\nlet vendor_details = [];\nfor (var key in vendors) {\n    if (vendors.hasOwnProperty(key)) {\n        var vendor = vendors[key];\n        vendor_ids.push(vendor.siemens_vendor_id);\n    }\n}\n\nitems[0].json.vendor_ids = vendor_ids;\n\nreturn items;"
       },
       "name": "Get Vendor IDs",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        -300,
+        -360,
         300
       ]
     },
@@ -189,7 +189,7 @@
           "string": [
             {
               "name": "dms_url",
-              "value": "=https://noirqa.shakedeal.com"
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"enterprise_company_id\"] === '904' ? \"https://adaniqa.shakedeal.com\" : \"https://noirqa.shakedeal.com\" }}"
             },
             {
               "name": "vendor_table_name",
@@ -203,7 +203,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        -480,
+        -560,
         300
       ]
     },
@@ -215,8 +215,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        720,
-        120
+        700,
+        280
       ]
     },
     {
@@ -228,7 +228,7 @@
       "typeVersion": 1,
       "position": [
         280,
-        460
+        540
       ]
     },
     {
@@ -247,8 +247,32 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        40,
+        60,
         300
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "dms_url",
+              "value": "=https://noirqa.shakedeal.com"
+            },
+            {
+              "name": "vendor_table_name",
+              "value": "=sds_vendors"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        -520,
+        620
       ]
     }
   ],
@@ -262,5 +286,5 @@
       "updatedAt": "2023-05-30T07:00:01.982Z"
     }
   ],
-  "updatedAt": "2023-07-17T07:41:31.141Z"
+  "updatedAt": "2023-09-14T12:13:38.315Z"
 }
