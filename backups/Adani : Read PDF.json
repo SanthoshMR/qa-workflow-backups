@@ -1,0 +1,716 @@
+{
+  "active": false,
+  "connections": {
+    "Read PDF": {
+      "main": [
+        [
+          {
+            "node": "Post the file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait for Po Email": {
+      "main": [
+        [
+          {
+            "node": "Get the PO number and subject",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extracting the seimens po details": {
+      "main": [
+        [
+          {
+            "node": "Check sku exists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post the file": {
+      "main": [
+        [
+          {
+            "node": "IF1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the products": {
+      "main": [
+        [
+          {
+            "node": "Get the po Item",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create products": {
+      "main": [
+        [
+          {
+            "node": "Construct HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Create products",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NoOp": {
+      "main": [
+        [
+          {
+            "node": "Function to construct PO obj",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the po Item": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to construct PO obj": {
+      "main": [
+        [
+          {
+            "node": "Post to the Seimens Pos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Details on Pincode": {
+      "main": [
+        [
+          {
+            "node": "Get the products",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check sku exists": {
+      "main": [
+        [
+          {
+            "node": "Get Details on Pincode",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create routing pos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create routing pos": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Construct HTML": {
+      "main": [
+        [
+          {
+            "node": "Adhoc Product Created Mail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check PO Exist": {
+      "main": [
+        [
+          {
+            "node": "Send PO Exist Mail",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Extracting the seimens po details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get PO by PO Number": {
+      "main": [
+        [
+          {
+            "node": "Check PO Exist",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Adhoc Product Created Mail": {
+      "main": [
+        [
+          {
+            "node": "Function to construct PO obj",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF1": {
+      "main": [
+        [
+          {
+            "node": "Get PO by PO Number",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the PO number and subject": {
+      "main": [
+        [
+          {
+            "node": "Read PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-09-14T09:19:54.566Z",
+  "id": "357",
+  "name": "Adani : Read PDF",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        140,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "binaryPropertyName": "=attachment_{{$node[\"Get the PO number and subject\"].json[\"attachmentIndex\"]}}"
+      },
+      "name": "Read PDF",
+      "type": "n8n-nodes-base.readPDF",
+      "typeVersion": 1,
+      "position": [
+        520,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "format": "resolved",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "name": "Wait for Po Email",
+      "type": "n8n-nodes-base.emailReadImap",
+      "typeVersion": 1,
+      "position": [
+        160,
+        380
+      ],
+      "alwaysOutputData": false,
+      "credentials": {
+        "imap": {
+          "id": "54",
+          "name": "Siemens IMAP"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "\nlet area = {\n    pos: {\n        id: '',\n        po_value: '',\n        po_net_value: '',\n        po_date: '',\n        po_delivery_date: '',\n        shipment_address: '',\n        street_address: '',\n        gstin: '',\n        city: '',\n        state: '',\n        country: '',\n        pincode: '',\n        ship_street_address: '',\n        ship_pincode: '',\n        ship_city: '',\n        ship_state: '',\n        ship_country: '',\n        poc_name: null,\n        poc_contact_number: null,\n        poc_email: null,\n        po_items: [],\n        products: [],\n        calculated_gross_price:'',\n        po_value_mismatch:false\n    },\n}\nlet integrated = [];\nlet poObj = {};\nlet numberFound = false;\nlet removeStartStringFound = false\nconst contentSubStringArray = $node[\"Read PDF\"].json[\"text\"];\nconst lines = contentSubStringArray.split('\\n');\n// console.log(\"====================\",lines);\nlet gstin = 0;\nlet calculatedGrossPrice=0;\nfor (i = 0; i < lines.length; i++) {\n    // PAN number\n    if (lines[i].includes(\"PAN:\")) {\n        let splitPanString = lines[i].split(\":\");\n        pan = splitPanString[1];\n        area.pan = pan;\n    }\n    // GSTIN number\n    else if (lines[i].includes(\"GSTIN\")) {\n        let splitGstnString = lines[i];\n        const regex = /GSTIN:\\s*([A-Za-z0-9]{15})/;\n        gstin = splitGstnString.match(regex);\n        if (gstin) {\n            area.pos.gstin = gstin[1];\n        } else {\n            area.pos.gstin = null;\n        }\n    }\n    // PO Date\n    else if (lines[i].includes(\"Date\")) {\n        let splitDateString = lines[i].split(\":\");\n        date = splitDateString[1];\n        splitdate = date.split(\".\");\n        joindate = splitdate.reverse().join(\"-\");\n        area.date = joindate;\n        area.pos.po_date = area.date;\n    }\n    // PO Delivery date\n    else if (lines[i].includes(\"Delivery date:\")) {\n        let splitDeliveryDateString = lines[i].split(\":\");\n        deliverydate = splitDeliveryDateString[1].trim(\" \");\n        splitdate = deliverydate.split(\".\");\n        joindeliverydate = splitdate.reverse().join(\"-\");\n        area.deliverydate = joindeliverydate;\n        area.pos.po_delivery_date = area.deliverydate;\n    }\n    // Order NO\n    else if (lines[i].includes(\"Order no\")) {\n        let splitOrderNoString = lines[i].split(\":\");\n        const regex = /-?\\d+(\\.\\d+)?/g;\n        order_no = splitOrderNoString[0].match(regex);\n        area.order_no = order_no[0];\n        if (area.order_no) {\n            area.pos.id = area.order_no;\n        }\n        else {\n            area.pos.id = '';\n            area.pos.po_items[0].id = '';\n        }\n    }\n    // ORG ID\n    else if (lines[i].includes(\"ORG-ID\")) {\n        let splitOrgIdString = lines[i].split(\":\");\n        org_id = splitOrgIdString[0].slice(9, 16);\n        area.org_id = org_id;\n    }\n\n    // Shipping Addresss\n    else if (lines[i].includes(\"Shipping address\")) {\n        const startString = \"Shipping address\";\n        const endString = \"Please supply in accordance with the stipulated terms and conditions attached. Kindly send us your\";\n        const startIndex = lines.indexOf(startString);\n        const endIndex = lines.indexOf(endString);\n        const addr = /^(.*?)(?=\\b\\d{6}\\b)/;\n        shipping_address = lines.slice(startIndex + 1, endIndex).join();\n        area.shipping_address = shipping_address;\n        area.pos.shipment_address = area.shipping_address;\n        street_address = area.pos.shipment_address.match(addr);\n        if(street_address == null || street_address.length < 0){\n            street_address2 = area.pos.shipment_address;\n            area.pos.street_address = street_address2.replace(/,/g, \" \").trim();\n            area.pos.ship_street_address = street_address2.replace(/,/g, \" \").trim();\n        }else{\n            area.pos.street_address = street_address && street_address[0] ? street_address[0].replace(/,/g, \" \").trim() : null;\n            area.pos.ship_street_address = street_address && street_address[0] ? street_address[0].replace(/,/g, \" \").trim() : null;\n        }\n        if (area.pos.shipment_address) {\n            const regex = /-?\\d+(\\.\\d+)?/g;\n            const pin = /\\b\\d{6}\\b/;\n            billing_address = area.pos.shipment_address.split(\" \").reverse(\"\");\n            splitBillingaddress = billing_address;\n            city = splitBillingaddress[0].split(\",\");\n            area.pos.city = city[0] || \"\";\n            area.pos.ship_city = city[0] || \"\";\n            state = splitBillingaddress[0].split(\",\");\n            country = splitBillingaddress[0].split(\",\");\n            area.pos.country = country[1] || \"\";\n            area.pos.ship_country = country[1] || \"\";\n            pincode = area.pos.shipment_address.match(pin);\n            area.pos.pincode = pincode && pincode[0] ? parseInt(pincode[0]) : null;\n            area.pos.ship_pincode = pincode && pincode[0] ? parseInt(pincode[0]) : null;\n        }\n    }\n\n    // POC NAME,EMAIL,PHONE NUMBER\n    else if (lines[i].includes(\"|||\")) {\n        let excludeStartStringFound=false;\n        let skipIndex=i;\n        if(!numberFound){            \n            for (t=0; t<25; t++){  \n                if(lines[i+t] && lines[i+t].includes(\"Note regarding\") && !excludeStartStringFound){\n                    excludeStartStringFound=true;\n                }\n                if(excludeStartStringFound && lines[i+t].includes(\"ItemMaterial/DescriptionQuantityUnitPrice\")){\n                    skipIndex=i+t;\n                    break;\n                }\n            }\n            // POC_NUMBER\n            let phone_match = /(\\+\\d{2}\\s*\\(\\d+\\)\\s*\\d+)|(\\+\\d{2}\\s*\\d{10})|\\d{8,}/g;\n            let phone_match2 = /\\(\\d{3}\\)\\s*\\d{7}/;\n            let phone_match3 = /\\b\\d{10}\\b/;\n            let regex = /\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}\\b/;\n            let phone=0;\n            let poc_email=0;\n            for (let u = 0; u < 10; u++) {\n                if (lines[skipIndex + u].match(phone_match)) { \n                    phone = lines[skipIndex + u].match(phone_match)\n                }\n                if(lines[skipIndex + u].match(regex)){\n                    poc_email = lines[skipIndex + u].match(regex)\n                }\n                if(lines[i].match(regex)){\n                        poc_email = lines[i].match(regex)\n                } \n                if(lines[i+1].match(regex)){\n                    poc_email = lines[i+1].match(regex)\n                }\n                if(lines[i].match(phone_match)){\n                    phone = lines[i].match(phone_match)\n                    let poc_number = phone && phone[0].replace(/\\D/g, \"\").length > 8 ? phone[0].replace(/\\D/g, \"\") : null;\n                    area.pos.poc_contact_number = parseInt(poc_number) ? parseInt(poc_number) : null;\n                } else if(lines[i].match(phone_match2)){\n                    phone = lines[i+1].match(phone_match2)\n                    let poc_number = phone && phone[0].replace(/\\D/g, \"\").length > 8 ? phone[0].replace(/\\D/g, \"\") : null;\n                    area.pos.poc_contact_number = parseInt(poc_number) ? parseInt(poc_number) : null;\n                } else {\n                    phone = lines[i+1].match(phone_match3)\n                    let poc_number = phone && phone[0].replace(/\\D/g, \"\").length > 8 ? phone[0].replace(/\\D/g, \"\") : null;\n                    area.pos.poc_contact_number = parseInt(poc_number) ? parseInt(poc_number) : null;\n                }\n            let poc_number = phone && phone[0].replace(/\\D/g, \"\").length > 8 ? phone[0].replace(/\\D/g, \"\") : null;\n            area.pos.poc_contact_number = parseInt(poc_number) ? parseInt(poc_number) : null;\n            \n            //POC_EMAIL \n            area.pos.poc_email = (poc_email && poc_email.length > 0) ? poc_email[0] : null;\n\n            // POC_NAME\n            area.pos.poc_name = poc_email.length > 0 ? poc_email[0].split(\"@\")[0].replaceAll('.',\" \") : null;\n        }\n        numberFound = true;\n        }\n    }\n\n    // COMPANY NAME\n    else if (lines[i].includes(\"Company\")) {\n        const startString = \"Company\";\n        const endString = \"PAN:    \";\n        const startIndex = lines.indexOf(startString);\n        const endIndex = lines.indexOf(endString);\n        company = lines.slice(startIndex + 1, endIndex).join();\n        area.company = company;\n    }\n    //SUPPLIER NUMBER \n    else if (lines[i].includes(\"Your supplier no.\")) {\n        let splitSupplierNoString = lines[i].split(\":\");\n        const regex = /-?\\d+(\\.\\d+)?/g;\n        supplier_no = splitSupplierNoString[0].match(regex);\n        area.supplier_no = supplier_no;\n    }\n    // TERMS OF PAYMENT\n    else if (lines[i].includes(\"Terms of payment\")) {\n        let splitTermsofPaymentString = lines[i + 1].split(\":\");\n        terms_of_payment = splitTermsofPaymentString[0];\n        area.terms_of_payment = terms_of_payment;\n    }\n\n    // AMOUNT IN WORDS\n    else if (lines[i].includes(\"Amount in words:\")) {\n        let splitAmountInWordsString = lines[i + 1].split(\":\");\n        amount_in_words = splitAmountInWordsString[0];\n        area.amount_in_words = amount_in_words;\n    }\n    // TOTAL NET VALUE\n    else if (lines[i].includes(\"Total net value\")) {\n        if (lines[i].includes(\"Total net value incl. Tax INR \")) {\n            let splitTotalPONetValueString = lines[i].split(\" \");\n            const regex = /[\\d,]+(?:\\.\\d+)?/;\n            for (let element of splitTotalPONetValueString) {\n                const matches = element.match(regex);\n                if (matches) {\n                    const gross_price = matches[0].replace(\",\", '');\n                    if (gross_price) {\n                        area.pos.po_value = parseFloat(gross_price);\n                        area.pos.po_items.net_price = parseFloat(gross_price);\n                    } else {\n                        area.pos.gross_price = null;\n                    }\n                    break;\n                }\n            }\n        } else {\n            let splitTotalPOGrossValueString = lines[i].split(\" \");\n            const regex = /-?\\d+(\\.\\d+)?/g;\n            net_price = splitTotalPOGrossValueString[2].replace(\",\", '');\n            net_price = net_price.match(regex);\n            if (net_price) {\n                area.pos.po_net_value = parseFloat(net_price);\n            } else {\n                area.pos.po_net_value = '';\n            }\n        }\n    }\n\n    // MULTIPLE PO_ITEMS\n    else if (lines[i].includes(\"HSN/SAC\")) {\n        let length = integrated.length + 1\n        // PO_ITEMS\n        let obj = {\n            id: '',\n            products: [],\n            hsn: '',\n            uom: '',\n            product: '',\n            ordered_qty: '',\n            unit_price: '',\n            net_price: '',\n            gross_price: '',\n            tax_percentage: '',\n            tax_value: '',\n            description: '',\n        }\n        // PRODUCTS\n        let product_details = {\n            id: '',\n            product_name: '',\n            hsn: '',\n            product_type: 2\n            //main_category:'',\n        }\n\n        // PRODUCT CODE - SKU CODE\n        let prod = \"\";\n        let split_product = lines.slice(i, i + 30)\n        split_product.map((e, j) => {\n            if(prod!=\"\"){\n                let skuLength = prod.match(/[a-zA-Z0-9]/g).length;                \n                if(skuLength < 11){\n                    let onlySKUDigit=prod.replace(/[^0-9]/gi, \"\").length;\n                    if(onlySKUDigit < 10){\n                        prod=\"\";\n                    }\n                }\n                else{\n                    let onlySKULetters=prod.replace(/[^a-z]/gi, \"\").length;\n                    let onlySKUDigit=prod.replace(/[^0-9]/gi, \"\").length;\n                    \n                    if(!(onlySKULetters <= 5 && onlySKUDigit > 6)){\n                        prod=\"\"\n                    }\n\n                }\n            }\n            if (e.includes(\"Gross Price\") && prod == \"\") {\n                if(split_product[j + 1].includes(\"Integrated\")){\n                    prod = split_product[j + 2];\n                    if (prod.startsWith(\"Quote ID:\")) {\n                    prod = prod.replace(\"Quote ID:\", \"\").trim();\n                    }\n                    if(prod.length < 16 && !prod.includes(\" \")){\n                    obj.product = prod;\n                    }                    \n                    product_details.id = obj.product;\n                } else if (split_product[j + 1].includes(\"Central\") && prod == \"\") {\n                   let secondMap = split_product.slice(j + 1);\n                   secondMap.map((el, k) => {\n                    if (el.includes(\"Note regarding\") && !removeStartStringFound) {\n                        removeStartStringFound = true;\n                    }\n                    if (removeStartStringFound && el.includes(\"Supplier Product Number\")) {\n                        skipindex = k + 1;\n                    }\n                    let skucode = secondMap[k + 1];\n                    if (skucode.startsWith(\"Quote ID:\")) {\n                    skucode = skucode.replace(\"Quote ID:\", \"\").trim();\n                    }\n                    if(skucode.length < 16 && !skucode.includes(\" \")){\n                    obj.product = skucode;\n                    }\n                    product_details.id = obj.product;\n                });\n                }else if(split_product[j + 1].includes(\"Integrated\") == false){\n                    prod = split_product[j + 1];\n                    if (prod.startsWith(\"Quote ID:\")) {\n                    prod = prod.replace(\"Quote ID:\", \"\").trim();\n                    }\n                    if(prod.length < 16 && !prod.includes(\" \")){\n                    obj.product = prod;\n                    }                    \n                    product_details.id = obj.product;\n                } else {\n                        prod = split_product[j + 2];\n                        if (prod.startsWith(\"Quote ID:\")) {\n                        prod = prod.replace(\"Quote ID:\", \"\").trim();\n                        }\n                        if(prod.length < 16 && !prod.includes(\" \")){\n                        obj.product = prod;\n                        }                    \n                        product_details.id = obj.product;\n                }\n            } else if (e.includes(\"Integrated GST\") && prod == \"\") {\n                prod = split_product[j + 1];\n                if (prod.startsWith(\"Quote ID:\")) {\n                    prod = prod.replace(\"Quote ID:\", \"\").trim();\n                    }\n                if(prod.length < 16 && !prod.includes(\" \")){\n                    obj.product = prod;\n                    }                    \n                    product_details.id = obj.product;\n            } else if (e.includes(\"#\") && prod == \"\") {\n                prod = split_product[j - 1];\n                if (prod.startsWith(\"Quote ID:\")) {\n                    prod = prod.replace(\"Quote ID:\", \"\").trim();\n                    }\n                if(prod.length < 16 && !prod.includes(\" \")){\n                    obj.product = prod;\n                    }                    \n                    product_details.id = obj.product;\n            } else if (e.includes(\"<p>\") && prod == \"\") {\n                prod = split_product[j - 1];\n                if (prod.startsWith(\"Quote ID:\")) {\n                    prod = prod.replace(\"Quote ID:\", \"\").trim();\n                    }\n                if(prod.length < 16 && !prod.includes(\" \")){\n                    obj.product = prod;\n                    }                    \n                    product_details.id = obj.product;\n            } else if (e.includes(\"<ul>\") && prod == \"\") {\n                prod = split_product[j - 1];\n                if (prod.startsWith(\"Quote ID:\")) {\n                    prod = prod.replace(\"Quote ID:\", \"\").trim();\n                    }\n                if(prod.length < 16 && !prod.includes(\" \")){\n                    obj.product = prod;\n                    }                    \n                    product_details.id = obj.product;\n            }\n        });      \n\n        // ID\n        let order = lines.find((e) => e.includes(\"Order no.\")).match(/\\d+/);\n        const itemno_id = /-?\\d+(\\.\\d+)?/g;\n        let serial = order + \"-\" + length\n        order_no = order[0].match(itemno_id);\n        obj.id = serial;\n        let pattern = /^\\d{4}/;\n        let serialno = pattern.test(lines[i]);\n        // SERIAL NUMBER\n        if (serialno && i != id + 1) {\n            let a = lines[i].split(\"\")\n            let itemno = a[0] + a[1] + a[2] + a[3]\n            let order = lines.find((e) => e.includes(\"Order no.\"))\n            let splitOrderNoString = order.split(\":\");\n            const itemno_id = /-?\\d+(\\.\\d+)?/g;\n            order_no = splitOrderNoString[0].match(itemno_id);\n            obj.id = order_no + '-' + itemno;\n        }\n\n        let productFound = false;\n        let integratedFound = false;\n        let descriptionFirstLineFound = false;\n        let descriptionEnded = false;\n\n        let net_value = lines.map((e, j) => {\n            if (j > i && j < i + 20 && e.includes(\"Gross Price PBXX\")) {\n                if (!productFound) {\n\n                    // NET PRICE \n                    net = lines[j].split(\" \").reverse();\n                    net_price = net[1];\n                    obj.net_price = parseFloat(net_price.replace(\",\", \"\"));\n\n                    // UNIT PRICE\n                    unit = lines[j].split(\" \").reverse();\n                    unit_price = unit.filter(element => element.trim() !== '');\n                    obj.unit_price = parseFloat(unit_price[1].replace(\",\", \"\"));\n                    productFound = true;\n                }\n                if (!integratedFound) {\n                    if (lines[j + 1].includes(\"Integrated\")) {\n                        tax_percent = lines[j + 1].split(\" \").reverse();\n                        const tax_reg = /(\\d+(,\\d+)?(\\.\\d+)?)/;\n                        tax_value = tax_percent[1].trim().match(tax_reg);\n                        obj.tax_value = parseFloat(tax_value[0].replace(\",\", \"\"));\n\n                        // TAX PERCENTAGE\n                        let splitGSTstring = lines[j + 1].split(\":\");\n                        const percent = /-?\\d+(\\.\\d+)?/g;\n                        tax_percentage = splitGSTstring[0].match(percent);\n                        obj.tax_percentage = parseFloat(tax_percentage[0]);\n                    }\n                    else if (lines[j + 1].includes(\"Central\") && lines[j + 2].includes(\"State\")) {\n                        tax_percent1 = lines[j + 1].split(\" \").reverse();\n                        tax_percent2 = lines[j + 2].split(\" \").reverse();\n                        const tax_reg = /(\\d+(,\\d+)?(\\.\\d+)?)/;\n                        tax_value1 = tax_percent1[1].trim().match(tax_reg);\n                        tax_value2 = tax_percent2[1].trim().match(tax_reg);\n                        tax_value_result1 = tax_value1[0].replace(\",\", \"\");\n                        tax_value_result2 = tax_value2[0].replace(\",\", \"\");\n                        obj.tax_value = parseInt(tax_value_result1) + parseInt(tax_value_result2);\n\n                        // TAX PERCENTAGE\n                        let splitGSTstring1 = lines[j + 1].split(\":\");\n                        let splitGSTstring2 = lines[j + 2].split(\":\")\n                        const percent = /-?\\d+(\\.\\d+)?/g;\n                        tax_percentage1 = splitGSTstring1[0].match(percent);\n                        tax_percentage2 = splitGSTstring2[0].match(percent);\n                        obj.tax_percentage = parseFloat(tax_percentage1[0]) + parseFloat(tax_percentage2[0]);\n                    }\n                    else {\n                        obj.tax_percentage = 0;\n                        obj.tax_value = 0;\n                    }\n                    integratedFound = true;\n                }\n                // Net Price\n                obj.gross_price = obj.net_price + obj.tax_value;                \n            }\n\n            // MATERIAL DESCRIPTION   \n            if (j > i && j < i + 20 && (descriptionFirstLineFound && !descriptionEnded)) {\n                if (e.includes(\"|||\")) {\n                    descriptionEnded = true;\n                    material_description = material_description + lines[j];\n                    obj.description = material_description.slice(0, material_description.indexOf(\"|||\"));\n                }\n                else {\n                    material_description = material_description + lines[j];\n                    \n                }\n            }\n\n            if (j > i && j < i + 25 && !descriptionFirstLineFound && (e.includes(\"<p>\") || e.includes(\"<ul>\") || e.includes(\"#\"))) {\n                material_description = lines[j];\n                descriptionFirstLineFound = true;\n                if (e.includes(\"|||\")) {                    \n                    obj.description = material_description.slice(0, material_description.indexOf(\"|||\")) ? material_description.slice(0, material_description.indexOf(\"|||\")) : '';\n                    descriptionEnded = true;\n                }\n            }\n        });\n\n\n        // HSN Code\n        let splitHsnCodeString = lines[i].split(\":\");\n        hsn = splitHsnCodeString[1].replace(/\\s/g, \"\");\n        obj.hsn = hsn;\n        product_details.hsn = hsn;\n\n        // ORDERED QTY and UOM\n\n        // ORDERED QTY\n        if (lines[i].includes(\"HSN\")) {\n            const regex = /(\\d+(?:,\\d+)?)/g;\n            let splitOrderQTY = lines[i - 1].split(\" \").reverse();\n            ordered_qty = splitOrderQTY[1].match(regex);\n\n            // obj.ordered_qty = ordered_qty ? parseInt(ordered_qty[0].replace(/,/g, '')) : null;\n            obj.ordered_qty = ordered_qty ? parseInt(ordered_qty[ordered_qty.length - 1].replace(/,/g, '')) : null;\n            \n            // UOM\n            obj.uom = splitOrderQTY[0];\n        }\n\n        // PRODUCT NAME \n        let productFirstLineFound = false;\n        let productNameFound = false;\n        let product_trim = lines.map((e, j) => {\n\n            if (productFirstLineFound && !productNameFound) {\n                if (e.includes(\"HSN\")) {\n                    productNameFound = true;\n                }\n                else {\n                    product_details.product_name = product_details.product_name + e\n                }\n            }\n\n            if (j < i && j > i - 10 && e.match(/\\b\\d{4}(?=[a-z])/gi)) {\n                product_details.product_name = e.replace(/\\b\\d{1,4}(?=[a-zA-Z])/g, \"\").replace(/\\d+\\s*PC$/, \"\").trim() ||\n                    \"\";\n                productFirstLineFound = true;\n            }\n        });\n\n        //replace last qty and uom from name\n        product_details.product_name = product_details.product_name.replace(/\\d+\\s*PC$/, \"\").trim();\n\n        obj.products.push(product_details)\n        integrated.push(obj)\n        area.pos.po_items = integrated;\n        \n        //calculated Gross Price\n        // calculatedGrossPrice += obj.gross_price;\n        calculatedGrossPrice += ( obj.unit_price * obj.ordered_qty) + ((obj.unit_price * obj.ordered_qty) * obj.tax_percentage / 100);\n    }\n}\narea.pos.calculated_gross_price=calculatedGrossPrice;\narea.pos.po_value_mismatch = calculatedGrossPrice == area.pos.po_value ? false : true;\narea.pos.po_document = $node[\"Post the file\"].json[\"data\"][\"id\"];\nlet products = area.pos.po_items;\n\nlet productIds = products.map(product => product.products[0].id);\nitems[0].json.area = area;\nitems[0].json.productIds = productIds;\nitems[0].json.products = products;\nreturn items;"
+      },
+      "name": "Extracting the seimens po details",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1720,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "https://adaniqa.shakedeal.com/items/sds_pos",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {
+          "bodyContentType": "json"
+        },
+        "bodyParametersJson": "={{$node[\"Function to construct PO obj\"].json[\"poObj\"]}}"
+      },
+      "name": "Post to the Seimens Pos",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1900,
+        960
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "89",
+          "name": "Seimens Noir PDF"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "https://adaniqa.shakedeal.com/files",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {
+          "bodyContentType": "multipart-form-data"
+        },
+        "sendBinaryData": true,
+        "binaryPropertyName": "=input_file:attachment_{{$node[\"Get the PO number and subject\"].json[\"attachmentIndex\"]}}"
+      },
+      "name": "Post the file",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        680,
+        380
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "89",
+          "name": "Seimens Noir PDF"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://adaniqa.shakedeal.com/items/sds_products?filter={\"id\":{\"_in\":\"{{$node[\"Extracting the seimens po details\"].json[\"productIds\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Get the products",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        660,
+        860
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "89",
+          "name": "Seimens Noir PDF"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let poProducts = $node[\"Extracting the seimens po details\"].json[\"products\"];\nlet existingProductData = $node[\"Get the products\"].json[\"data\"];\nlet poObj = $node[\"Extracting the seimens po details\"].json[\"area\"][\"pos\"];\nlet poItems =  $node[\"Get the po Item\"].json[\"data\"];\nlet resultFilter = \n   poProducts.filter(products=>\n     !existingProductData.some(\n      data=> data.id === products.products[0].id \n    )\n  );\nlet productsToCreate = resultFilter.map(product=>product.products[0]);\nuniqueArr = Object.create(null),\n    uniqueProductArr = productsToCreate.filter(o => {\n        var key = ['id'].map(k => o[k]).join('|');\n        if (!uniqueArr[key]) {\n            uniqueArr[key] = true;\n            return true;\n        }\n    });\n\nitems[0].json.resultFilter = resultFilter;\nitems[0].json.productsToCreate = uniqueProductArr;\nreturn items;"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        860
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "=https://adaniqa.shakedeal.com/items/sds_products",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Function\"].json[\"productsToCreate\"]}}"
+      },
+      "name": "Create products",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1440,
+        740
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "89",
+          "name": "Seimens Noir PDF"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Function\"].json[\"productsToCreate\"].length>0?true:false}}"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1240,
+        860
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1480,
+        1140
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://adaniqa.shakedeal.com/items/sds_po_items?filter={\"_and\": [{\"product\": {\"_in\":\"{{$node[\"Extracting the seimens po details\"].json[\"productIds\"]}}\"}},{\"vendor\":{\"_neq\":null}}]}&sort=-date_created&limit=1&fields=product,vendor.id,vendor.shipment_type",
+        "options": {}
+      },
+      "name": "Get the po Item",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        860,
+        860
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "89",
+          "name": "Seimens Noir PDF"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let poProducts = $node[\"Extracting the seimens po details\"].json[\"products\"];\nlet postOfficeDetails = $node[\"Get Details on Pincode\"].json[0][\"PostOffice\"];\nif(postOfficeDetails && postOfficeDetails.length > 0){\n  postOfficeDetails = $node[\"Get Details on Pincode\"].json[0][\"PostOffice\"][0];\n}else{\n  postOfficeDetails = null;\n}\nlet city = postOfficeDetails && postOfficeDetails[\"District\"] !== null ? postOfficeDetails[\"District\"] : null;\nlet state = postOfficeDetails && postOfficeDetails[\"State\"] !== null ? postOfficeDetails[\"State\"] : null;\nlet country = postOfficeDetails && postOfficeDetails[\"Country\"] !== null ? postOfficeDetails[\"Country\"] : null;\n$node[\"Extracting the seimens po details\"].json[\"area\"][\"pos\"][\"city\"]= city;\n$node[\"Extracting the seimens po details\"].json[\"area\"][\"pos\"][\"state\"]= state;\n$node[\"Extracting the seimens po details\"].json[\"area\"][\"pos\"][\"country\"]= country;\n$node[\"Extracting the seimens po details\"].json[\"area\"][\"pos\"][\"ship_city\"]= city;\n$node[\"Extracting the seimens po details\"].json[\"area\"][\"pos\"][\"ship_state\"]= state;\n$node[\"Extracting the seimens po details\"].json[\"area\"][\"pos\"][\"ship_country\"]= country;\nlet poObj = $node[\"Extracting the seimens po details\"].json[\"area\"][\"pos\"];\nlet poItems =  $node[\"Get the po Item\"].json[\"data\"];\nlet existingProducts = $node[\"Get the products\"].json[\"data\"];\nlet createdProducts =$node[\"Function\"].json[\"productsToCreate\"].length>0?$node[\"Create products\"].json[\"data\"]:[];\nlet allProducts = [...existingProducts,...createdProducts]\npoProducts.forEach(function(poProduct,index){\n  let matchedPoItem = poItems.filter(poItem=>poItem.product == poProduct.product);\n  let matchedProduct = allProducts.filter(product=>product.id == poProduct.product);\n  poObj.po_items[index].category = matchedProduct[0].main_category;\n  if(matchedPoItem.length>0){\n    poObj.po_items[index].vendor = matchedPoItem[0].vendor.id;\n    poObj.po_items[index].shipment_type = matchedPoItem[0].vendor.shipment_type;\n  }\n})\nitems[0].json.poObj= poObj\nreturn items;"
+      },
+      "name": "Function to construct PO obj",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1680,
+        960
+      ]
+    },
+    {
+      "parameters": {
+        "url": "=https://api.postalpincode.in/pincode/{{$node[\"Extracting the seimens po details\"].json[\"area\"][\"pos\"][\"pincode\"]}}",
+        "jsonParameters": true,
+        "options": {}
+      },
+      "name": "Get Details on Pincode",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        440,
+        860
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Extracting the seimens po details\"].json[\"products\"][0][\"products\"][0][\"id\"]?true:false}}"
+            }
+          ]
+        }
+      },
+      "name": "Check sku exists",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        200,
+        880
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "=https://adaniqa.shakedeal.com/items/sds_routing_pos",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "po_number",
+              "value": "={{$node[\"Extracting the seimens po details\"].json[\"area\"][\"pos\"][\"id\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Create routing pos",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        440,
+        1100
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "89",
+          "name": "Seimens Noir PDF"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "noreply@shakedeal.com",
+        "toEmail": "=chidanand@shakedeal.com,surya.kc@shakedeal.com,parthiban.n@shakedeal.com,vinay.kumar@shakedeal.com,aditya.darira@shakedeal.com,vinod.raj@shakedeal.com",
+        "subject": "=Not able to read PO - {{$node[\"Extracting the seimens po details\"].json[\"area\"][\"pos\"][\"id\"]}}",
+        "text": "=Hi Team,\n\nWe are not able to read PO as SKU is not present\n\nThanks",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        700,
+        1100
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "7",
+          "name": "AWS SES Creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let result=$node[\"Create products\"].json.data;\n\nlet table = '<table>';\n   table += `<tr bgcolor=\"#FFDEAD\"><th>ID </th><th>PRODUCT_NAME </th></tr>`;\n  for(i=0;i<result.length;i++)\n    {\n table=table+\"<tr bgcolor='#E0FFFF'><td>\"+result[i].id+\"</td><td>\"+result[i].product_name+\"</td></tr>\";\n}\n    table += \"</table>\";\n\nreturn {\"table\" : table};"
+      },
+      "name": "Construct HTML",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1660,
+        740
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$node[\"Get PO by PO Number\"].json[\"data\"].length > 0 ?true : false}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "Check PO Exist",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1240,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "noreply@shakedeal.com",
+        "toEmail": "chidanand@shakedeal.com,surya.kc@shakedeal.com,parthiban.n@shakedeal.com,vinay.kumar@shakedeal.com,aditya.darira@shakedeal.com,vinod.raj@shakedeal.com",
+        "subject": "=Siemens :This PO already exist with PO number - {{$node[\"Extracting the seimens po details\"].json[\"area\"][\"pos\"][\"id\"]}}",
+        "html": "=<h1 class=\"my-4 display-4 text-center\">This PO already exist with PO number:{{$node[\"Extracting the seimens po details\"].json[\"area\"][\"pos\"][\"id\"]}}</h1>",
+        "options": {}
+      },
+      "name": "Send PO Exist Mail",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        1460,
+        60
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "7",
+          "name": "AWS SES Creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://adaniqa.shakedeal.com/items/sds_pos?filter={\"id\":{\"_eq\":\"{{$node[\"Get the PO number and subject\"].json[\"purchaseOrderNumber\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Get PO by PO Number",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        160
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "89",
+          "name": "Seimens Noir PDF"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "noreply@shakedeal.com",
+        "toEmail": "chidanand@shakedeal.com,surya.kc@shakedeal.com,parthiban.n@shakedeal.com,vinay.kumar@shakedeal.com,aditya.darira@shakedeal.com",
+        "subject": "Ad Hoc Product Created on Noir Platform",
+        "html": "=<div>Hi Aditya,</div><br/><br/>\n\nPFA the list of ad hoc products that has been created on Mini Mozart platform. As per our process, I kindly request your assistance in notifying the catalogue team to catalogue the newly added product.<br/><br/>\n\nThank you for your cooperation and swift attention to this matter.<br/><br/>\n\nBest regards,<br/><br/>\n\nTeam ShakeDeal<br/><br/>\n\n{{$node[\"Construct HTML\"].json[\"table\"]}}",
+        "options": {}
+      },
+      "id": "4451458d-0178-4531-bb12-60e3d4add6d2",
+      "name": "Adhoc Product Created Mail",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        1860,
+        740
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "7",
+          "name": "AWS SES Creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Wait for Po Email\"].json[\"subject\"]}}",
+              "operation": "contains",
+              "value2": "=Purchase Order Number"
+            }
+          ]
+        }
+      },
+      "name": "IF1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        840,
+        380
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "NoOp1",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "items[0].json.attachmentIndex = items[0].binary ? Object.values(items[0].binary).findIndex(key => key.mimeType === \"application/pdf\") : -1;\nif(items[0].json.attachmentIndex !== -1){\n  items[0].json.data = items[0].binary[items[0].json.attachmentIndex];\n}\n\nlet emailSubject = $node[\"Wait for Po Email\"].json[\"subject\"];\nconst startIndex = emailSubject.indexOf(\"Purchase Order Number\");\nlet purchaseOrderNumber = \"\"\nif (startIndex !== -1) {\n  // Extract the value after \"Purchase Order Number\"\n  purchaseOrderNumber = emailSubject.slice(startIndex + \"Purchase Order Number\".length).trim().split(\" \")[0];\n}\n\nitems[0].json.purchaseOrderNumber= purchaseOrderNumber;\nitems[0].json.emailSubject= emailSubject;\nreturn items;"
+      },
+      "name": "Get the PO number and subject",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        340,
+        380
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [
+    {
+      "id": "8",
+      "name": "Adani",
+      "createdAt": "2023-09-14T09:19:59.003Z",
+      "updatedAt": "2023-09-14T09:19:59.003Z"
+    }
+  ],
+  "updatedAt": "2023-09-14T09:22:54.403Z"
+}
