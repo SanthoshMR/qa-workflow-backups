@@ -223,7 +223,7 @@
           "string": [
             {
               "name": "dms_url",
-              "value": "={{$node[\"Webhook\"].json[\"body\"][\"enterprise_company_id\"] === '904' ? \"https://adaniqa.shakedeal.com\" : \"https://noirqa.shakedeal.com\" }}"
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"company_id\"] === '904' ? \"https://adaniqa.shakedeal.com\" : \"https://noirqa.shakedeal.com\" }}"
             },
             {
               "name": "order_table_name",
@@ -587,5 +587,5 @@
       "updatedAt": "2023-05-30T07:00:01.982Z"
     }
   ],
-  "updatedAt": "2023-09-14T12:10:55.902Z"
+  "updatedAt": "2023-09-15T06:53:01.228Z"
 }
