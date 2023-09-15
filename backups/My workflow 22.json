@@ -25,13 +25,7 @@
     },
     "Read PDF": {
       "main": [
-        [
-          {
-            "node": "Function1",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     }
   },
@@ -51,7 +45,7 @@
     },
     {
       "parameters": {
-        "downloadAttachments": true,
+        "format": "resolved",
         "options": {
           "allowUnauthorizedCerts": true
         }
@@ -92,23 +86,12 @@
       "position": [
         900,
         300
-      ]
-    },
-    {
-      "parameters": {
-        "functionCode": "[\n{\n\"data\": {\n\"id\": \"$node[\"Read PDF\"].json[\"text\"];\",\n\"user_created\": \"\"\n\n}\n}\n]\n"
-      },
-      "name": "Function1",
-      "type": "n8n-nodes-base.function",
-      "typeVersion": 1,
-      "position": [
-        1120,
-        300
-      ]
+      ],
+      "notesInFlow": true
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-09-14T12:10:38.053Z"
+  "updatedAt": "2023-09-15T06:56:38.992Z"
 }
