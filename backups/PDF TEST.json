@@ -1,0 +1,119 @@
+{
+  "active": true,
+  "connections": {
+    "Wait for Po Email": {
+      "main": [
+        [
+          {
+            "node": "Get PDF File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get PDF File": {
+      "main": [
+        [
+          {
+            "node": "Read PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read PDF": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-09-15T07:19:56.931Z",
+  "id": "359",
+  "name": "PDF TEST",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        260,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "format": "resolved",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "name": "Wait for Po Email",
+      "type": "n8n-nodes-base.emailReadImap",
+      "typeVersion": 1,
+      "position": [
+        260,
+        320
+      ],
+      "alwaysOutputData": false,
+      "credentials": {
+        "imap": {
+          "id": "88",
+          "name": "IMAP account(tendul)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "items[0].json.attachmentIndex = items[0].binary ? Object.values(items[0].binary).findIndex(key => key.mimeType === \"application/pdf\") : -1;\nif(items[0].json.attachmentIndex !== -1){\n  items[0].json.data = items[0].binary[items[0].json.attachmentIndex];\n}\n\nreturn items;"
+      },
+      "name": "Get PDF File",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        500,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "binaryPropertyName": "=attachment_{{$node[\"Get PDF File\"].json[\"attachmentIndex\"]}}"
+      },
+      "name": "Read PDF",
+      "type": "n8n-nodes-base.readPDF",
+      "typeVersion": 1,
+      "position": [
+        740,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let area = {\n    pos: {\n        id: '',\n        po_value: '',\n        po_net_value: '',\n        po_taxes: '',\n        po_other_taxes: '',\n        po_date: '',\n        po_delivery_date: '',\n        shipment_address: '',\n        street_address: '',\n        gstin: '',\n        city: '',\n        state: '',\n        country: '',\n        pincode: '',\n        ship_street_address: '',\n        ship_pincode: '',\n        ship_city: '',\n        ship_state: '',\n        ship_country: '',\n        poc_name: null,\n        poc_contact_number: null,\n        poc_email: null,\n        po_items: [],\n        products: [],\n        calculated_gross_price:'',\n        po_value_mismatch:false\n    },\n}\n\nconst contentSubStringArray = $node[\"Read PDF\"].json[\"text\"];\nconst lines = contentSubStringArray.split('\\n');\n// console.log(\"====================\",lines);\n\nlet buyerDetailsFound=false;\nlet orderValueSummaryFound=false;\nlet poItemsFound=false;\n\nfor (i = 0; i < lines.length; i++) {\n\n    // PO Number\n    if (lines[i].includes(\"PO No\") && !area.pos.id) {\n        area.pos.id = lines[i].split(\":\")[1].trim();\n    }\n\n    // PO Date\n    if (lines[i].includes(\"PO Release Date\") && !area.pos.po_date) {\n        area.pos.po_date = lines[i].split(\":\")[1].trim();\n    }\n\n    //check buyer detials started\n    if(lines[i].includes(\"Buyer's details\")){\n        buyerDetailsFound=true;\n    }    \n\n    if(buyerDetailsFound){\n\n        // PAN number\n        if (lines[i].includes(\"PAN\") && !area.pan) {            \n            area.pan = lines[i].replace(\"PAN\",\"\");\n        }\n\n        // GSTIN\n        if (lines[i].includes(\"GSTIN\") && !area.pos.gstin) {            \n            area.pos.gstin = lines[i].replace(\"GSTIN\",\"\");\n        }\n        \n        // POC Name\n        if (lines[i].includes(\"Name\") && !area.pos.poc_name) {\n            area.pos.poc_name = lines[i].replace(\"Name\",\"\");\n        }\n\n        // POC Contact Number\n        if (lines[i].includes(\"Phone\") && !area.pos.poc_contact_number) {\n            area.pos.poc_contact_number = lines[i].replace(\"Phone\",\"\");\n        }\n\n        // POC Email\n        if (lines[i].includes(\"Email\") && !area.pos.poc_email) {\n            area.pos.poc_email = lines[i].replace(\"Email\",\"\");\n        }\n    }\n\n    //check order value summary started\n    if(lines[i].includes(\"Order Value Summary\")){\n        orderValueSummary=true;\n    }\n\n    if(orderValueSummary){\n\n        //PO Net Value with out tax\n        if (lines[i].includes(\"Basic Price\") && !area.pos.po_net_value) {\n            area.pos.po_net_value = parseFloat(lines[i+1].replace(\"INR\",\"\").replaceAll(',', '').trim());\n        }\n\n        //PO tax\n        if (lines[i].includes(\"Taxes\") && !area.pos.po_taxes) {\n            area.pos.po_taxes = parseFloat(lines[i+1].replace(\"INR\",\"\").replaceAll(',', '').trim());\n        }\n\n        //PO other tax\n        if (lines[i].includes(\"Other Charges\") && !area.pos.po_other_taxes) {\n            area.pos.po_other_taxes = parseFloat(lines[i+1].replace(\"INR\",\"\").replaceAll(',', '').trim());\n        }\n\n        //PO Value with  tax\n        if (lines[i].includes(\"PO Price\") && !area.pos.po_value) {\n            area.pos.po_value = parseFloat(lines[i+1].replace(\"INR\",\"\").replaceAll(',', '').trim());\n        }\n    }\n\n    // PO_ITEMS\n    let poItemDetails = {\n        id: '',\n        hsn: '',\n        uom: '',\n        product: '',\n        ordered_qty: '',\n        unit_price: '',\n        net_price: '',\n        gross_price: '',\n        tax_percentage: '',\n        tax_value: '',\n        description: '',\n    }\n\n    // PRODUCTS\n    let productDetails = {\n        id: '',\n        product_name: '',\n        hsn: '',\n        product_type: 2\n    }\n\n    if(lines[i].includes(\"ANNEXURE-I\") && lines[i+1].includes(\"PRICE SCHEDULE\")){\n        poItemsFound=true;\n    }\n\n    if(poItemsFound){\n        \n    }\n}\nconsole.log(\"******************************************\",area);\nreturn items[0]={\"a\":lines};"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        960,
+        140
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": {
+    "node:Wait for Po Email": {
+      "lastMessageUid": 2917
+    }
+  },
+  "tags": [],
+  "updatedAt": "2023-09-15T12:38:30.993Z"
+}
