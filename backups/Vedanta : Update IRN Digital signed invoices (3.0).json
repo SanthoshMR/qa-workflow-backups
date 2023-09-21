@@ -318,7 +318,8 @@
         "options": {
           "timeout": 3000
         },
-        "sendBinaryData": true
+        "sendBinaryData": true,
+        "headerParametersJson": "={\n\"hash\":\">wfs%#hash\"\t,\n\"Content-file-name\":{{$node[\"Function to get the splitted irn Item\"].json[\"invoice_number\"].split(\".\")[0]}}\n}"
       },
       "name": "Send the irn data to SD store",
       "type": "n8n-nodes-base.httpRequest",
@@ -437,5 +438,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-09-13T07:14:59.079Z"
+  "updatedAt": "2023-09-21T06:11:10.472Z"
 }
