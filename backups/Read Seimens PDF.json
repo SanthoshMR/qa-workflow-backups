@@ -1,15 +1,9 @@
 {
-  "active": true,
+  "active": false,
   "connections": {
     "Wait for Po Email": {
       "main": [
-        [
-          {
-            "node": "Get PDF File",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Extracting the seimens po details": {
@@ -230,6 +224,17 @@
           }
         ]
       ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Get PDF File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2023-05-17T09:47:27.940Z",
@@ -242,8 +247,8 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        -480,
-        -480
+        -460,
+        -260
       ]
     },
     {
@@ -269,8 +274,8 @@
       "type": "n8n-nodes-base.emailReadImap",
       "typeVersion": 1,
       "position": [
-        -480,
-        -260
+        -640,
+        -300
       ],
       "alwaysOutputData": false,
       "credentials": {
@@ -278,7 +283,8 @@
           "id": "88",
           "name": "IMAP account(tendul)"
         }
-      }
+      },
+      "disabled": true
     },
     {
       "parameters": {
@@ -657,7 +663,7 @@
   "settings": {},
   "staticData": {
     "node:Wait for Po Email": {
-      "lastMessageUid": 2932
+      "lastMessageUid": 2936
     }
   },
   "tags": [
@@ -668,5 +674,5 @@
       "updatedAt": "2023-05-30T07:00:01.982Z"
     }
   ],
-  "updatedAt": "2023-09-20T09:45:28.285Z"
+  "updatedAt": "2023-09-21T10:35:57.112Z"
 }
