@@ -197,7 +197,7 @@
       "main": [
         [
           {
-            "node": "Siemens - Send Email",
+            "node": "Send Email",
             "type": "main",
             "index": 0
           }
@@ -211,7 +211,7 @@
         ]
       ]
     },
-    "Siemens - Send Email": {
+    "Adani  - Send Email": {
       "main": [
         [
           {
@@ -222,7 +222,7 @@
         ]
       ]
     },
-    "Adani  - Send Email": {
+    "Send Email": {
       "main": [
         [
           {
@@ -298,6 +298,10 @@
             {
               "name": "adani_to_email",
               "value": "vinay.kumar@shakedeal.com,surya.kc@shakedeal.com,parthiban.n@shakedeal.com"
+            },
+            {
+              "name": "company_name",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"enterprise_company_id\"] === '904' ? \"Adani\" : \"Siemens\" }}"
             }
           ]
         },
@@ -597,29 +601,6 @@
     {
       "parameters": {
         "fromEmail": "={{$node[\"Globals\"].json[\"from_email\"]}}",
-        "toEmail": "={{$node[\"Webhook\"].json[\"body\"][\"enterprise_company_id\"] === '904' ? $node[\"Globals\"].json[\"adani_to_email\"]: $node[\"Globals\"].json[\"siemens_to_email\"] }}",
-        "subject": "=QA : Request to Upload Invoice for Completed Order ID {{$node[\"Status Update\"].json[\"data\"][\"order_id\"]}}",
-        "text": "=",
-        "html": "=<div>Dear Vinod Raj,</div><br>\n<div>Request you to upload the invoice for the completed order ID\n<b>{{$node[\"Status Update\"].json[\"data\"][\"order_id\"]}}</b> on the Siemens portal. This order has been marked as completed, and we await the invoice to be uploaded.</div><br/>\n<div>Thank you for your cooperation and prompt attention to this matter.</div><br/>\n<div><b>Note:</b> If you have already uploaded the invoice, please ignore this email.</div>",
-        "options": {}
-      },
-      "name": "Siemens - Send Email",
-      "type": "n8n-nodes-base.emailSend",
-      "typeVersion": 1,
-      "position": [
-        1480,
-        640
-      ],
-      "credentials": {
-        "smtp": {
-          "id": "7",
-          "name": "AWS SES Creds"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "fromEmail": "={{$node[\"Globals\"].json[\"from_email\"]}}",
         "toEmail": "={{$node[\"Globals\"].json[\"adani_to_email\"]}}",
         "subject": "=QA : Request to Upload Invoice for Completed Order ID {{$node[\"Status Update\"].json[\"data\"][\"order_id\"]}}",
         "text": "=",
@@ -640,6 +621,29 @@
         }
       },
       "disabled": true
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{$node[\"Globals\"].json[\"from_email\"]}}",
+        "toEmail": "={{$node[\"Webhook\"].json[\"body\"][\"enterprise_company_id\"] === '904' ? $node[\"Globals\"].json[\"adani_to_email\"]: $node[\"Globals\"].json[\"siemens_to_email\"] }}",
+        "subject": "=QA : Request to Upload Invoice for Completed Order ID {{$node[\"Status Update\"].json[\"data\"][\"order_id\"]}}",
+        "text": "=",
+        "html": "=<div>Dear Vinod Raj,</div><br>\n<div>Request you to upload the invoice for the completed order ID\n<b>{{$node[\"Status Update\"].json[\"data\"][\"order_id\"]}}</b> on the {{$node[\"Globals\"].json[\"company_name\"]}} portal. This order has been marked as completed, and we await the invoice to be uploaded.</div><br/>\n<div>Thank you for your cooperation and prompt attention to this matter.</div><br/>\n<div><b>Note:</b> If you have already uploaded the invoice, please ignore this email.</div>",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        1480,
+        640
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "7",
+          "name": "AWS SES Creds"
+        }
+      }
     }
   ],
   "settings": {},
@@ -652,5 +656,5 @@
       "updatedAt": "2023-05-30T07:00:01.982Z"
     }
   ],
-  "updatedAt": "2023-09-19T06:46:01.350Z"
+  "updatedAt": "2023-09-21T11:36:55.286Z"
 }
