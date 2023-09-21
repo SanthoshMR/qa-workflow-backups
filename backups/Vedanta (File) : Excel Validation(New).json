@@ -555,7 +555,7 @@
     },
     {
       "parameters": {
-        "functionCode": "// return items;\nlet poFiles=[];\nlet excelFiles=[];\nlet poNumbers = [];\nitems.forEach((item) => {\n    const fullPath = item.json[\"path\"].split(\"/\");\n    const fileName = fullPath[fullPath.length - 1];\n    if(decodeURI(fileName) && (decodeURI(fileName).includes(\".pdf\")|| decodeURI(fileName).includes(\".PDF\"))){\n        poNumbers.push(decodeURI(fileName).split(\".\")[0]);\n        poFiles.push({\"file_name\":decodeURI(fileName),\"file_size\":item.json[\"contentLength\"]});\n    }\n    if(decodeURI(fileName).includes(\".xlsx\") || decodeURI(fileName).includes(\".XLSX\")){\n        excelFiles.push({\"file_name\":decodeURI(fileName)});\n    }\n});\n\nreturn [{\n     json: {\n         poData: poFiles,\n         excelData:excelFiles,\n         pos : poNumbers\n    }\n}];"
+        "functionCode": "// return items;\nlet poFiles=[];\nlet excelFiles=[];\nlet poNumbers = [];\nitems.forEach((item) => {\n    const fullPath = item.json[\"path\"].split(\"/\");\n    const fileName = fullPath[fullPath.length - 1];\n    if(decodeURI(fileName) && (decodeURI(fileName).includes(\".pdf\")|| decodeURI(fileName).includes(\".PDF\"))){\n        poNumbers.push(decodeURI(fileName).split(\".\")[0]);\n        poFiles.push({\"file_name\":decodeURI(fileName),\"file_size\":item.json[\"contentLength\"]});\n    }\n    if(decodeURI(fileName).includes(\".xlsx\") || decodeURI(fileName).includes(\".XLSX\")||decodeURI(fileName).includes(\".csv\")||decodeURI(fileName).includes(\".CSV\")){\n        excelFiles.push({\"file_name\":decodeURI(fileName)});\n    }\n});\n\nreturn [{\n     json: {\n         poData: poFiles,\n         excelData:excelFiles,\n         pos : poNumbers\n    }\n}];"
       },
       "name": "Combine Items",
       "type": "n8n-nodes-base.function",
@@ -1110,7 +1110,7 @@
     {
       "parameters": {
         "fromEmail": "=chidanand@shakedeal.com",
-        "toEmail": "=sairam.reddy@shakedeal.com,anjali.jain@shakedeal.com",
+        "toEmail": "=sairam.reddy@shakedeal.com,anjali.jain@shakedeal.com,bijan.krishna@shakedeal.com",
         "ccEmail": "=",
         "subject": "PO format not matched or product/vendor not exist",
         "html": "={{$node[\"Construct the table\"].json[\"tableHtml\"]}}",
@@ -1277,5 +1277,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-09-20T05:51:18.165Z"
+  "updatedAt": "2023-09-21T12:14:15.427Z"
 }
