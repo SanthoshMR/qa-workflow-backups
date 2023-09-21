@@ -1,0 +1,96 @@
+{
+  "active": true,
+  "connections": {
+    "Wait for Po Email": {
+      "main": [
+        [
+          {
+            "node": "Call workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call workflow": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-09-21T10:24:12.995Z",
+  "id": "362",
+  "name": "Global : Mail Reading SD Automation",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "format": "resolved",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "name": "Wait for Po Email",
+      "type": "n8n-nodes-base.emailReadImap",
+      "typeVersion": 1,
+      "position": [
+        460,
+        340
+      ],
+      "alwaysOutputData": false,
+      "credentials": {
+        "imap": {
+          "id": "88",
+          "name": "IMAP account(tendul)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let workflowId = 0;\n\nlet subject = $node[\"Wait for Po Email\"].json.subject;\nlet fromMail = $node[\"Wait for Po Email\"].json[\"from\"].value[0].address;\nif(fromMail.includes(\"shakedeal\")&&subject.includes(\"PO\")){\n  workflowId=357;\n}else if(fromMail.includes(\"shakedeal\")&&subject.includes(\"Purchase Order Number\")){\n   workflowId=310;\n}\nitems[0].json.workflowId= workflowId;\nreturn items;"
+      },
+      "name": "Call workflow",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        680,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "={{$node[\"Call workflow\"].json[\"workflowId\"]}}"
+      },
+      "name": "Execute Workflow",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        900,
+        340
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": {
+    "node:Wait for Po Email": {
+      "lastMessageUid": 2952
+    }
+  },
+  "tags": [],
+  "updatedAt": "2023-09-21T14:06:06.484Z"
+}
