@@ -1,0 +1,45 @@
+{
+  "active": false,
+  "connections": {},
+  "createdAt": "2023-09-21T07:13:16.769Z",
+  "id": "361",
+  "name": "Tally : Get IRN Details",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "irn-details",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        480,
+        280
+      ],
+      "webhookId": "3d082836-4221-4299-8e20-f67a87746db6",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "86",
+          "name": "Tally Basic Auth"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-09-21T07:13:28.307Z"
+}
