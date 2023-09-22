@@ -1,6 +1,193 @@
 {
   "active": false,
-  "connections": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Function to split irn details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to split irn details": {
+      "main": [
+        [
+          {
+            "node": "Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set": {
+      "main": [
+        [
+          {
+            "node": "Start Loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start Loop": {
+      "main": [
+        [
+          {
+            "node": "Function to get the splitted irn",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to get the splitted irn": {
+      "main": [
+        [
+          {
+            "node": "Nextcloud",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nextcloud": {
+      "main": [
+        [
+          {
+            "node": "Check for irn file in cloud",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for irn file in cloud": {
+      "main": [
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update irn file received status in dms",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update irn file received status in dms": {
+      "main": [
+        [
+          {
+            "node": "Increment index",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Increment index": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "End Loop": {
+      "main": [
+        [
+          {
+            "node": "Postgres",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "End Loop",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Start Loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres": {
+      "main": [
+        [
+          {
+            "node": "Respond to webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NoOp": {
+      "main": [
+        [
+          {
+            "node": "no ops incriment index",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "no ops incriment index": {
+      "main": [
+        [
+          {
+            "node": "IF1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF1": {
+      "main": [
+        [
+          {
+            "node": "End Loop",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Start Loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
   "createdAt": "2023-09-21T07:13:16.769Z",
   "id": "361",
   "name": "Tally : Get IRN Details",
@@ -20,6 +207,7 @@
         "authentication": "basicAuth",
         "httpMethod": "POST",
         "path": "irn-details",
+        "responseMode": "lastNode",
         "options": {}
       },
       "name": "Webhook",
@@ -36,10 +224,269 @@
           "name": "Tally Basic Auth"
         }
       }
+    },
+    {
+      "parameters": {
+        "functionCode": "let irnDetails = $node[\"Webhook\"].json[\"body\"][\"irn_details\"];\nlet invoiceNumbersString = \"\";\n\n\nconst size = 5; // size of each subarray\n\nconst result = [];\nirnDetails.forEach(function(irn,index){\n  invoiceNumbersString  = invoiceNumbersString?invoiceNumbersString+\",\"+`'${irn.invoice_number}'`:invoiceNumbersString+`'${irn.invoice_number}'`;\n})\nfor (let i = 0; i < irnDetails.length; i += size) {\n  \n  result.push(irnDetails.slice(i, i + size));\n}\n\n\nreturn [{\n    json: {\n        result: result,\n        resultlength : result.length,\n        irn_numbers : invoiceNumbersString\n    },\n}];\n"
+      },
+      "name": "Function to split irn details",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        700,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "number": [
+            {
+              "name": "index"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        920,
+        280
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "Start Loop",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let irnData = $node[\"Function to split irn details\"].json[\"result\"];\nlet currentIndex = $node[\"Start Loop\"].json[\"index\"];\nlet currentIrn = irnData[currentIndex];\nlet returnItems = [];\n\ncurrentIrn.forEach(function(obj,index){\n    returnItems.push({\n    json: {\n       invoice_number : obj.invoice_number\n    }\n  });\n  \n})\n\nreturn returnItems;\n"
+      },
+      "name": "Function to get the splitted irn",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1320,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "path": "=Tally-qa/Invoices/{{$node[\"Function to get the splitted irn\"].json[\"invoice_number\"]+\".pdf\"}}"
+      },
+      "name": "Nextcloud",
+      "type": "n8n-nodes-base.nextCloud",
+      "typeVersion": 1,
+      "position": [
+        1520,
+        280
+      ],
+      "credentials": {
+        "nextCloudApi": {
+          "id": "43",
+          "name": "SD Cloud"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1940,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Nextcloud\"].json.hasOwnProperty('error')}}"
+            }
+          ]
+        }
+      },
+      "name": "Check for irn file in cloud",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1720,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "=https://zeusqa.shakedeal.com/items/tally_pos/{{$node[\"Check for irn file in cloud\"].json[\"invoice_number\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "tally_irn_received",
+              "value": "={{true}}"
+            }
+          ]
+        }
+      },
+      "name": "Update irn file received status in dms",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1960,
+        380
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "10",
+          "name": "SD-Dms-Token"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "number": [
+            {
+              "name": "index",
+              "value": "={{$node[\"Start Loop\"].json[\"index\"]+1}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Increment index",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        2160,
+        360
+      ],
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Increment index\"].json[\"index\"]}}",
+              "operation": "equal",
+              "value2": "={{$node[\"Function to split irn details\"].json[\"resultlength\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        2360,
+        380
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "End Loop",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        2540,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=select tally_irn_received,id from tally_e_invoices where id IN ({{$node[\"Function to split irn details\"].json[\"irn_numbers\"]}})",
+        "additionalFields": {}
+      },
+      "name": "Postgres",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        2760,
+        260
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "13",
+          "name": "Dms - QA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let returnItems =[]\nlet invoices = [];\n\n\nitems.forEach(function(obj,index){ \n  if(obj.json.tally_irn_received){\n     invoices.push({\n      invoice_number:obj.json.id,\n    })\n  } \n})\n    \n returnItems.push({\n   json:{\n     irn_details : invoices\n   }\n }) \n\n\nreturn returnItems;"
+      },
+      "name": "Respond to webhook",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        2960,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "number": [
+            {
+              "name": "index",
+              "value": "={{$node[\"Start Loop\"].json[\"index\"]+1}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "no ops incriment index",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        2160,
+        180
+      ],
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"no ops incriment index\"].json[\"index\"]}}",
+              "operation": "equal",
+              "value2": "={{$node[\"Function to split irn details\"].json[\"resultlength\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "IF1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        2280,
+        80
+      ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-09-21T07:13:28.307Z"
+  "updatedAt": "2023-09-22T10:12:47.754Z"
 }
