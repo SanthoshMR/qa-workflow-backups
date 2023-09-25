@@ -607,8 +607,8 @@
       "parameters": {
         "fromEmail": "noreply@shakedeal.com",
         "toEmail": "chidanand@shakedeal.com,surya.kc@shakedeal.com,parthiban.n@shakedeal.com,vinay.kumar@shakedeal.com,aditya.darira@shakedeal.com",
-        "subject": "Ad Hoc Product Created on Noir Platform",
-        "html": "=<div>Hi Aditya,</div><br/><br/>\n\nPFA the list of ad hoc products that has been created on Mini Mozart platform. As per our process, I kindly request your assistance in notifying the catalogue team to catalogue the newly added product.<br/><br/>\n\nThank you for your cooperation and swift attention to this matter.<br/><br/>\n\nBest regards,<br/><br/>\n\nTeam ShakeDeal<br/><br/>\n\n{{$node[\"Construct HTML\"].json[\"table\"]}}",
+        "subject": "Ad Hoc Product Created on Adani Platform",
+        "html": "=<div>Hi Siddesh,</div><br/><br/>\n\nPFA the list of ad hoc products that has been created on Mini Mozart platform. As per our process, I kindly request your assistance in notifying the catalogue team to catalogue the newly added product.<br/><br/>\n\nThank you for your cooperation and swift attention to this matter.<br/><br/>\n\nBest regards,<br/><br/>\n\nTeam ShakeDeal<br/><br/>\n\n{{$node[\"Construct HTML\"].json[\"table\"]}}",
         "options": {}
       },
       "id": "4451458d-0178-4531-bb12-60e3d4add6d2",
@@ -704,7 +704,10 @@
       ]
     }
   ],
-  "settings": {},
+  "settings": {
+    "saveExecutionProgress": "DEFAULT",
+    "errorWorkflow": "364"
+  },
   "staticData": null,
   "tags": [
     {
@@ -714,5 +717,5 @@
       "updatedAt": "2023-09-14T09:19:59.003Z"
     }
   ],
-  "updatedAt": "2023-09-23T02:32:37.199Z"
+  "updatedAt": "2023-09-25T11:42:41.612Z"
 }
