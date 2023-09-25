@@ -133,7 +133,7 @@
     {
       "parameters": {
         "operation": "download",
-        "path": "=adani/PurchaseOrder.PDF"
+        "path": "=adani/9982.pdf"
       },
       "name": "Nextcloud",
       "type": "n8n-nodes-base.nextCloud",
@@ -185,5 +185,5 @@
     }
   },
   "tags": [],
-  "updatedAt": "2023-09-22T10:26:46.090Z"
+  "updatedAt": "2023-09-25T07:02:36.448Z"
 }
