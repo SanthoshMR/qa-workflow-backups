@@ -1,0 +1,65 @@
+{
+  "active": false,
+  "connections": {
+    "Error Trigger": {
+      "main": [
+        []
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-09-25T07:20:59.835Z",
+  "id": "364",
+  "name": "Adani : Error Workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "Error Trigger",
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        560,
+        160
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "url": "=https://qan8n.shakedeal.com/api/v1/executions/346070",
+        "options": {}
+      },
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-09-25T09:27:56.674Z"
+}
