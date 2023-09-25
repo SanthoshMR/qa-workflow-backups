@@ -60,7 +60,7 @@
       "main": [
         [
           {
-            "node": "Check for irn file in cloud",
+            "node": "Update irn file received status in dms",
             "type": "main",
             "index": 0
           }
@@ -76,13 +76,7 @@
             "index": 0
           }
         ],
-        [
-          {
-            "node": "Update irn file received status in dms",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Update irn file received status in dms": {
@@ -171,20 +165,8 @@
     },
     "IF1": {
       "main": [
-        [
-          {
-            "node": "End Loop",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Start Loop",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        [],
+        []
       ]
     }
   },
@@ -305,9 +287,10 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        1940,
-        180
-      ]
+        1980,
+        -80
+      ],
+      "disabled": true
     },
     {
       "parameters": {
@@ -324,21 +307,22 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        1720,
-        280
-      ]
+        1760,
+        -120
+      ],
+      "disabled": true
     },
     {
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "PATCH",
-        "url": "=https://zeusqa.shakedeal.com/items/tally_pos/{{$node[\"Check for irn file in cloud\"].json[\"invoice_number\"]}}",
+        "url": "=https://zeusqa.shakedeal.com/items/tally_e_invoices/{{$node[\"Nextcloud\"].json[\"invoice_number\"]}}",
         "options": {},
         "bodyParametersUi": {
           "parameter": [
             {
               "name": "tally_irn_received",
-              "value": "={{true}}"
+              "value": "={{$node[\"Nextcloud\"].json.hasOwnProperty('error')?false:true}}"
             }
           ]
         }
@@ -347,8 +331,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1960,
-        380
+        1860,
+        300
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -460,9 +444,10 @@
       "typeVersion": 1,
       "position": [
         2160,
-        180
+        -100
       ],
-      "executeOnce": true
+      "executeOnce": true,
+      "disabled": true
     },
     {
       "parameters": {
@@ -480,13 +465,14 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        2280,
-        80
-      ]
+        2340,
+        -80
+      ],
+      "disabled": true
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-09-22T10:12:47.754Z"
+  "updatedAt": "2023-09-25T11:42:51.100Z"
 }
