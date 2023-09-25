@@ -85,12 +85,15 @@
       ]
     }
   ],
-  "settings": {},
+  "settings": {
+    "saveExecutionProgress": "DEFAULT",
+    "errorWorkflow": "364"
+  },
   "staticData": {
     "node:Wait for Po Email": {
-      "lastMessageUid": 2971
+      "lastMessageUid": 2983
     }
   },
   "tags": [],
-  "updatedAt": "2023-09-23T02:25:28.087Z"
+  "updatedAt": "2023-09-25T11:34:46.770Z"
 }
