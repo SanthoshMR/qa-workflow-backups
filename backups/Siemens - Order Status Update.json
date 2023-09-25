@@ -302,6 +302,10 @@
             {
               "name": "company_name",
               "value": "={{$node[\"Webhook\"].json[\"body\"][\"enterprise_company_id\"] === '904' ? \"Adani\" : \"Siemens\" }}"
+            },
+            {
+              "name": "company_user",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"enterprise_company_id\"] === '904' ? \"Siddesh Nayak\" : \"Vinod Raj\" }}"
             }
           ]
         },
@@ -628,7 +632,7 @@
         "toEmail": "={{$node[\"Webhook\"].json[\"body\"][\"enterprise_company_id\"] === '904' ? $node[\"Globals\"].json[\"adani_to_email\"]: $node[\"Globals\"].json[\"siemens_to_email\"] }}",
         "subject": "=QA : Request to Upload Invoice for Completed Order ID {{$node[\"Status Update\"].json[\"data\"][\"order_id\"]}}",
         "text": "=",
-        "html": "=<div>Dear Vinod Raj,</div><br>\n<div>Request you to upload the invoice for the completed order ID\n<b>{{$node[\"Status Update\"].json[\"data\"][\"order_id\"]}}</b> on the {{$node[\"Globals\"].json[\"company_name\"]}} portal. This order has been marked as completed, and we await the invoice to be uploaded.</div><br/>\n<div>Thank you for your cooperation and prompt attention to this matter.</div><br/>\n<div><b>Note:</b> If you have already uploaded the invoice, please ignore this email.</div>",
+        "html": "=<div>Dear {{$node[\"Globals\"].json[\"company_user\"]}},</div><br>\n<div>Request you to upload the invoice for the completed order ID\n<b>{{$node[\"Status Update\"].json[\"data\"][\"order_id\"]}}</b> on the {{$node[\"Globals\"].json[\"company_name\"]}} portal. This order has been marked as completed, and we await the invoice to be uploaded.</div><br/>\n<div>Thank you for your cooperation and prompt attention to this matter.</div><br/>\n<div><b>Note:</b> If you have already uploaded the invoice, please ignore this email.</div>",
         "options": {}
       },
       "name": "Send Email",
@@ -656,5 +660,5 @@
       "updatedAt": "2023-05-30T07:00:01.982Z"
     }
   ],
-  "updatedAt": "2023-09-21T11:36:55.286Z"
+  "updatedAt": "2023-09-25T09:52:01.236Z"
 }
