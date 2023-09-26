@@ -3,14 +3,20 @@
   "connections": {
     "Error Trigger": {
       "main": [
-        []
-      ]
-    },
-    "Start": {
-      "main": [
         [
           {
             "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
             "type": "main",
             "index": 0
           }
@@ -40,26 +46,54 @@
       "position": [
         560,
         160
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "noreply@shakedeal.com",
+        "toEmail": "=surya.kc@shakedeal.com,vinay.kumar@shakedeal.com,sairam.reddy@shakedeal.com",
+        "subject": "=Not able to read PO",
+        "text": "Hi Team,\n\nWe are not able to read PO as there is a mismatch in the PO format.\n\nThanks",
+        "html": "=",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        820,
+        160
       ],
-      "disabled": true
+      "credentials": {
+        "smtp": {
+          "id": "7",
+          "name": "AWS SES Creds"
+        }
+      }
     },
     {
       "parameters": {
         "authentication": "basicAuth",
-        "url": "=https://qan8n.shakedeal.com/api/v1/executions/346070",
         "options": {}
       },
       "name": "HTTP Request",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        460,
-        300
-      ]
+        680,
+        60
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "9",
+          "name": "SD-Basic-Auth-Temp"
+        }
+      },
+      "disabled": true
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-09-25T09:27:56.674Z"
+  "updatedAt": "2023-09-26T09:46:00.107Z"
 }
