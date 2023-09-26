@@ -218,7 +218,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let irnData = $node[\"Function to split irn details\"].json[\"result\"];\nlet currentIndex = $node[\"Start Loop\"].json[\"index\"];\nlet currentIrn = irnData[currentIndex];\nlet returnItems = [];\n\ncurrentIrn.forEach(function(obj,index){\n    returnItems.push({\n    json: {\n       invoice_number : obj.id\n    }\n  });\n  \n})\n\nreturn returnItems;\n"
+        "functionCode": "let irnData = $node[\"Function to split irn details\"].json[\"result\"];\nlet currentIndex = $node[\"Start Loop\"].json[\"index\"];\nlet currentIrn = irnData[currentIndex];\nlet returnItems = [];\n\ncurrentIrn.forEach(function(obj,index){\n    returnItems.push({\n    json: {\n       invoice_number : obj.id,\n       header_obj:{\n         \"content-hash\":\"wfs%#hash\",\n          \"content-file-name\":obj.id.replace(\"INV\",\"\")\n       }\n    }\n  });\n  \n})\n\nreturn returnItems;\n"
       },
       "name": "Function to get the splitted irn",
       "type": "n8n-nodes-base.function",
@@ -258,7 +258,7 @@
           "timeout": 3000
         },
         "sendBinaryData": true,
-        "headerParametersJson": "={{\n{\n\"content-hash\":\"wfs%#hash\",\n\"Content-file-name\":'{{$node[\"Function to get the splitted irn\"].json[\"invoice_number\"]}}'\n} \n}}"
+        "headerParametersJson": "={{$node[\"Function to get the splitted irn\"].json[\"header_obj\"]}}"
       },
       "name": "Send the irn data to SD store",
       "type": "n8n-nodes-base.httpRequest",
@@ -274,13 +274,13 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "PATCH",
-        "url": "=https://zeusqa.shakedeal.com/items/tally_e_invoices/{{$node[\"Send the irn data to SD store\"].json.rdata.invoice_number}}",
+        "url": "=https://zeusqa.shakedeal.com/items/tally_e_invoices/{{$node[\"Send the irn data to SD store\"].json[\"invoice_number\"]}}",
         "options": {},
         "bodyParametersUi": {
           "parameter": [
             {
-              "name": "tally_irn_received",
-              "value": "={{$node[\"Nextcloud\"].json.hasOwnProperty('error')?false:true}}"
+              "name": "tally_irn_sent",
+              "value": "={{$node[\"Send the irn data to SD store\"].json[\"success\"]}}"
             }
           ]
         }
@@ -356,5 +356,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-09-25T12:57:36.909Z"
+  "updatedAt": "2023-09-26T06:55:46.923Z"
 }
