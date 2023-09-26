@@ -93,7 +93,7 @@
       "main": [
         [
           {
-            "node": "Update status in mozart",
+            "node": "Update digitally signed irn status in dms",
             "type": "main",
             "index": 0
           }
@@ -145,6 +145,17 @@
         [
           {
             "node": "Start Loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update digitally signed irn status in dms": {
+      "main": [
+        [
+          {
+            "node": "Update status in mozart",
             "type": "main",
             "index": 0
           }
@@ -281,7 +292,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let irnData = $node[\"Function to get irn data\"].json[\"result\"];\nlet currentIndex = $node[\"Start Loop\"].json[\"index\"];\nlet currentIrn = irnData[currentIndex];\nlet returnItems = [];\n\ncurrentIrn.forEach(function(obj,index){  \n    returnItems.push({\n    json: {\n       invoice_number : obj.sd_invoice_number,\n       dms_url : $node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]\n    }\n  });\n  \n})\n\nreturn returnItems;\n\n// items[0].json.currentStock= currentStock;\n\n// return items;"
+        "functionCode": "let irnData = $node[\"Function to get irn data\"].json[\"result\"];\nlet currentIndex = $node[\"Start Loop\"].json[\"index\"];\nlet currentIrn = irnData[currentIndex];\nlet returnItems = [];\n\ncurrentIrn.forEach(function(obj,index){  \n    returnItems.push({\n    json: {\n       invoice_number : obj.sd_invoice_number,\n       dms_url : $node[\"Get url and token\"].json[\"0\"][\"mozart_url\"],\n       header_obj:{\n         \"content-hash\":\"wfs%#hash\",\n          \"content-file-name\":obj.sd_invoice_number.replace(\"INV\",\"\")\n       }\n    }\n  });\n  \n})\n\nreturn returnItems;\n\n// items[0].json.currentStock= currentStock;\n\n// return items;"
       },
       "name": "Function to get the splitted irn Item",
       "type": "n8n-nodes-base.function",
@@ -316,10 +327,11 @@
         "url": "=https://sdqa.shakedeal.com/index.php?dispatch=wfs_update.retrieve_irn_invoice",
         "jsonParameters": true,
         "options": {
+          "bodyContentType": "raw",
           "timeout": 3000
         },
         "sendBinaryData": true,
-        "headerParametersJson": "={\n\"hash\":\">wfs%#hash\"\t,\n\"Content-file-name\":{{$node[\"Function to get the splitted irn Item\"].json[\"invoice_number\"].split(\".\")[0]}}\n}"
+        "headerParametersJson": "={{$node[\"Function to get the splitted irn Item\"].json[\"header_obj\"]}}"
       },
       "name": "Send the irn data to SD store",
       "type": "n8n-nodes-base.httpRequest",
@@ -335,13 +347,15 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "PATCH",
-        "url": "=https://sdqa.mozart.shakedeal.com/items/sdm_order_invoices/{{$node[\"Send the irn data to SD store\"].json.rdata.invoice_number}}",
-        "options": {},
+        "url": "=https://sdqa.mozart.shakedeal.com/items/sdm_order_invoices/{{$node[\"Send the irn data to SD store\"].json[\"invoice_number\"]}}",
+        "options": {
+          "batchInterval": 3000
+        },
         "bodyParametersUi": {
           "parameter": [
             {
               "name": "sd_irn_sent",
-              "value": "={{true}}"
+              "value": "={{$node[\"Send the irn data to SD store\"].json[\"success\"]}}"
             }
           ]
         }
@@ -433,10 +447,40 @@
         3000,
         160
       ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "=https://zeusqa.shakedeal.com/items/tally_e_invoices/{{$node[\"Send the irn data to SD store\"].json[\"invoice_number\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "irn_digitally_signed_sent",
+              "value": "={{$node[\"Send the irn data to SD store\"].json[\"success\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update digitally signed irn status in dms",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2180,
+        100
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "10",
+          "name": "SD-Dms-Token"
+        }
+      },
+      "continueOnFail": true
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-09-21T06:11:10.472Z"
+  "updatedAt": "2023-09-26T06:40:14.581Z"
 }
