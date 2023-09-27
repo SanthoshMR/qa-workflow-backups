@@ -1,22 +1,67 @@
 {
   "active": false,
   "connections": {
-    "Error Trigger": {
+    "Globals": {
       "main": [
         [
           {
-            "node": "HTTP Request",
+            "node": "Get the po number",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "HTTP Request": {
+    "Get the po number": {
+      "main": [
+        [
+          {
+            "node": "Check for po error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email": {
+      "main": [
+        [
+          {
+            "node": "Make mail sent true",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        []
+      ]
+    },
+    "Check for po error": {
       "main": [
         [
           {
             "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Globals",
             "type": "main",
             "index": 0
           }
@@ -34,7 +79,7 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        240,
+        280,
         300
       ]
     },
@@ -44,15 +89,15 @@
       "type": "n8n-nodes-base.errorTrigger",
       "typeVersion": 1,
       "position": [
-        560,
-        160
+        440,
+        180
       ]
     },
     {
       "parameters": {
         "fromEmail": "noreply@shakedeal.com",
         "toEmail": "=surya.kc@shakedeal.com,vinay.kumar@shakedeal.com,sairam.reddy@shakedeal.com",
-        "subject": "=Not able to read PO",
+        "subject": "=Not able to read PO - {{$node[\"Get the po number\"].json[\"data\"][0][\"po_number\"]}}",
         "text": "Hi Team,\n\nWe are not able to read PO as there is a mismatch in the PO format.\n\nThanks",
         "html": "=",
         "options": {}
@@ -61,7 +106,7 @@
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 1,
       "position": [
-        820,
+        1180,
         160
       ],
       "credentials": {
@@ -73,27 +118,106 @@
     },
     {
       "parameters": {
-        "authentication": "basicAuth",
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "mozart_url",
+              "value": "=https://adaniqa.shakedeal.com"
+            }
+          ]
+        },
         "options": {}
       },
-      "name": "HTTP Request",
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        620,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"mozart_url\"]}}/items/sds_po_errors?filter={\"_and\": [{\"po_created\": {\"_eq\":false}},{\"po_error_mail\":{\"_eq\":false}}]}&sort=-date_created&limit=1",
+        "options": {}
+      },
+      "name": "Get the po number",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        680,
-        60
+        800,
+        180
       ],
       "credentials": {
-        "httpBasicAuth": {
-          "id": "9",
-          "name": "SD-Basic-Auth-Temp"
+        "httpHeaderAuth": {
+          "id": "89",
+          "name": "Seimens Noir PDF"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"mozart_url\"]}}/items/sds_po_errors/{{$node[\"Get the po number\"].json[\"data\"][0][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "po_error_mail",
+              "value": "={{true}}"
+            }
+          ]
         }
       },
-      "disabled": true
+      "name": "Make mail sent true",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1380,
+        140
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "89",
+          "name": "Seimens Noir PDF"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1240,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Get the po number\"].json[\"data\"].length>0?true:false}}"
+            }
+          ]
+        }
+      },
+      "name": "Check for po error",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        980,
+        180
+      ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-09-26T09:46:00.107Z"
+  "updatedAt": "2023-09-27T07:15:27.402Z"
 }
