@@ -169,7 +169,7 @@
         ],
         [
           {
-            "node": "Extract PO Details & Items",
+            "node": "Create PO error record",
             "type": "main",
             "index": 0
           }
@@ -254,6 +254,28 @@
         [
           {
             "node": "Check sku exists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create PO error record": {
+      "main": [
+        [
+          {
+            "node": "Extract PO Details & Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post to the Seimens Pos": {
+      "main": [
+        [
+          {
+            "node": "Make PO created true",
             "type": "main",
             "index": 0
           }
@@ -642,7 +664,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        840,
+        900,
         380
       ]
     },
@@ -702,6 +724,64 @@
         1880,
         380
       ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Get the PO number and subject\"].json[\"dms_url\"]}}/items/sds_po_errors",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "po_number",
+              "value": "={{$node[\"Get the PO number and subject\"].json[\"purchaseOrderNumber\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Create PO error record",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1400,
+        360
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "89",
+          "name": "Seimens Noir PDF"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Get the PO number and subject\"].json[\"dms_url\"]}}/items/sds_po_errors/{{$node[\"Create PO error record\"].json[\"data\"][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "po_created",
+              "value": "={{true}}"
+            }
+          ]
+        }
+      },
+      "name": "Make PO created true",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2120,
+        960
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "89",
+          "name": "Seimens Noir PDF"
+        }
+      }
     }
   ],
   "settings": {
@@ -717,5 +797,5 @@
       "updatedAt": "2023-09-14T09:19:59.003Z"
     }
   ],
-  "updatedAt": "2023-09-25T11:42:41.612Z"
+  "updatedAt": "2023-09-27T07:12:29.564Z"
 }
