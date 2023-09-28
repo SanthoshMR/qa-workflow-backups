@@ -1,0 +1,175 @@
+{
+  "active": false,
+  "connections": {
+    "IMAP Email": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "Read PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read PDF": {
+      "main": [
+        [
+          {
+            "node": "Post the file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function1": {
+      "main": [
+        [
+          {
+            "node": "Function2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post the file": {
+      "main": [
+        [
+          {
+            "node": "Function1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-09-28T06:37:52.850Z",
+  "id": "365",
+  "name": "My workflow 23",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "format": "resolved",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "name": "IMAP Email",
+      "type": "n8n-nodes-base.emailReadImap",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ],
+      "credentials": {
+        "imap": {
+          "id": "99",
+          "name": "IMAP account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "\nitems[0].json.attachmentIndex = items[0].binary ? Object.values(items[0].binary).findIndex(key => key.mimeType === \"application/pdf\") : -1;\nif(items[0].json.attachmentIndex !== -1){\n  items[0].json.data = items[0].binary[items[0].json.attachmentIndex];\n}\n\n\nlet emailSubject = $node[\"IMAP Email\"].json[\"subject\"];\n\npurchaseOrderNumber = emailSubject.split(\":-\")[1];\n\nitems[0].json.dms_url = \"https://adaniqa.shakedeal.com\"\nitems[0].json.purchaseOrderNumber= purchaseOrderNumber;\nitems[0].json.emailSubject= emailSubject;\nreturn items;"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        680,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "binaryPropertyName": "=attachment_{{$node[\"Function\"].json[\"attachmentIndex\"]}}"
+      },
+      "name": "Read PDF",
+      "type": "n8n-nodes-base.readPDF",
+      "typeVersion": 1,
+      "position": [
+        900,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let poData=$node[\"Read PDF\"].json[\"text\"];\n\nlet startIndexPoDetails=poData.indexOf(\"Purchase Order\");\n// let endIndexPoDetails=poData.indexOf(\"Order Value Summary\"); \nlet endIndexPoDetails=poData.indexOf(\"In words, RUPEES\");\n\nlet startIndexPoItems=poData.indexOf(\"ANNEXURE-I\");\nlet endIndexPoItems=poData.indexOf(\"Total No. Of Items\");\n\nlet poItems=poData.substring(startIndexPoItems,endIndexPoItems).split('\\n');\n\nlet poExtracted=[]; \n\nlet skip=false;\nfor (i = 0; i < poItems.length; i++) {\n  if(poItems[i].includes(\"Disclaimer\")){\n    skip=true;\n  }\n  if(skip && poItems[i].includes(\"Sr. No.Material Code/DescriptionUOM\") && poItems[i+1].includes(\"Quantity\")){\n    skip=false;\n    i=i+2;\n  }\n  if(!skip){\n    poExtracted.push(poItems[i]);\n  }\n}\n\nitems[0]={\n  \"poDetails\":poData.substring(startIndexPoDetails,endIndexPoDetails).split('\\n'),\n  \"poItems\":poExtracted\n};\n\nreturn items[0];"
+      },
+      "name": "Function1",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let address=[\n    {\n        \"gstin\":\"24AAECB3981A1Z3\",\n        \"shipment_address\":\"ADANI FORWARDING AGENT PVT LTD Survey No. 44/1, Village Tumb, Tal- Umbergaon, Dist- Valsad\",\n        \"street_address\":\"Adani Forwarding Agents Pvt Ltd, SERVEY NO 44/1, 44/1/2 Village Tumb, Tal- Umbergaon\",\n        \"city\":\"Village Tumb\",\n        \"state\":\"Gujarat\",\n        \"country\":\"India\",\n        \"pincode\":396150,\n        \"ship_street_address\":\"Adani Forwarding Agents Pvt Ltd, SERVEY NO 44/1, 44/1/2 Village Tumb, Tal- Umbergaon\",       \n        \"ship_city\":\"Village Tumb\",\n        \"ship_state\":\"Gujarat\",\n        \"ship_country\":\"India\",\n        \"ship_pincode\":\"396150\"\n    },\n];\n\nlet area = {\n    pos: {\n        id: '',\n        po_value: '',\n        po_net_value: '',\n        po_taxes: '',\n        po_other_taxes: '',\n        po_date: '',\n        po_delivery_date: '',\n        shipment_address: '',\n        street_address: '',\n        gstin: '',\n        city: '',\n        state: '',\n        country: '',\n        pincode: '',\n        ship_street_address: '',\n        ship_pincode: '',\n        ship_city: '',\n        ship_state: '',\n        ship_country: '',\n        poc_name: null,\n        poc_contact_number: null,\n        poc_email: null,\n        po_items: [],\n        products: [],\n        calculated_gross_price:0,\n        po_document:'',\n        po_value_mismatch:false\n    },\n}\n\nconst poDetaillines = $node[\"Function1\"].json[\"poDetails\"];\n\nlet buyerDetailsFound=false;\nlet orderValueSummaryFound=false;\nlet poItemsFound=false;\nlet completeAddressFound=false;\n\nlet shippingAddress=new String();\n\nfor (i = 0; i < poDetaillines.length; i++) {\n\n    // PO Number\n    if (poDetaillines[i].includes(\"PO No\") && !area.pos.id) {\n        area.pos.id = poDetaillines[i].split(\":\")[1].trim();\n    }\n\n    // PO Date\n    if (poDetaillines[i].includes(\"PO Release Date\") && !area.pos.po_date) {\n        area.pos.po_date = new Date(poDetaillines[i].split(\":\")[1].trim().split(\".\").reverse().join(\"-\"));\n    }\n\n    //check buyer detials started\n    if(poDetaillines[i].includes(\"Buyer's details\")){\n        buyerDetailsFound=true;\n        i=i+1;\n    }    \n\n    if(buyerDetailsFound){\n        //Address\n        while(!completeAddressFound && !poDetaillines[i].includes(\"PAN\")){\n            shippingAddress=shippingAddress+poDetaillines[i]+\" \";\n            i=i+1;\n        }\n        completeAddressFound=true;\n        if(!area.pos.shipment_address){\n            area.pos.shipment_address=shippingAddress.trim();\n        }\n\n        // PAN number\n        if (poDetaillines[i].includes(\"PAN\") && !area.pan) {            \n            area.pan = poDetaillines[i].replace(\"PAN\",\"\");\n        }\n\n        // GSTIN\n        if (poDetaillines[i].includes(\"GSTIN\") && !area.pos.gstin) {            \n            area.pos.gstin = poDetaillines[i].replace(\"GSTIN\",\"\");\n        }\n        \n        // POC Name\n        if (poDetaillines[i].includes(\"Name\") && !area.pos.poc_name) {\n            area.pos.poc_name = poDetaillines[i].replace(\"Name\",\"\");\n        }\n\n        // POC Contact Number\n        if (poDetaillines[i].includes(\"Phone\") && !area.pos.poc_contact_number) {\n            area.pos.poc_contact_number = parseInt(poDetaillines[i].replace(\"Phone\",\"\").replace(\"+\",\"\"));\n        }\n\n        // POC Email\n        if (poDetaillines[i].includes(\"Email\") && !area.pos.poc_email) {\n            area.pos.poc_email = poDetaillines[i].replace(\"Email\",\"\");\n        }\n    }\n\n    //check order value summary started\n    if(poDetaillines[i].includes(\"Order Value Summary\")){\n        orderValueSummaryFound=true;\n    }\n\n    if(orderValueSummaryFound){\n\n        //PO Net Value with out tax\n        if (poDetaillines[i].includes(\"Basic Price\") && !area.pos.po_net_value) {\n            area.pos.po_net_value = parseFloat(poDetaillines[i+1].replace(\"INR\",\"\").replaceAll(',', '').trim());\n        }\n\n        //PO tax\n        if (poDetaillines[i].includes(\"Taxes\") && !area.pos.po_taxes) {\n            area.pos.po_taxes = parseFloat(poDetaillines[i+1].replace(\"INR\",\"\").replaceAll(',', '').trim());\n        }\n\n        //PO other tax\n        if (poDetaillines[i].includes(\"Other Charges\") && !area.pos.po_other_taxes) {\n            area.pos.po_other_taxes = parseFloat(poDetaillines[i+1].replace(\"INR\",\"\").replaceAll(',', '').trim());\n        }\n\n        //PO Value with  tax\n        if (poDetaillines[i].includes(\"PO Price\") && !area.pos.po_value) {\n            area.pos.po_value = parseFloat(poDetaillines[i+1].replace(\"INR\",\"\").replaceAll(',', '').trim());\n        }\n    }  \n}\n\n//Address Details\nlet addressDetails=address.find(a => a.gstin == area.pos.gstin);\nif(addressDetails){\n    area.pos.shipment_address=addressDetails.shipment_address,\n    area.pos.street_address=addressDetails.street_address,\n    area.pos.city=addressDetails.city,\n    area.pos.state=addressDetails.state,\n    area.pos.country=addressDetails.country,\n    area.pos.pincode=addressDetails.pincode,\n    area.pos.ship_street_address=addressDetails.ship_street_address,    \n    area.pos.ship_city=addressDetails.ship_city,\n    area.pos.ship_state=addressDetails.ship_state,\n    area.pos.ship_country=addressDetails.ship_country,\n    area.pos.ship_pincode=addressDetails.ship_pincode\n}\n\n// All Items\nconst poItemlines = $node[\"Function1\"].json[\"poItems\"];\n\nfor(j = 0; j < poItemlines.length; j++)\n{    \n    \n    if(poItemlines[j].includes(\"ANNEXURE-I\") && poItemlines[j+1].includes(\"PRICE SCHEDULE\")){\n        poItemsFound=true;\n    }\n\n    if(poItemsFound){\n        if(poItemlines[j].includes(\"Sr. No.Material Code/DescriptionUOM\") && poItemlines[j+1].includes(\"Quantity\")){\n            j=j+2; //Added i+2 to skip 2 lines so that can get serial number and matcode\n            \n            //All PRoduct Items Iteration\n            while(j<=poItemlines.length && !poItemlines[j]==\"\"){\n\n                // PRODUCTS\n                let productDetails = {\n                    id: '',\n                    product_name: '',\n                    hsn: '',\n                    product_type: 2\n                }\n\n\n                // PO_ITEMS\n                let poItemDetails = {\n                    id: '',\n                    hsn: '',\n                    uom: '',\n                    product: '',\n                    ordered_qty: '',\n                    unit_price: '',\n                    net_price: '',\n                    gross_price: '',\n                    tax_percentage: '',\n                    tax_value: '',\n                    description: '',\n                    delivery_date:''\n                }\n\n                let productName=new String();\n                let productDescription=new String();\n\n                let serialNumber = poItemlines[j].trim().substring(0,poItemlines[j].trim().length - 10).trim();\n                let matCode =poItemlines[j].slice(-10);\n                let unitPrice=0;\n                let netTotal=0;\n                let grossTotal=0;\n                let gst=0;\n                let totalTax=0;\n                let deliveryDate='';\n\n                j=j+1; //Added i+1 to skip 1 line and get HSN\n                let hsn=poItemlines[j].replace(\"HSN No:\",\"\").trim();\n\n                //To get Product Name\n                j=j+1;\n                const decimalRegex = /^-?\\d+(\\.\\d+)?$/;\n                \n                while(j<=poItemlines.length &&  (!decimalRegex.test(poItemlines[j].trim()) || !poItemlines[j].includes(\".000\")) ){\n                    productName=productName+poItemlines[j]+\" \";\n                    j++;                    \n                }\n                \n                //To get index of occurence of UOM so that in product name it can be removed\n                let uomLastIndex=productName.lastIndexOf(poItemlines[j-1]);    \n                productName=productName.substring(0,uomLastIndex).trim();  \n\n                // To get UOM\n                let uom=poItemlines[j-1].trim();\n\n                //To get quantity\n                let qty=parseFloat(poItemlines[j].replaceAll(',', '').trim());\n\n                //To get Product Description\n                j=j+1;\n                while(j<=poItemlines.length && !poItemlines[j].includes(\"Currency\")){\n                    productDescription=productDescription+poItemlines[j]+\" \";\n                    j++;\n                }                 \n               \n                //To loop till product detials ends\n                while(j < poItemlines.length-1 && !poItemlines[j].replace(/ /g, \"\").includes(\"DateQuantityPlant\")){\n                    if(poItemlines[j].includes(\"Item Basic PriceINR\")){\n                        let unitAndNetTotal=poItemlines[j+1].trim().split(\" \");\n                        unitPrice=parseFloat(unitAndNetTotal[0].replaceAll(',', '').trim());\n                        netTotal=parseFloat(unitAndNetTotal[1].replaceAll(',', '').trim());\n                    }\n                    if(poItemlines[j].includes(\"Item PO Price\")){\n                        grossTotal=parseFloat(poItemlines[j+1].replaceAll(',', '').trim());\n                    }\n                    if(poItemlines[j].includes(\"CGST\")){\n                        gst=parseFloat(poItemlines[j].replace(\"CGST\",\"\").replaceAll('%','').trim())*2;\n                        totalTax=parseFloat(poItemlines[j+1].replaceAll(',', '').trim())*2;\n                    }\n                    if(poItemlines[j].includes(\"IGST\")){\n                        gst=parseFloat(poItemlines[j].replace(\"IGST\",\"\").replaceAll('%','').trim());\n                        totalTax=parseFloat(poItemlines[j+1].replaceAll(',', '').trim());\n                    }\n                    j++;\n                }   \n                \n                deliveryDate=poItemlines[j+1]?new Date(poItemlines[j+1].split(\" \")[0].split(\".\").reverse().join(\"-\")):\"\";  \n                if(!area.pos.po_delivery_date || area.pos.po_delivery_date < deliveryDate){\n                    area.pos.po_delivery_date= deliveryDate;\n                }\n                j=j+2;\n\n                poItemDetails.id=area.pos.id+\"-\"+serialNumber;\n                poItemDetails.hsn=hsn;\n                poItemDetails.product=matCode;\n                poItemDetails.uom=uom;\n                poItemDetails.ordered_qty=qty;\n                poItemDetails.description=productDescription;\n                poItemDetails.unit_price=unitPrice;\n                poItemDetails.net_price=netTotal;\n                poItemDetails.gross_price=grossTotal;\n                poItemDetails.tax_percentage=gst;\n                poItemDetails.tax_value=totalTax;\n                poItemDetails.delivery_date=deliveryDate; \n                             \n\n                productDetails.id=matCode;\n                productDetails.hsn=hsn;\n                productDetails.product_name=productName?productName:productDescription.substring(0,50);\n                \n                area.pos.po_items.push(poItemDetails);\n                area.pos.products.push(productDetails);\n                area.pos.calculated_gross_price=area.pos.calculated_gross_price+(unitPrice*qty)+((unitPrice*qty)*(gst/100));               \n\n            }\n        }        \n    }\n}\n\nlet products = area.pos.products;\narea.pos.po_document = $node[\"Post the file\"].json[\"data\"][\"id\"];\narea.pos.po_value_mismatch=area.pos.calculated_gross_price==area.pos.po_value?false:true;\n\nlet productIds = products.map(product => product.id);\nitems[0].json.area = area;\nitems[0].json.productIds = productIds;\nitems[0].json.products = products;\n\nreturn items;\n"
+      },
+      "name": "Function2",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1540,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Function\"].json[\"dms_url\"]}}/files",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {
+          "bodyContentType": "multipart-form-data"
+        },
+        "sendBinaryData": true,
+        "binaryPropertyName": "=input_file:attachment_{{$node[\"Function\"].json[\"attachmentIndex\"]}}"
+      },
+      "name": "Post the file",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "89",
+          "name": "Seimens Noir PDF"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-09-28T11:04:39.148Z"
+}
