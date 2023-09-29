@@ -1709,7 +1709,7 @@
             },
             {
               "name": "extra_cc_mail_ids",
-              "value": "={{$node[\"Get po_details\"].json[\"data\"][0][\"vendor\"][\"extra_cc_mail_ids\"].trim()}}"
+              "value": "={{$node[\"Get po_details\"].json[\"data\"][0][\"vendor\"][\"extra_cc_mail_ids\"]}}"
             }
           ]
         }
@@ -2629,5 +2629,5 @@
   },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-09-28T09:13:12.396Z"
+  "updatedAt": "2023-09-29T07:36:40.912Z"
 }
