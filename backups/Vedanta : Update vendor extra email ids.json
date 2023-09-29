@@ -1,0 +1,258 @@
+{
+  "active": true,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get url and token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get url and token": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Get the vendor id",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get the vendor details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the vendor id": {
+      "main": [
+        [
+          {
+            "node": "Update alternative emails in vpanel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the vendor details": {
+      "main": [
+        [
+          {
+            "node": "Update alternative mails in mozart",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-09-29T03:27:00.514Z",
+  "id": "368",
+  "name": "Vedanta : Update vendor extra email ids",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "update-cc-emails",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ],
+      "webhookId": "2420fe78-1888-4c98-932b-6d9929e67ad3",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "=https://qan8n.shakedeal.com/webhook/get-url",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "client",
+              "value": "=vedanta"
+            },
+            {
+              "name": "env",
+              "value": "=qa"
+            }
+          ]
+        }
+      },
+      "name": "Get url and token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        700,
+        300
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"source\"]==\"mozart\"?true:false}}"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        920,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_vendors?filter={\"vendor\":{\"email\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"keys\"][0]}}\"}}}",
+        "options": {}
+      },
+      "name": "Get the vendor id",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        160
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_vendors/{{$node[\"Webhook\"].json[\"body\"][\"keys\"][0]}}?fields=*,vendor.*",
+        "options": {}
+      },
+      "name": "Get the vendor details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        380
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendors/{{$node[\"Get the vendor details\"].json[\"data\"][\"vendor\"][\"email\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "extra_cc_mail_ids",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"extra_cc_mail_ids\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update alternative mails in mozart",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1320,
+        380
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_vendors/{{$node[\"Get the vendor id\"].json[\"data\"][0][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "extra_cc_mail_ids",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"extra_cc_mail_ids\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update alternative emails in vpanel",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1320,
+        160
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-09-29T09:34:59.731Z"
+}
