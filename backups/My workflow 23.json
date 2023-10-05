@@ -55,6 +55,17 @@
           }
         ]
       ]
+    },
+    "Function2": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2023-09-28T06:37:52.850Z",
@@ -166,10 +177,28 @@
           "name": "Seimens Noir PDF"
         }
       }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        1760,
+        300
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "17",
+          "name": "smtp(sai)creds"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-10-03T05:30:02.647Z"
+  "updatedAt": "2023-10-05T05:57:46.961Z"
 }
