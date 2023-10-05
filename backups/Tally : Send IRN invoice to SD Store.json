@@ -218,7 +218,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let irnData = $node[\"Function to split irn details\"].json[\"result\"];\nlet currentIndex = $node[\"Start Loop\"].json[\"index\"];\nlet currentIrn = irnData[currentIndex];\nlet returnItems = [];\n\ncurrentIrn.forEach(function(obj,index){\n    returnItems.push({\n    json: {\n       invoice_number : obj.id,\n       header_obj:{\n         \"content-hash\":\"wfs%#hash\",\n          \"content-file-name\":obj.id.replace(\"INV\",\"\")\n       }\n    }\n  });\n  \n})\n\nreturn returnItems;\n"
+        "functionCode": "let irnData = $node[\"Function to split irn details\"].json[\"result\"];\nlet currentIndex = $node[\"Start Loop\"].json[\"index\"];\nlet currentIrn = irnData[currentIndex];\nlet returnItems = [];\n\ncurrentIrn.forEach(function(obj,index){\n    returnItems.push({\n    json: {\n       invoice_number : obj.id,\n       header_obj:{\n         \"content-hash\":\"wfs%#hash\",\n          \"content-file-name\":obj.id.replace(\"INV\",\"\"),\n          \"irn_number\":obj.irn_number,\n          \"ack_number\":obj.ack_number,\n          \"ack_date\":obj.ack_date\n       }\n    }\n  });\n  \n})\n\nreturn returnItems;\n"
       },
       "name": "Function to get the splitted irn",
       "type": "n8n-nodes-base.function",
@@ -356,5 +356,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-09-26T06:55:46.923Z"
+  "updatedAt": "2023-10-05T12:31:01.451Z"
 }
