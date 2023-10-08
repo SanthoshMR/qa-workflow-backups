@@ -1,0 +1,204 @@
+{
+  "active": true,
+  "connections": {
+    "Cron": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Function1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function1": {
+      "main": [
+        [
+          {
+            "node": "Item Lists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Item Lists": {
+      "main": [
+        [
+          {
+            "node": "Spreadsheet File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Spreadsheet File": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-10-06T06:08:14.926Z",
+  "id": "370",
+  "name": "Reward ledger",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        660,
+        900
+      ]
+    },
+    {
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "mode": "everyMonth",
+              "hour": 11,
+              "minute": 30,
+              "dayOfMonth": 6
+            }
+          ]
+        }
+      },
+      "name": "Cron",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        380,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let today = new Date();\n\ntoday.setMonth(today.getMonth()+1);\n\nlet previousMonth = (today.getMonth() - 6);\n\nreturn {previousMonth};"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        600,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://campaignsqa.shakepe.com/items/sp_reward_ledger?filter[month][_eq]={{$node[\"Function\"].json[\"previousMonth\"]}}",
+        "allowUnauthorizedCerts": true,
+        "options": {}
+      },
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        820,
+        160
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "102",
+          "name": "Header Auth account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "arr =$node[\"HTTP Request\"].json[\"data\"];\narr.forEach( function(data) {\n  data['ID'] = data['id'];\n  delete data['id'];\n  data['UserCreated'] = data['user_created'];\n  delete data['user_created'];\n  data['DateCreated'] = data['date_created'];\n  delete data['date_created'];\n  data['UserUpdated'] = data['user_updated'];\n  delete data['user_updated'];\n  data['DateUpdated'] = data['date_updated'];\n  delete data['date_updated'];\n  data['OpeningBalance'] = data['opening_balance'];\n  delete data['opening_balance'];\n  data['LoadedBalance'] = data['loaded_balance'];\n  delete data['loaded_balance'];\n  data['RedeemedAmount'] = data['redeemed_amount'];\n  delete data['redeemed_amount'];\n  data['ClosingBalance'] = data['closing_balance'];\n  delete data['closing_balance'];\n  data['Year'] = data['year'];\n  delete data['year'];\n  data['Month'] = data['month'];\n  delete data['month'];\n  data['RewardCampaign'] = data['reward_campaign'];\n  delete data['reward_campaign'];\n  data['ExpiredBalance'] = data['expired_balance'];\n  delete data['expired_balance']; \n});\n\nreturn {arr};"
+      },
+      "name": "Function1",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "arr",
+        "options": {}
+      },
+      "name": "Item Lists",
+      "type": "n8n-nodes-base.itemLists",
+      "typeVersion": 1,
+      "position": [
+        1260,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "toFile",
+        "options": {}
+      },
+      "name": "Spreadsheet File",
+      "type": "n8n-nodes-base.spreadsheetFile",
+      "typeVersion": 1,
+      "position": [
+        1480,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "rooparajput19@gmail.com",
+        "toEmail": "rooparajput19@gmail.com",
+        "subject": "test",
+        "attachments": "data",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        1700,
+        160
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "103",
+          "name": "SMTP account(Roopa)"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-10-06T07:09:50.276Z"
+}
