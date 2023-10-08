@@ -250,7 +250,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let irnData = [];\n//let productIds = [];\nitems.forEach((item, index) => {\n  //productIds.push(item.json[\"Material\"])\n      let sdInvoiceNumber = item.json.path.replace('es/santhosh/IRN-digitally-signed-qa/','').replace('.pdf','').trim();\n      if(sdInvoiceNumber.includes(\"pdf\")){\n        irnData.push({\n          sd_invoice_number : sdInvoiceNumber\n        })\n      }\n      \n})\nconst size = 10; // size of each subarray\n\nconst result = [];\nfor (let i = 0; i < irnData.length; i += size) {\n  result.push(irnData.slice(i, i + size));\n}\n\n//items[0].json.result= result;\n//items[0].json.resultlength = result.length;\n//return items;\nreturn [{\n    json: {\n        result: result,\n        resultlength : result.length\n    },\n}];\n"
+        "functionCode": "let irnData = [];\n//let productIds = [];\nitems.forEach((item, index) => {\n  //productIds.push(item.json[\"Material\"])\n      let irnPath = item.json.path.toLowerCase();\n      let fileName = item.json.path.replace('es/santhosh/IRN-digitally-signed-qa/','').trim();\n      let extension = fileName.split(\".\")[1];\n      let sdInvoiceNumber = item.json.path.replace('es/santhosh/IRN-digitally-signed-qa/','').replace(extension,'').trim();\n      \n      if(irnPath.includes(\"pdf\")){\n        irnData.push({\n          sd_invoice_number : sdInvoiceNumber,\n          file_name : fileName\n        })\n      }\n      \n})\nconst size = 10; // size of each subarray\n\nconst result = [];\nfor (let i = 0; i < irnData.length; i += size) {\n  result.push(irnData.slice(i, i + size));\n}\n\n//items[0].json.result= result;\n//items[0].json.resultlength = result.length;\n//return items;\nreturn [{\n    json: {\n        result: result,\n        resultlength : result.length\n    },\n}];\n"
       },
       "name": "Function to get irn data",
       "type": "n8n-nodes-base.function",
@@ -292,7 +292,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let irnData = $node[\"Function to get irn data\"].json[\"result\"];\nlet currentIndex = $node[\"Start Loop\"].json[\"index\"];\nlet currentIrn = irnData[currentIndex];\nlet returnItems = [];\n\ncurrentIrn.forEach(function(obj,index){  \n    returnItems.push({\n    json: {\n       invoice_number : obj.sd_invoice_number,\n       dms_url : $node[\"Get url and token\"].json[\"0\"][\"mozart_url\"],\n       header_obj:{\n         \"content-hash\":\"wfs%#hash\",\n          \"content-file-name\":obj.sd_invoice_number.replace(\"INV\",\"\")\n       }\n    }\n  });\n  \n})\n\nreturn returnItems;\n\n// items[0].json.currentStock= currentStock;\n\n// return items;"
+        "functionCode": "let irnData = $node[\"Function to get irn data\"].json[\"result\"];\nlet currentIndex = $node[\"Start Loop\"].json[\"index\"];\nlet currentIrn = irnData[currentIndex];\nlet returnItems = [];\n\ncurrentIrn.forEach(function(obj,index){  \n    returnItems.push({\n    json: {\n       invoice_number : obj.sd_invoice_number,\n       dms_url : $node[\"Get url and token\"].json[\"0\"][\"mozart_url\"],\n       file_name : obj.file_name,\n       header_obj:{\n         \"content-hash\":\"wfs%#hash\",\n          \"content-file-name\":obj.sd_invoice_number.replace(\"INV\",\"\")\n       }\n    }\n  });\n  \n})\n\nreturn returnItems;\n\n// items[0].json.currentStock= currentStock;\n\n// return items;"
       },
       "name": "Function to get the splitted irn Item",
       "type": "n8n-nodes-base.function",
@@ -305,7 +305,7 @@
     {
       "parameters": {
         "operation": "download",
-        "path": "=IRN-digitally-signed-qa/{{$node[\"Function to get the splitted irn Item\"].json[\"invoice_number\"]}}"
+        "path": "=IRN-digitally-signed-qa/{{$node[\"Function to get the splitted irn Item\"].json[\"file_name\"]}}"
       },
       "name": "Nextcloud",
       "type": "n8n-nodes-base.nextCloud",
@@ -378,8 +378,8 @@
     {
       "parameters": {
         "operation": "move",
-        "path": "=IRN-digitally-signed-qa/{{$node[\"Function to get the splitted irn Item\"].json[\"invoice_number\"]}}",
-        "toPath": "=IRN-old-digitally-signed-qa/{{$node[\"Function to get the splitted irn Item\"].json[\"invoice_number\"]}}"
+        "path": "=IRN-digitally-signed-qa/{{$node[\"Function to get the splitted irn Item\"].json[\"file_name\"]}}",
+        "toPath": "=IRN-old-digitally-signed-qa/{{$node[\"Function to get the splitted irn Item\"].json[\"file_name\"]}}"
       },
       "name": "Move All Files",
       "type": "n8n-nodes-base.nextCloud",
@@ -482,5 +482,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-10-05T10:44:25.926Z"
+  "updatedAt": "2023-10-06T10:08:17.991Z"
 }
