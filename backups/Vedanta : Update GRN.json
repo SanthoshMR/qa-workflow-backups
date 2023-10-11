@@ -650,19 +650,19 @@
           "parameter": [
             {
               "name": "received_qty",
-              "value": "={{$node[\"Function to get the splitted grn\"].json[\"received_qty\"] != 0 && $node[\"Get Shipment Items\"].json[\"data\"][0][\"file_name\"] != $node[\"Function to get the splitted grn\"].json[\"file_name\"] && $node[\"Get Shipment Items\"].json[\"data\"][0][\"movement_type\"] != $node[\"Function to get the splitted grn\"].json[\"movement_type\"] && $node[\"Get Shipment Items\"].json[\"data\"][0][\"item_index\"] != $node[\"Function to get the splitted grn\"].json[\"item_index\"]?$node[\"Get Shipment Items\"].json[\"data\"][0][\"received_qty\"]+parseFloat($node[\"Function to get the splitted grn\"].json[\"received_qty\"]):$node[\"Get Shipment Items\"].json[\"data\"][0][\"received_qty\"]}}"
+              "value": "={{$node[\"Function to get the splitted grn\"].json[\"received_qty\"] != 0 && $node[\"Get Shipment Items\"].json[\"data\"][0][\"file_name\"] != $node[\"Function to get the splitted grn\"].json[\"file_name\"]? $node[\"Get Shipment Items\"].json[\"data\"][0][\"received_qty\"]+parseFloat($node[\"Function to get the splitted grn\"].json[\"received_qty\"]):$node[\"Get Shipment Items\"].json[\"data\"][0][\"received_qty\"]}}"
             },
             {
               "name": "accepted_qty",
-              "value": "={{$node[\"Function to get the splitted grn\"].json[\"accepted_qty\"] != 0 && $node[\"Get Shipment Items\"].json[\"data\"][0][\"file_name\"] != $node[\"Function to get the splitted grn\"].json[\"file_name\"] && $node[\"Get Shipment Items\"].json[\"data\"][0][\"movement_type\"] != $node[\"Function to get the splitted grn\"].json[\"movement_type\"]&& $node[\"Get Shipment Items\"].json[\"data\"][0][\"item_index\"] != $node[\"Function to get the splitted grn\"].json[\"item_index\"]?$node[\"Get Shipment Items\"].json[\"data\"][0][\"accepted_qty\"]+parseFloat($node[\"Function to get the splitted grn\"].json[\"accepted_qty\"]):$node[\"Get Shipment Items\"].json[\"data\"][0][\"accepted_qty\"]}}"
+              "value": "={{$node[\"Function to get the splitted grn\"].json[\"accepted_qty\"] != 0 && $node[\"Get Shipment Items\"].json[\"data\"][0][\"file_name\"] != $node[\"Function to get the splitted grn\"].json[\"file_name\"]?$node[\"Get Shipment Items\"].json[\"data\"][0][\"accepted_qty\"]+parseFloat($node[\"Function to get the splitted grn\"].json[\"accepted_qty\"]):$node[\"Get Shipment Items\"].json[\"data\"][0][\"accepted_qty\"]}}"
             },
             {
               "name": "rejected_qty",
-              "value": "={{$node[\"Function to get the splitted grn\"].json[\"rejected_qty\"] != 0 && $node[\"Get Shipment Items\"].json[\"data\"][0][\"file_name\"] != $node[\"Function to get the splitted grn\"].json[\"file_name\"] && $node[\"Get Shipment Items\"].json[\"data\"][0][\"movement_type\"] != $node[\"Function to get the splitted grn\"].json[\"movement_type\"] && $node[\"Get Shipment Items\"].json[\"data\"][0][\"item_index\"] != $node[\"Function to get the splitted grn\"].json[\"item_index\"]?$node[\"Get Shipment Items\"].json[\"data\"][0][\"rejected_qty\"]+parseFloat($node[\"Function to get the splitted grn\"].json[\"rejected_qty\"]):$node[\"Get Shipment Items\"].json[\"data\"][0][\"rejected_qty\"]}}"
+              "value": "={{$node[\"Function to get the splitted grn\"].json[\"rejected_qty\"] != 0 && $node[\"Get Shipment Items\"].json[\"data\"][0][\"file_name\"] != $node[\"Function to get the splitted grn\"].json[\"file_name\"] ?$node[\"Get Shipment Items\"].json[\"data\"][0][\"rejected_qty\"]+parseFloat($node[\"Function to get the splitted grn\"].json[\"rejected_qty\"]):$node[\"Get Shipment Items\"].json[\"data\"][0][\"rejected_qty\"]}}"
             },
             {
               "name": "remaining_qty",
-              "value": "={{$node[\"Function to get the splitted grn\"].json[\"accepted_qty\"] != 0 && $node[\"Get Shipment Items\"].json[\"data\"][0][\"file_name\"] != $node[\"Function to get the splitted grn\"].json[\"file_name\"] && $node[\"Get Shipment Items\"].json[\"data\"][0][\"movement_type\"] != $node[\"Function to get the splitted grn\"].json[\"movement_type\"] && $node[\"Get Shipment Items\"].json[\"data\"][0][\"item_index\"] != $node[\"Function to get the splitted grn\"].json[\"item_index\"]?$node[\"Get Shipment Items\"].json[\"data\"][0][\"remaining_qty\"]+parseFloat($node[\"Function to get the splitted grn\"].json[\"accepted_qty\"]):$node[\"Get Shipment Items\"].json[\"data\"][0][\"remaining_qty\"]}}"
+              "value": "={{$node[\"Function to get the splitted grn\"].json[\"accepted_qty\"] != 0 && $node[\"Get Shipment Items\"].json[\"data\"][0][\"file_name\"] != $node[\"Function to get the splitted grn\"].json[\"file_name\"] ?$node[\"Get Shipment Items\"].json[\"data\"][0][\"remaining_qty\"]+parseFloat($node[\"Function to get the splitted grn\"].json[\"accepted_qty\"]):$node[\"Get Shipment Items\"].json[\"data\"][0][\"remaining_qty\"]}}"
             },
             {
               "name": "grn_number",
@@ -1152,5 +1152,5 @@
   },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-09-08T10:18:12.987Z"
+  "updatedAt": "2023-10-11T09:21:04.063Z"
 }
