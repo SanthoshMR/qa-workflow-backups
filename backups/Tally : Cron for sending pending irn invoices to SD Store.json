@@ -1,0 +1,360 @@
+{
+  "active": false,
+  "connections": {
+    "Get the pending invoices": {
+      "main": [
+        [
+          {
+            "node": "Function to split irn details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to split irn details": {
+      "main": [
+        [
+          {
+            "node": "Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set": {
+      "main": [
+        [
+          {
+            "node": "Start Loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start Loop": {
+      "main": [
+        [
+          {
+            "node": "Function to get the splitted irn",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to get the splitted irn": {
+      "main": [
+        [
+          {
+            "node": "Nextcloud",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nextcloud": {
+      "main": [
+        [
+          {
+            "node": "Send the irn data to SD store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send the irn data to SD store": {
+      "main": [
+        [
+          {
+            "node": "Update irn file received status in dms",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update irn file received status in dms": {
+      "main": [
+        [
+          {
+            "node": "Increment index",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Increment index": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "End Loop",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Start Loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cron": {
+      "main": [
+        [
+          {
+            "node": "Get the pending invoices",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-10-09T07:35:05.090Z",
+  "id": "371",
+  "name": "Tally : Cron for sending pending irn invoices to SD Store",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://zeusqa.shakedeal.com/items/tally_e_invoices?filter={\"_and\": [{\"tally_irn_received\": {\"_eq\":true}},{\"irn_digitally_signed_sent\":{\"_eq\":false}},{\"tally_irn_sent\":{\"_eq\":false}}]}",
+        "options": {}
+      },
+      "name": "Get the pending invoices",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        700,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "10",
+          "name": "SD-Dms-Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let irnDetails = $node[\"Get the pending invoices\"].json[\"data\"];\n\n\nconst size = 5; // size of each subarray\n\nconst result = [];\n\nfor (let i = 0; i < irnDetails.length; i += size) {\n  \n  result.push(irnDetails.slice(i, i + size));\n}\n\n\nreturn [{\n    json: {\n        result: result,\n        resultlength : result.length\n    },\n}];\n"
+      },
+      "name": "Function to split irn details",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        940,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "number": [
+            {
+              "name": "index"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1160,
+        320
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "Start Loop",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1380,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let irnData = $node[\"Function to split irn details\"].json[\"result\"];\nlet currentIndex = $node[\"Start Loop\"].json[\"index\"];\nlet currentIrn = irnData[currentIndex];\nlet returnItems = [];\n\ncurrentIrn.forEach(function(obj,index){\n    returnItems.push({\n    json: {\n       invoice_number : obj.id,\n       header_obj:{\n         \"content-hash\":\"wfs%#hash\",\n          \"content-file-name\":obj.id.replace(\"INV\",\"\"),\n          \"content-irn-number\":obj.irn_number,\n          \"content-ack-number\":obj.ack_number,\n          \"content-ack-date\":obj.ack_date\n       }\n    }\n  });\n  \n})\n\nreturn returnItems;\n"
+      },
+      "name": "Function to get the splitted irn",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1600,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "path": "=Tally-qa/Invoices/{{$node[\"Function to get the splitted irn\"].json[\"invoice_number\"]+\".pdf\"}}"
+      },
+      "name": "Nextcloud",
+      "type": "n8n-nodes-base.nextCloud",
+      "typeVersion": 1,
+      "position": [
+        1840,
+        340
+      ],
+      "credentials": {
+        "nextCloudApi": {
+          "id": "43",
+          "name": "SD Cloud"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "=https://sdqa.shakedeal.com/index.php?dispatch=wfs_update.retrieve_irn_invoice",
+        "jsonParameters": true,
+        "options": {
+          "bodyContentType": "raw",
+          "timeout": 3000
+        },
+        "sendBinaryData": true,
+        "headerParametersJson": "={{$node[\"Function to get the splitted irn\"].json[\"header_obj\"]}}"
+      },
+      "name": "Send the irn data to SD store",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2120,
+        380
+      ],
+      "alwaysOutputData": true,
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "=https://zeusqa.shakedeal.com/items/tally_e_invoices/{{$node[\"Send the irn data to SD store\"].json[\"invoice_number\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "tally_irn_sent",
+              "value": "={{$node[\"Send the irn data to SD store\"].json[\"success\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update irn file received status in dms",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2320,
+        400
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "10",
+          "name": "SD-Dms-Token"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "number": [
+            {
+              "name": "index",
+              "value": "={{$node[\"Start Loop\"].json[\"index\"]+1}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Increment index",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        2560,
+        400
+      ],
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Increment index\"].json[\"index\"]}}",
+              "operation": "equal",
+              "value2": "={{$node[\"Function to split irn details\"].json[\"resultlength\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        2800,
+        420
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "End Loop",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        3020,
+        360
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "Cron",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        460,
+        320
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-10-09T07:36:12.589Z"
+}
