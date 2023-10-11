@@ -104,7 +104,7 @@
       "main": [
         [
           {
-            "node": "Postgres",
+            "node": "Send irn to sd store",
             "type": "main",
             "index": 0
           }
@@ -156,6 +156,17 @@
         [
           {
             "node": "IF1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send irn to sd store": {
+      "main": [
+        [
+          {
+            "node": "Postgres",
             "type": "main",
             "index": 0
           }
@@ -474,10 +485,31 @@
         -80
       ],
       "disabled": true
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "=https://qan8n.shakedeal.com/webhook/send-irn-sdstore",
+        "options": {}
+      },
+      "name": "Send irn to sd store",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2660,
+        100
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-10-05T13:07:06.071Z"
+  "updatedAt": "2023-10-10T07:16:11.352Z"
 }
