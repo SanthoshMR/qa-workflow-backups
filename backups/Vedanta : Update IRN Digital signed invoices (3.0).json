@@ -1,5 +1,5 @@
 {
-  "active": false,
+  "active": true,
   "connections": {
     "Get url and token": {
       "main": [
@@ -235,7 +235,9 @@
         "triggerTimes": {
           "item": [
             {
-              "mode": "everyX"
+              "mode": "everyX",
+              "value": 5,
+              "unit": "minutes"
             }
           ]
         }
@@ -482,5 +484,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-10-06T10:08:17.991Z"
+  "updatedAt": "2023-10-11T10:04:51.129Z"
 }
