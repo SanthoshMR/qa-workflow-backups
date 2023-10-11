@@ -128,6 +128,17 @@
           }
         ]
       ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "update close transaction in mozart",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2023-09-11T07:22:26.693Z",
@@ -233,7 +244,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let resolutionItems = $node[\"Get the resolution from vpanel\"].json[\"data\"][\"resolution_items\"];\nlet mozartResolutionId = $node[\"Get the resolution from vpanel\"].json[\"data\"][\"mozart_resolution_id\"];\nlet updateResolutionItemQuery = \"\";\nlet updateShipmentItemQuery = \"\";\nlet isCloseTransaction = false;\nresolutionItems.forEach(function(rItem,index){\n  updateResolutionItemQuery=updateResolutionItemQuery+`update sdm_resolution_items set resolution = '${rItem.resolution}' where shipment_item = ${rItem.mozart_item_id} and grn_resolution = ${mozartResolutionId};`+\" \";\n  updateShipmentItemQuery=updateShipmentItemQuery+`update sdm_shipment_items set resolution = '${rItem.resolution}' where id = ${rItem.mozart_item_id};`+\" \";\n  if(rItem.resolution == \"close_transaction\"){\n    isCloseTransaction =  true;\n  }\n})\n\nitems[0].json.updateResolutionItemQuery = updateResolutionItemQuery.trim();\nitems[0].json.updateShipmentItemQuery= updateShipmentItemQuery.trim();\nitems[0].json.isCloseTransaction = isCloseTransaction;\nreturn items;"
+        "functionCode": "let resolutionItems = $node[\"Get the resolution from vpanel\"].json[\"data\"][\"resolution_items\"];\nlet mozartResolutionId = $node[\"Get the resolution from vpanel\"].json[\"data\"][\"mozart_resolution_id\"];\nlet updateResolutionItemQuery = \"\";\nlet updateShipmentItemQuery = \"\";\nlet isCloseTransaction = false;\nlet updateItemId = 0;\nresolutionItems.forEach(function(rItem,index){\n  updateResolutionItemQuery=updateResolutionItemQuery+`update sdm_resolution_items set resolution = '${rItem.resolution}' where shipment_item = ${rItem.mozart_item_id} and grn_resolution = ${mozartResolutionId};`+\" \";\n  updateShipmentItemQuery=updateShipmentItemQuery+`update sdm_shipment_items set resolution = '${rItem.resolution}' where id = ${rItem.mozart_item_id};`+\" \";\n  if(rItem.resolution == \"close_transaction\"){\n    isCloseTransaction =  true;\n    updateItemId = rItem.mozart_item_id\n  }\n})\n\nitems[0].json.updateResolutionItemQuery = updateResolutionItemQuery.trim();\nitems[0].json.updateShipmentItemQuery= updateShipmentItemQuery.trim();\nitems[0].json.isCloseTransaction = isCloseTransaction;\nitems[0].json.update_item_id = updateItemId\nreturn items;"
       },
       "name": "Function",
       "type": "n8n-nodes-base.function",
@@ -337,7 +348,8 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/assets/{{$node[\"Get the resolution from vpanel\"].json[\"data\"][\"credit_note_file\"]}}",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/assets/{{$node[\"Get the resolution from vpanel\"].json[\"data\"][\"credit_note_file\"]}}",
+        "responseFormat": "file",
         "options": {}
       },
       "name": "Get the close transaction file from vpanel",
@@ -423,10 +435,39 @@
           "name": "Mozart DMS Token"
         }
       }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_shipment_items/{{$node[\"Function\"].json[\"update_item_id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "resolution",
+              "value": "=close_transaction"
+            }
+          ]
+        }
+      },
+      "name": "update close transaction in mozart",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3040,
+        180
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-09-12T07:46:09.740Z"
+  "updatedAt": "2023-10-11T12:40:48.898Z"
 }
