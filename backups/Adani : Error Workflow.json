@@ -5,7 +5,7 @@
       "main": [
         [
           {
-            "node": "Get the po number",
+            "node": "Wait",
             "type": "main",
             "index": 0
           }
@@ -34,11 +34,6 @@
         ]
       ]
     },
-    "Start": {
-      "main": [
-        []
-      ]
-    },
     "Check for po error": {
       "main": [
         [
@@ -62,6 +57,17 @@
         [
           {
             "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Get the po number",
             "type": "main",
             "index": 0
           }
@@ -147,8 +153,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        800,
-        180
+        840,
+        240
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -214,10 +220,23 @@
         980,
         180
       ]
+    },
+    {
+      "parameters": {
+        "unit": "minutes"
+      },
+      "name": "Wait",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [
+        720,
+        60
+      ],
+      "webhookId": "f1e89301-50f2-4e0a-ab74-1b8c336245a6"
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-09-27T07:15:27.402Z"
+  "updatedAt": "2023-10-09T07:10:40.043Z"
 }
