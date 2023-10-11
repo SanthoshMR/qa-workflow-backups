@@ -133,7 +133,7 @@
     {
       "parameters": {
         "operation": "download",
-        "path": "=adani/9982.pdf"
+        "path": "=adani/nr.pdf"
       },
       "name": "Nextcloud",
       "type": "n8n-nodes-base.nextCloud",
@@ -166,7 +166,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let poData=$node[\"Read PDF\"].json[\"text\"];\n\nlet startIndexPoDetails=poData.indexOf(\"Purchase Order\");\n// let endIndexPoDetails=poData.indexOf(\"Order Value Summary\"); \nlet endIndexPoDetails=poData.indexOf(\"In words, RUPEES\");\n\nlet startIndexPoItems=poData.indexOf(\"ANNEXURE-I\");\nlet endIndexPoItems=poData.indexOf(\"Total No. Of Items\");\n\nlet poItems=poData.substring(startIndexPoItems,endIndexPoItems).split('\\n');\n\nlet poExtracted=[]; \n\nlet skip=false;\nfor (i = 0; i < poItems.length; i++) {\n  if(poItems[i].includes(\"Disclaimer\")){\n    skip=true;\n  }\n  if(skip && poItems[i].includes(\"Sr. No.Material Code/DescriptionUOM\") && poItems[i+1].includes(\"Quantity\")){\n    skip=false;\n    i=i+2;\n  }\n  if(!skip){\n    poExtracted.push(poItems[i]);\n  }\n}\n\nitems[0]={\n  \"poDetails\":poData.substring(startIndexPoDetails,endIndexPoDetails).split('\\n'),\n  \"poItems\":poExtracted\n};\n\nreturn items[0];"
+        "functionCode": "let poData=$node[\"Read PDF\"].json[\"text\"];\n\nlet startIndexPoDetails=poData.indexOf(\"Purchase Order\");\n// let endIndexPoDetails=poData.indexOf(\"Order Value Summary\"); \nlet endIndexPoDetails=poData.indexOf(\"words\");\n\nlet startIndexPoItems=poData.indexOf(\"ANNEXURE-I\");\nlet endIndexPoItems=poData.indexOf(\"Total No. Of Items\");\n\nlet poItems=poData.substring(startIndexPoItems,endIndexPoItems).split('\\n');\n\nlet poExtracted=[]; \n\nlet skip=false;\nfor (i = 0; i < poItems.length; i++) {\n  if(poItems[i].includes(\"Disclaimer\")){\n    skip=true;\n  }\n  if(skip && poItems[i].includes(\"Sr. No.Material Code/DescriptionUOM\") && poItems[i+1].includes(\"Quantity\")){\n    skip=false;\n    i=i+2;\n  }\n  if(!skip){\n    poExtracted.push(poItems[i]);\n  }\n}\n\nitems[0]={\n  \"poDetails\":poData.substring(startIndexPoDetails,endIndexPoDetails).split('\\n'),\n  \"poItems\":poExtracted\n};\n\nreturn items[0];"
       },
       "name": "Extract PO Details & Items",
       "type": "n8n-nodes-base.function",
@@ -185,5 +185,5 @@
     }
   },
   "tags": [],
-  "updatedAt": "2023-09-25T07:02:36.448Z"
+  "updatedAt": "2023-10-09T07:35:26.077Z"
 }
