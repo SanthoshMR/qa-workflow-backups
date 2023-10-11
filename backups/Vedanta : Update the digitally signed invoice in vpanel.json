@@ -1,0 +1,354 @@
+{
+  "active": true,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get url and token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload invoice to vpanel": {
+      "main": [
+        [
+          {
+            "node": "update the order invoice in vpanel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "update the order invoice in vpanel": {
+      "main": [
+        [
+          {
+            "node": "update the shipment status in mozart",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the shipment from vpanel": {
+      "main": [
+        [
+          {
+            "node": "Get the irn file from mozart",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get url and token": {
+      "main": [
+        [
+          {
+            "node": "Get the order invoice from mozart",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the order invoice from mozart": {
+      "main": [
+        [
+          {
+            "node": "Get the shipment from vpanel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the irn file from mozart": {
+      "main": [
+        [
+          {
+            "node": "Upload invoice to vpanel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "update the shipment status in mozart": {
+      "main": [
+        [
+          {
+            "node": "Update file name in vpanel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-10-09T13:27:27.281Z",
+  "id": "372",
+  "name": "Vedanta : Update the digitally signed invoice in vpanel",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "update-irn-vpanel",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        640,
+        240
+      ],
+      "webhookId": "bc68cfbf-6001-4b5d-a5f3-6fc916053dd7",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "=https://qan8n.shakedeal.com/webhook/get-url",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "client",
+              "value": "=vedanta"
+            },
+            {
+              "name": "env",
+              "value": "=qa"
+            }
+          ]
+        }
+      },
+      "name": "Get url and token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        860,
+        240
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "=https://sdqa.vpanel.shakedeal.com/files",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {
+          "bodyContentType": "multipart-form-data"
+        },
+        "sendBinaryData": true,
+        "binaryPropertyName": "=input_file:data"
+      },
+      "name": "Upload invoice to vpanel",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1440,
+        260
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "=https://sdqa.vpanel.shakedeal.com/items/sdv_shipments/{{$node[\"Get the shipment from vpanel\"].json[\"data\"][0][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "sd_invoice",
+              "value": "={{$node[\"Upload invoice to vpanel\"].json[\"data\"][\"id\"]}}"
+            },
+            {
+              "name": "shipment_Status",
+              "value": "=awaiting_asn"
+            }
+          ]
+        }
+      },
+      "name": "update the order invoice in vpanel",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1600,
+        260
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://sdqa.vpanel.shakedeal.com/items/sdv_shipments?filter={\"_and\": [{\"vendor_po_number\":{\"po_number\":{\"_eq\":\"{{$node[\"Get the order invoice from mozart\"].json[\"data\"][\"order\"][\"shipments\"][0][\"sdm_shipments_id\"][\"vendor_po_num\"]}}\"}}},{\"invoice_number\":{\"_eq\":\"{{$node[\"Get the order invoice from mozart\"].json[\"data\"][\"order\"][\"shipments\"][0][\"sdm_shipments_id\"][\"invoice_number\"]}}\"}}]}",
+        "options": {}
+      },
+      "name": "Get the shipment from vpanel",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1080,
+        240
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_shipments/{{$node[\"Get the order invoice from mozart\"].json[\"data\"][\"order\"][\"shipments\"][0][\"sdm_shipments_id\"][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "shipment_status",
+              "value": "awaiting_asn"
+            }
+          ]
+        }
+      },
+      "name": "update the shipment status in mozart",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1760,
+        260
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_order_invoices/{{$node[\"Webhook\"].json[\"body\"][\"keys\"][0]}}?fields=*,order.*,order.shipments.sdm_shipments_id.*",
+        "options": {}
+      },
+      "name": "Get the order invoice from mozart",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        100
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/assets/{{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"view_shakedeal_invoice\"]}}",
+        "allowUnauthorizedCerts": true,
+        "responseFormat": "file",
+        "options": {}
+      },
+      "name": "Get the irn file from mozart",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1280,
+        240
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "=https://sdqa.vpanel.shakedeal.com/files/{{$node[\"Upload invoice to vpanel\"].json[\"data\"][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "filename_download",
+              "value": "={{$node[\"Get the shipment from vpanel\"].json[\"data\"][0][\"invoice_number\"]+\".pdf\"}}"
+            },
+            {
+              "name": "title",
+              "value": "={{$node[\"Get the shipment from vpanel\"].json[\"data\"][0][\"invoice_number\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update file name in vpanel",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1980,
+        260
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-10-10T12:37:05.050Z"
+}
