@@ -474,7 +474,7 @@
       "main": [
         [
           {
-            "node": "Update the po_status",
+            "node": "Postgres",
             "type": "main",
             "index": 0
           }
@@ -831,6 +831,17 @@
             "node": "Wait for file upload",
             "type": "main",
             "index": 1
+          }
+        ]
+      ]
+    },
+    "Postgres": {
+      "main": [
+        [
+          {
+            "node": "Update the po_status",
+            "type": "main",
+            "index": 0
           }
         ]
       ]
@@ -1592,7 +1603,7 @@
       "type": "n8n-nodes-base.moveBinaryData",
       "typeVersion": 1,
       "position": [
-        5560,
+        5620,
         60
       ],
       "disabled": true
@@ -1923,11 +1934,12 @@
           "id": "51",
           "name": "VendorPanel DMS Token"
         }
-      }
+      },
+      "disabled": true
     },
     {
       "parameters": {
-        "functionCode": "let po_to_products = [];\nlet concat_products = $node[\"Function to create products\"].json.action == \"post the products\"?[...$node[\"post product details\"].json.data,...$node[\"Get the products\"].json.data]:$node[\"Get the products\"].json.data;\nconcat_products.map((obj, i) => ({ ...obj, isMapped: false }));\nlet product_details = $node[\"Get po_details\"].json[\"data\"][0][\"po_items\"]\nproduct_details.forEach(function(obj,index){\n  let product = concat_products.filter(prod=>prod.product_code == obj[\"product\"][\"id\"] && !prod[\"isMapped\"]);\n  concat_products[concat_products.findIndex(prod=>prod.product_code == obj[\"product\"][\"id\"]&& !prod[\"isMapped\"])].isMapped = true;\n  po_to_products[index]={};\n  po_to_products[index].sdv_products_id = product[0].id;\n  po_to_products[index].sdv_vendor_pos_id = Array.isArray($node[\"Create po in vpanel\"].json.data)?$node[\"Create po in vpanel\"].json.data[0].id:$node[\"Create po in vpanel\"].json.data.id;\n  po_to_products[index].req_qty = obj.requested_qty\n  po_to_products[index].rate = obj.unit_price\n  po_to_products[index].sub_total = obj.net_price\n  po_to_products[index].tax_value = obj.tax_value\n  po_to_products[index].product_total = obj.gross_price\n  po_to_products[index].po_items_id = obj.id;\n  po_to_products[index].tax_percentage = obj.tax_percentage;\n  po_to_products[index].hsn = obj.hsn;\n  po_to_products[index].uom = obj.uom;\n  po_to_products[index].disable_validation = false;\n\n})\n\n\nitems[0].json.po_to_products= po_to_products;\nitems[0].json.concat_products= concat_products;\nitems[0].json.product_details= product_details;\nreturn items;"
+        "functionCode": "let po_to_products = [];\nlet psqlQuery = \"INSERT INTO sdv_vendor_pos_sdv_products (sdv_products_id,sdv_vendor_pos_id,req_qty,rate,sub_total,product_total,po_items_id,tax_percentage,hsn,uom) VALUES \"\nlet concat_products = $node[\"Function to create products\"].json.action == \"post the products\"?[...$node[\"post product details\"].json.data,...$node[\"Get the products\"].json.data]:$node[\"Get the products\"].json.data;\nconcat_products.map((obj, i) => ({ ...obj, isMapped: false }));\nlet product_details = $node[\"Get po_details\"].json[\"data\"][0][\"po_items\"]\nproduct_details.forEach(function(obj,index){\n  let product = concat_products.filter(prod=>prod.product_code == obj[\"product\"][\"id\"] && !prod[\"isMapped\"]);\n  concat_products[concat_products.findIndex(prod=>prod.product_code == obj[\"product\"][\"id\"]&& !prod[\"isMapped\"])].isMapped = true;\n  po_to_products[index]={};\n  po_to_products[index].sdv_products_id = product[0].id;\n  po_to_products[index].sdv_vendor_pos_id = Array.isArray($node[\"Create po in vpanel\"].json.data)?$node[\"Create po in vpanel\"].json.data[0].id:$node[\"Create po in vpanel\"].json.data.id;\n  po_to_products[index].req_qty = obj.requested_qty\n  po_to_products[index].rate = obj.unit_price\n  po_to_products[index].sub_total = obj.net_price\n  po_to_products[index].tax_value = obj.tax_value\n  po_to_products[index].product_total = obj.gross_price\n  po_to_products[index].po_items_id = obj.id;\n  po_to_products[index].tax_percentage = obj.tax_percentage;\n  po_to_products[index].hsn = obj.hsn;\n  po_to_products[index].uom = obj.uom;\n})\n\npo_to_products.forEach(function(product,index){\n  let productValues = `(${product.sdv_products_id},${product.sdv_vendor_pos_id},${product.req_qty},${product.rate},${product.sub_total},${product.product_total},'${product.po_items_id}',${product.tax_percentage},${product.hsn},'${product.uom}')`;\n  psqlQuery+=productValues+\",\";\n})\nlet poItemsQuery = psqlQuery.slice(0, -1);\n\nitems[0].json.po_to_products= po_to_products;\nitems[0].json.concat_products= concat_products;\nitems[0].json.product_details= product_details;\nitems[0].json.psqlQuery= psqlQuery;\nitems[0].json.poItemsQuery= poItemsQuery;\nreturn items;"
       },
       "name": "Function to map po and product",
       "type": "n8n-nodes-base.function",
@@ -2622,6 +2634,27 @@
           "name": "header auth creds"
         }
       }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "={{$node[\"Function to map po and product\"].json.poItemsQuery}}",
+        "additionalFields": {}
+      },
+      "name": "Postgres",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        9180,
+        -120
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "94",
+          "name": "Vendor Panel qa creds"
+        }
+      }
     }
   ],
   "settings": {
@@ -2629,5 +2662,5 @@
   },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-10-20T12:14:13.240Z"
+  "updatedAt": "2023-10-25T12:34:50.915Z"
 }
