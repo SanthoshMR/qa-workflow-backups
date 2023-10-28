@@ -1,0 +1,23 @@
+{
+  "active": false,
+  "connections": {},
+  "createdAt": "2023-10-28T07:34:19.876Z",
+  "id": "374",
+  "name": "Reward_links",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-10-28T07:34:19.876Z"
+}
