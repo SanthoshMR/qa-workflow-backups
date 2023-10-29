@@ -1,6 +1,39 @@
 {
   "active": false,
-  "connections": {},
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Item Lists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Item Lists": {
+      "main": [
+        []
+      ]
+    }
+  },
   "createdAt": "2023-10-28T07:34:19.876Z",
   "id": "374",
   "name": "Reward_links",
@@ -14,10 +47,55 @@
         240,
         300
       ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "https://campaignsqa.shakepe.com/items/sp_reward_links?fields[]=id,otp_last_updated,value,reward_campaign.name",
+        "options": {}
+      },
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "102",
+          "name": "Header Auth account 2(campaign qa)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "arr =$node[\"HTTP Request\"].json[\"data\"];\narr.forEach( function(data) {\n\n  delete data['otp_last_updated'];})\nreturn arr;"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        640,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "data",
+        "options": {}
+      },
+      "name": "Item Lists",
+      "type": "n8n-nodes-base.itemLists",
+      "typeVersion": 1,
+      "position": [
+        680,
+        340
+      ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-10-28T07:34:19.876Z"
+  "updatedAt": "2023-10-28T15:57:17.289Z"
 }
