@@ -19,7 +19,35 @@
             "node": "Function",
             "type": "main",
             "index": 0
-          },
+          }
+        ]
+      ]
+    },
+    "Item Lists": {
+      "main": [
+        [
+          {
+            "node": "Date & Time",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Date & Time": {
+      "main": [
+        [
+          {
+            "node": "Spreadsheet File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
           {
             "node": "Item Lists",
             "type": "main",
@@ -28,7 +56,7 @@
         ]
       ]
     },
-    "Item Lists": {
+    "Spreadsheet File": {
       "main": [
         []
       ]
@@ -44,21 +72,21 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        240,
+        -240,
         300
       ]
     },
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "https://campaignsqa.shakepe.com/items/sp_reward_links?fields[]=id,otp_last_updated,value,reward_campaign.name",
+        "url": "https://campaignsqa.shakepe.com/items/sp_reward_links?fields[]=id,otp_last_updated,value,reward_campaign.name&limit=-1",
         "options": {}
       },
       "name": "HTTP Request",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        460,
+        -20,
         300
       ],
       "credentials": {
@@ -70,32 +98,84 @@
     },
     {
       "parameters": {
-        "functionCode": "arr =$node[\"HTTP Request\"].json[\"data\"];\narr.forEach( function(data) {\n\n  delete data['otp_last_updated'];})\nreturn arr;"
+        "functionCode": "arr =$node[\"HTTP Request\"].json[\"data\"];\narr.forEach( function(data) {\n  data['Links'] = data['id'];\n  delete data['id'];\n   if (data['reward_campaign'] && data['reward_campaign']['name']) {\n    data['RewardCampaign'] = data['reward_campaign']['name'];\n    delete data['reward_campaign']['name'];\n  \n  } else {\n    console.error(\"The 'reward_campaign' or 'name' property is missing or null.\");\n  }\n  data['Value'] = data['value'];\n  delete data['value'];\n  data['OtpValidTill'] = data['otp_last_updated'];\n  delete data['otp_last_updated'];\n  delete data['reward_campaign'];\n  \n});\n\nreturn {arr};"
       },
       "name": "Function",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        640,
-        180
+        140,
+        300
       ]
     },
     {
       "parameters": {
-        "fieldToSplitOut": "data",
+        "fieldToSplitOut": "arr",
         "options": {}
       },
       "name": "Item Lists",
       "type": "n8n-nodes-base.itemLists",
       "typeVersion": 1,
       "position": [
-        680,
-        340
+        320,
+        300
       ]
+    },
+    {
+      "parameters": {
+        "value": "={{$node[\"Item Lists\"].json[\"OtpValidTill\"]}}",
+        "dataPropertyName": "OtpValidTill",
+        "custom": true,
+        "toFormat": "DD-MM-YYYY",
+        "options": {
+          "fromFormat": "="
+        }
+      },
+      "name": "Date & Time",
+      "type": "n8n-nodes-base.dateTime",
+      "typeVersion": 1,
+      "position": [
+        520,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "toFile",
+        "options": {}
+      },
+      "name": "Spreadsheet File",
+      "type": "n8n-nodes-base.spreadsheetFile",
+      "typeVersion": 1,
+      "position": [
+        720,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "rooparajput19@gmail.com",
+        "toEmail": "rooparajput19@gmail.com",
+        "attachments": "data",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        940,
+        300
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "103",
+          "name": "SMTP account(Roopa)"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-10-28T15:57:17.289Z"
+  "updatedAt": "2023-11-02T10:31:00.102Z"
 }
