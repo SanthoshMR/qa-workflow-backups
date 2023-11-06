@@ -27,7 +27,7 @@
       "main": [
         [
           {
-            "node": "Send Email",
+            "node": "IF1",
             "type": "main",
             "index": 0
           }
@@ -57,6 +57,24 @@
         [
           {
             "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF1": {
+      "main": [
+        [
+          {
+            "node": "Send Campaign Email",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Email",
             "type": "main",
             "index": 0
           }
@@ -142,6 +160,10 @@
             {
               "name": "enquiry_type",
               "value": "={{$node[\"Wait for Personal details\"].json[\"body\"][\"enquirytype\"]}}"
+            },
+            {
+              "name": "source",
+              "value": "={{$node[\"Wait for Personal details\"].json[\"body\"][\"form_type\"]}}"
             }
           ]
         },
@@ -194,28 +216,6 @@
         560,
         300
       ]
-    },
-    {
-      "parameters": {
-        "fromEmail": "={{$node[\"Globals\"].json[\"from_email\"]}}",
-        "toEmail": "={{$node[\"Globals\"].json[\"to_email\"]}}",
-        "subject": "=ShakePe Enquiry Details",
-        "text": "=Hi Team,\n\nPlease find the requirements :\n\nCompany Name : {{$node[\"Wait for Personal details\"].json[\"body\"][\"company\"]}}\nName : {{$node[\"Wait for Personal details\"].json[\"body\"][\"name\"]}}\nJob Title : {{$node[\"Wait for Personal details\"].json[\"body\"][\"jobtitle\"]}}\nEnquiry Type : {{$node[\"Wait for Personal details\"].json[\"body\"][\"enquirytype\"]}}\nWork email : {{$node[\"Wait for Personal details\"].json[\"body\"][\"email\"]}}\nMob no : {{parseInt($node[\"Wait for Personal details\"].json[\"body\"][\"phone\"])}}\nComments : {{$node[\"Wait for Personal details\"].json[\"body\"][\"message\"]}}",
-        "options": {}
-      },
-      "name": "Send Email",
-      "type": "n8n-nodes-base.emailSend",
-      "typeVersion": 1,
-      "position": [
-        1320,
-        200
-      ],
-      "credentials": {
-        "smtp": {
-          "id": "7",
-          "name": "AWS SES Creds"
-        }
-      }
     },
     {
       "parameters": {
@@ -274,10 +274,73 @@
         930,
         310
       ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Wait for Personal details\"].json[\"body\"][\"form_type\"]}}",
+              "value2": "=2"
+            }
+          ]
+        }
+      },
+      "name": "IF1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{$node[\"Globals\"].json[\"from_email\"]}}",
+        "toEmail": "={{$node[\"Globals\"].json[\"to_email\"]}}",
+        "subject": "=ShakePe Enquiry Details",
+        "text": "=Hi Team,\n\nPlease find the requirements :\n\nWork email : {{$node[\"Wait for Personal details\"].json[\"body\"][\"email\"]}}\nMob no : {{parseInt($node[\"Wait for Personal details\"].json[\"body\"][\"phone\"])}}",
+        "options": {}
+      },
+      "name": "Send Campaign Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        1580,
+        120
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "7",
+          "name": "AWS SES Creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{$node[\"Globals\"].json[\"from_email\"]}}",
+        "toEmail": "={{$node[\"Globals\"].json[\"to_email\"]}}",
+        "subject": "=ShakePe Enquiry Details",
+        "text": "=Hi Team,\n\nPlease find the requirements :\n\nCompany Name : {{$node[\"Wait for Personal details\"].json[\"body\"][\"company\"]}}\nName : {{$node[\"Wait for Personal details\"].json[\"body\"][\"name\"]}}\nJob Title : {{$node[\"Wait for Personal details\"].json[\"body\"][\"jobtitle\"]}}\nEnquiry Type : {{$node[\"Wait for Personal details\"].json[\"body\"][\"enquirytype\"]}}\nWork email : {{$node[\"Wait for Personal details\"].json[\"body\"][\"email\"]}}\nMob no : {{parseInt($node[\"Wait for Personal details\"].json[\"body\"][\"phone\"])}}\nComments : {{$node[\"Wait for Personal details\"].json[\"body\"][\"message\"]}}",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        1580,
+        320
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "7",
+          "name": "AWS SES Creds"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-09-05T05:48:11.287Z"
+  "updatedAt": "2023-11-06T10:41:47.108Z"
 }
