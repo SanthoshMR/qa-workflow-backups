@@ -38,7 +38,7 @@
       "main": [
         [
           {
-            "node": "Create resolution in mozart",
+            "node": "IF",
             "type": "main",
             "index": 0
           }
@@ -49,7 +49,7 @@
       "main": [
         [
           {
-            "node": "Function",
+            "node": "Get the pending resolution",
             "type": "main",
             "index": 0
           }
@@ -72,6 +72,46 @@
         [
           {
             "node": "Update resolution id in vpanel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the pending resolution": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Update resolution in vpanel",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create resolution in mozart",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update resolution in vpanel": {
+      "main": [
+        [
+          {
+            "node": "Update resolution in mozart",
             "type": "main",
             "index": 0
           }
@@ -170,7 +210,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let shipmentItems = $node[\"Get the shipment items\"].json[\"data\"];\nlet vendorShipment = $node[\"Get the shipment from vpanel\"].json[\"data\"];\nlet sdmResolution = {};\nlet sdvResolution = {};\nlet sdmResolutionItems = [];\nlet sdvResolutionItems = [];\nshipmentItems.forEach(function(sItem,index){\n  let issue = sItem.grn_status == \"grn_pending\"?\"short_supply\":\"rejection\";\n  let rejected_qty = sItem.grn_status == \"grn_pending\"?sItem.shipment_qty - sItem.received_qty :sItem.shipment_qty - sItem.accepted_qty;\n  let vendorShipmentItemId = vendorShipment[0].shipment_items.filter(vsi=>vsi.sdv_vendor_pos_sdv_products_id.po_items_id == sItem.sdm_po_items_id.id)\n  \n  sdmResolutionItems.push({\n    shipment_item : sItem.id,\n    issue : issue,\n    rejected_qty : rejected_qty\n  });\n  sdvResolutionItems.push({\n    shipment_item : vendorShipmentItemId[0].id,\n    issue : issue,\n    rejected_qty : rejected_qty,\n    mozart_item_id:sItem.id\n  })\n})\n\nsdmResolution.shipment = shipmentItems[0].sdm_shipments_id.id;\nsdmResolution.resolution_items = sdmResolutionItems\n\nsdvResolution.shipment= vendorShipment[0].id;\nsdvResolution.resolution_items=sdvResolutionItems\n\n\n\nitems[0].json.sdmResolution= sdmResolution;\nitems[0].json.sdvResolution= sdvResolution;\nreturn items;"
+        "functionCode": "let shipmentItems = $node[\"Get the shipment items\"].json[\"data\"];\nlet vendorShipment = $node[\"Get the shipment from vpanel\"].json[\"data\"];\nlet sdmResolution = {};\nlet sdvResolution = {};\nlet sdmResolutionItems = [];\nlet sdvResolutionItems = [];\nlet pendingResolution = $node[\"Get the pending resolution\"].json[\"data\"];\nshipmentItems.forEach(function(sItem,index){\n  let issue = sItem.grn_status == \"grn_pending\"?\"short_supply\":\"rejection\";\n  let rejected_qty = sItem.grn_status == \"grn_pending\"?sItem.shipment_qty - sItem.received_qty :sItem.shipment_qty - sItem.accepted_qty;\n  let vendorShipmentItemId = vendorShipment[0].shipment_items.filter(vsi=>vsi.sdv_vendor_pos_sdv_products_id.po_items_id == sItem.sdm_po_items_id.id)\n  \n  if(pendingResolution.length>0){\n    sdmResolutionItems.push({\n      shipment_item : sItem.id,\n      issue : issue,\n      rejected_qty : rejected_qty,\n      grn_resolution:pendingResolution[0].mozart_resolution_id\n    });\n    sdvResolutionItems.push({\n      shipment_item : vendorShipmentItemId[0].id,\n      issue : issue,\n      rejected_qty : rejected_qty,\n      mozart_item_id:sItem.id,\n      grn_resolution:pendingResolution[0].id\n    })\n  }else{\n    sdmResolutionItems.push({\n      shipment_item : sItem.id,\n      issue : issue,\n      rejected_qty : rejected_qty\n    });\n    sdvResolutionItems.push({\n      shipment_item : vendorShipmentItemId[0].id,\n      issue : issue,\n      rejected_qty : rejected_qty,\n      mozart_item_id:sItem.id\n    })\n  }\n \n})\n\nsdmResolution.shipment = shipmentItems[0].sdm_shipments_id.id;\nsdmResolution.resolution_items = sdmResolutionItems\n\nsdvResolution.shipment= vendorShipment[0].id;\nsdvResolution.resolution_items=sdvResolutionItems\n\n\n\nitems[0].json.sdmResolution= sdmResolution;\nitems[0].json.sdvResolution= sdvResolution;\nreturn items;"
       },
       "name": "Function",
       "type": "n8n-nodes-base.function",
@@ -190,8 +230,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1080,
-        80
+        980,
+        20
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -274,10 +314,95 @@
           "name": "VendorPanel DMS Token"
         }
       }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://sdqa.vpanel.shakedeal.com/items/sdv_grn_resolutions?filter={\"resolution_status\":{\"_eq\":\"pending\"}}",
+        "options": {}
+      },
+      "name": "Get the pending resolution",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1160,
+        20
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$node[\"Get the pending resolution\"].json[\"data\"].length>0?true:false}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1420,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_resolution_items",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Function\"].json[\"sdvResolution\"][\"resolution_items\"]}}"
+      },
+      "name": "Update resolution in vpanel",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1680,
+        0
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_resolution_items",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Function\"].json[\"sdmResolution\"][\"resolution_items\"]}}"
+      },
+      "name": "Update resolution in mozart",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1900,
+        0
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-10-30T10:41:16.524Z"
+  "updatedAt": "2023-11-06T12:22:04.960Z"
 }
