@@ -58,7 +58,13 @@
     },
     "Spreadsheet File": {
       "main": [
-        []
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     }
   },
@@ -163,7 +169,7 @@
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 1,
       "position": [
-        940,
+        900,
         300
       ],
       "credentials": {
@@ -177,5 +183,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-11-02T10:31:00.102Z"
+  "updatedAt": "2023-11-06T12:38:57.200Z"
 }
