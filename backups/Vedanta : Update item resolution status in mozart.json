@@ -82,7 +82,7 @@
       "main": [
         [
           {
-            "node": "IF",
+            "node": "IF1",
             "type": "main",
             "index": 0
           }
@@ -144,7 +144,91 @@
       "main": [
         [
           {
+            "node": "Get the invoice from mozart",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF1": {
+      "main": [
+        [
+          {
+            "node": "Create shipment Items in vpanel",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create DC shipment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create DC shipment": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update invoice Details": {
+      "main": [
+        [
+          {
+            "node": "Update invoice details in mozart",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create shipment Items in vpanel": {
+      "main": [
+        [
+          {
+            "node": "Create shipment Items in mozart",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the invoice from mozart": {
+      "main": [
+        [
+          {
             "node": "Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create shipment Items in mozart": {
+      "main": [
+        [
+          {
+            "node": "Update invoice Details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update invoice details in mozart": {
+      "main": [
+        [
+          {
+            "node": "IF",
             "type": "main",
             "index": 0
           }
@@ -162,7 +246,7 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        240,
+        0,
         300
       ]
     },
@@ -176,7 +260,7 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        460,
+        380,
         300
       ],
       "webhookId": "4b53ab75-eef9-401f-9c31-f6fcf31d8cda"
@@ -204,7 +288,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        700,
+        620,
         300
       ],
       "credentials": {
@@ -224,7 +308,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        920,
+        840,
         300
       ],
       "credentials": {
@@ -249,19 +333,19 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        1140,
+        1060,
         300
       ]
     },
     {
       "parameters": {
-        "functionCode": "let resolutionItems = $node[\"Get the resolution from vpanel\"].json[\"data\"][\"resolution_items\"];\nlet mozartResolutionId = $node[\"Get the resolution from vpanel\"].json[\"data\"][\"mozart_resolution_id\"];\nlet updateResolutionItemQuery = \"\";\nlet updateShipmentItemQuery = \"\";\nlet isCloseTransaction = false;\nlet updateItemId = 0;\nlet latestDc= $node[\"Get the latest DC\"].json[\"data\"]\n\nresolutionItems.forEach(function(rItem,index){\n  updateResolutionItemQuery=updateResolutionItemQuery+`update sdm_resolution_items set resolution = '${rItem.resolution}' where shipment_item = ${rItem.mozart_item_id} and grn_resolution = ${mozartResolutionId};`+\" \";\n  updateShipmentItemQuery=updateShipmentItemQuery+`update sdm_shipment_items set resolution = '${rItem.resolution}' where id = ${rItem.mozart_item_id};`+\" \";\n  if(rItem.resolution == \"close_transaction\"){\n    isCloseTransaction =  true;\n    updateItemId = rItem.mozart_item_id\n  }\n})\n\nlet shipmentItems = [];\nlet grossInvoiceValue = 0;\nlet netInvoiceValue = 0;\nlet sameInvoiceItems = resolutionItems.filter(resolutionItem=>resolutionItem.resolution == \"same_invoice\");\nsameInvoiceItems.forEach(function(invoiceItem,index){\n  shipmentItems.push({\n    sdv_vendor_pos_sdv_products_id:invoiceItem.shipment_item.sdv_vendor_pos_sdv_products_id.id,\n    shipment_qty:invoiceItem.rejected_qty\n  })\n\n  let itemNetValue = invoiceItem.shipment_item.sdv_vendor_pos_sdv_products_id.rate * invoiceItem.rejected_qty;\n  netInvoiceValue+=itemNetValue;\n  let itemGrossValue = itemNetValue+(itemNetValue*invoiceItem.shipment_item.sdv_vendor_pos_sdv_products_id.tax_percentage)/100;\n  grossInvoiceValue+=itemGrossValue\n\n})\nlet latestInvoiceNumber = `${latestDc[0].invoice_number.split(\"-\")[0]}-${parseInt(latestDc[0].invoice_number.split(\"-\")[1])+1}`\nlet dcShipment = {\n  vendor_po_number:resolutionItems[0].shipment_item.sdv_vendor_pos_sdv_products_id.sdv_vendor_pos_id,\n  invoice_number:latestInvoiceNumber,\n  invoice_date:new Date.toISOString(),\n  invoice_value:grossInvoiceValue,\n  net_invoice_value:netInvoiceValue,\n  shipment_items:shipmentItems\n}\n\nitems[0].json.updateResolutionItemQuery = updateResolutionItemQuery.trim();\nitems[0].json.updateShipmentItemQuery= updateShipmentItemQuery.trim();\nitems[0].json.isCloseTransaction = isCloseTransaction;\nitems[0].json.update_item_id = updateItemId;\nitems[0].json.dc_shipment = dcShipment;\nreturn items;"
+        "functionCode": "let resolutionItems = $node[\"Get the resolution from vpanel\"].json[\"data\"][\"resolution_items\"];\nlet mozartResolutionId = $node[\"Get the resolution from vpanel\"].json[\"data\"][\"mozart_resolution_id\"];\nlet updateResolutionItemQuery = \"\";\nlet updateShipmentItemQuery = \"\";\nlet isCloseTransaction = false;\nlet updateItemId = 0;\nlet latestDc= $node[\"Get the latest DC\"].json[\"data\"];\nlet mozartShipment = $node[\"Get the invoice from mozart\"].json[\"data\"];\n\nresolutionItems.forEach(function(rItem,index){\n  updateResolutionItemQuery=updateResolutionItemQuery+`update sdm_resolution_items set resolution = '${rItem.resolution}' where shipment_item = ${rItem.mozart_item_id} and grn_resolution = ${mozartResolutionId};`+\" \";\n  updateShipmentItemQuery=updateShipmentItemQuery+`update sdm_shipment_items set resolution = '${rItem.resolution}' where id = ${rItem.mozart_item_id};`+\" \";\n  if(rItem.resolution == \"close_transaction\"){\n    isCloseTransaction =  true;\n    updateItemId = rItem.mozart_item_id\n  }\n})\n\nlet shipmentItems = [];\nlet vPanelShipmentItems = [];\nlet mozartShipmentItems = [];\nlet grossInvoiceValue = latestDc[0].shipment_Status==\"awaiting_asn\"?latestDc[0].invoice_value:0;\nlet netInvoiceValue = latestDc[0].shipment_Status==\"awaiting_asn\"?latestDc[0].net_invoice_value:0;\nlet sameInvoiceItems = resolutionItems.filter(resolutionItem=>resolutionItem.resolution == \"same_invoice\");\nsameInvoiceItems.forEach(function(invoiceItem,index){\n  if(latestDc[0].shipment_Status==\"awaiting_asn\"){\n    vPanelShipmentItems.push({\n      sdv_vendor_pos_sdv_products_id:invoiceItem.shipment_item.sdv_vendor_pos_sdv_products_id.id,\n      shipment_qty:invoiceItem.rejected_qty,\n      sdv_shipments_id:latestDc[0].id\n    })\n    mozartShipmentItems.push({\n      sdv_vendor_pos_sdv_products_id:invoiceItem.shipment_item.sdv_vendor_pos_sdv_products_id.po_items_id,\n      shipment_qty:invoiceItem.rejected_qty,\n      sdm_shipments_id:mozartShipment[0].id\n    })\n  }else{\n    shipmentItems.push({\n      sdv_vendor_pos_sdv_products_id:invoiceItem.shipment_item.sdv_vendor_pos_sdv_products_id.id,\n      shipment_qty:invoiceItem.rejected_qty\n    })\n  }\n  \n\n  let itemNetValue = invoiceItem.shipment_item.sdv_vendor_pos_sdv_products_id.rate * invoiceItem.rejected_qty;\n  netInvoiceValue+=itemNetValue;\n  let itemGrossValue = itemNetValue+(itemNetValue*invoiceItem.shipment_item.sdv_vendor_pos_sdv_products_id.tax_percentage)/100;\n  grossInvoiceValue+=itemGrossValue\n\n})\nlet latestInvoiceNumber = `${latestDc[0].invoice_number.split(\"-\")[0]}-${parseInt(latestDc[0].invoice_number.split(\"-\")[1])+1}`\nlet dcShipment = {\n  vendor_po_number:resolutionItems[0].shipment_item.sdv_vendor_pos_sdv_products_id.sdv_vendor_pos_id,\n  invoice_number:latestInvoiceNumber,\n  invoice_date:new Date.toISOString(),\n  invoice_value:grossInvoiceValue,\n  net_invoice_value:netInvoiceValue,\n  shipment_items:shipmentItems,\n  shipment_Status:\"awaiting_asn\"\n}\n\nitems[0].json.updateResolutionItemQuery = updateResolutionItemQuery.trim();\nitems[0].json.updateShipmentItemQuery= updateShipmentItemQuery.trim();\nitems[0].json.isCloseTransaction = isCloseTransaction;\nitems[0].json.update_item_id = updateItemId;\nitems[0].json.dc_shipment = dcShipment;\nitems[0].json.shipment_items = shipmentItems;\nitems[0].json.v_panel_shipment_items = vPanelShipmentItems;\nitems[0].json.mozart_shipment_items = mozartShipmentItems;\nreturn items;"
       },
       "name": "Function",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1360,
+        1280,
         300
       ]
     },
@@ -284,7 +368,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1580,
+        1500,
         300
       ],
       "credentials": {
@@ -304,7 +388,7 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 1,
       "position": [
-        1800,
+        1720,
         300
       ],
       "alwaysOutputData": true,
@@ -325,7 +409,7 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 1,
       "position": [
-        2020,
+        1940,
         300
       ],
       "executeOnce": false,
@@ -352,8 +436,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        2240,
-        300
+        2480,
+        280
       ]
     },
     {
@@ -367,8 +451,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2380,
-        180
+        2700,
+        160
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -394,8 +478,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2600,
-        180
+        2920,
+        160
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -410,8 +494,8 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        2440,
-        420
+        2700,
+        440
       ]
     },
     {
@@ -437,8 +521,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2820,
-        180
+        3140,
+        160
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -466,8 +550,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        3040,
-        180
+        3360,
+        160
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -479,7 +563,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdm_shipments?filter={\"invoice_number\":{\"_contains\":\"{{$node[\"Get the resolution from vpanel\"].json[\"data\"][\"shipment\"][\"invoice_number\"].spilt(\"-\")[0]}}\"}}&sort=-date_created",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_shipments?filter={\"invoice_number\":{\"_contains\":\"{{$node[\"Get the resolution from vpanel\"].json[\"data\"][\"shipment\"][\"invoice_number\"].spilt(\"-\")[0]}}\"}}&sort=-date_created",
         "options": {}
       },
       "name": "Get the latest DC",
@@ -495,10 +579,192 @@
           "name": "VendorPanel DMS Token"
         }
       }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$node[\"Get the latest DC\"].json[\"data\"].length>0?true:false}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "IF1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        2140,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_shipments/{{$node[\"Get the latest DC\"].json[\"data\"][0][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "invoice_date",
+              "value": "={{$node[\"Function\"].json[\"dc_shipment\"][\"invoice_date\"]}}"
+            },
+            {
+              "name": "invoice_value",
+              "value": "={{$node[\"Function\"].json[\"dc_shipment\"][\"invoice_value\"]}}"
+            },
+            {
+              "name": "net_invoice_value",
+              "value": "={{$node[\"Function\"].json[\"dc_shipment\"][\"net_invoice_value\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update invoice Details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2540,
+        -140
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_shipments",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Function\"].json[\"dc_shipment\"]}}"
+      },
+      "name": "Create DC shipment",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2340,
+        400
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_shipment_items",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Function\"].json[\"v_panel_shipment_items\"]}}"
+      },
+      "name": "Create shipment Items in vpanel",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2180,
+        -140
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_shipments?filter={\"invoice_number\":{\"_eq\":\"{{$node[\"Get the latest DC\"].json[\"data\"][0][\"invoice_number\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Get the invoice from mozart",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1240,
+        0
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_shipment_items",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Function\"].json[\"mozart_shipment_items\"]}}"
+      },
+      "name": "Create shipment Items in mozart",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2360,
+        -140
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_shipments/{{$node[\"Get the invoice from mozart\"].json[\"data\"][0][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "invoice_date",
+              "value": "={{$node[\"Function\"].json[\"dc_shipment\"][\"invoice_date\"]}}"
+            },
+            {
+              "name": "invoice_value",
+              "value": "={{$node[\"Function\"].json[\"dc_shipment\"][\"invoice_value\"]}}"
+            },
+            {
+              "name": "net_invoice_value",
+              "value": "={{$node[\"Function\"].json[\"dc_shipment\"][\"net_invoice_value\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update invoice details in mozart",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2720,
+        -140
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-11-06T13:42:37.402Z"
+  "updatedAt": "2023-11-07T12:52:42.627Z"
 }
