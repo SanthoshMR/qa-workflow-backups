@@ -1474,7 +1474,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let consignmentInvoices = $node[\"Function to get grn data\"].json[\"consignmentVendorInvoiceArr\"].length>0? $node[\"Get the consignment invoices\"].json[\"data\"]:[];\nlet nonConsignmentInvoices = $node[\"Function to get grn data\"].json[\"nonConsignmentInvoices\"].length>0? $node[\"Get the non cosignment invoices\"].json[\"data\"]:[];\nlet dcInvoices = $node[\"Function to get grn data\"].json[\"dcInvoicesArr\"].length>0? $node[\"Get the dc invoices\"].json[\"data\"]:[];\n\nlet keysToUpdateShipment =[];\n\nconsignmentInvoices.forEach(function(cInvoice,index){\n  keysToUpdateShipment.push(cInvoice.id);\n});\n\nnonConsignmentInvoices.forEach(function(ncInvoice,index){\n  keysToUpdateShipment.push(ncInvoice[\"order\"][\"shipments\"][0][\"sdm_shipments_id\"][\"id\"]);\n});\n\ndcInvoices.forEach(function(dcInvoice,index){\n  keysToUpdateShipment.push(dcInvoice.id);\n});\n\n\nlet updateInvoiceObj = {\n  keys:keysToUpdateShipment,\n  data:{\n    grn_received:true\n  }\n}\n\nitems[0].json.updateInvoiceObj= updateInvoiceObj;\nreturn items;"
+        "functionCode": "let consignmentInvoices = $node[\"Function to get grn data\"].json[\"consignmentVendorInvoiceArr\"].length>0? $node[\"Get the consignment invoices\"].json[\"data\"]:[];\nlet nonConsignmentInvoices = $node[\"Function to get grn data\"].json[\"nonConsignmentInvoices\"].length>0? $node[\"Get the non cosignment invoices\"].json[\"data\"]:[];\nlet dcInvoices = $node[\"Function to get grn data\"].json[\"dcInvoicesArr\"].length>0? $node[\"Get the dc invoices\"].json[\"data\"]:[];\n\nlet keysToUpdateShipment =[];\n\nconsignmentInvoices.forEach(function(cInvoice,index){\n  keysToUpdateShipment.push(cInvoice.id);\n});\n\nnonConsignmentInvoices.forEach(function(ncInvoice,index){\n  keysToUpdateShipment.push(ncInvoice[\"order\"][\"shipments\"][0][\"sdm_shipments_id\"][\"id\"]);\n});\n\ndcInvoices.forEach(function(dcInvoice,index){\n  keysToUpdateShipment.push(dcInvoice.id);\n});\n\n\nlet updateInvoiceObj = {\n  keys:keysToUpdateShipment,\n  data:{\n    grn_received:true,\n    shipment_status:\"qc_pending\"\n  }\n}\n\nitems[0].json.updateInvoiceObj= updateInvoiceObj;\nreturn items;"
       },
       "name": "Function to update shipment",
       "type": "n8n-nodes-base.function",
@@ -1513,5 +1513,5 @@
   },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-11-06T11:17:11.619Z"
+  "updatedAt": "2023-11-07T13:22:32.101Z"
 }
