@@ -226,14 +226,14 @@
         ],
         [
           {
-            "node": "NoOp",
+            "node": "Function to create table",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "NoOp": {
+    "Update invoice number in shakedeal payment": {
       "main": [
         [
           {
@@ -244,7 +244,18 @@
         ]
       ]
     },
-    "Update invoice number in shakedeal payment": {
+    "Function to create table": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email": {
       "main": [
         [
           {
@@ -289,8 +300,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        560,
-        180
+        320,
+        200
       ]
     },
     {
@@ -306,8 +317,8 @@
       "type": "n8n-nodes-base.moveBinaryData",
       "typeVersion": 1,
       "position": [
-        940,
-        180
+        700,
+        200
       ]
     },
     {
@@ -320,8 +331,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1660,
-        180
+        1420,
+        200
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -363,8 +374,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        740,
-        180
+        500,
+        200
       ]
     },
     {
@@ -375,8 +386,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1520,
-        180
+        1280,
+        200
       ]
     },
     {
@@ -395,8 +406,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1140,
-        20
+        900,
+        40
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -421,8 +432,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1160,
-        300
+        920,
+        320
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -439,8 +450,8 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 1,
       "position": [
-        1340,
-        180
+        1100,
+        200
       ]
     },
     {
@@ -524,8 +535,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        360,
-        180
+        120,
+        200
       ],
       "credentials": {
         "httpBasicAuth": {
@@ -609,8 +620,8 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        140,
-        180
+        -100,
+        200
       ]
     },
     {
@@ -648,8 +659,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1860,
-        180
+        1620,
+        200
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -760,18 +771,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        2020,
-        180
-      ]
-    },
-    {
-      "parameters": {},
-      "name": "NoOp",
-      "type": "n8n-nodes-base.noOp",
-      "typeVersion": 1,
-      "position": [
-        2280,
-        380
+        1860,
+        220
       ]
     },
     {
@@ -802,10 +803,44 @@
           "name": "Mozart qa creds"
         }
       }
+    },
+    {
+      "parameters": {
+        "functionCode": "let orderInvoiceData = $node[\"Create order invoices\"].json[\"data\"];\nlet orderID = $node[\"Get Invoice Details\"].json[\"body\"][\"invoice_no\"];\nlet dmsUrl = $node[\"Globals\"].json[\"dms_url\"];\nlet tableData = '';\nlet borderStyle = \"border: 1px solid black;border-collapse: collapse\";\nlet orderLink = `${dmsUrl}/items/sdm_orders/${orderInvoiceData.order}`;\n\ntableData=tableData+\n      `<tr style='${borderStyle}'>`+\n      `<td style='${borderStyle}'>OD${orderID}</td>`+\n      `<td style='${borderStyle}'>${orderInvoiceData.id}</td>`+\n      `<td style='${borderStyle}'>Processed</td>`+\n      `<td style='${borderStyle}'><a href=${orderLink}>View Order</a></td>`+\n      `</tr>`;\n\n\nlet tableHtml = `<table  style=\"color:#000000;width: auto;border: 1px solid black;border-collapse: collapse;\">`+\n    `<tr style='background-color:#dedfe0;border: 1px solid black;border-collapse: collapse'>`+\n    `<th style='${borderStyle}'>Order ID</th>`+\n    `<th style='${borderStyle}'>Invoice No</th>`+\n    `<th style='${borderStyle}'>Order Status</th>`+\n    `<th style='${borderStyle}'>Action</th>`+\n    `</tr>${tableData}`+\n    `</table>`;\n\nitems[0].json.tableHtml = tableHtml\n\nreturn items;"
+      },
+      "name": "Function to create table",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        2140,
+        360
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "=sairam.reddy@shakedeal.com",
+        "toEmail": "=bijan.krishna@shakedeal.com",
+        "subject": "=New Order Created and Processed for Vendor PO #{{$node[\"Get the order_id\"].json[\"data\"][0][\"order_items\"][0][\"sdm_po_items_id\"][\"vendor_po\"]}}",
+        "html": "=<p>Dear Team, </p>\n<p>This is to inform you that a new order has been created and processed for Vendor PO #{{$node[\"Get the order_id\"].json[\"data\"][0][\"order_items\"][0][\"sdm_po_items_id\"][\"vendor_po\"]}}</p>\n{{$node[\"Function to create table\"].json[\"tableHtml\"]}}\n<p>Thanks</p>",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        2300,
+        380
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "7",
+          "name": "AWS SES Creds"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-06-15T11:14:07.103Z"
+  "updatedAt": "2023-11-08T13:03:11.258Z"
 }
