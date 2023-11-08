@@ -136,8 +136,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "57",
-          "name": "Adani header auth"
+          "id": "102",
+          "name": "Header Auth account 2(campaign qa)"
         }
       }
     },
@@ -190,7 +190,7 @@
             },
             {
               "name": "api-key",
-              "value": "A826baea1feaa6207057eb1f52f68fde8"
+              "value": "Ad3aca40e1bf47b84114c9b8b967c9db8"
             }
           ]
         },
@@ -224,8 +224,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "57",
-          "name": "Adani header auth"
+          "id": "102",
+          "name": "Header Auth account 2(campaign qa)"
         }
       }
     },
@@ -246,8 +246,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "57",
-          "name": "Adani header auth"
+          "id": "102",
+          "name": "Header Auth account 2(campaign qa)"
         }
       }
     }
@@ -255,5 +255,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-12-13T11:41:02.813Z"
+  "updatedAt": "2023-11-08T14:10:00.035Z"
 }
