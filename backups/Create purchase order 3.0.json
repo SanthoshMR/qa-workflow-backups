@@ -463,7 +463,7 @@
       "main": [
         [
           {
-            "node": "Function to map po and product",
+            "node": "Update user created in pdf",
             "type": "main",
             "index": 0
           }
@@ -840,6 +840,17 @@
         [
           {
             "node": "Update the po_status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update user created in pdf": {
+      "main": [
+        [
+          {
+            "node": "Function to map po and product",
             "type": "main",
             "index": 0
           }
@@ -1721,6 +1732,10 @@
             {
               "name": "extra_cc_mail_ids",
               "value": "={{$node[\"Get po_details\"].json[\"data\"][0][\"vendor\"][\"extra_cc_mail_ids\"]}}"
+            },
+            {
+              "name": "pan",
+              "value": "={{$node[\"Get po_details\"].json[\"data\"][0][\"vendor\"][\"gstin\"]}}"
             }
           ]
         }
@@ -2655,6 +2670,35 @@
           "name": "Vendor Panel qa creds"
         }
       }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/files/{{$node[\"Upload PO in vpanel\"].json[\"data\"][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "uploaded_by",
+              "value": "= {{Array.isArray($node[\"Create po in vpanel\"].json.data)?$node[\"Create po in vpanel\"].json.data[0].vendor:$node[\"Create po in vpanel\"].json.data.vendor}}"
+            }
+          ]
+        }
+      },
+      "name": "Update user created in pdf",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        8660,
+        -100
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
     }
   ],
   "settings": {
@@ -2662,5 +2706,5 @@
   },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-10-25T12:34:50.915Z"
+  "updatedAt": "2023-11-08T10:19:47.300Z"
 }
