@@ -102,7 +102,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "=https://campaignsqa.shakepe.com/items/sp_campaigns?fields=*.*.*&filter={\"id\":{\"_in\":\"{{$node[\"sendintimationhook\"].json[\"body\"][\"payload\"][\"keys\"]}}\"}}",
+        "url": "=https://campaignsqa.shakepe.com/items/sp_campaigns?fields=*.*.*.*&filter={\"id\":{\"_in\":\"{{$node[\"sendintimationhook\"].json[\"body\"][\"payload\"][\"keys\"]}}\"}}",
         "options": {}
       },
       "name": "getpartners",
@@ -114,14 +114,14 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "57",
-          "name": "Adani header auth"
+          "id": "102",
+          "name": "Header Auth account 2(campaign qa)"
         }
       }
     },
     {
       "parameters": {
-        "functionCode": "console.log($node[\"getpartners\"].json[\"data\"])\nlet groups=$node[\"getpartners\"].json[\"data\"][0].groups;\nlet campaign = $node[\"getpartners\"].json[\"data\"][0].name;\nlet campaign_id =  $node[\"getpartners\"].json[\"data\"][0][\"id\"];\n\nlet from_date = $node[\"getpartners\"].json[\"data\"][0].start_date;\nlet end_date = $node[\"getpartners\"].json[\"data\"][0].end_date;\nlet partners =[]\n\ngroups.forEach(function(grp,index){\n  grp.partners.forEach(function(partner){\n    if(partner.wa_notifications!=false) partners.push({\n    json: {partner:partner,campaign : campaign,from_date : from_date,end_date:end_date,campaign_id:campaign_id}});\n  })  \n})\n\n// let partners =[[\n//   {\n//     \"id\": '065d355a-a5e9-40b7-9f0f-dcce7d63adf3',\n//     \"compaign_id\":'16fa8fc1-4440-4543-80a2-4557351e9c51',\n//     \"partner\":\"first\"\n//   }],\n//   [{\n//     \"id\": '2eb5b4a6-56a1-4059-b1fd-bf0636ade8cb',\n//     \"compaign_id\":'16fa8fc1-4440-4543-80a2-4557351e9c51',\n//      \"partner\":\"second\"\n//   }],\n//   [{\n//     \"id\":'0ee14cb7-c7c0-41eb-b3b1-09eee2696350',\n//     \"compaign_id\":'16fa8fc1-4440-4543-80a2-4557351e9c51',\n//      \"partner\":\"third\"\n//   }]\n// ];\nreturn partners;"
+        "functionCode": "console.log($node[\"getpartners\"].json[\"data\"])\nlet groups=$node[\"getpartners\"].json[\"data\"][0].groups;\nlet campaign = $node[\"getpartners\"].json[\"data\"][0].name;\nlet campaign_id =  $node[\"getpartners\"].json[\"data\"][0][\"id\"];\n\nlet from_date = $node[\"getpartners\"].json[\"data\"][0].start_date;\nlet end_date = $node[\"getpartners\"].json[\"data\"][0].end_date;\nlet partners =[]\n\ngroups.forEach(function(grp,index){\n  grp.partners.forEach(function(partner){\n    if(partner.wa_notifications!=false) partners.push({\n    json: {partner:partner.sp_partners_id,campaign : campaign,from_date : from_date,end_date:end_date,campaign_id:campaign_id}});\n  })  \n})\n\n// let partners =[[\n//   {\n//     \"id\": '065d355a-a5e9-40b7-9f0f-dcce7d63adf3',\n//     \"compaign_id\":'16fa8fc1-4440-4543-80a2-4557351e9c51',\n//     \"partner\":\"first\"\n//   }],\n//   [{\n//     \"id\": '2eb5b4a6-56a1-4059-b1fd-bf0636ade8cb',\n//     \"compaign_id\":'16fa8fc1-4440-4543-80a2-4557351e9c51',\n//      \"partner\":\"second\"\n//   }],\n//   [{\n//     \"id\":'0ee14cb7-c7c0-41eb-b3b1-09eee2696350',\n//     \"compaign_id\":'16fa8fc1-4440-4543-80a2-4557351e9c51',\n//      \"partner\":\"third\"\n//   }]\n// ];\nreturn partners;"
       },
       "name": "Function",
       "type": "n8n-nodes-base.function",
@@ -279,5 +279,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-12-13T11:38:29.934Z"
+  "updatedAt": "2023-11-08T14:23:11.390Z"
 }
