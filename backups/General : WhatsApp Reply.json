@@ -253,7 +253,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "=http://157.245.104.124:8056/items/sp_whatsapp_history?filter={\"partner\":{\"phone\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"query\"][\"mobile\"].replace(\"91\",\"\")}}\"}}}&fields=partner.*,campaign.*",
+        "url": "=https://campaignsqa.shakepe.com/items/sp_whatsapp_history?filter={\"partner\":{\"phone\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"query\"][\"mobile\"].replace(\"91\",\"\")}}\"}}}&fields=partner.*,campaign.*",
         "options": {}
       },
       "name": "Get the partner id",
@@ -265,8 +265,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "57",
-          "name": "Adani header auth"
+          "id": "102",
+          "name": "Header Auth account 2(campaign qa)"
         }
       }
     },
@@ -395,7 +395,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "=http://157.245.104.124:8056/items/sp_partner_progress?filter={\"partner\":{\"_eq\":\"{{$node[\"Get the partner id\"].json[\"data\"][0][\"partner\"][\"id\"]}}\"}}",
+        "url": "=https://campaignsqa.shakepe.com/items/sp_partner_progress?filter={\"partner\":{\"_eq\":\"{{$node[\"Get the partner id\"].json[\"data\"][0][\"partner\"][\"id\"]}}\"}}",
         "options": {}
       },
       "name": "Get partner progress",
@@ -407,8 +407,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "57",
-          "name": "Adani header auth"
+          "id": "102",
+          "name": "Header Auth account 2(campaign qa)"
         }
       }
     },
@@ -501,5 +501,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-10-17T05:37:36.856Z"
+  "updatedAt": "2023-11-08T17:27:41.857Z"
 }
