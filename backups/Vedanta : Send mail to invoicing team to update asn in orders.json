@@ -1,0 +1,182 @@
+{
+  "active": false,
+  "connections": {
+    "Cron": {
+      "main": [
+        [
+          {
+            "node": "Get url and token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get url and token": {
+      "main": [
+        [
+          {
+            "node": "Get the open orders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the open orders": {
+      "main": [
+        [
+          {
+            "node": "Function to create table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to create table": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-11-09T06:09:30.523Z",
+  "id": "375",
+  "name": "Vedanta : Send mail to invoicing team to update asn in orders",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "hour": 9
+            },
+            {
+              "hour": 12
+            },
+            {
+              "hour": 3
+            },
+            {
+              "hour": 6
+            }
+          ]
+        }
+      },
+      "name": "Cron",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "=https://qan8n.shakedeal.com/webhook/get-url",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "client",
+              "value": "=vedanta"
+            },
+            {
+              "name": "env",
+              "value": "=qa"
+            }
+          ]
+        }
+      },
+      "name": "Get url and token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        660,
+        300
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_orders?filter={\"order_status\":{\"_eq\":\"open\"}}",
+        "options": {}
+      },
+      "name": "Get the open orders",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        880,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let ordersData = $node[\"Get the open orders\"].json[\"data\"];\nlet tableData = '';\nlet dmsUrl = $node[\"Get url and token\"].json[\"0\"][\"mozart_url\"];\nlet borderStyle = \"border: 1px solid black;border-collapse: collapse\"\n\nordersData.forEach(function(order,index){\n    let orderLink = `${dmsUrl}/items/sdm_orders/${order.id}`;\n    tableData=tableData+\n      `<tr style='${borderStyle}'>`+\n      `<td style='${borderStyle}'>${order.order_id}</td>`+\n      `<td style='${borderStyle}'>${order.po_number}</td>`+\n      `<td style='${borderStyle}'><a href=${orderLink}>Update ASN</a></td>`+\n      `</tr>`;\n})\nlet tableHtml = `<table  style=\"color:#000000;width: auto;border: 1px solid black;border-collapse: collapse;\">`+\n    `<tr style='background-color:#dedfe0;border: 1px solid black;border-collapse: collapse'>`+\n    `<th style='${borderStyle}'>Order ID</th>`+\n    `<th style='${borderStyle}'>Vedanta PO Number</th>`+\n    `<th style='${borderStyle}'>Link</th>`+\n    `</tr>${tableData}`+\n    `</table>`;\n\nitems[0].json.tableHtml = tableHtml\nreturn items;"
+      },
+      "name": "Function to create table",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "=sairam.reddy@shakedeal.com",
+        "toEmail": "=bijan.krishna@shakedeal.com",
+        "subject": "=Action needed || Processing Required for Pending Orders",
+        "html": "=<p>Dear Team, </p>\n<p>We kindly request you to process the below orders by updating the ASN No to generate the IRN Invoice. Please note that if any of the orders have been canceled, update the status accordingly.</p>\n{{$node[\"Function to create table\"].json[\"tableHtml\"]}}\n<p>Thanks</p>",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        300
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "7",
+          "name": "AWS SES Creds"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-11-09T07:18:57.888Z"
+}
