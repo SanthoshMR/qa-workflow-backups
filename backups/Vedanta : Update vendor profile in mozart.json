@@ -1,0 +1,45 @@
+{
+  "active": true,
+  "connections": {},
+  "createdAt": "2023-11-09T06:22:56.231Z",
+  "id": "376",
+  "name": "Vedanta : Update vendor profile in mozart",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "update-vendor-profile",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        520,
+        260
+      ],
+      "webhookId": "586eafa2-12a6-4a9b-a433-4fcc28cb583c",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-11-09T06:24:13.195Z"
+}
