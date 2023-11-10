@@ -1,0 +1,311 @@
+{
+  "active": false,
+  "connections": {
+    "Set": {
+      "main": [
+        [
+          {
+            "node": "Start Loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start Loop": {
+      "main": [
+        [
+          {
+            "node": "Microsoft Excel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to get links data": {
+      "main": [
+        [
+          {
+            "node": "Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AWS SES": {
+      "main": [
+        [
+          {
+            "node": "Insert SES Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert SES Log": {
+      "main": [
+        [
+          {
+            "node": "Increment index",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Increment index": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "End Loop",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Start Loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Microsoft Excel": {
+      "main": [
+        [
+          {
+            "node": "AWS SES",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Function to get links data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-11-10T07:08:27.716Z",
+  "id": "378",
+  "name": "Ascendum : Diwali Reward links",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        -1160,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "number": [
+            {
+              "name": "index"
+            }
+          ],
+          "string": [
+            {}
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        -880,
+        440
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "Start Loop",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -660,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "\nlet links = [\n{\n\"Links\": \"https://rewardlinks.shakepe.com/links/MjmtpL7I7Cnnl9UT\",\n\"id\": \"iZalArPtYTP0gsVU\",\n\"first_name\": \"Handyala Sairam Reddy\",\n\"phone\": 7981916157,\n\"email\": \"sairam.reddy@shakedeal.com\"\n},\n{\n\"Links\": \"https://rewardlinks.shakepe.com/links/5qAC7YBsjnX2h3Bk\",\n\"id\": \"ifeBwhnGmge68iyf\",\n\"first_name\": \"Chidanand C\",\n\"phone\": 7871544849,\n\"email\": \"chidanand@shakedeal.com\"\n}]\n\nconst size = 10; // size of each subarray\n\nconst result = [];\nfor (let i = 0; i < links.length; i += size) {\n  result.push(links.slice(i, i + size));\n}\n\nreturn [{\n    json: {\n        result: result,\n        resultlength : result.length\n    },\n}];"
+      },
+      "name": "Function to get links data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -1080,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "isBodyHtml": true,
+        "subject": "=🪔Happy-Diwali-Your-Diwali-Gift-Voucher!🪔",
+        "body": "=<!DOCTYPE html>\n<html>\n\n<head>\n<style type=\"text/css\">\n@media only screen and (min-width: 520px) {\n.u-row {\nwidth: 500px !important;\n}\n\n.u-row .u-col {\nvertical-align: top;\n}\n\n.u-row .u-col-100 {\nwidth: 500px !important;\n}\n}\n\n@media (max-width: 520px) {\n.u-row-container {\nmax-width: 100% !important;\npadding-left: 0px !important;\npadding-right: 0px !important;\n}\n\n.u-row .u-col {\nmin-width: 320px !important;\nmax-width: 100% !important;\ndisplay: block !important;\n}\n\n.u-row {\nwidth: 100% !important;\n}\n\n.u-col {\nwidth: 100% !important;\n}\n\n.u-col>div {\nmargin: 0 auto;\n}\n}\n\nbody {\nmargin: 0;\npadding: 0;\n}\n\ntable,\ntr,\ntd {\nvertical-align: top;\nborder-collapse: collapse;\n}\n\np {\nmargin: 0;\n}\n\n.ie-container table,\n.mso-container table {\ntable-layout: fixed;\n}\n\n* {\nline-height: inherit;\n}\n\na[x-apple-data-detectors='true'] {\ncolor: inherit !important;\ntext-decoration: none !important;\n}\n\ntable,\ntd {\ncolor: #000000;\n}\n\n#u_body a {\ncolor: #ecf0f1;\ntext-decoration: underline;\n}\n\n@media (max-width: 480px) {\n#u_content_heading_1 .v-font-size {\nfont-size: 20px !important;\n}\n\n#u_content_text_1 .v-container-padding-padding {\npadding: 5px 15px 15px !important;\n}\n\n#u_content_text_1 .v-font-size {\nfont-size: 14px !important;\n}\n\n#u_content_text_2 .v-font-size {\nfont-size: 14px !important;\n}\n\n#u_content_button_1 .v-font-size {\nfont-size: 16px !important;\n}\n\n#u_content_text_3 .v-font-size {\nfont-size: 10px !important;\n}\n}\n</style>\n<link href=\"https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap\" rel=\"stylesheet\" type=\"text/css\">\n<link href=\"https://fonts.googleapis.com/css?family=Playfair+Display:400,700\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body class=\"clean-body u_body\"\nstyle=\"margin: 0;padding: 0;-webkit-text-size-adjust: 100%;background-color: #e7e7e7;color: #000000\">\n\n<table id=\"u_body\"\nstyle=\"border-collapse: collapse;table-layout: fixed;border-spacing: 0;mso-table-lspace: 0pt;mso-table-rspace: 0pt;vertical-align: top;min-width: 320px;Margin: 0 auto;background-color: #e7e7e7;width:100%\"\ncellpadding=\"0\" cellspacing=\"0\">\n<tbody>\n<tr style=\"vertical-align: top\">\n<td style=\"word-break: break-word;border-collapse: collapse !important;vertical-align: top\">\n<div class=\"u-row-container\" style=\"padding: 0px;background-color: transparent\">\n<div class=\"u-row\"\nstyle=\"margin: 0 auto;min-width: 320px;max-width: 500px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;\">\n<div\nstyle=\"border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;\">\n<div class=\"u-col u-col-100\"\nstyle=\"max-width: 320px;min-width: 500px;display: table-cell;vertical-align: top;\">\n<div style=\"background-color: #61268b;height: 100%;width: 100% !important;\">\n<div\nstyle=\"box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;\">\n<table style=\"font-family:'Roboto',helvetica,sans-serif;\"\nrole=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"\nborder=\"0\">\n<tbody>\n<tr>\n<td class=\"v-container-padding-padding\"\nstyle=\"overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:'Roboto',helvetica,sans-serif;\"\nalign=\"left\">\n\n<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\"\nborder=\"0\">\n<tr>\n<td style=\"padding-right: 0px;padding-left: 0px;\"\nalign=\"center\">\n\n<img align=\"center\" border=\"0\"\nsrc=\"https://sdqa.shakedeal.com/images/shake_deal/spl/ascendum-diwali.png\"\nalt=\"Happy Diwali Greetings!\"\ntitle=\"Happy Diwali Greetings!\"\nstyle=\"outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 100%;max-width: 480px;\"\nwidth=\"480\" />\n\n</td>\n</tr>\n</table>\n</td>\n</tr>\n</tbody>\n</table>\n</div>\n</div>\n</div>\n</div>\n</div>\n<div class=\"u-row\"\nstyle=\"margin: 0 auto;min-width: 320px;max-width: 500px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;\">\n<div\nstyle=\"border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;\">\n\n<div class=\"u-col u-col-100\"\nstyle=\"max-width: 320px;min-width: 500px;display: table-cell;vertical-align: top;\">\n<div\nstyle=\"background-color: #61268b;height: 100%;width: 100% !important;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;\">\n<div\nstyle=\"box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;\">\n\n<table id=\"u_content_heading_1\"\nstyle=\"font-family:'Roboto',helvetica,sans-serif;\" role=\"presentation\"\ncellpadding=\"0\" cellspacing=\"0\" width=\"100%\" border=\"0\">\n<tbody>\n<tr>\n<td class=\"v-container-padding-padding\"\nstyle=\"overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:'Roboto',helvetica,sans-serif;\"\nalign=\"left\">\n\n<h1 class=\"v-font-size\"\nstyle=\"margin: 0px; color: #ecf0f1; line-height: 140%; text-align: center; word-wrap: break-word; font-family: Great Vibes; font-size: 32px; font-weight: 400;\">\nDear {{$node[\"Microsoft Excel\"].json[\"first_name\"]}}\n</h1>\n\n</td>\n</tr>\n<tr>\n<td class=\"v-container-padding-padding\"\nstyle=\"overflow-wrap:break-word;word-break:break-word;padding:0px 20px 20px;font-family:'Roboto',helvetica,sans-serif;\"\nalign=\"left\">\n\n<div class=\"v-font-size\"\nstyle=\"font-family: 'Playfair Display',serif; font-size: 16px; color: #ecf0f1; line-height: 140%; text-align: center; word-wrap: break-word;\">\n<p style=\"line-height: 140%;\">Diwali is all about\nhappiness and we are here to multiply\nthat joy by sending you a <span\nstyle=\"line-height: 22.4px; color: #f9bd39;\"><strong>gift\nvoucher</strong></span>\nthat is sure to add an extra dose of festive frenzy\nto your celebrations.</p>\n</div>\n\n</td>\n</tr>\n</tbody>\n</table>\n<table id=\"u_content_text_2\"\nstyle=\"font-family:'Roboto',helvetica,sans-serif;\" role=\"presentation\"\ncellpadding=\"0\" cellspacing=\"0\" width=\"100%\" border=\"0\">\n<tbody>\n<tr>\n<td class=\"v-container-padding-padding\"\nstyle=\"overflow-wrap:break-word;word-break:break-word;padding:10px 30px 20px;font-family:'Roboto',helvetica,sans-serif;\"\nalign=\"left\">\n\n<div class=\"v-font-size\"\nstyle=\"font-family: 'Playfair Display',serif; font-size: 16px; color: #ecf0f1; line-height: 140%; text-align: center; word-wrap: break-word;\">\n<p style=\"line-height: 140%;\">We've curated your gift to\nfeature some of your favorite\nbrands like <span\nstyle=\"color: #f9bd39; line-height: 22.4px;\"><strong>Shopper's\nStop</strong></span>, <span\nstyle=\"color: #f9bd39; line-height: 22.4px;\"><strong>Lifestyle</strong></span>,\n<span\nstyle=\"color: #f9bd39; line-height: 22.4px;\"><strong>Swiggy</strong></span>,\n<span\nstyle=\"color: #f9bd39; line-height: 22.4px;\"><strong>Flipkart\n</strong></span>and more. Take your pick!\n</p>\n<p style=\"line-height: 140%;\">&nbsp;</p>\n<p style=\"line-height: 140%;\">What are you waiting for?\nClaim your gift now!</p>\n</div>\n\n</td>\n</tr>\n</tbody>\n</table>\n\n\n<table id=\"u_content_button_1\"\nstyle=\"font-family:'Roboto',helvetica,sans-serif;\" role=\"presentation\"\ncellpadding=\"0\" cellspacing=\"0\" width=\"100%\" border=\"0\">\n<tbody>\n<tr>\n<td class=\"v-container-padding-padding\"\nstyle=\"overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:'Roboto',helvetica,sans-serif;\"\nalign=\"left\">\n\n<div align=\"center\">\n<a href=\"{{$node[\"Microsoft Excel\"].json[\"Links\"]}}\"\ntarget=\"_blank\" class=\"v-button v-font-size\"\nstyle=\"box-sizing: border-box;display: inline-block;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #61268b; background-color: #f9bd39; border-radius: 4px;-webkit-border-radius: 4px; -moz-border-radius: 4px; width:auto; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;font-family: 'Playfair Display',serif; font-size: 20px;\">\n<span\nstyle=\"display:block;padding:10px 20px;line-height:120%;\"><strong><span\nstyle=\"line-height: 24px;\">Claim your\nGift!</span></strong>\n</span>\n</a>\n</div>\n\n</td>\n</tr>\n</tbody>\n</table>\n\n\n\n</div>\n</div>\n</div>\n</div>\n</div>\n\n\n\n<div class=\"u-row\"\nstyle=\"margin: 0 auto;min-width: 320px;max-width: 500px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;\">\n<div\nstyle=\"border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;\">\n<div class=\"u-col u-col-100\"\nstyle=\"max-width: 320px;min-width: 500px;display: table-cell;vertical-align: top;\">\n<div\nstyle=\"background-color: #843fa1;height: 100%;width: 100% !important;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;\">\n<div\nstyle=\"box-sizing: border-box; height: 100%; padding: 6px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;\">\n<!--<![endif]-->\n\n<table id=\"u_content_text_3\"\nstyle=\"font-family:'Roboto',helvetica,sans-serif;\" role=\"presentation\"\ncellpadding=\"0\" cellspacing=\"0\" width=\"100%\" border=\"0\">\n<tbody>\n<tr>\n<td class=\"v-container-padding-padding\"\nstyle=\"overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:'Roboto',helvetica,sans-serif;\"\nalign=\"left\">\n\n<div class=\"v-font-size\"\nstyle=\"font-family: helvetica,sans-serif; font-size: 12px; color: #ced4d9; line-height: 140%; text-align: center; word-wrap: break-word;\">\n<p style=\"line-height: 140%;\">Redeem your voucher by:\n<strong>10-May-24</strong></p>\n<p style=\"line-height: 140%;\">Powered by <a\ntarget=\"_blank\" href=\"https://shakepe.com\"\nrel=\"noopener\">ShakePe</a></p>\n</div>\n\n</td>\n</tr>\n</tbody>\n</table>\n</div>\n</div>\n</div>\n</div>\n</div>\n\n\n\n\n</div>\n\n\n</td>\n</tr>\n</tbody>\n</table>\n</body>\n\n</html>",
+        "fromEmail": "=hr-india@ascendum.com",
+        "toAddresses": [
+          "={{$node[\"Microsoft Excel\"].json[\"email\"]}}"
+        ],
+        "additionalFields": {
+          "configurationSetName": "=ses-qa"
+        }
+      },
+      "name": "AWS SES",
+      "type": "n8n-nodes-base.awsSes",
+      "typeVersion": 1,
+      "position": [
+        -220,
+        440
+      ],
+      "credentials": {
+        "aws": {
+          "id": "106",
+          "name": "AWS account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "=https://zeus.shakedeal.com/items/sd_delivery_logs",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "message_id",
+              "value": "={{$node[\"AWS SES\"].json[\"SendEmailResponse\"][\"SendEmailResult\"][\"MessageId\"]}}"
+            },
+            {
+              "name": "status",
+              "value": "Send"
+            },
+            {
+              "name": "recipient",
+              "value": "={{$node[\"Microsoft Excel\"].json[\"email\"]}}"
+            },
+            {
+              "name": "template",
+              "value": "=Diwali Campaign"
+            },
+            {
+              "name": "source",
+              "value": "=Diwali Campaign"
+            }
+          ]
+        }
+      },
+      "name": "Insert SES Log",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        -20,
+        420
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "10",
+          "name": "SD-Dms-Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "number": [
+            {
+              "name": "index",
+              "value": "={{$node[\"Start Loop\"].json[\"index\"]+1}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Increment index",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        180,
+        420
+      ],
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Increment index\"].json[\"index\"]}}",
+              "operation": "equal",
+              "value2": "={{$node[\"Function to get links data\"].json[\"resultlength\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        380,
+        420
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "End Loop",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        600,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let linksData = $node[\"Function to get links data\"].json[\"result\"];\nlet currentIndex = $node[\"Start Loop\"].json[\"index\"];\nlet currentLink = linksData[currentIndex];\nlet returnItems = [];\n\ncurrentLink.forEach(function(obj,index){\n    returnItems.push({\n    json: obj\n  });\n  \n})\n\nreturn returnItems;\n"
+      },
+      "name": "Microsoft Excel",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -440,
+        440
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-11-10T08:05:11.578Z"
+}
