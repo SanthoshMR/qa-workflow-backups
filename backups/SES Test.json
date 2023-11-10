@@ -1,0 +1,77 @@
+{
+  "active": false,
+  "connections": {
+    "Microsoft Excel": {
+      "main": [
+        [
+          {
+            "node": "AWS SES",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-11-10T06:34:51.449Z",
+  "id": "377",
+  "name": "SES Test",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "isBodyHtml": true,
+        "subject": "=Happpydewfwegrw",
+        "body": "=<!DOCTYPE html>\n<html>\n\n<head>\n <style type=\"text/css\">\n @media only screen and (min-width: 520px) {\n .u-row {\n width: 500px !important;\n }\n\n .u-row .u-col {\n vertical-align: top;\n }\n\n .u-row .u-col-100 {\n width: 500px !important;\n }\n }\n\n @media (max-width: 520px) {\n .u-row-container {\n max-width: 100% !important;\n padding-left: 0px !important;\n padding-right: 0px !important;\n }\n\n .u-row .u-col {\n min-width: 320px !important;\n max-width: 100% !important;\n display: block !important;\n }\n\n .u-row {\n width: 100% !important;\n }\n\n .u-col {\n width: 100% !important;\n }\n\n .u-col>div {\n margin: 0 auto;\n }\n }\n\n body {\n margin: 0;\n padding: 0;\n }\n\n table,\n tr,\n td {\n vertical-align: top;\n border-collapse: collapse;\n }\n\n p {\n margin: 0;\n }\n\n .ie-container table,\n .mso-container table {\n table-layout: fixed;\n }\n\n * {\n line-height: inherit;\n }\n\n a[x-apple-data-detectors='true'] {\n color: inherit !important;\n text-decoration: none !important;\n }\n\n table,\n td {\n color: #000000;\n }\n\n #u_body a {\n color: #ecf0f1;\n text-decoration: underline;\n }\n\n @media (max-width: 480px) {\n #u_content_heading_1 .v-font-size {\n font-size: 20px !important;\n }\n\n #u_content_text_1 .v-container-padding-padding {\n padding: 5px 15px 15px !important;\n }\n\n #u_content_text_1 .v-font-size {\n font-size: 14px !important;\n }\n\n #u_content_text_2 .v-font-size {\n font-size: 14px !important;\n }\n\n #u_content_button_1 .v-font-size {\n font-size: 16px !important;\n }\n\n #u_content_text_3 .v-font-size {\n font-size: 10px !important;\n }\n }\n </style>\n <link href=\"https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap\" rel=\"stylesheet\" type=\"text/css\">\n <link href=\"https://fonts.googleapis.com/css?family=Playfair+Display:400,700\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body class=\"clean-body u_body\"\n style=\"margin: 0;padding: 0;-webkit-text-size-adjust: 100%;background-color: #e7e7e7;color: #000000\">\n\n <table id=\"u_body\"\n style=\"border-collapse: collapse;table-layout: fixed;border-spacing: 0;mso-table-lspace: 0pt;mso-table-rspace: 0pt;vertical-align: top;min-width: 320px;Margin: 0 auto;background-color: #e7e7e7;width:100%\"\n cellpadding=\"0\" cellspacing=\"0\">\n <tbody>\n <tr style=\"vertical-align: top\">\n <td style=\"word-break: break-word;border-collapse: collapse !important;vertical-align: top\">\n <div class=\"u-row-container\" style=\"padding: 0px;background-color: transparent\">\n <div class=\"u-row\"\n style=\"margin: 0 auto;min-width: 320px;max-width: 500px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;\">\n <div\n style=\"border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;\">\n <div class=\"u-col u-col-100\"\n style=\"max-width: 320px;min-width: 500px;display: table-cell;vertical-align: top;\">\n <div style=\"background-color: #61268b;height: 100%;width: 100% !important;\">\n <div\n style=\"box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;\">\n <table style=\"font-family:'Roboto',helvetica,sans-serif;\"\n role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"\n border=\"0\">\n <tbody>\n <tr>\n <td class=\"v-container-padding-padding\"\n style=\"overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:'Roboto',helvetica,sans-serif;\"\n align=\"left\">\n\n <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\"\n border=\"0\">\n <tr>\n <td style=\"padding-right: 0px;padding-left: 0px;\"\n align=\"center\">\n\n <img align=\"center\" border=\"0\"\n src=\"https://sdqa.shakedeal.com/images/shake_deal/spl/ascendum-diwali.png\"\n alt=\"Happy Diwali Greetings!\"\n title=\"Happy Diwali Greetings!\"\n style=\"outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 100%;max-width: 480px;\"\n width=\"480\" />\n\n </td>\n </tr>\n </table>\n </td>\n </tr>\n </tbody>\n </table>\n <table id=\"u_content_heading_1\"\n style=\"font-family:'Roboto',helvetica,sans-serif;\" role=\"presentation\"\n cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" border=\"0\">\n <tbody>\n <tr>\n <td class=\"v-container-padding-padding\"\n style=\"overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:'Roboto',helvetica,sans-serif;\"\n align=\"left\">\n\n <h1 class=\"v-font-size\"\n style=\"margin: 0px; color: #ecf0f1; line-height: 140%; text-align: center; word-wrap: break-word; font-family: Great Vibes; font-size: 32px; font-weight: 400;\">\n Dear {{$node[\"Microsoft Excel\"].json[\"first_name\"]}}\n </h1>\n\n </td>\n </tr>\n <tr>\n <td class=\"v-container-padding-padding\"\n style=\"overflow-wrap:break-word;word-break:break-word;padding:0px 20px 20px;font-family:'Roboto',helvetica,sans-serif;\"\n align=\"left\">\n\n <div class=\"v-font-size\"\n style=\"font-family: 'Playfair Display',serif; font-size: 16px; color: #ecf0f1; line-height: 140%; text-align: center; word-wrap: break-word;\">\n <p style=\"line-height: 140%;\">Diwali is all about\n happiness and we are here to multiply\n that joy by sending you a <span\n style=\"line-height: 22.4px; color: #f9bd39;\"><strong>gift\n voucher</strong></span>\n that is sure to add an extra dose of festive frenzy\n to your celebrations.</p>\n </div>\n\n </td>\n </tr>\n </tbody>\n </table>\n <table id=\"u_content_text_2\"\n style=\"font-family:'Roboto',helvetica,sans-serif;\" role=\"presentation\"\n cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" border=\"0\">\n <tbody>\n <tr>\n <td class=\"v-container-padding-padding\"\n style=\"overflow-wrap:break-word;word-break:break-word;padding:10px 30px 20px;font-family:'Roboto',helvetica,sans-serif;\"\n align=\"left\">\n\n <div class=\"v-font-size\"\n style=\"font-family: 'Playfair Display',serif; font-size: 16px; color: #ecf0f1; line-height: 140%; text-align: center; word-wrap: break-word;\">\n <p style=\"line-height: 140%;\">We've curated your gift to\n feature some of your favorite\n brands like <span\n style=\"color: #f9bd39; line-height: 22.4px;\"><strong>Shopper's\n Stop</strong></span>, <span\n style=\"color: #f9bd39; line-height: 22.4px;\"><strong>Lifestyle</strong></span>,\n <span\n style=\"color: #f9bd39; line-height: 22.4px;\"><strong>Swiggy</strong></span>,\n <span\n style=\"color: #f9bd39; line-height: 22.4px;\"><strong>Flipkart\n </strong></span>and more. Take your pick!\n </p>\n <p style=\"line-height: 140%;\">&nbsp;</p>\n <p style=\"line-height: 140%;\">What are you waiting for?\n Claim your gift now!</p>\n </div>\n\n </td>\n </tr>\n </tbody>\n </table>\n <table id=\"u_content_button_1\"\n style=\"font-family:'Roboto',helvetica,sans-serif;\" role=\"presentation\"\n cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" border=\"0\">\n <tbody>\n <tr>\n <td class=\"v-container-padding-padding\"\n style=\"overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:'Roboto',helvetica,sans-serif;\"\n align=\"left\">\n\n <div align=\"center\">\n <a href=\"{{$node[\" Microsoft Excel\"].json[\"Links\"]}}\"\n target=\"_blank\" class=\"v-button v-font-size\"\n style=\"box-sizing: border-box;display: inline-block;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #61268b; background-color: #f9bd39; border-radius: 4px;-webkit-border-radius: 4px; -moz-border-radius: 4px; width:auto; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;font-family: 'Playfair Display',serif; font-size: 20px;\">\n <span\n style=\"display:block;padding:10px 20px;line-height:120%;\"><strong><span\n style=\"line-height: 24px;\">Claim your\n Gift!</span></strong>\n </span>\n </a>\n </div>\n </td>\n </tr>\n </tbody>\n </table>\n </div>\n </div>\n <div\n style=\"background-color: #843fa1;height: 100%;width: 100% !important;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;\">\n <div\n style=\"box-sizing: border-box; height: 100%; padding: 6px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;\">\n <!--<![endif]-->\n\n <table id=\"u_content_text_3\"\n style=\"font-family:'Roboto',helvetica,sans-serif;\" role=\"presentation\"\n cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" border=\"0\">\n <tbody>\n <tr>\n <td class=\"v-container-padding-padding\"\n style=\"overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:'Roboto',helvetica,sans-serif;\"\n align=\"left\">\n\n <div class=\"v-font-size\"\n style=\"font-family: helvetica,sans-serif; font-size: 12px; color: #ced4d9; line-height: 140%; text-align: center; word-wrap: break-word;\">\n <p style=\"line-height: 140%;\">Redeem your voucher by:\n <strong>10-May-23</strong>\n </p>\n <p style=\"line-height: 140%;\">Powered by <a\n target=\"_blank\" href=\"https://shakepe.com\"\n rel=\"noopener\">ShakePe</a></p>\n </div>\n\n </td>\n </tr>\n </tbody>\n </table>\n </div>\n </div>\n </div>\n </div>\n </div>\n </div>\n </td>\n </tr>\n </tbody>\n </table>\n <div></div>\n <div style=\"font-family : Verdana, Arial, Helvetica, sans-serif; font-size : 10pt; \">\n <p style=\"margin : 0cm; font-size : 11pt; color : rgb(0, 0, 0); font-family : Verdana, Arial, Helvetica, sans-serif; font-style : normal; font-weight : 400; letter-spacing : normal; orphans : 2; text-indent : 0px; text-transform : none; white-space : normal; widows : 2; word-spacing : 0px; background-color : rgb(255, 255, 255); \"class=\"\"><span style=\"font-size : 18pt; font-family : Brush Script MT; color : black; \">Warm Diwali wishes to you and your loved ones!</span><br>\n </p>\n <p style=\"margin : 0cm; font-size : 11pt; color : rgb(0, 0, 0); font-family : Verdana, Arial, Helvetica, sans-serif; font-style : normal; font-weight : 400; letter-spacing : normal; orphans : 2; text-indent : 0px; text-transform : none; white-space : normal; widows : 2; word-spacing : 0px; background-color : rgb(255, 255, 255); \"class=\"\">\n <span style=\"font-size : 18pt; font-family : Brush Script MT; color : black; \">May this auspicious festival of lights beautifully illuminate every corner of your life by adding sparkling moments of Happiness. May your life be blessed with Peace, Prosperity, Fortune, and Good Health which fill your heart with great joy.</span><br>\n <span style=\"font-size : 18pt; font-family : Brush Script MT; color : black; \">I take this opportunity to thank each one of you for your contribution. As a token of appreciation, we are sending you a gift, in the form of a voucher. Details will be sent to your official email id from HR.</span><br>\n </p>\n </div>\n</body>\n\n</html>",
+        "fromEmail": "parthiban.n@shakedeal.com",
+        "toAddresses": [
+          "chidanand@shakedeal.com"
+        ],
+        "additionalFields": {
+          "configurationSetName": "ses-qa"
+        }
+      },
+      "name": "AWS SES",
+      "type": "n8n-nodes-base.awsSes",
+      "typeVersion": 1,
+      "position": [
+        700,
+        300
+      ],
+      "credentials": {
+        "aws": {
+          "id": "106",
+          "name": "AWS account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "34f3f76d-d834-42ff-adf2-0e791b8e87a6",
+        "options": {}
+      },
+      "name": "Microsoft Excel",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ],
+      "webhookId": "34f3f76d-d834-42ff-adf2-0e791b8e87a6"
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-11-10T07:55:49.165Z"
+}
