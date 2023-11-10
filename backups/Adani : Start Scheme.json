@@ -68,7 +68,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "=https://campaignsqa.shakepe.com/items/sp_campaigns?fields=*.*.*&filter={\"id\":{\"_in\":\"{{$node[\"sendintimationhook\"].json[\"body\"][\"payload\"][\"keys\"]}}\"}}",
+        "url": "=https://campaignsqa.shakepe.com/items/sp_campaigns?fields=*.*.*.*&filter={\"id\":{\"_in\":\"{{$node[\"sendintimationhook\"].json[\"body\"][\"payload\"][\"keys\"]}}\"}}",
         "options": {}
       },
       "name": "getpartners",
@@ -80,14 +80,14 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "57",
-          "name": "Adani header auth"
+          "id": "102",
+          "name": "Header Auth account 2(campaign qa)"
         }
       }
     },
     {
       "parameters": {
-        "functionCode": "console.log($node[\"getpartners\"].json[\"data\"])\nlet groups=$node[\"getpartners\"].json[\"data\"][0].groups;\nlet campaign = $node[\"getpartners\"].json[\"data\"][0].name;\n\nlet from_date = $node[\"getpartners\"].json[\"data\"][0].start_date;\nlet end_date = $node[\"getpartners\"].json[\"data\"][0].end_date;\nlet partners =[]\n\ngroups.forEach(function(grp,index){\n  grp.partners.forEach(function(partner){\n    if(partner.wa_notifications!=false) partners.push({\n    json: [{partner:partner,campaign : campaign,from_date : from_date,end_date:end_date}]});\n  })  \n})\n\nreturn partners;"
+        "functionCode": "console.log($node[\"getpartners\"].json[\"data\"])\nlet groups=$node[\"getpartners\"].json[\"data\"][0].groups;\nlet campaign = $node[\"getpartners\"].json[\"data\"][0].name;\n\nlet from_date = $node[\"getpartners\"].json[\"data\"][0].start_date;\nlet end_date = $node[\"getpartners\"].json[\"data\"][0].end_date;\nlet partners =[]\n\ngroups.forEach(function(grp,index){\n  grp.partners.forEach(function(partner){\n    if(partner.wa_notifications!=false) partners.push({\n    json: [{partner:partner.sp_partners_id,campaign : campaign,from_date : from_date,end_date:end_date}]});\n  })  \n})\n\nreturn partners;"
       },
       "name": "Function",
       "type": "n8n-nodes-base.function",
@@ -150,5 +150,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-12-13T11:41:33.303Z"
+  "updatedAt": "2023-11-10T09:41:51.857Z"
 }
