@@ -1,0 +1,594 @@
+{
+  "active": false,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Check for hi text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Call OCR API",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call OCR API": {
+      "main": [
+        [
+          {
+            "node": "Get the user favorite product",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for OCR response": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for favorite product": {
+      "main": [
+        [
+          {
+            "node": "Update User favorite product",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for hi text": {
+      "main": [
+        [
+          {
+            "node": "Get the user",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Check for favorite product",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create User account": {
+      "main": [
+        [
+          {
+            "node": "Check for favorite product",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update User favorite product": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the user": {
+      "main": [
+        [
+          {
+            "node": "Check for user",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for user": {
+      "main": [
+        [
+          {
+            "node": "Create User account",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Check for favorite product",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the user favorite product": {
+      "main": [
+        [
+          {
+            "node": "Check for OCR response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-11-15T11:00:12.234Z",
+  "id": "379",
+  "name": "My workflow 25",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        -120,
+        360
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "itc",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        60,
+        600
+      ],
+      "webhookId": "f2b34d14-6ad2-4923-bdb1-5696f25308dd",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://api.kaleyra.io/v1/HXIN1732535738IN/messages",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "from",
+              "value": "+917406700552"
+            },
+            {
+              "name": "to",
+              "value": "={{+$node[\"Webhook\"].json[\"body\"][\"mobile\"]}}"
+            },
+            {
+              "name": "type",
+              "value": "mediatemplate"
+            },
+            {
+              "name": "params",
+              "value": "={{$node[\"Function\"].json[\"params\"]}}"
+            },
+            {
+              "name": "template_name",
+              "value": "={{$node[\"Function\"].json[\"templateName\"]}}"
+            },
+            {
+              "name": "channel",
+              "value": "whatsapp"
+            },
+            {
+              "name": "media_url",
+              "value": "={{$node[\"Function to get whatapp details\"].json[\"media_url\"]}}"
+            }
+          ]
+        },
+        "headerParametersUi": {
+          "parameter": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "api-key",
+              "value": "Ad3aca40e1bf47b84114c9b8b967c9db8"
+            }
+          ]
+        },
+        "queryParametersUi": {
+          "parameter": [
+            {}
+          ]
+        }
+      },
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1080,
+        650
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "functionCode": "let mobile = $node[\"Webhook\"].json[\"body\"][\"mobile\"];\nlet body = $node[\"Webhook\"].json[\"body\"][\"body\"]?$node[\"Webhook\"].json[\"body\"][\"body\"].toLowerCase():$node[\"Webhook\"].json[\"body\"];\nlet welcomeTexts = [\"hi\",\"hello\",\"hey\",\"hii\"];\nlet favouriteProducts = [\"sunfeast biscuits\",\"sunfeast farmlite oats\",\"bingo mad angles\",\"bingo chips\"];\nlet followUpFovouriteProducts = [\"morning time\",\"evening snacks\",\"late night cravings\"];\n\nlet templateName = \"\";\nlet params = \"\"\nif(welcomeTexts.includes(body)){\n  templateName = \"welcome_message\"\n}else if(body == \"campaign info\"){\n  templateName = \"campaign_info_1\"\n}else if(body == \"select favorite product\"){\n  templateName = \"select_favorite_product\"\n}else if(favouriteProducts.includes(body)){\n  templateName = \"followup_select_favorite_product\";\n  params = `\"${$node[\"Webhook\"].json[\"body\"][\"body\"]}\"`\n}else if(followUpFovouriteProducts.includes(body)){\n  templateName = \"ack_select_favorite_product\"\n}else if(body == \"upload bill\"){\n  templateName = \"user_selects_upload_bill\"\n}else if(body == \"main menu\"){\n  templateName = \"welcome_message\" \n}else if(body[\"bill_url\"]){\n  templateName = \"followup_for_upload_bill\"\n}\n\nitems[0].json.templateName = templateName;\nitems[0].json.mobile = mobile;\nitems[0].json.params = params;\nreturn items;"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        880,
+        650
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Webhook\"].json[\"body\"][\"bill_url\"]?true:false}}"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1370,
+        650
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "=https://api.mindee.net/v1/products/mindee/expense_receipts/v5/predict",
+        "options": {
+          "bodyContentType": "multipart-form-data"
+        },
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "document",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"bill_url\"]}}"
+            }
+          ]
+        },
+        "headerParametersUi": {
+          "parameter": [
+            {
+              "name": "Content-Type",
+              "value": "=multipart/form-data"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Token eb91f4badce54959044abaa90f46a113"
+            }
+          ]
+        }
+      },
+      "name": "Call OCR API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1500,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let ocrData = $node[\"Call OCR API\"].json;\nlet templateName = \"no_product_not_found\";\nlet supplierNames = [\"reliance\",\"relian\"];\nlet brands = [\"sunfeast\",\"sunf\",\"bingo\"];\nlet products = [\"mad\",\"bisc\",\"chip\",\"oat\",\"chp\"];\nlet offerBrand = \"\";\nlet offerProduct = \"\";\nlet billId = `${$node[\"Call OCR API\"].json[\"document\"][\"inference\"][\"prediction\"][\"date\"][\"value\"]}-${$node[\"Call OCR API\"].json[\"document\"][\"inference\"][\"prediction\"][\"total_amount\"][\"value\"]}`\nlet userFavoriteProduct = $node[\"Get the user favorite product\"].json[\"data\"][\"favorite_product\"];\n  if(ocrData.api_request.status == \"success\"){\n    \n    let supplierAddress = ocrData.document.inference.pages[0].prediction.supplier_address.value;\n    if(supplierAddress){\n      let lineItems = ocrData.document[\"inference\"][\"prediction\"][\"line_items\"];\n      let checkForSupplier = supplierNames.filter(item => supplierAddress.toLowerCase().includes(item));\n      if(checkForSupplier.length>0){\n        let isBrandExist = checkForBrands(lineItems);\n        console.log(\"============isBrandExist\",isBrandExist);\n        if(isBrandExist.is_user_favorite_brand_found && isBrandExist.is_user_favorite_product_found){\n          let firstSpaceIndex = userFavoriteProduct.indexOf(\" \");\n          offerBrand = userFavoriteProduct.slice(0, firstSpaceIndex);\n          offerProduct = userFavoriteProduct.slice(firstSpaceIndex + 1);\n          templateName = \"reveal_surprise_reward_2\";\n        }else if(!isBrandExist.is_user_favorite_brand_found && !isBrandExist.is_user_favorite_product_found && !isBrandExist.brands_found && !isBrandExist.products_found){\n          templateName = \"no_product_not_found\"\n        }else {\n          if(isBrandExist.is_user_favorite_brand_found){\n            let firstSpaceIndex = userFavoriteProduct.indexOf(\" \");\n            offerBrand = userFavoriteProduct.slice(0, firstSpaceIndex);\n            offerProduct = userFavoriteProduct.slice(firstSpaceIndex + 1); \n          }else {\n            offerBrand = isBrandExist.brands_found[0];\n         }\n          templateName = \"selected_product_not_found_3\";\n        }\n      }\n    }else templateName == \"no_product_not_found\";\n    \n  }else templateName == \"not_able_to_read_image\"\n  \nfunction checkForBrands(items){\n  let isBrandFound = false;\n  let isProductFound = false;\n  let brandsFound = [];\n  let productsFound = [];\n  let isUserFavoriteBrandFound = false;\n  let isUserFavoriteProductFound = false;\n  if(userFavoriteProduct){\n    let matchBrand = brands.filter(brand =>userFavoriteProduct.toLowerCase().includes(brand));\n    console.log(\"--------------matchBrand\",matchBrand);\n    console.log(\"++++++++++++userFavoriteProduct\",userFavoriteProduct)\n    if(matchBrand.length>0){\n      isUserFavoriteBrandFound = true;\n    }\n  }\n  \n  items.forEach(function(item,index){\n    let checkForBrand = brands.filter(brand =>item.description.toLowerCase().includes(brand));\n    let checkForProduct = products.filter(product =>item.description.toLowerCase().includes(product));\n    let matchUserFavoriteProduct = products.filter(product =>item.description.toLowerCase().includes(product));\n    if(matchUserFavoriteProduct.length>0){\n      isUserFavoriteProductFound = true;\n    }\n    if(checkForProduct.length>0){\n      isProductFound = true;\n      productsFound.push(checkForProduct);\n    }\n    if(checkForBrand.length>0){\n      isBrandFound = true;\n      brandsFound.push(checkForBrand);\n    }\n  })\n  return {\n    is_product_found : isProductFound,\n    is_brand_found : isBrandFound,\n    brands_found : brandsFound,\n    products_found : productsFound,\n    is_user_favorite_brand_found:isUserFavoriteBrandFound,\n    is_user_favorite_product_found:isUserFavoriteProductFound\n  }\n}\n\nitems[0].json.offerBrand = offerBrand;\nitems[0].json.templateName = templateName;\nitems[0].json.offerProduct = offerProduct;\nitems[0].json.billId = billId;\nreturn items;"
+      },
+      "name": "Check for OCR response",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1980,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://api.kaleyra.io/v1/HXIN1732535738IN/messages",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "from",
+              "value": "+917406700552"
+            },
+            {
+              "name": "to",
+              "value": "={{+$node[\"Webhook\"].json[\"body\"][\"mobile\"]}}"
+            },
+            {
+              "name": "type",
+              "value": "mediatemplate"
+            },
+            {
+              "name": "params",
+              "value": "={{$node[\"Check for OCR response\"].json[\"params\"]}}"
+            },
+            {
+              "name": "template_name",
+              "value": "={{$node[\"Check for OCR response\"].json[\"templateName\"]}}"
+            },
+            {
+              "name": "channel",
+              "value": "whatsapp"
+            },
+            {
+              "name": "media_url",
+              "value": "={{$node[\"Function to get whatapp details\"].json[\"media_url\"]}}"
+            }
+          ]
+        },
+        "headerParametersUi": {
+          "parameter": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "api-key",
+              "value": "Ad3aca40e1bf47b84114c9b8b967c9db8"
+            }
+          ]
+        },
+        "queryParametersUi": {
+          "parameter": [
+            {}
+          ]
+        }
+      },
+      "name": "HTTP Request1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2220,
+        500
+      ],
+      "alwaysOutputData": true,
+      "disabled": true
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1540,
+        760
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{[\"sunfeast biscuits\",\"sunfeast farmlite oats\",\"bingo mad angles\",\"bingo chips\"].includes($node[\"Webhook\"].json[\"body\"][\"body\"].toLowerCase())}}"
+            }
+          ]
+        }
+      },
+      "name": "Check for favorite product",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        580,
+        630
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{[\"hi\",\"hello\",\"hey\",\"hii\"].includes($node[\"Webhook\"].json[\"body\"][\"body\"].toLowerCase())}}"
+            }
+          ]
+        }
+      },
+      "name": "Check for hi text",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        260,
+        610
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "=https://spdemo.shakepe.com/items/sp_users",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "mobile_number",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"mobile\"]}}"
+            },
+            {
+              "name": "name",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"name\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Create User account",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        580,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "107",
+          "name": "ITC DEMo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "=https://spdemo.shakepe.com/items/sp_users/{{$node[\"Webhook\"].json[\"body\"][\"mobile\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "favorite_product",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"body\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update User favorite product",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        870,
+        430
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "107",
+          "name": "ITC DEMo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://spdemo.shakepe.com/items/sp_users?filter={\"mobile_number\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"mobile\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Get the user",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        180,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "107",
+          "name": "ITC DEMo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Get the user\"].json.data.length == 0?true:false}}"
+            }
+          ]
+        }
+      },
+      "name": "Check for user",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        390,
+        330
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://spdemo.shakepe.com/items/sp_users/{{$node[\"Webhook\"].json[\"body\"][\"mobile\"]}}",
+        "options": {}
+      },
+      "name": "Get the user favorite product",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1730,
+        500
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "107",
+          "name": "ITC DEMo"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-11-15T13:55:49.807Z"
+}
