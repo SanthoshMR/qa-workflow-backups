@@ -150,7 +150,7 @@
             },
             {
               "name": "to_email",
-              "value": "shakedeal.web@gmail.com, anup.routray@shakedeal.com"
+              "value": "shakedeal.web@gmail.com"
             }
           ]
         },
@@ -190,7 +190,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sp_card_inventory?filter={\"_and\":[{\"reference_number\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"id\"]}}\"}},{\"otp\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"otp\"]}}\"}}]}&fields=mobile_number,otp,otp_last_updated,sd_serial_number,customer_name,reference_number",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sp_card_inventory?filter={\"_and\":[{\"reference_number\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"id\"]}}\"}},{\"otp\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"otp\"]}}\"}}]}&fields=mobile_number,otp,otp_last_updated,sd_serial_number,customer_name,reference_number,amount",
         "options": {}
       },
       "name": "Get Details From Serial",
@@ -390,5 +390,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-10-03T11:48:17.931Z"
+  "updatedAt": "2023-11-20T12:54:27.644Z"
 }
