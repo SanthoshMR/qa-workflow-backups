@@ -1,6 +1,273 @@
 {
   "active": true,
-  "connections": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get url and token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get url and token": {
+      "main": [
+        [
+          {
+            "node": "Check for GST Certificate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for GST Certificate": {
+      "main": [
+        [
+          {
+            "node": "Get the gst certificate file",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Check for pan card",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the gst certificate file": {
+      "main": [
+        [
+          {
+            "node": "Post GST file to mozart",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for pan card": {
+      "main": [
+        [
+          {
+            "node": "Get the pan card",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Check for msme file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the pan card": {
+      "main": [
+        [
+          {
+            "node": "Upload pan card in mozart",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for msme file": {
+      "main": [
+        [
+          {
+            "node": "Get the msme file",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Check for cancel cheque",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the msme file": {
+      "main": [
+        [
+          {
+            "node": "Upload msme file in mozart",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for cancel cheque": {
+      "main": [
+        [
+          {
+            "node": "Get the cancel cheque",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Check for dealer ship aggrements",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the cancel cheque": {
+      "main": [
+        [
+          {
+            "node": "Upload cancel cheque in mozart",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for dealer ship aggrements": {
+      "main": [
+        [
+          {
+            "node": "Function to split files",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update vendor profile",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post GST file to mozart": {
+      "main": [
+        [
+          {
+            "node": "Check for pan card",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload pan card in mozart": {
+      "main": [
+        [
+          {
+            "node": "Check for msme file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload msme file in mozart": {
+      "main": [
+        [
+          {
+            "node": "Check for cancel cheque",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload cancel cheque in mozart": {
+      "main": [
+        [
+          {
+            "node": "Check for dealer ship aggrements",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to split files": {
+      "main": [
+        [
+          {
+            "node": "Get the uploaded files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the uploaded files": {
+      "main": [
+        [
+          {
+            "node": "Function to club the binay files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to club the binay files": {
+      "main": [
+        [
+          {
+            "node": "post the file to dms",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "post the file to dms": {
+      "main": [
+        [
+          {
+            "node": "Function to update files in mozart",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to update files in mozart": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Update vendor profile",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
   "createdAt": "2023-11-09T06:22:56.231Z",
   "id": "376",
   "name": "Vedanta : Update vendor profile in mozart",
@@ -26,8 +293,8 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        520,
-        260
+        460,
+        320
       ],
       "webhookId": "586eafa2-12a6-4a9b-a433-4fcc28cb583c",
       "credentials": {
@@ -36,10 +303,519 @@
           "name": "SD Basic Auth"
         }
       }
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "=https://qan8n.shakedeal.com/webhook/get-url",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "client",
+              "value": "=vedanta"
+            },
+            {
+              "name": "env",
+              "value": "=qa"
+            }
+          ]
+        }
+      },
+      "name": "Get url and token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        660,
+        320
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"gst_certificate\"]?true:false}}"
+            }
+          ]
+        }
+      },
+      "name": "Check for GST Certificate",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        880,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/assets/{{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"gst_certificate\"]}}",
+        "responseFormat": "file",
+        "options": {}
+      },
+      "name": "Get the gst certificate file",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        960,
+        140
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"pan_card\"]?true:false}}"
+            }
+          ]
+        }
+      },
+      "name": "Check for pan card",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1360,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/assets/{{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"pan_card\"]}}",
+        "responseFormat": "file",
+        "options": {}
+      },
+      "name": "Get the pan card",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1440,
+        120
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"msme_file\"]?true:false}}"
+            }
+          ]
+        }
+      },
+      "name": "Check for msme file",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1800,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/assets/{{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"msme_file\"]}}",
+        "responseFormat": "file",
+        "options": {}
+      },
+      "name": "Get the msme file",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1900,
+        120
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"cancel_cheque\"]?true:false}}"
+            }
+          ]
+        }
+      },
+      "name": "Check for cancel cheque",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        2160,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/assets/{{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"cancel_cheque\"]}}",
+        "options": {}
+      },
+      "name": "Get the cancel cheque",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2320,
+        140
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"dealership_agreements\"].lengh>0?true:false}}"
+            }
+          ]
+        }
+      },
+      "name": "Check for dealer ship aggrements",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        2580,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendors/{{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"email\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "vendor_phone",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"vendor_phone\"]}}"
+            },
+            {
+              "name": "vendor_company",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"vendor_company\"]}}"
+            },
+            {
+              "name": "vendor_address",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"vendor_address\"]}}"
+            },
+            {
+              "name": "gstin",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"gstin\"]}}"
+            },
+            {
+              "name": "pan",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"pan\"]}}"
+            },
+            {
+              "name": "Alternate_Mobile_Number",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"Alternate_Mobile_Number\"]}}"
+            },
+            {
+              "name": "Telephone_Number",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"Telephone_Number\"]}}"
+            },
+            {
+              "name": "msme_toggle",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"msme_toggle\"]}}"
+            },
+            {
+              "name": "gst_certificate",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"gst_certificate\"]?$node[\"Post GST file to mozart\"].json[\"data\"][\"id\"]:null}}"
+            },
+            {
+              "name": "pan_card",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"pan_card\"]?$node[\"Upload pan card in mozart\"].json[\"data\"][\"id\"]:null}}"
+            },
+            {
+              "name": "msme_file",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"msme_file\"]?$node[\"Upload msme file in mozart\"].json[\"data\"][\"id\"]:null}}"
+            },
+            {
+              "name": "authorized_dealer_toggle",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"authorized_dealer_toggle\"]}}"
+            },
+            {
+              "name": "brand_tags",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"brand_tags\"]}}"
+            },
+            {
+              "name": "account_number",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"account_number\"]}}"
+            },
+            {
+              "name": "cancel_cheque",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"cancel_cheque\"]?$node[\"Upload cancel cheque in mozart\"].json[\"data\"][\"id\"]:null}}"
+            }
+          ]
+        }
+      },
+      "name": "Update vendor profile",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3940,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/files",
+        "jsonParameters": true,
+        "options": {
+          "bodyContentType": "multipart-form-data"
+        },
+        "sendBinaryData": true,
+        "binaryPropertyName": "=input_file:data"
+      },
+      "name": "Post GST file to mozart",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1140,
+        140
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/files",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {
+          "bodyContentType": "multipart-form-data"
+        },
+        "sendBinaryData": true,
+        "binaryPropertyName": "=input_file:data"
+      },
+      "name": "Upload pan card in mozart",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1640,
+        120
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"mozart_dms_url\"]}}/files",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {
+          "bodyContentType": "multipart-form-data"
+        },
+        "sendBinaryData": true,
+        "binaryPropertyName": "=input_file:data"
+      },
+      "name": "Upload msme file in mozart",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2080,
+        120
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"mozart_dms_url\"]}}/files",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {
+          "bodyContentType": "multipart-form-data"
+        },
+        "sendBinaryData": true,
+        "binaryPropertyName": "=input_file:data"
+      },
+      "name": "Upload cancel cheque in mozart",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2500,
+        140
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let responseData = [];\nlet files = [];\nlet upload_files = $node[\"Webhook\"].json[\"body\"][\"payload\"][\"dealership_agreements\"][\"create\"];\n\n\nlet ids = [];\nupload_files.forEach(function(file,index){\n    files.push(file.directus_files_id.id)\n})\nif(files){\n    files.forEach(function(upload_file,index){\n        ids.push(upload_file)\n        responseData.push({\n            json: {\n                \"id\":upload_file,\n                \"index\":\"data\"+index,\n                \"dms_url\":$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]\n            }\t\t\t\n        });\n    })\n}\n\n\nreturn responseData;"
+      },
+      "name": "Function to split files",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        2720,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Function to split files\"].json[\"dms_url\"]}}/files/{{$node[\"Function to split files\"].json[\"id\"]}}",
+        "options": {}
+      },
+      "name": "Get the uploaded files",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2900,
+        140
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let binaries = {}, binary_keys = [],uploadDocument = [],extension = [];\n\n\n\nfor([index, item] of items.entries()) {\n    let fileNameDownload = item.json.data.filename_disk.split(\".\")\n    let fileName = item.json.data.filename_download\n    item.binary.data.fileName = fileName\n    let extension = item.json.data.type==\"image/png\"?\"png\":\"pdf\"\n    binaries[`data_${index}.${extension}`] = item.binary.data;\n    binary_keys.push(`data_${index}.${extension}`);\n    uploadDocument.push(`input_file${index}:data_${index}.${extension}`);\n}\n\nreturn [{\n    json: {\n        binary_keys: binary_keys.join(','),\n        uploadDocument : uploadDocument.join(',')\n    },\n    binary: binaries\n}];"
+      },
+      "name": "Function to club the binay files",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        3080,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/files",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {
+          "bodyContentType": "multipart-form-data"
+        },
+        "sendBinaryData": true,
+        "binaryPropertyName": "={{$node[\"Function to club the binay files\"].json[\"uploadDocument\"]}}"
+      },
+      "name": "post the file to dms",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3260,
+        140
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendors_files",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Function to update files in mozart\"].json[\"dealership_agreements\"]}}"
+      },
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3660,
+        140
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let uploaded_data = $node[\"post the file to dms\"].json.data;\nlet requets_id = $node[\"Webhook\"].json[\"body\"][\"payload\"][\"email\"];\nlet dealership_agreements = [];\n\nlet dataIndex = 0\n\nif(Array.isArray(uploaded_data)){\n  uploaded_data.forEach(function(data,index){\n    \n      dealership_agreements[dataIndex] = {}\n      dealership_agreements[dataIndex].directus_files_id = data.id;\n      dealership_agreements[dataIndex].sdm_vendors_id = requets_id\n      dataIndex++;\n  })\n}\nelse{\n  dealership_agreements[0] = {}\n  dealership_agreements[0].directus_files_id = uploaded_data.id;\n  dealership_agreements[0].sdm_vendors_id = requets_id\n}\n\n\nitems[0].json.dealership_agreements = dealership_agreements;\nreturn items;"
+      },
+      "name": "Function to update files in mozart",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        3440,
+        140
+      ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-11-09T06:24:13.195Z"
+  "updatedAt": "2023-11-23T13:10:12.596Z"
 }
