@@ -1,0 +1,56 @@
+{
+  "active": false,
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Get the msme file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-11-23T12:24:57.585Z",
+  "id": "380",
+  "name": "My workflow 26",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://sdqa.vpanel.shakedeal.com//assets?{\"id\":{\"_in\":\"[\"c33dc432-1738-48b7-b99c-a1772e90d298\",\"0b6642e4-c639-4d25-ae89-b9ed02706211\"]\"}}",
+        "responseFormat": "file",
+        "options": {}
+      },
+      "name": "Get the msme file",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        580,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "80",
+          "name": "Mozart qa creds"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-11-23T12:24:57.585Z"
+}
