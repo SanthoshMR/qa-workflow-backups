@@ -200,7 +200,7 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "POST",
-        "url": "=https://enterprise.shakedeal.com/api/GetorderBranchName",
+        "url": "=https://enterpriseqa.shakedeal.com/api/GetorderBranchName",
         "options": {},
         "bodyParametersUi": {
           "parameter": [
@@ -278,5 +278,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-10-20T14:50:52.953Z"
+  "updatedAt": "2023-11-24T07:41:29.239Z"
 }
