@@ -71,7 +71,7 @@
       "main": [
         [
           {
-            "node": "Update the order_status with that order_id",
+            "node": "IF1",
             "type": "main",
             "index": 0
           }
@@ -172,6 +172,24 @@
           }
         ]
       ]
+    },
+    "IF1": {
+      "main": [
+        [
+          {
+            "node": "NoOp1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update the order_status with that order_id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2022-06-06T08:33:49.062Z",
@@ -238,7 +256,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"vpanel_url\"]}}/items/sdv_shipments/{{$node[\"Wait for delivery info\"].json[\"body\"][\"keys\"][0]}}?fields=vendor_po_number.*,asn_number,delivery_partner",
+        "url": "={{$node[\"Globals\"].json[\"vpanel_url\"]}}/items/sdv_shipments/{{$node[\"Wait for delivery info\"].json[\"body\"][\"keys\"][0]}}?fields=vendor_po_number.*,asn_number,delivery_partner,is_dc_invoice",
         "options": {}
       },
       "name": "Get the vendor po_number",
@@ -265,7 +283,7 @@
           "parameter": [
             {
               "name": "shipment_Status",
-              "value": "=intransit"
+              "value": "={{$node[\"Get the vendor po_number\"].json.data.is_dc_invoice?\"dc_download_pending\":\"intransit\"}}"
             }
           ]
         }
@@ -302,7 +320,7 @@
             },
             {
               "name": "shipment_status",
-              "value": "=intransit"
+              "value": "={{$node[\"Get the vendor po_number\"].json.data.is_dc_invoice?\"dc_download_pending\":\"intransit\"}}"
             },
             {
               "name": "asn_document",
@@ -389,7 +407,7 @@
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 1,
       "position": [
-        3040,
+        3220,
         320
       ],
       "credentials": {
@@ -498,7 +516,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2380,
+        2560,
         320
       ],
       "credentials": {
@@ -527,7 +545,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2600,
+        2780,
         320
       ],
       "credentials": {
@@ -556,7 +574,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2820,
+        3000,
         320
       ],
       "credentials": {
@@ -595,6 +613,35 @@
         1960,
         540
       ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Get the vendor po_number\"].json.data.is_dc_invoice}}"
+            }
+          ]
+        }
+      },
+      "name": "IF1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        2320,
+        320
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "NoOp1",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        2660,
+        40
+      ]
     }
   ],
   "settings": {},
@@ -607,5 +654,5 @@
       "updatedAt": "2022-05-30T07:16:52.136Z"
     }
   ],
-  "updatedAt": "2023-08-17T06:13:49.881Z"
+  "updatedAt": "2023-11-27T13:08:06.920Z"
 }
