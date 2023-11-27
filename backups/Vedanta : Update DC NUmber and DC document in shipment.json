@@ -1,0 +1,475 @@
+{
+  "active": true,
+  "connections": {
+    "Get url and token": {
+      "main": [
+        [
+          {
+            "node": "Get the shipment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the shipment": {
+      "main": [
+        [
+          {
+            "node": "Get the vendor Invoice from vpanel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the plant details": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        []
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Get the shakedeal invoice",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Move Binary Data": {
+      "main": [
+        [
+          {
+            "node": "Post the file to vpanel",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Upload file in mozart",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post the file to vpanel": {
+      "main": [
+        [
+          {
+            "node": "Update DC Invoice",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload file in mozart": {
+      "main": [
+        [
+          {
+            "node": "Update DC Invoice",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the shakedeal invoice": {
+      "main": [
+        [
+          {
+            "node": "Move Binary Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the vendor Invoice from vpanel": {
+      "main": [
+        [
+          {
+            "node": "Get the plant details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update DC Invoice": {
+      "main": [
+        [
+          {
+            "node": "Update shipment status in shipment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get url and token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-11-27T07:16:13.765Z",
+  "id": "381",
+  "name": "Vedanta : Update DC NUmber and DC document in shipment",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        200,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "httpMethod": "POST",
+        "path": "update-dc",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        280,
+        320
+      ],
+      "webhookId": "ea6e91c1-9274-4aab-9767-986be560ddc1",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "=https://qan8n.shakedeal.com/webhook/get-url",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "client",
+              "value": "=vedanta"
+            },
+            {
+              "name": "env",
+              "value": "=qa"
+            }
+          ]
+        }
+      },
+      "name": "Get url and token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        520,
+        320
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let shipment = $node[\"Get the shipment\"].json[\"data\"];\nlet vendorDetails = shipment.vendor_po_num.vendor;\nlet shipTo = $node[\"Get the plant details\"].json[\"data\"];\nlet shipmentItems = [];\nlet vendorStateCode = vendorDetails.gstin.slice(0,2);\nlet plantStateCode = shipTo.gst.slice(0,2);\nlet isIgst =  vendorStateCode == plantStateCode ?false:true;\nlet productTableData = '';\nlet totalRow = '';\nlet bangaloreBillingAddress = \"170-172 2nd floor EPIP Zone whitefield,Bangalore,Karnataka 560066\";\nlet bangaloreGst = \"29AACCO6618B1ZK\";\nlet bangaloreStateName = \"Karnataka\";\nlet bangaloreStateCode = \"29\"\nlet goaBillingAddress = \"Ground Floor Sesa Goa IRON ORE Vedanta Limited Navelim Goa 403506\";\nlet goaGst = \"30AACCO6618B1Z1\";\nlet goaStateName = \"Goa\";\nlet goaStateCode = \"30\"\nlet billingAdress = \"\";\nlet billingGst = \"\";\nlet stateName = \"\";\nlet stateCode = \"\";\n//let shipmentKey = $node[\"Webhook\"].json[\"body\"][\"keys\"][0];\nlet shipmentKey = 1634;\nlet dcNumber = \"DC\"+Math.floor(1000+Math.random() * 9000)+shipmentKey.toString();\nif(plantStateCode == \"29\"){\n  billingAdress = bangaloreBillingAddress;\n  billingGst = bangaloreGst;\n  stateName = bangaloreStateName;\n  stateCode = bangaloreStateCode;\n}else{\n  billingAdress = goaBillingAddress;\n  billingGst = goaGst;\n  stateName = goaStateName;\n  stateCode = goaStateCode;\n}\n\nshipment.shipment_items.forEach(function(sitem,index){\n  let netPrice = sitem.shipment_qty*sitem.sdm_po_items_id.unit_price;\n  let taxAmount = (netPrice*sitem.sdm_po_items_id.tax_percentage)/100\n  let totalAmount = netPrice+taxAmount;\n  let igst = 0;\n  let sgst = 0;\n  let cgst = 0;\n  if(isIgst){\n    igst = taxAmount\n  }else{\n    sgst = taxAmount/2;\n    cgst = taxAmount/2;\n  }\n  shipmentItems[index]={};\n  shipmentItems[index].sku = sitem.sdm_po_items_id.product.id;\n  shipmentItems[index].product_name = sitem.sdm_po_items_id.product.description;\n  shipmentItems[index].hsn = sitem.sdm_po_items_id.hsn;\n  shipmentItems[index].qty = sitem.shipment_qty;\n  shipmentItems[index].uom = sitem.sdm_po_items_id.uom;\n  shipmentItems[index].unit_price = sitem.sdm_po_items_id.unit_price;\n  shipmentItems[index].net_price = netPrice;\n  shipmentItems[index].tax_percentage = sitem.sdm_po_items_id.tax_percentage;\n  shipmentItems[index].igst = igst;\n  shipmentItems[index].cgst = cgst;\n  shipmentItems[index].sgst = sgst;\n  shipmentItems[index].total_amount = totalAmount;\n})\nlet totalIgst = shipmentItems.reduce((total,obj)=>obj.igst+ total, 0);\nlet totalSgst = shipmentItems.reduce((total,obj)=>obj.sgst+ total, 0);\nlet totalCgst = shipmentItems.reduce((total,obj)=>obj.cgst+ total, 0);\nlet productTotal = shipmentItems.reduce((total,obj)=>obj.total_amount+ total, 0);\nshipmentItems.forEach(function(item,index){\n  productTableData=productTableData+\n  `<tr>`+\n  `<td>${index+1}</td>`+\n  `<td>`+\n  `<div><span class=\"product-sku\">Mat Code - </span>${item.sku}</div>`+\n  `<div class=\"product-name\">${item.product_name}</div>`+\n  `</td>`+\n  `<td>${item.hsn}</td>`+\n  `<td>${item.qty}</td>`+\n  `<td>${item.uom}</td>`+\n  `<td>${item.unit_price}</td>`+\n  `<td>${item.net_price.toFixed(2)}</td>`+\n  `<td>${item.tax_percentage}%</td>`\n  if(isIgst){\n    productTableData=productTableData+`<td>${item.igst.toFixed(2)}</td>`\n  }else{\n     productTableData=productTableData+`<td>${item.sgst}</td>`+`<td>${item.cgst}</td>`\n  }\n  productTableData=productTableData+`<td>${item.total_amount.toFixed(2)}</td>`\n})\ntotalRow=totalRow+\n`<tr>`+\n`<td colspan=\"8\"><strong>TOTAL:</strong></td>`\nif(isIgst){\n  totalRow=totalRow+`<td>${totalIgst.toFixed(2)}</td>`\n}else{\n  totalRow=totalRow+`<td>${totalSgst.toFixed(2)}</td>`+`<td>${totalCgst.toFixed(2)}</td>`\n}\ntotalRow=totalRow+`<td>${productTotal.toFixed(2)}</td>`\n//Funtion to conevert number to words\nconst wordify = (num) => {\n   const single = [\"Zero\", \"One\", \"Two\", \"Three\", \"Four\", \"Five\", \"Six\", \"Seven\", \"Eight\", \"Nine\"];\n   const double = [\"Ten\", \"Eleven\", \"Twelve\", \"Thirteen\", \"Fourteen\", \"Fifteen\", \"Sixteen\", \"Seventeen\", \"Eighteen\", \"Nineteen\"];\n   const tens = [\"\", \"Ten\", \"Twenty\", \"Thirty\", \"Forty\", \"Fifty\", \"Sixty\", \"Seventy\", \"Eighty\", \"Ninety\"];\n   const formatTenth = (digit, prev) => {\n      return 0 == digit ? \"\" : \" \" + (1 == digit ? double[prev] : tens[digit])\n   };\n   const formatOther = (digit, next, denom) => {\n      return (0 != digit && 1 != next ? \" \" + single[digit] : \"\") + (0 != next || digit > 0 ? \" \" + denom : \"\")\n   };\n   let res = \"\";\n   let index = 0;\n   let digit = 0;\n   let next = 0;\n   let words = [];\n   if (num += \"\", isNaN(parseInt(num))){\n      res = \"\";\n   }\n   else if (parseInt(num) > 0 && num.length <= 10) {\n      for (index = num.length - 1; index >= 0; index--) switch (digit = num[index] - 0, next = index > 0 ? num[index - 1] - 0 : 0, num.length - index - 1) {\n         case 0:\n            words.push(formatOther(digit, next, \"\"));\n         break;\n         case 1:\n            words.push(formatTenth(digit, num[index + 1]));\n            break;\n         case 2:\n            words.push(0 != digit ? \" \" + single[digit] + \" Hundred\" + (0 != num[index + 1] && 0 != num[index + 2] ? \" and\" : \"\") : \"\");\n            break;\n         case 3:\n            words.push(formatOther(digit, next, \"Thousand\"));\n            break;\n         case 4:\n            words.push(formatTenth(digit, num[index + 1]));\n            break;\n         case 5:\n            words.push(formatOther(digit, next, \"Lakh\"));\n            break;\n         case 6:\n            words.push(formatTenth(digit, num[index + 1]));\n            break;\n         case 7:\n            words.push(formatOther(digit, next, \"Crore\"));\n            break;\n         case 8:\n            words.push(formatTenth(digit, num[index + 1]));\n            break;\n         case 9:\n            words.push(0 != digit ? \" \" + single[digit] + \" Hundred\" + (0 != num[index + 1] || 0 != num[index + 2] ? \" and\" : \" Crore\") : \"\")\n      };\n      res = words.reverse().join(\"\")\n   } else res = \"\";\n   return res+\" Rupees Only\"\n};\nlet amountInWords = wordify(parseInt(productTotal));\n\nlet tableHeaders = \"\";\ntableHeaders=tableHeaders+\n`<tr>`+\n`<th>#</th>`+\n`<th>Product</th>`+\n`<th>HSN</th>`+\n`<th>Qty</th>`+\n`<th>UOM</th>`+\n`<th>Unit Price</th>`+\n`<th>Net Amount (INR)</th>`+\n`<th>Tax rate</th>`\nif(isIgst){\n  tableHeaders=tableHeaders+`<th>IGST</th>`\n}else{\n  tableHeaders=tableHeaders+`<th>SGST</th>`+`<th>CGST</th>`\n}\ntableHeaders=tableHeaders+`<th>Total Amount (INR)</th>`+\n`</tr>`\nlet invoiceHtml = `<!DOCTYPE html>\n<html>\n<head>\n  <title>Vendor Invoice</title>\n  <style>\n     body, h1, table {\n        margin: 0;\n        padding: 0;\n        font-family: \"Lucida Sans Unicode\", sans-serif;\n}\n\n/* Header Styles */\n    .header {\n      display: flex;\n      justify-content: space-between;\n      align-items: center;\n      margin-bottom: 20px;\n      border-bottom : solid 2px;\n    }\n    \n    .company-logo {\n      max-height: 50px;\n    }\n    \n    .invoice-text {\n      font-weight: bold;\n        font-family: 'Arial Black', sans-serif;\n          font-style: normal;\n          font-weight: normal;\n          text-decoration: none;\n          font-size: 17.5pt;\n    }\n\n/* Details Styles */\n.details {\n   display: flex;\n  justify-content: space-between;\n  align-content: flex-start;\n}\n\n.vendor-details,\n.invoice-details {\n flex: 1;\n}\n\n/* Address Styles */\n.address  {\n  display: flex;\n  justify-content: space-between;\n  align-content: flex-start;\n  margin-bottom:20px;\n}\n\n.bill-to{\n   flex: 1;\n   text-align: left;\n}\n.ship-to {\n   flex: 1;\n   text-align: right;\n}\n\n    table {\n      border-collapse: collapse;\n      width: 100%;\n      border: 1px solid #ddd;   \n    }\n    \n    th, td {\n      text-align: left;\n      padding: 8px;\n      border-bottom: 1px solid #ddd;\n      border-right: 1px solid #ddd;\n    }\n    \n    th:first-child, td:first-child {\n      border-left: 1px solid #ddd;\n    }\n    \n    th {\n      background-color: #f2f2f2;\n    }\n    \n    .product-sku {\n      font-weight: bold;\n    }\n    \n    .product-name {\n      overflow-wrap: break-word; /* Break product name into multiple lines */\n    }\n    \n    .signature {\n      border: none; /* Remove border for signature cells */\n    }\n    \n    .bottom-space {\n      padding-bottom: 10px; /* Add bottom space after \"For Sairam\" */\n    }\n    .signature-row {\n        text-align: right;\n    }\n\n    .signature-text {\n      font-weight: bold;\n    }\n\n    .signature {\n      margin-top: 40px;\n    }\n    .bill-address{\n      width : 90%;\n      overflow-wrap: break-word;\n    }\n    p{\n        font-style: normal;\n        font-weight: normal;\n        text-decoration: none;\n        font-size: 14pt;\n        margin: 0pt;\n    }\n    footer {\n      position:fixed;\n      bottom:0;\n      width:100%;\n      border-bottom:1px solid\n    }\n    footer p {\n      margin: 5px 0;\n    }\n  </style>\n</head>\n<body>\n<div class=\"container\">\n  <div class=\"header\">\n    <img src=\"https://cdn.shakedeal.com/images/logos/2/ShakeDealLogo.png\" alt=\"Company Logo\" alt=\"Company Logo\" class=\"company-logo\">\n    <h1 class=\"invoice-text\">Delivery Challan</h1>\n  </div>\n  \n  <!-- Vendor and Invoice Details -->\n  <div class=\"details\">\n    <div class=\"vendor-details\">\n      <p><strong>Opcommerce Online Private Limited</strong></p>\n      <p>${billingAdress}</p>\n      <p>accounts@shakedeal.com</p>\n      <p><strong>GSTIN/UIN:</strong>${billingGst}</p>\n    </div>\n    <div class=\"invoice-details\">\n      <p><strong>DC No:</strong> ${dcNumber}</p>\n      <p><strong>Date:</strong> ${shipment.invoice_date}</p>\n      <p><strong>Ref Invoice No:</strong>${shipment.invoice_number}</p>\n      <p><strong>PO No:</strong>${shipment.vendor_po_num.id}</p>\n      <p><strong>PO Date:</strong> ${shipment.vendor_po_num.po_date}</p>\n      <p><strong>Buyer’s Order No:</strong>${shipment.vendor_po_num.po_num}</p>\n      <p><strong>Place of Supply:</strong>Goa</p>\n    </div>\n  </div>\n  \n  <!-- Bill To and Ship To -->\n  <div class=\"address\">\n    <div class=\"vendor-details\">\n      <h2>Dispatch From:</h2>\n      <p><strong>${vendorDetails.vendor_name}</strong></p>\n      <p class=\"bill-address\">${vendorDetails.vendor_address}</p>\n      <p><strong>GSTIN:</strong>${billingGst}</p>\n    </div>\n    <div class=\"invoice-details\">\n      <h2>Deliver To:</h2>\n      <p><strong>${shipTo.company_name}</strong></p>\n      <p class=\"bill-address1\">${shipTo.delivery_address}</p>\n      <p><strong>GSTIN:</strong>${shipTo.gst}</p>\n    </div>\n  </div>\n  <table>\n    ${tableHeaders}\n    ${productTableData}\n    ${totalRow}\n    <tr>\n      <td colspan=\"11\">\n        <strong>Amount in words : </strong>${amountInWords}\n      </td>\n    </tr>\n    <tr>\n    \t<td colspan=\"11\" class=\"signature-row\">\n        <div class=\"signature-text\">For OpCommerce OnlinePvt.Ltd</div>\n        <div class=\"signature\">Authorized Signature</div>\n      </td>\n    </tr>\n  </table>\n  <footer>\n    <p>For any inquiries, please contact us at vedantaiob.ops@shakedeal.com</p>\n  </footer>\n  </div>\n</body>\n</html>\n`\n\nitems[0].json.invoiceHtml = invoiceHtml;\nitems[0].json.encodeHtml = Buffer.from(invoiceHtml, 'utf-8').toString('base64');\nitems[0].json.vendorStateCode = vendorStateCode;\nitems[0].json.plantStateCode = plantStateCode;\nitems[0].json.isIgst = isIgst;\nitems[0].json.amountInWords = amountInWords;\nreturn items;"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1300,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_shipments/{{$node[\"Webhook\"].json[\"body\"][\"keys\"][0]}}?fields=*,shipment_items.*,shipment_items.sdm_po_items_id.*,shipment_items.sdm_po_items_id.product.*,vendor_po_num.*,vendor_po_num.buyers.*,vendor_po_num.buyers.sdm_buyers_id.*,vendor_po_num.operation_agents,vendor_po_num.operation_agents.sdm_operation_agents_id.*,vendor_po_num.vendor.*",
+        "options": {}
+      },
+      "name": "Get the shipment",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        740,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "80",
+          "name": "Mozart qa creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_plants/{{$node[\"Get the shipment\"].json[\"data\"][\"shipment_items\"][0][\"sdm_po_items_id\"][\"plant\"]}}",
+        "options": {}
+      },
+      "name": "Get the plant details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "80",
+          "name": "Mozart qa creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "=https://sdqa.shakedeal.com/index.php?dispatch=wfs_update.pdf_generate",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "hash",
+              "value": "=wfs%#hash"
+            },
+            {
+              "name": "data",
+              "value": "={{$node[\"Function\"].json[\"encodeHtml\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1560,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{$node[\"HTTP Request\"].json[\"path\"]}}",
+        "allowUnauthorizedCerts": true,
+        "responseFormat": "file",
+        "options": {}
+      },
+      "name": "Get the shakedeal invoice",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1780,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "setAllData": false,
+        "destinationKey": "invoice",
+        "options": {
+          "keepSource": true,
+          "keepAsBase64": true
+        }
+      },
+      "name": "Move Binary Data",
+      "type": "n8n-nodes-base.moveBinaryData",
+      "typeVersion": 1,
+      "position": [
+        2020,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/files",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {
+          "bodyContentType": "multipart-form-data"
+        },
+        "sendBinaryData": true
+      },
+      "name": "Post the file to vpanel",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2200,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/files",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {
+          "bodyContentType": "multipart-form-data"
+        },
+        "sendBinaryData": true
+      },
+      "name": "Upload file in mozart",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2200,
+        520
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_shipments/{{$node[\"Get the vendor Invoice from vpanel\"].json[\"data\"][0][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "dc_document",
+              "value": "={{$node[\"Post the file to vpanel\"].json[\"data\"][\"id\"]}}"
+            },
+            {
+              "name": "shipment_Status",
+              "value": "=intransit"
+            },
+            {
+              "name": "dc_number"
+            }
+          ]
+        }
+      },
+      "name": "Update DC Invoice",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2480,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_shipments?filter={\"_and\": [{\"vendor_po_number\":{\"po_number\":{\"_eq\":\"{{$node[\"Get the shipment\"].json[\"data\"][\"vendor_po_num\"][\"id\"]}}\"}}},{\"invoice_number\":{\"_eq\":\"{{$node[\"Get the shipment\"].json[\"data\"][\"invoice_number\"]}}\"}}]}",
+        "options": {}
+      },
+      "name": "Get the vendor Invoice from vpanel",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        900,
+        140
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_shipments/{{$node[\"Webhook\"].json[\"body\"][\"keys\"][0]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "shipment_status",
+              "value": "=intransit"
+            },
+            {
+              "name": "dc_document",
+              "value": "={{$node[\"Upload file in mozart\"].json[\"data\"][\"id\"]}}"
+            },
+            {
+              "name": "dc_number"
+            }
+          ]
+        }
+      },
+      "name": "Update shipment status in shipment",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2720,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-11-27T13:20:19.653Z"
+}
