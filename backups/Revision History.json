@@ -1,0 +1,211 @@
+{
+  "active": false,
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "Item Lists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Item Lists": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request2": {
+      "main": [
+        [
+          {
+            "node": "Item Lists1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Item Lists1": {
+      "main": [
+        [
+          {
+            "node": "Function1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function1": {
+      "main": [
+        [
+          {
+            "node": "Spreadsheet File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-11-28T13:29:07.913Z",
+  "id": "383",
+  "name": "Revision History",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "https://zeusqa.shakedeal.com/items/sp_card_inventory",
+        "options": {}
+      },
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "108",
+          "name": "zeusqa"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "arr =$node[\"HTTP Request\"].json[\"data\"];\nlet result =  arr.slice();\nlet ids = result.map( (item) => item.sd_serial_number);\n      return {ids};"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        680,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "ids",
+        "options": {}
+      },
+      "name": "Item Lists",
+      "type": "n8n-nodes-base.itemLists",
+      "typeVersion": 1,
+      "position": [
+        900,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://zeusqa.shakedeal.com/revisions?filter[collection][_eq]=sp_card_inventory&filter[item][_eq]={{$node[\"Item Lists\"].json[\"ids\"]}}",
+        "options": {}
+      },
+      "name": "HTTP Request2",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1160,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "108",
+          "name": "zeusqa"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "aggregateItems",
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {
+              "fieldToAggregate": "data"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Item Lists1",
+      "type": "n8n-nodes-base.itemLists",
+      "typeVersion": 1,
+      "position": [
+        1380,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": " arr = $node[\"Item Lists1\"].json[\"data\"];\nlet tableData = [];\n\nfor (let i = 0; i < arr.length; i++) {\n    let order = arr[i];\n\n    for (let j = 0; j < order.length; j++) {\n        let currentItem = order[j];\n\n        let status = currentItem['delta'] ? currentItem['delta']['status'] : undefined;\n        let dateUpdated = currentItem['delta'] ? currentItem['delta']['date_updated'] : undefined;\n        let dateCreated = currentItem['data'] ? currentItem['data']['date_created'] : undefined;\n\n        if (status === 'NotAssigned' && dateCreated !== undefined) {\n            dateUpdated = dateCreated;\n        }\n\n        let sdSerialNumber = currentItem['data'] ? currentItem['data']['sd_serial_number'] : undefined;\n\n        if (status !== undefined && dateUpdated !== undefined && sdSerialNumber !== undefined) {\n            let itemData = {\n                revision_history: sdSerialNumber,\n                status: status,\n                date_created: dateUpdated\n            };\n\n            tableData.push(itemData);\n        }\n    }\n}\nreturn tableData;\n\n\n"
+      },
+      "name": "Function1",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1600,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "toFile",
+        "options": {}
+      },
+      "name": "Spreadsheet File",
+      "type": "n8n-nodes-base.spreadsheetFile",
+      "typeVersion": 1,
+      "position": [
+        1820,
+        300
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-11-28T13:29:07.913Z"
+}
