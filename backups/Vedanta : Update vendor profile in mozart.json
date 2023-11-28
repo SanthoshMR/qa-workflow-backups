@@ -519,7 +519,7 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "PATCH",
-        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendors/{{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"email\"]}}",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendors/{{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"vendorEmail\"]}}",
         "options": {},
         "bodyParametersUi": {
           "parameter": [
@@ -817,5 +817,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-11-23T13:10:12.596Z"
+  "updatedAt": "2023-11-28T10:59:49.807Z"
 }
