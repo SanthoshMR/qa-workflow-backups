@@ -34,11 +34,6 @@
         ]
       ]
     },
-    "Start": {
-      "main": [
-        []
-      ]
-    },
     "HTTP Request": {
       "main": [
         [
@@ -137,6 +132,28 @@
         [
           {
             "node": "Get url and token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update shipment status in shipment": {
+      "main": [
+        [
+          {
+            "node": "Update parent shipment status in mozart",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update parent shipment status in mozart": {
+      "main": [
+        [
+          {
+            "node": "Update parent shipment status in vpanel",
             "type": "main",
             "index": 0
           }
@@ -466,10 +483,68 @@
           "name": "Mozart DMS Token"
         }
       }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_shipments/{{$node[\"Get the vendor Invoice from vpanel\"].json[\"data\"][0][\"mozart_parent_invoice\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "shipment_status",
+              "value": "=grn_completed"
+            }
+          ]
+        }
+      },
+      "name": "Update parent shipment status in mozart",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2940,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_shipments/{{$node[\"Get the vendor Invoice from vpanel\"].json[\"data\"][0][\"parent_invoice\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "shipment_Status",
+              "value": "=grn_completed"
+            }
+          ]
+        }
+      },
+      "name": "Update parent shipment status in vpanel",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3180,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-11-27T13:20:19.653Z"
+  "updatedAt": "2023-11-28T09:27:33.396Z"
 }
