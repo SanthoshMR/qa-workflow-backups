@@ -66,6 +66,17 @@
           }
         ]
       ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2023-11-28T13:30:47.489Z",
@@ -78,14 +89,14 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        120,
+        80,
         200
       ]
     },
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "https://zeus.shakedeal.com/items/sp_card_inventory",
+        "url": "https://zeus.shakedeal.com/items/sp_card_inventory?fields[]=sd_serial_number&limit=-1",
         "options": {}
       },
       "name": "HTTP Request",
@@ -97,8 +108,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "108",
-          "name": "zeusqa"
+          "id": "109",
+          "name": "zeusprod"
         }
       }
     },
@@ -130,7 +141,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "=https://zeusqa.shakedeal.com/revisions?filter[collection][_eq]=sp_card_inventory&filter[item][_eq]={{$node[\"Item Lists\"].json[\"ids\"]}}",
+        "url": "=https://zeus.shakedeal.com/revisions?filter[collection][_eq]=sp_card_inventory&filter[item][_eq]={{$node[\"Item Lists\"].json[\"ids\"]}}&limit=-1",
         "options": {}
       },
       "name": "HTTP Request2",
@@ -142,8 +153,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "108",
-          "name": "zeusqa"
+          "id": "109",
+          "name": "zeusprod"
         }
       }
     },
@@ -169,7 +180,7 @@
     },
     {
       "parameters": {
-        "functionCode": " arr = $node[\"Item Lists1\"].json[\"data\"];\nlet tableData = [];\n\nfor (let i = 0; i < arr.length; i++) {\n    let order = arr[i];\n\n    for (let j = 0; j < order.length; j++) {\n        let currentItem = order[j];\n\n        let status = currentItem['delta'] ? currentItem['delta']['status'] : undefined;\n        let dateUpdated = currentItem['delta'] ? currentItem['delta']['date_updated'] : undefined;\n        let dateCreated = currentItem['data'] ? currentItem['data']['date_created'] : undefined;\n\n        if (status === 'NotAssigned' && dateCreated !== undefined) {\n            dateUpdated = dateCreated;\n        }\n\n        let sdSerialNumber = currentItem['data'] ? currentItem['data']['sd_serial_number'] : undefined;\n\n        if (status !== undefined && dateUpdated !== undefined && sdSerialNumber !== undefined) {\n            let itemData = {\n                revision_history: sdSerialNumber,\n                status: status,\n                date_created: dateUpdated\n            };\n\n            tableData.push(itemData);\n        }\n    }\n}\nreturn tableData;\n\n\n"
+        "functionCode": "  let arr = $node[\"Item Lists1\"].json[\"data\"];\nlet tableData = [];\n\nfor (let i = 0; i < arr.length; i++) {\n    let order = arr[i];\n\n    for (let j = 0; j < order.length; j++) {\n        let currentItem = order[j];\n\n        let status = currentItem['delta'] ? currentItem['delta']['status'] : undefined;\n        let dateUpdated = currentItem['delta'] ? currentItem['delta']['date_updated'] : undefined;\n        let dateCreated = currentItem['data'] ? currentItem['data']['date_created'] : undefined;\n\n        if (status === 'NotAssigned' && dateCreated !== undefined) {\n            dateUpdated = dateCreated;\n        }\n\n        let sdSerialNumber = currentItem['data'] ? currentItem['data']['sd_serial_number'] : undefined;\n\n        if (status !== undefined && dateUpdated !== undefined && sdSerialNumber !== undefined) {\n            \n            const utcDate = new Date(dateUpdated); \n            const utcMilliseconds = utcDate.getTime(); \n\n            const offsetMilliseconds = 5.5 * 60 * 60 * 1000; \n            const adjustedMilliseconds = utcMilliseconds + offsetMilliseconds; \n\n            let adjustedDate = new Date(adjustedMilliseconds);\n\n            let itemData = {\n                revision_history: sdSerialNumber,\n                status: status,\n                date_created: adjustedDate\n            };\n\n            tableData.push(itemData);\n        }\n    }\n}\n\nreturn tableData;"
       },
       "name": "Function1",
       "type": "n8n-nodes-base.function",
@@ -193,8 +204,10 @@
       ]
     }
   ],
-  "settings": {},
+  "settings": {
+    "saveManualExecutions": true
+  },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-11-28T13:33:34.641Z"
+  "updatedAt": "2023-11-29T12:11:25.934Z"
 }
