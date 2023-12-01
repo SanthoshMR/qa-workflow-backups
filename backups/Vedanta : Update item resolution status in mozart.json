@@ -60,7 +60,7 @@
       "main": [
         [
           {
-            "node": "Postgres",
+            "node": "IF2",
             "type": "main",
             "index": 0
           }
@@ -234,6 +234,86 @@
           }
         ]
       ]
+    },
+    "Get all shipment resolutions": {
+      "main": [
+        [
+          {
+            "node": "Get all resolved resolutions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF2": {
+      "main": [
+        [
+          {
+            "node": "Get all shipment resolutions",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Postgres",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get all resolved resolutions": {
+      "main": [
+        [
+          {
+            "node": "Check for status update",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for status update": {
+      "main": [
+        [
+          {
+            "node": "Update shipment status",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Postgres",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update shipment status": {
+      "main": [
+        [
+          {
+            "node": "Update shipment status in vpanel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update shipment status in vpanel": {
+      "main": [
+        [
+          {
+            "node": "Postgres",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2023-09-11T07:22:26.693Z",
@@ -260,8 +340,8 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        380,
-        300
+        140,
+        320
       ],
       "webhookId": "4b53ab75-eef9-401f-9c31-f6fcf31d8cda"
     },
@@ -288,8 +368,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        620,
-        300
+        380,
+        320
       ],
       "credentials": {
         "httpBasicAuth": {
@@ -308,8 +388,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        840,
-        300
+        600,
+        320
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -333,8 +413,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        1060,
-        300
+        820,
+        320
       ]
     },
     {
@@ -345,15 +425,15 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1280,
-        300
+        1040,
+        320
       ]
     },
     {
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "PATCH",
-        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_grn_resolutions/{{$node[\"Get the resolution from vpanel\"].json[\"data\"][\"mozart_resolution_id\"]}}",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_grn_resolutions/{{$node[\"Get the resolution from vpanel\"].json[\"data\"][\"mozart_resolution_id\"]}}?fields=*,shipment.*",
         "options": {},
         "bodyParametersUi": {
           "parameter": [
@@ -368,8 +448,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1500,
-        300
+        1260,
+        320
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -570,8 +650,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1020,
-        0
+        780,
+        20
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -692,8 +772,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1240,
-        0
+        1000,
+        20
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -761,10 +841,138 @@
           "name": "Mozart DMS Token"
         }
       }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_shipments/{{$node[\"Update resolution status in mozart\"].json.data.shipment.id}}",
+        "options": {}
+      },
+      "name": "Get all shipment resolutions",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1440,
+        40
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Update resolution status in mozart\"].json.data.shipment.rejection_report_came}}"
+            }
+          ]
+        }
+      },
+      "name": "IF2",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1400,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let resolutionsData = $node[\"Get all shipment resolutions\"].json.data.resolution;\nlet getAllResolvedData = resolutionsData.filter(rd=>rd.resolution_status == \"resolved\");\nlet updateShipmentStatus = false;\nif(resolutionsData.length == getAllResolvedData.length){\n  updateShipmentStatus = true;\n}\n\n\nitems[0].json.getAllResolvedData = getAllResolvedData;\nitems[0].json.updateShipmentStatus = updateShipmentStatus;\nreturn items;"
+      },
+      "name": "Get all resolved resolutions",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1620,
+        40
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Get all resolved resolutions\"].json[\"updateShipmentStatus\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Check for status update",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1780,
+        40
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_shipments/{{$node[\"Update resolution status in mozart\"].json.data.shipment.id}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "shipment_status",
+              "value": "=grn_completed"
+            }
+          ]
+        }
+      },
+      "name": "Update shipment status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1820,
+        -240
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_shipments/{{$node[\"Get the resolution from vpanel\"].json.data.shipment}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "shipment_Status",
+              "value": "=grn_completed"
+            }
+          ]
+        }
+      },
+      "name": "Update shipment status in vpanel",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2020,
+        -240
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-11-28T13:05:06.637Z"
+  "updatedAt": "2023-12-01T07:39:00.349Z"
 }
