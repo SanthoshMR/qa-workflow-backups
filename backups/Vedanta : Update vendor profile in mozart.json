@@ -161,7 +161,7 @@
       "main": [
         [
           {
-            "node": "Check for pan card",
+            "node": "Get the gst file details",
             "type": "main",
             "index": 0
           }
@@ -172,7 +172,7 @@
       "main": [
         [
           {
-            "node": "Check for msme file",
+            "node": "Get the pan file details",
             "type": "main",
             "index": 0
           }
@@ -183,7 +183,7 @@
       "main": [
         [
           {
-            "node": "Check for cancel cheque",
+            "node": "Get the msms file details",
             "type": "main",
             "index": 0
           }
@@ -194,7 +194,7 @@
       "main": [
         [
           {
-            "node": "Check for dealer ship aggrements",
+            "node": "Get the cancel file details",
             "type": "main",
             "index": 0
           }
@@ -216,7 +216,7 @@
       "main": [
         [
           {
-            "node": "Function to club the binay files",
+            "node": "Get the uploaded assets",
             "type": "main",
             "index": 0
           }
@@ -266,6 +266,105 @@
           }
         ]
       ]
+    },
+    "Get the gst file details": {
+      "main": [
+        [
+          {
+            "node": "Update gst file details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update gst file details": {
+      "main": [
+        [
+          {
+            "node": "Check for pan card",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the pan file details": {
+      "main": [
+        [
+          {
+            "node": "Update pan file details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update pan file details": {
+      "main": [
+        [
+          {
+            "node": "Check for msme file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the cancel file details": {
+      "main": [
+        [
+          {
+            "node": "Update cancel file details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update cancel file details": {
+      "main": [
+        [
+          {
+            "node": "Check for dealer ship aggrements",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the msms file details": {
+      "main": [
+        [
+          {
+            "node": "Update msme file details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update msme file details": {
+      "main": [
+        [
+          {
+            "node": "Check for cancel cheque",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the uploaded assets": {
+      "main": [
+        [
+          {
+            "node": "Function to club the binay files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2023-11-09T06:22:56.231Z",
@@ -278,8 +377,8 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        240,
-        300
+        -100,
+        -140
       ]
     },
     {
@@ -293,7 +392,7 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        460,
+        -180,
         320
       ],
       "webhookId": "586eafa2-12a6-4a9b-a433-4fcc28cb583c",
@@ -327,7 +426,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        660,
+        20,
         320
       ],
       "credentials": {
@@ -352,7 +451,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        880,
+        240,
         320
       ]
     },
@@ -367,8 +466,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        960,
-        140
+        280,
+        -40
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -392,7 +491,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        1360,
+        1020,
         340
       ]
     },
@@ -407,8 +506,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1440,
-        120
+        1180,
+        -40
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -472,21 +571,22 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        2160,
-        340
+        2480,
+        360
       ]
     },
     {
       "parameters": {
         "authentication": "headerAuth",
         "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/assets/{{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"cancel_cheque\"]}}",
+        "responseFormat": "file",
         "options": {}
       },
       "name": "Get the cancel cheque",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2320,
+        2700,
         140
       ],
       "credentials": {
@@ -502,7 +602,7 @@
           "boolean": [
             {
               "value1": true,
-              "value2": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"dealership_agreements\"].lengh>0?true:false}}"
+              "value2": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"dealership_agreements\"]?true:false}}"
             }
           ]
         }
@@ -511,8 +611,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        2580,
-        320
+        3360,
+        380
       ]
     },
     {
@@ -590,8 +690,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        3940,
-        320
+        4480,
+        380
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -616,8 +716,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1140,
-        140
+        520,
+        -40
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -643,8 +743,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1640,
-        120
+        1380,
+        -40
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -657,7 +757,7 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "POST",
-        "url": "={{$node[\"Globals\"].json[\"mozart_dms_url\"]}}/files",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/files",
         "allowUnauthorizedCerts": true,
         "jsonParameters": true,
         "options": {
@@ -684,7 +784,7 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "POST",
-        "url": "={{$node[\"Globals\"].json[\"mozart_dms_url\"]}}/files",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/files",
         "allowUnauthorizedCerts": true,
         "jsonParameters": true,
         "options": {
@@ -694,38 +794,6 @@
         "binaryPropertyName": "=input_file:data"
       },
       "name": "Upload cancel cheque in mozart",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        2500,
-        140
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "50",
-          "name": "Mozart DMS Token"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "functionCode": "let responseData = [];\nlet files = [];\nlet upload_files = $node[\"Webhook\"].json[\"body\"][\"payload\"][\"dealership_agreements\"][\"create\"];\n\n\nlet ids = [];\nupload_files.forEach(function(file,index){\n    files.push(file.directus_files_id.id)\n})\nif(files){\n    files.forEach(function(upload_file,index){\n        ids.push(upload_file)\n        responseData.push({\n            json: {\n                \"id\":upload_file,\n                \"index\":\"data\"+index,\n                \"dms_url\":$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]\n            }\t\t\t\n        });\n    })\n}\n\n\nreturn responseData;"
-      },
-      "name": "Function to split files",
-      "type": "n8n-nodes-base.function",
-      "typeVersion": 1,
-      "position": [
-        2720,
-        140
-      ]
-    },
-    {
-      "parameters": {
-        "authentication": "headerAuth",
-        "url": "={{$node[\"Function to split files\"].json[\"dms_url\"]}}/files/{{$node[\"Function to split files\"].json[\"id\"]}}",
-        "options": {}
-      },
-      "name": "Get the uploaded files",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
@@ -741,14 +809,46 @@
     },
     {
       "parameters": {
+        "functionCode": "let responseData = [];\nlet files = [];\nlet upload_files = $node[\"Webhook\"].json[\"body\"][\"payload\"][\"dealership_agreements\"][\"create\"];\n\n\nlet ids = [];\nupload_files.forEach(function(file,index){\n    files.push(file.directus_files_id.id)\n})\nif(files){\n    files.forEach(function(upload_file,index){\n        ids.push(upload_file)\n        responseData.push({\n            json: {\n                \"id\":upload_file,\n                \"index\":\"data\"+index,\n                \"dms_url\":$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]\n            }\t\t\t\n        });\n    })\n}\n\n\nreturn responseData;"
+      },
+      "name": "Function to split files",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        3580,
+        40
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Function to split files\"].json[\"dms_url\"]}}/files/{{$node[\"Function to split files\"].json[\"id\"]}}",
+        "options": {}
+      },
+      "name": "Get the uploaded files",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3800,
+        40
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
         "functionCode": "let binaries = {}, binary_keys = [],uploadDocument = [],extension = [];\n\n\n\nfor([index, item] of items.entries()) {\n    let fileNameDownload = item.json.data.filename_disk.split(\".\")\n    let fileName = item.json.data.filename_download\n    item.binary.data.fileName = fileName\n    let extension = item.json.data.type==\"image/png\"?\"png\":\"pdf\"\n    binaries[`data_${index}.${extension}`] = item.binary.data;\n    binary_keys.push(`data_${index}.${extension}`);\n    uploadDocument.push(`input_file${index}:data_${index}.${extension}`);\n}\n\nreturn [{\n    json: {\n        binary_keys: binary_keys.join(','),\n        uploadDocument : uploadDocument.join(',')\n    },\n    binary: binaries\n}];"
       },
       "name": "Function to club the binay files",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        3080,
-        140
+        4120,
+        40
       ]
     },
     {
@@ -768,8 +868,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        3260,
-        140
+        4300,
+        40
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -791,7 +891,178 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        3660,
+        4680,
+        40
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let uploaded_data = $node[\"post the file to dms\"].json.data;\nlet requets_id = $node[\"Webhook\"].json[\"body\"][\"payload\"][\"vendorEmail\"];\nlet dealership_agreements = [];\n\nlet dataIndex = 0\n\nif(Array.isArray(uploaded_data)){\n  uploaded_data.forEach(function(data,index){\n    \n      dealership_agreements[dataIndex] = {}\n      dealership_agreements[dataIndex].directus_files_id = data.id;\n      dealership_agreements[dataIndex].sdm_vendors_id = requets_id\n      dataIndex++;\n  })\n}\nelse{\n  dealership_agreements[0] = {}\n  dealership_agreements[0].directus_files_id = uploaded_data.id;\n  dealership_agreements[0].sdm_vendors_id = requets_id\n}\n\n\nitems[0].json.dealership_agreements = dealership_agreements;\nreturn items;"
+      },
+      "name": "Function to update files in mozart",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        4480,
+        40
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/files/{{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"gst_certificate\"]}}",
+        "options": {}
+      },
+      "name": "Get the gst file details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        760,
+        -60
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/files/{{$node[\"Post GST file to mozart\"].json.data.id}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "title",
+              "value": "={{$node[\"Get the gst file details\"].json.data.title}}"
+            },
+            {
+              "name": "filename_download",
+              "value": "={{$node[\"Get the gst file details\"].json.data.filename_download}}"
+            }
+          ]
+        }
+      },
+      "name": "Update gst file details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        960,
+        -40
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/files/{{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"pan_card\"]}}",
+        "options": {}
+      },
+      "name": "Get the pan file details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1580,
+        -40
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/files/{{$node[\"Upload pan card in mozart\"].json.data.id}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "title",
+              "value": "={{$node[\"Get the pan file details\"].json.data.title}}"
+            },
+            {
+              "name": "filename_download",
+              "value": "={{$node[\"Get the pan file details\"].json.data.filename_download}}"
+            }
+          ]
+        }
+      },
+      "name": "Update pan file details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1760,
+        -40
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/files/{{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"cancel_cheque\"]}}",
+        "options": {}
+      },
+      "name": "Get the cancel file details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3080,
+        140
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/files/{{$node[\"Upload cancel cheque in mozart\"].json.data.id}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "title",
+              "value": "={{$node[\"Get the cancel file details\"].json.data.title}}"
+            },
+            {
+              "name": "filename_download",
+              "value": "={{$node[\"Get the cancel file details\"].json.data.filename_download}}"
+            }
+          ]
+        }
+      },
+      "name": "Update cancel file details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3280,
         140
       ],
       "credentials": {
@@ -803,19 +1074,83 @@
     },
     {
       "parameters": {
-        "functionCode": "let uploaded_data = $node[\"post the file to dms\"].json.data;\nlet requets_id = $node[\"Webhook\"].json[\"body\"][\"payload\"][\"email\"];\nlet dealership_agreements = [];\n\nlet dataIndex = 0\n\nif(Array.isArray(uploaded_data)){\n  uploaded_data.forEach(function(data,index){\n    \n      dealership_agreements[dataIndex] = {}\n      dealership_agreements[dataIndex].directus_files_id = data.id;\n      dealership_agreements[dataIndex].sdm_vendors_id = requets_id\n      dataIndex++;\n  })\n}\nelse{\n  dealership_agreements[0] = {}\n  dealership_agreements[0].directus_files_id = uploaded_data.id;\n  dealership_agreements[0].sdm_vendors_id = requets_id\n}\n\n\nitems[0].json.dealership_agreements = dealership_agreements;\nreturn items;"
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/files/{{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"msme_file\"]}}",
+        "options": {}
       },
-      "name": "Function to update files in mozart",
-      "type": "n8n-nodes-base.function",
+      "name": "Get the msms file details",
+      "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        3440,
+        2280,
+        120
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/files/{{$node[\"Upload msme file in mozart\"].json.data.id}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "title",
+              "value": "={{$node[\"Get the msms file details\"].json.data.title}}"
+            },
+            {
+              "name": "filename_download",
+              "value": "={{$node[\"Get the msms file details\"].json.data.filename_download}}"
+            }
+          ]
+        }
+      },
+      "name": "Update msme file details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2460,
         140
-      ]
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Function to split files\"].json[\"dms_url\"]}}/assets/{{$node[\"Function to split files\"].json[\"id\"]}}",
+        "allowUnauthorizedCerts": true,
+        "responseFormat": "file",
+        "dataPropertyName": "=data",
+        "options": {}
+      },
+      "name": "Get the uploaded assets",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3960,
+        -100
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-11-28T10:59:49.807Z"
+  "updatedAt": "2023-12-04T12:37:58.420Z"
 }
