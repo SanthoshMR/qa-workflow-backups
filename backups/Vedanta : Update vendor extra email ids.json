@@ -67,7 +67,7 @@
       "main": [
         [
           {
-            "node": "Update cc emails in vendor panel",
+            "node": "Call endpoint to update extra mails",
             "type": "main",
             "index": 0
           }
@@ -79,6 +79,17 @@
         [
           {
             "node": "Postgres",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call endpoint to update extra mails": {
+      "main": [
+        [
+          {
+            "node": "Update cc emails in vendor panel",
             "type": "main",
             "index": 0
           }
@@ -241,8 +252,7 @@
           "id": "50",
           "name": "Mozart DMS Token"
         }
-      },
-      "disabled": true
+      }
     },
     {
       "parameters": {
@@ -284,7 +294,7 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 1,
       "position": [
-        1600,
+        1740,
         160
       ],
       "credentials": {
@@ -292,7 +302,8 @@
           "id": "94",
           "name": "Vendor Panel qa creds"
         }
-      }
+      },
+      "disabled": true
     },
     {
       "parameters": {
@@ -312,11 +323,38 @@
           "id": "78",
           "name": "Vedanta postgres qa"
         }
-      }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "requestMethod": "PATCH",
+        "url": "=https://sdqa.vpanel.shakedeal.com/vendor/profile-update",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "id",
+              "value": "={{$node[\"Get the vendor id\"].json[\"data\"][0][\"id\"]}}"
+            },
+            {
+              "name": "extra_cc_mail_ids",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"extra_cc_mail_ids\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Call endpoint to update extra mails",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1520,
+        160
+      ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-12-05T12:55:36.465Z"
+  "updatedAt": "2023-12-06T10:00:19.821Z"
 }
