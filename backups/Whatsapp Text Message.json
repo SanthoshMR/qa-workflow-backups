@@ -1,0 +1,339 @@
+{
+  "active": false,
+  "connections": {
+    "Text Message": {
+      "main": [
+        [
+          {
+            "node": "Media Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Media Message": {
+      "main": [
+        [
+          {
+            "node": "List Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Message": {
+      "main": [
+        [
+          {
+            "node": "Reply Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "Text Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-12-06T05:06:18.444Z",
+  "id": "386",
+  "name": "Whatsapp Text Message",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        -140,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://api.kaleyra.io/v1/HXIN1732535738IN/messages",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "from",
+              "value": "+917406700552"
+            },
+            {
+              "name": "to",
+              "value": "={{$node[\"Function\"].json[\"mobile_number\"]}}"
+            },
+            {
+              "name": "type",
+              "value": "text"
+            },
+            {
+              "name": "channel",
+              "value": "whatsapp"
+            },
+            {
+              "name": "body",
+              "value": "Text message type 😊"
+            }
+          ]
+        },
+        "headerParametersUi": {
+          "parameter": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "api-key",
+              "value": "Ad3aca40e1bf47b84114c9b8b967c9db8"
+            }
+          ]
+        },
+        "queryParametersUi": {
+          "parameter": [
+            {}
+          ]
+        }
+      },
+      "name": "Text Message",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        240,
+        320
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://api.kaleyra.io/v1/HXIN1732535738IN/messages",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "from",
+              "value": "+917406700552"
+            },
+            {
+              "name": "to",
+              "value": "={{$node[\"Function\"].json[\"mobile_number\"]}}"
+            },
+            {
+              "name": "type",
+              "value": "media"
+            },
+            {
+              "name": "channel",
+              "value": "whatsapp"
+            },
+            {
+              "name": "media_url",
+              "value": "https://cdn.shakedeal.com/images/logos/2/ShakeDealLogo.png"
+            },
+            {
+              "name": "caption",
+              "value": "Media Message 😊"
+            },
+            {
+              "name": "body",
+              "value": "This is the test message 😊"
+            }
+          ]
+        },
+        "headerParametersUi": {
+          "parameter": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "api-key",
+              "value": "Ad3aca40e1bf47b84114c9b8b967c9db8"
+            }
+          ]
+        },
+        "queryParametersUi": {
+          "parameter": [
+            {}
+          ]
+        }
+      },
+      "name": "Media Message",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        460,
+        320
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://api.kaleyra.io/v1/HXIN1732535738IN/messages",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "from",
+              "value": "+917406700552"
+            },
+            {
+              "name": "to",
+              "value": "={{$node[\"Function\"].json[\"mobile_number\"]}}"
+            },
+            {
+              "name": "type",
+              "value": "list"
+            },
+            {
+              "name": "channel",
+              "value": "whatsapp"
+            },
+            {
+              "name": "body",
+              "value": "List message type 😊"
+            },
+            {
+              "name": "action",
+              "value": "{\n  \"button\": \"Actions\",\n  \"sections\": [\n    {\n      \"title\": \"Language\",\n      \"rows\": [\n        {\n          \"id\": \"hindi\",\n          \"title\": \"Hindi\",\n          \"description\": \"\"\n        },\n        {\n          \"id\": \"tamil\",\n          \"title\": \"tamil\",\n          \"description\": \"tamil\"\n        },\n{\n          \"id\": \"kanada\",\n          \"title\": \"Kanada\",\n          \"description\": \"Kanada\"\n        }\n      ]\n    }\n  ]\n}"
+            },
+            {
+              "name": "header",
+              "value": "{\"type\": \"text\", \"text\": \"This is header content\"}"
+            },
+            {
+              "name": "footer",
+              "value": "Shakedeal"
+            }
+          ]
+        },
+        "headerParametersUi": {
+          "parameter": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "api-key",
+              "value": "Ad3aca40e1bf47b84114c9b8b967c9db8"
+            }
+          ]
+        },
+        "queryParametersUi": {
+          "parameter": [
+            {}
+          ]
+        }
+      },
+      "name": "List Message",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        700,
+        320
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "functionCode": "// \nitems[0].json.mobile_number = \"919965098134\";\n// items[0].json.mobile_number = \"919741551010\";\n// items[0].json.mobile_number = \"919886791181\";\n// items[0].json.mobile_number = \"919108568126\";\n\n\n\nreturn items;\n"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        60,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://api.kaleyra.io/v1/HXIN1732535738IN/messages",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "from",
+              "value": "+917406700552"
+            },
+            {
+              "name": "to",
+              "value": "={{$node[\"Function\"].json[\"mobile_number\"]}}"
+            },
+            {
+              "name": "type",
+              "value": "reply"
+            },
+            {
+              "name": "channel",
+              "value": "whatsapp"
+            },
+            {
+              "name": "body",
+              "value": "Reply Message Type 😊"
+            },
+            {
+              "name": "action",
+              "value": "{\n            \"buttons\": [\n                {\n                    \"type\": \"reply\",\n                    \"reply\": {\n                        \"id\": \"1\",\n                        \"title\": \"Hindi\"\n                    }\n                },\n                {\n                    \"type\": \"reply\",\n                    \"reply\": {\n                        \"id\": \"2\",\n                        \"title\": \"English\"\n                    }\n                },\n                {\n                    \"type\": \"reply\",\n                    \"reply\": {\n                        \"id\": \"3\",\n                        \"title\": \"Telgu\"\n                    }\n                }\n            ]\n        }"
+            }
+          ]
+        },
+        "headerParametersUi": {
+          "parameter": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "api-key",
+              "value": "Ad3aca40e1bf47b84114c9b8b967c9db8"
+            }
+          ]
+        },
+        "queryParametersUi": {
+          "parameter": [
+            {}
+          ]
+        }
+      },
+      "name": "Reply Message",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        960,
+        320
+      ],
+      "alwaysOutputData": true
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-12-06T12:29:17.366Z"
+}
