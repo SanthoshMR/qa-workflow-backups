@@ -228,7 +228,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let responseData = [];\n\nresponseData.push({\n    json: {\n      \"success\":false,\n      \"message\":\"Invalid OTP\"\n    }\t\t\t\t\n});\n\nreturn responseData;"
+        "functionCode": "let responseData = [];\n\nresponseData.push({\n    json: {\n      \"success\":false,\n      \"message\":\"Entered Invalid OTP\"\n    }\t\t\t\t\n});\n\nreturn responseData;"
       },
       "name": "Respond Failure",
       "type": "n8n-nodes-base.function",
@@ -240,7 +240,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let responseData = [];\nlet customerName = $node[\"Get Details From Serial\"].json[\"data\"][0][\"customer_name\"];\n\nif(!customerName) customerName = \"Card User\";\n\nresponseData.push({\n    json: {\n      \"success\":true,\n      \"customer_name\": customerName,\n      \"message\":\"Request Placed Successfully\"\n    }\t\t\t\t\n});\n\nreturn responseData;"
+        "functionCode": "let responseData = [];\nlet customerName = $node[\"Get Details From Serial\"].json[\"data\"][0][\"customer_name\"];\n\nif(!customerName) customerName = \"Card User\";\n\nresponseData.push({\n    json: {\n      \"success\":true,\n      \"customer_name\": customerName,\n      \"message\":\"Request for Activation is Successfull.\",\n    }\t\t\t\t\n});\n\nreturn responseData;"
       },
       "name": "Respond Success",
       "type": "n8n-nodes-base.function",
@@ -390,5 +390,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-11-20T12:54:27.644Z"
+  "updatedAt": "2023-12-06T07:03:43.377Z"
 }
