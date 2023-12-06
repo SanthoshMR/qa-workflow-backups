@@ -150,7 +150,7 @@
         ],
         [
           {
-            "node": "Update vendor profile",
+            "node": "Get vendor profile",
             "type": "main",
             "index": 0
           }
@@ -260,7 +260,7 @@
       "main": [
         [
           {
-            "node": "Update vendor profile",
+            "node": "Get vendor profile",
             "type": "main",
             "index": 0
           }
@@ -360,6 +360,17 @@
         [
           {
             "node": "Function to club the binay files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get vendor profile": {
+      "main": [
+        [
+          {
+            "node": "Update vendor profile",
             "type": "main",
             "index": 0
           }
@@ -625,63 +636,63 @@
           "parameter": [
             {
               "name": "vendor_phone",
-              "value": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"vendor_phone\"]}}"
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"vendor_phone\"]?$node[\"Webhook\"].json[\"body\"][\"payload\"][\"vendor_phone\"]:$node[\"Get vendor profile\"].json.data.vendor_phone}}"
             },
             {
               "name": "vendor_company",
-              "value": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"vendor_company\"]}}"
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"vendor_company\"]?$node[\"Webhook\"].json[\"body\"][\"payload\"][\"vendor_company\"]:$node[\"Get vendor profile\"].json.data.vendor_company}}"
             },
             {
               "name": "vendor_address",
-              "value": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"vendor_address\"]}}"
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"vendor_address\"]?$node[\"Webhook\"].json[\"body\"][\"payload\"][\"vendor_address\"]:$node[\"Get vendor profile\"].json.data.vendor_address}}"
             },
             {
               "name": "gstin",
-              "value": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"gstin\"]}}"
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"gstin\"]?$node[\"Webhook\"].json[\"body\"][\"payload\"][\"gstin\"]:$node[\"Get vendor profile\"].json.data.gstin}}"
             },
             {
               "name": "pan",
-              "value": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"pan\"]}}"
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"pan\"]?$node[\"Webhook\"].json[\"body\"][\"payload\"][\"pan\"]:$node[\"Get vendor profile\"].json.data.pan}}"
             },
             {
               "name": "Alternate_Mobile_Number",
-              "value": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"Alternate_Mobile_Number\"]}}"
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"Alternate_Mobile_Number\"]?$node[\"Webhook\"].json[\"body\"][\"payload\"][\"Alternate_Mobile_Number\"]:$node[\"Get vendor profile\"].json.data.Alternate_Mobile_Number}}"
             },
             {
               "name": "Telephone_Number",
-              "value": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"Telephone_Number\"]}}"
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"Telephone_Number\"]?$node[\"Webhook\"].json[\"body\"][\"payload\"][\"Telephone_Number\"]:$node[\"Get vendor profile\"].json.data.Telephone_Number}}"
             },
             {
               "name": "msme_toggle",
-              "value": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"msme_toggle\"]}}"
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"msme_toggle\"]?$node[\"Webhook\"].json[\"body\"][\"payload\"][\"msme_toggle\"]:$node[\"Get vendor profile\"].json.data.msme_toggle}}"
             },
             {
               "name": "gst_certificate",
-              "value": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"gst_certificate\"]?$node[\"Post GST file to mozart\"].json[\"data\"][\"id\"]:null}}"
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"gst_certificate\"]?$node[\"Post GST file to mozart\"].json[\"data\"][\"id\"]:$node[\"Get vendor profile\"].json.data.gst_certificate}}"
             },
             {
               "name": "pan_card",
-              "value": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"pan_card\"]?$node[\"Upload pan card in mozart\"].json[\"data\"][\"id\"]:null}}"
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"pan_card\"]?$node[\"Upload pan card in mozart\"].json[\"data\"][\"id\"]:$node[\"Get vendor profile\"].json.data.pan_card}}"
             },
             {
               "name": "msme_file",
-              "value": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"msme_file\"]?$node[\"Upload msme file in mozart\"].json[\"data\"][\"id\"]:null}}"
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"msme_file\"]?$node[\"Upload msme file in mozart\"].json[\"data\"][\"id\"]:$node[\"Get vendor profile\"].json.data.msme_file}}"
             },
             {
               "name": "authorized_dealer_toggle",
-              "value": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"authorized_dealer_toggle\"]}}"
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"authorized_dealer_toggle\"]?$node[\"Webhook\"].json[\"body\"][\"payload\"][\"authorized_dealer_toggle\"]:$node[\"Get vendor profile\"].json.data.authorized_dealer_toggle}}"
             },
             {
               "name": "brand_tags",
-              "value": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"brand_tags\"]}}"
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"brand_tags\"]?$node[\"Webhook\"].json[\"body\"][\"payload\"][\"brand_tags\"]:$node[\"Get vendor profile\"].json.data.brand_tags}}"
             },
             {
               "name": "account_number",
-              "value": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"account_number\"]}}"
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"account_number\"]?$node[\"Webhook\"].json[\"body\"][\"payload\"][\"account_number\"]:$node[\"Get vendor profile\"].json.data.account_number}}"
             },
             {
               "name": "cancel_cheque",
-              "value": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"cancel_cheque\"]?$node[\"Upload cancel cheque in mozart\"].json[\"data\"][\"id\"]:null}}"
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"cancel_cheque\"]?$node[\"Upload cancel cheque in mozart\"].json[\"data\"][\"id\"]:$node[\"Get vendor profile\"].json.data.cancel_cheque}}"
             }
           ]
         }
@@ -690,7 +701,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        4480,
+        5160,
         380
       ],
       "credentials": {
@@ -1147,10 +1158,30 @@
           "name": "VendorPanel DMS Token"
         }
       }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendors/{{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"vendorEmail\"]}}",
+        "options": {}
+      },
+      "name": "Get vendor profile",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        4940,
+        380
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-12-04T12:37:58.420Z"
+  "updatedAt": "2023-12-06T12:24:40.843Z"
 }
