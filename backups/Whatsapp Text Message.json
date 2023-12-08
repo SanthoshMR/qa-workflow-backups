@@ -125,7 +125,8 @@
         240,
         320
       ],
-      "alwaysOutputData": true
+      "alwaysOutputData": true,
+      "disabled": true
     },
     {
       "parameters": {
@@ -189,7 +190,8 @@
         460,
         320
       ],
-      "alwaysOutputData": true
+      "alwaysOutputData": true,
+      "disabled": true
     },
     {
       "parameters": {
@@ -257,7 +259,8 @@
         700,
         320
       ],
-      "alwaysOutputData": true
+      "alwaysOutputData": true,
+      "disabled": true
     },
     {
       "parameters": {
@@ -335,5 +338,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-12-06T12:29:17.366Z"
+  "updatedAt": "2023-12-08T06:43:31.504Z"
 }
