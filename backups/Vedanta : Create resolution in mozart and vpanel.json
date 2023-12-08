@@ -318,7 +318,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "=https://sdqa.vpanel.shakedeal.com/items/sdv_grn_resolutions?filter={\"resolution_status\":{\"_eq\":\"pending\"}}",
+        "url": "=https://sdqa.vpanel.shakedeal.com/items/sdv_grn_resolutions?filter={\"_and\":[{\"resolution_status\":{\"_eq\":\"pending\"}},{\"shipment\":{\"_eq\":\"{{$node[\"Get the shipment from vpanel\"].json.data[0].id}}\"}}]}",
         "options": {}
       },
       "name": "Get the pending resolution",
@@ -404,5 +404,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-11-07T13:34:51.275Z"
+  "updatedAt": "2023-12-08T09:44:33.235Z"
 }
