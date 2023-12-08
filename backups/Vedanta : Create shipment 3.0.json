@@ -137,7 +137,7 @@
       "main": [
         [
           {
-            "node": "Get the vendor payments id",
+            "node": "Update po status",
             "type": "main",
             "index": 0
           }
@@ -273,6 +273,17 @@
         [
           {
             "node": "Get the shipment items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update po status": {
+      "main": [
+        [
+          {
+            "node": "Get the vendor payments id",
             "type": "main",
             "index": 0
           }
@@ -915,10 +926,39 @@
           "name": "VendorPanel DMS Token"
         }
       }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_pos/{{$node[\"Get the po number\"].json[\"data\"][\"po_number\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "po_status",
+              "value": "=processing"
+            }
+          ]
+        }
+      },
+      "name": "Update po status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2580,
+        260
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-12-07T10:20:36.832Z"
+  "updatedAt": "2023-12-08T06:08:23.410Z"
 }
