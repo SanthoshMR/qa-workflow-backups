@@ -34,33 +34,11 @@
         ]
       ]
     },
-    "Update the vendor po_num": {
-      "main": [
-        [
-          {
-            "node": "Create vendor invoice details",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Function to create po": {
       "main": [
         [
           {
-            "node": "Update the vendor po_num",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Get PO attachment": {
-      "main": [
-        [
-          {
-            "node": "Move Binary Data",
+            "node": "Get the PO pdf",
             "type": "main",
             "index": 0
           }
@@ -71,7 +49,7 @@
       "main": [
         [
           {
-            "node": "Wait for file upload",
+            "node": "Update title in vpanel",
             "type": "main",
             "index": 0
           }
@@ -233,7 +211,7 @@
       "main": [
         [
           {
-            "node": "Function to map po and product",
+            "node": "Update user created in pdf",
             "type": "main",
             "index": 0
           }
@@ -244,7 +222,7 @@
       "main": [
         [
           {
-            "node": "Update the po_status",
+            "node": "Postgres",
             "type": "main",
             "index": 0
           }
@@ -256,17 +234,6 @@
         [
           {
             "node": "Map po and products",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Create vendor invoice details": {
-      "main": [
-        [
-          {
-            "node": "Get PO attachment",
             "type": "main",
             "index": 0
           }
@@ -288,9 +255,9 @@
       "main": [
         [
           {
-            "node": "Wait for file upload",
+            "node": "Update title in mozart",
             "type": "main",
-            "index": 1
+            "index": 0
           }
         ]
       ]
@@ -462,6 +429,72 @@
           }
         ]
       ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "Move Binary Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the PO pdf": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update title in mozart": {
+      "main": [
+        [
+          {
+            "node": "Wait for file upload",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Update title in vpanel": {
+      "main": [
+        [
+          {
+            "node": "Wait for file upload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update user created in pdf": {
+      "main": [
+        [
+          {
+            "node": "Function to map po and product",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres": {
+      "main": [
+        [
+          {
+            "node": "Update the po_status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2023-12-11T10:51:24.581Z",
@@ -558,47 +591,14 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "25",
-          "name": "Local Header Auth"
+          "id": "50",
+          "name": "Mozart DMS Token"
         }
       }
     },
     {
       "parameters": {
-        "authentication": "headerAuth",
-        "requestMethod": "PATCH",
-        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_pos/{{$node[\"Get po_details\"].json[\"data\"][0][\"id\"]}}",
-        "options": {},
-        "bodyParametersUi": {
-          "parameter": [
-            {
-              "name": "id",
-              "value": "={{$node[\"create po\"].json[\"purchaseorder\"][\"purchaseorder_number\"]}}"
-            },
-            {
-              "name": "po_status",
-              "value": "=vendor_po_sent"
-            }
-          ]
-        }
-      },
-      "name": "Update the vendor po_num",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        -3400,
-        800
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "25",
-          "name": "Local Header Auth"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "functionCode": "let pro_items=$node[\"Get the po items\"].json[\"data\"];\nlet buyers = $node[\"Get po_details\"].json[\"data\"][0][\"buyers\"];\nlet ldChargeApplicable =  $node[\"Get po_details\"].json[\"data\"][0][\"ld_charges_applicable\"];\nlet transportationChargesApplicable = $node[\"Get po_details\"].json[\"data\"][0][\"transportation_charges_applicable\"];\nlet transportationCharges = $node[\"Get po_details\"].json[\"data\"][0][\"transportation_charges\"];\nlet otherChargesApplicable = $node[\"Get po_details\"].json[\"data\"][0][\"other_charges_applicable\"];\nlet otherCharges = $node[\"Get po_details\"].json[\"data\"][0][\"other_charges\"];\nlet operationAgents = $node[\"Get po_details\"].json[\"data\"][0][\"operation_agents\"];\nlet buyerEmails = buyers.map(buyer=>buyer.sdm_buyers_id.buyer.email).join(\",\");\nlet operationAgentEmails = operationAgents.map(agent=>agent.sdm_operation_agents_id.operation_agent.email).join(\",\")\nlet routing_commission = $node[\"Globals\"].json.commission;\nlet po_type = $node[\"Get po_details\"].json[\"data\"][0][\"po_num\"][\"po_type\"];\npro_items.map((obj, i) => ({ ...obj, isMapped: false }));\n//let payment_terms = $node[\"wait for order data\"].json[\"body\"][\"payment_terms\"]?$node[\"wait for order data\"].json[\"body\"][\"payment_terms\"]:\"Advance\";\nconst id= [];\nconst custom_fields=[];\nlet contact_id=\"\";\nlet vendor_id = \"\";\nlet source_of_supply = $node[\"Check for vendor\"].json[\"contacts\"].length?$node[\"Check for vendor\"].json[\"contacts\"][0][\"place_of_contact\"]:$node[\"Get the place of supply\"].json[\"data\"][0][\"state_code\"]\n\n;\nlet destination_of_supply = $node[\"Get contact details based on plant\"].json[\"data\"][0][\"destination_of_supply\"];\nlet vendor_gst_treatment = \"\";\nlet vendorPassword = \"\";\nlet vendorFirstName = $node[\"Get po_details\"].json[\"data\"][0][\"vendor\"][\"vendor_name\"];\nlet randomNumber = Math.floor(Math.random() * 90000) + 10000;\nvendorPassword =`${vendorFirstName.split(\" \")[0]}@${randomNumber}`\n\n\nif($node[\"Check for Customer\"].json[\"contacts\"].length!==0){\n    contact_id=$node[\"Check for Customer\"].json[\"contacts\"][0][\"contact_id\"]\n}else{\n    contact_id=$node[\"create contact\"].json[\"contact\"][\"contact_id\"]\n}\nif($node[\"Check for vendor\"].json[\"contacts\"].length!==0){\n    vendor_id=$node[\"Check for vendor\"].json[\"contacts\"][0][\"contact_id\"]\n    vendor_gst_treatment=$node[\"Check for vendor\"].json[\"contacts\"][0][\"gst_treatment\"]\n}else{\n    vendor_id=$node[\"create vendor\"].json[\"contact\"][\"contact_id\"]\n    vendor_gst_treatment=$node[\"create vendor\"].json[\"contact\"][\"gst_treatment\"]\n}\n\nfor (const [index,item] of items.entries()) {\n  if(item.json.hasOwnProperty(\"code\")){\n     let tax_name = source_of_supply == destination_of_supply?\"intra\":\"inter\";\n     let item_tax_preferences = item.json.hasOwnProperty(\"item\")?item.json[\"item\"][\"item_tax_preferences\"]:item.json[\"items\"][0][\"item_tax_preferences\"];\n     let taxId = item_tax_preferences.find(tax =>tax.tax_specification == tax_name);\n     let list = pro_items.find(data=>data[\"product\"][\"id\"]===(item.json.hasOwnProperty(\"item\")?item.json[\"item\"][\"sku\"]:item.json[\"items\"][0][\"sku\"])&& !data[\"isMapped\"])\n     pro_items[pro_items.findIndex(product=>product[\"product\"][\"id\"]===(item.json.hasOwnProperty(\"item\")?item.json[\"item\"][\"sku\"]:item.json[\"items\"][0][\"sku\"])&& !product[\"isMapped\"])].isMapped = true\n        id.push(\n        {\n            item_id: item.json.hasOwnProperty(\"item\")?item.json[\"item\"][\"item_id\"]:item.json[\"items\"][0][\"item_id\"],\n            sku : list[\"product\"][\"id\"],\n            quantity:list[\"requested_qty\"],\n            rate:po_type == \"routing\"?list[\"unit_price\"]-(list[\"unit_price\"]*routing_commission)/100 :list[\"unit_price\"],\n            reverse_charge_tax_id:vendor_gst_treatment == \"business_none\"?taxId[\"tax_id\"]:\"\",\n            product_type: \"goods\",\n            tax_id:vendor_gst_treatment == \"business_none\" ||vendor_gst_treatment == \"business_registered_composition\"?\"\":taxId[\"tax_id\"],\n        });\n  }   \n}\n\n//Start : Get the products which are not mapped and push to invoice\nlet not_mapped_products = pro_items.filter(prod =>!prod.isMapped);\nif(not_mapped_products){\n    not_mapped_products.forEach(function(nmp,index){\n        let find_product = id.find(item=>nmp[\"product\"][\"id\"] == item.sku);\n        if(find_product){\n            id.push(\n            {\n                item_id: find_product[\"item_id\"],\n                quantity:nmp[\"requested_qty\"],\n                rate:find_product[\"rate\"],\n                reverse_charge_tax_id:find_product[\"reverse_charge_tax_id\"],\n                product_type: \"goods\",\n                tax_id:find_product[\"tax_id\"],\n            });\n        }\n    })\n}\n//END\n\nlet termsAndConditions = `Terms & Conditions\n${transportationChargesApplicable?\"\":\"Price basis : FOR - Free on Road\"}\nFOR SITE\nInsurance :\nTaxes : GST Extra @ Actuals\nShipping Instruction : OP COMMERCE INVOICE HAS TO BE ATTACHED TO PRODUCT.\nPayment mode : NEFT/RTGS\nPayment terms : ${$node[\"Get po_details\"].json[\"data\"][0][\"payment_terms\"]?parseInt($node[\"Get po_details\"].json[\"data\"][0][\"payment_terms\"]):30} Days Credit\n${transportationChargesApplicable?transportationCharges:\"\"}\n\n${otherChargesApplicable?otherCharges:\"\"}\n\nWarranty : The equipment's/spares supplied to us under this Contract shall be warranted against defects in workmanship and material under normal use, service and duty conditions as specified in the Purchase Order, for a period of 12 months from the date of installation or 18 months from the date of supply, whichever is earlier. If any defects are noticed in the equipment during the warranty period, the same shall be intimated to you in writing and the equipment will be sent to you on a freight-to-pay basis. All rectification/replacement will be undertaken at your own cost.\n\nFor deliveries through dedicated vehicle at site/inside site of Vedanta Ltd., the below compliances and safety requirements to be adhered-to by the transporters carrying the material.\na) All the legal documents pertaining to the vehicle namely Vehicle Insurance, Registration certificate, Pollution certificate etc in which dispatch is being done to be valid.\nb) The driver should possess valid driving license w.r.t the type of vehicle he has arrived inside the premises with the material.\nc) The vehicle carrying the material to be compulsorily equipped with reverse horn & reverse camera which should be in working condition.\n\n${ldChargeApplicable?\"LD clause # Applicable as below\":\"LD clause # not Applicable\"}\n${ldChargeApplicable?\"LD Clause: In the event you fail to supply the material within the time specified in the contract, you shall pay to us penalty @ 0.5% of the value of the contract for each weeks delay and part thereof. However, such payment shall not exceed 5% of the total value of the contract. We may, without prejudice to any other method of recovery, deduct an amount of such damages from any monies due or which may become due to you.\":\"\"}\n\nOP Commerce Online Pvt. Ltd. stands as an aggregator in the Procurement & Stores sector for Vedanta Ltd. For Vendor payments we solely depend on payments received from Vedanta Ltd. post adherence to all procurement and billing procedures. However, payments will be done by us to our Source vendors as per the Payment terms mentioned on the face page of this Contract agreement mentioned above on a case to case basis. But during occurrences of Force Majeure or any other rare/seldom circumstances payment will be made on Paid-when-Paid basis\n\nDo not dispatch consignment through DTDC, Trackon, Maruti or Professional Couriers as the don't supply any consignments to Goa on door delivery basis. Kindly prefer Bluedart, TCI Express, TCI Freight, VRL, ACPL or Deccan Queen Transport to book for door delivery basis.\n`\n\nlet delivery_address= {\n    \"address\": $node[\"Get contact details based on plant\"].json[\"data\"][0][\"delivery_address\"]\n}\nlet invoice_obj={\n \"purchaseorder_number\" :$node[\"Get po_details\"].json[\"data\"][0][\"id\"],\n \"delivery_customer_id\":contact_id,\n  \"line_items\":id,\n \"date\":$node[\"Get po_details\"].json[\"data\"][0][\"po_date\"],\n \"reference_number\":$node[\"Get po_details\"].json[\"data\"][0][\"po_num\"]?$node[\"Get po_details\"].json[\"data\"][0][\"po_num\"][\"id\"]:\"\",\n \"expected_delivery_date\":$node[\"Get po_details\"].json[\"data\"][0][\"po_deliver_date\"],\n //\"salesperson_name\":$node[\"wait for order data\"].json[\"body\"][\"salesperson_name\"],\n //\"custom_fields\":custom_fields,\n \"payment_terms\":$node[\"Get po_details\"].json[\"data\"][0][\"payment_terms\"]?parseInt($node[\"Get po_details\"].json[\"data\"][0][\"payment_terms\"]):30,\n //\"discount\": $node[\"wait for order data\"].json[\"body\"][\"discount\"],\n //\"shipping_charge\":$node[\"wait for order data\"].json[\"body\"][\"shipping_charge\"],\n //\"billing_address\":$node[\"wait for order data\"].json[\"body\"][\"billing_address\"],\n //\"shipping_address\":$node[\"wait for order data\"].json[\"body\"][\"shipping_address\"],\n \"source_of_supply\":source_of_supply,\n \"destination_of_supply\":$node[\"Get contact details based on plant\"].json[\"data\"][0][\"destination_of_supply\"],\n \"is_discount_before_tax\":false,\n \"vendor_id\":vendor_id,\n \"delivery_address\":delivery_address,\n \"vendor_gst_treatment\":vendor_gst_treatment,\n \"pro_items\":pro_items,\n  \"branch_name\" : $node[\"Get po_details\"].json[\"data\"][0][\"sd_billing_address\"]?$node[\"Get po_details\"].json[\"data\"][0][\"sd_billing_address\"][\"branch_name\"]:\"Large Enterprises\",\n \"branch_id\": $node[\"Get po_details\"].json[\"data\"][0][\"sd_billing_address\"]?$node[\"Get po_details\"].json[\"data\"][0][\"sd_billing_address\"][\"branch_id\"]:\"1763031000027801917\",\n \"buyer_ids\":buyerEmails,\n \"poc_ids\":operationAgentEmails,\n \"t&c\":termsAndConditions,\n \"vendor_password\":vendorPassword\n}  \nlet returnItems = []\nreturnItems.push({\njson:invoice_obj\n})\nreturn returnItems ;\n"
+        "functionCode": "\nlet poDetails = $node[\"Get po_details\"].json.data;\nlet poItemsData = $node[\"Get the po items\"].json.data;\nlet plantDetails = $node[\"Get contact details based on plant\"].json.data;\nlet pdfPoItems = [];\nlet taxItems = [];\nlet allPoTaxes = poItemsData.map(pItem =>pItem.tax_percentage);\nlet uniquePoTaxes =[...new Set(allPoTaxes)];\nlet subtotal = poItemsData.reduce((acc, obj) => acc +  parseFloat(obj.net_price), 0);\nlet totalValue = poItemsData.reduce((acc, obj) => acc +  parseFloat(obj.gross_price), 0);\nlet transportationChargesHtml = \"\";\nlet otherChargesHtml = \"\";\n\nlet taxType = poDetails[0].vendor.gstin.slice(0,2) == plantDetails[0].gst.slice(0,2)?\"intrastate\":\"interstate\";\n\nlet ldChargeApplicable =  $node[\"Get po_details\"].json[\"data\"][0][\"ld_charges_applicable\"];\nlet transportationChargesApplicable = $node[\"Get po_details\"].json[\"data\"][0][\"transportation_charges_applicable\"];\nlet transportationCharges = $node[\"Get po_details\"].json[\"data\"][0][\"transportation_charges\"];\nlet otherChargesApplicable = $node[\"Get po_details\"].json[\"data\"][0][\"other_charges_applicable\"];\nlet otherCharges = $node[\"Get po_details\"].json[\"data\"][0][\"other_charges\"];\n\nif(transportationChargesApplicable){\n    let splitTransportationCharges = transportationCharges.split(\"\\n\");\n    splitTransportationCharges.forEach(function(charge,index){\n        transportationChargesHtml=transportationChargesHtml+`<p>${charge}</p>`\n    })\n}\nif(otherChargesApplicable){\n    let splitOtherCharges = otherCharges.split(\"\\n\");\n    splitOtherCharges.forEach(function(charge,index){\n        otherChargesHtml=otherChargesHtml+`<p>${charge}</p>`\n    })\n}\n\nlet termsAndConditions = `<p><b>Terms & Conditions<b></p>\n${transportationChargesApplicable?\"\":\"<p>Price basis : FOR - Free on Road</p>\"}\n<p>FOR SITE\nInsurance :\nTaxes : GST Extra @ Actuals\nShipping Instruction : OP COMMERCE INVOICE HAS TO BE ATTACHED TO PRODUCT.\nPayment mode : NEFT/RTGS</p>\n<p>Payment terms : ${$node[\"Get po_details\"].json[\"data\"][0][\"payment_terms\"]?parseInt($node[\"Get po_details\"].json[\"data\"][0][\"payment_terms\"]):30} Days Credit</p><br>\n${transportationChargesApplicable?transportationChargesHtml:\"\"}<br>\n\n${otherChargesApplicable?otherChargesHtml:\"\"}<br>\n\n<p>Warranty : The equipment's/spares supplied to us under this Contract shall be warranted against defects in workmanship and material under normal use, service and duty conditions as specified in the Purchase Order, for a period of 12 months from the date of installation or 18 months from the date of supply, whichever is earlier. If any defects are noticed in the equipment during the warranty period, the same shall be intimated to you in writing and the equipment will be sent to you on a freight-to-pay basis. All rectification/replacement will be undertaken at your own cost.</p>\n\n<p>For deliveries through dedicated vehicle at site/inside site of Vedanta Ltd., the below compliances and safety requirements to be adhered-to by the transporters carrying the material.</p>\n<p>a) All the legal documents pertaining to the vehicle namely Vehicle Insurance, Registration certificate, Pollution certificate etc in which dispatch is being done to be valid.</p><br>\n<p>b) The driver should possess valid driving license w.r.t the type of vehicle he has arrived inside the premises with the material.</p><br>\n<p>c) The vehicle carrying the material to be compulsorily equipped with reverse horn & reverse camera which should be in working condition.</p><br>\n\n${ldChargeApplicable?\"<p>LD clause # Applicable as below</p>\":\"<p>LD clause # not Applicable</p>\"}\n${ldChargeApplicable?\"<p>LD Clause: In the event you fail to supply the material within the time specified in the contract, you shall pay to us penalty @ 0.5% of the value of the contract for each weeks delay and part thereof. However, such payment shall not exceed 5% of the total value of the contract. We may, without prejudice to any other method of recovery, deduct an amount of such damages from any monies due or which may become due to you.<p>\":\"\"}\n\n<p>OP Commerce Online Pvt. Ltd. stands as an aggregator in the Procurement & Stores sector for Vedanta Ltd. For Vendor payments we solely depend on payments received from Vedanta Ltd. post adherence to all procurement and billing procedures. However, payments will be done by us to our Source vendors as per the Payment terms mentioned on the face page of this Contract agreement mentioned above on a case to case basis. But during occurrences of Force Majeure or any other rare/seldom circumstances payment will be made on Paid-when-Paid basis</p>\n\n<p>Do not dispatch consignment through DTDC, Trackon, Maruti or Professional Couriers as the don't supply any consignments to Goa on door delivery basis. Kindly prefer Bluedart, TCI Express, TCI Freight, VRL, ACPL or Deccan Queen Transport to book for door delivery basis.</p>\n`\npoItemsData.forEach(function(pItem,index){\n    pdfPoItems.push({\n        product :pItem.product.product_name,\n        product_code:pItem.product.id,\n        hsn:pItem.hsn,\n        quantity:`${pItem.requested_qty.toFixed(2)} ${pItem.uom}`,\n        unit_price:pItem.unit_price,\n        sgst_tax_percentage:taxType==\"intrastate\"?(pItem.tax_percentage)/2:0,\n        cgst_tax_percentage:taxType==\"intrastate\"?(pItem.tax_percentage)/2:0,\n        sgst_tax_value:taxType==\"intrastate\"?(pItem.gross_price - pItem.net_price)/2:0,\n        cgst_tax_value:taxType==\"intrastate\"?(pItem.gross_price - pItem.net_price)/2:0,\n        igst_tax_percentage:taxType==\"interstate\"?pItem.tax_percentage:0,\n        igst_tax_value:taxType==\"interstate\"?pItem.gross_price-pItem.net_price:0,\n        subtotal:pItem.net_price\n    })\n});\n\nuniquePoTaxes.forEach(function(tax,index){\n    let getAllTaxes = poItemsData.filter(pItem=>pItem.tax_percentage == tax);\n    const taxValue = getAllTaxes.reduce((acc, obj) => acc + (parseFloat(obj.gross_price) - parseFloat(obj.net_price)), 0);\n    if(taxType == \"intrastate\"){\n        taxItems.push(\n            {\n                tax :`CGST (${tax/2}%)`,\n                amount:taxValue/2\n            },\n            {\n                tax :`SGST (${tax/2}%)`,\n                amount:taxValue/2\n            }\n        )\n    }else{\n        taxItems.push(\n            {\n                tax :`IGST (${tax}%)`,\n                amount:taxValue\n            }\n        )\n    }\n})\n\nlet invoiceObj={\n    security_key:\"6f34f84465f9a02\",\n    po_data:{\n        po_number:poDetails[0].id,\n        delivery_date:poDetails[0].po_deliver_date,\n        po_date:poDetails[0].po_date,\n        reference_number:poDetails[0].po_num.id,\n        place_of_supply:\"\",\n        company_data:{\n            name:\"Opcommerce Online Private Limited\",\n            gstin:poDetails[0].sd_billing_address.gstin,\n            address:poDetails[0].sd_billing_address.address,\n            email:\"accounts@shakedeal.com\"\n        },\n        vendor:{\n            email:poDetails[0].vendor.id,\n            gstin:poDetails[0].vendor.gstin,\n            company_name:poDetails[0].vendor.vendor_company?poDetails[0].vendor.vendor_company:poDetails[0].vendor.vendor_name,\n            phone:poDetails[0].vendor.vendor_phone,\n            address:poDetails[0].vendor.vendor_address,\n            delivery_company_name:plantDetails[0].delivery_address,\n            delivery_company_address:plantDetails[0].company_name,\n        },\n        tax_type:taxType,\n        po_items:pdfPoItems,\n        tax_items:taxItems,\n        total_items:poItemsData.length.toFixed(2),\n        notes:\"<p><b>Notes</b></p><p>We must be notified 4 hours before dispatch in order to generate ASN and Tax invoices, which are required for goods receipt and without which materials will not be allowed inside the Material gate by security. For order dispatch related queries E-mail:vedantaiob.ops@shakedeal.com </p>\",\n        subtotal:subtotal,\n        total_value:totalValue,\n        terms_conditions:termsAndConditions\n    }\n}\n\nitems[0].json.invoiceObj= invoiceObj\nreturn items\n"
       },
       "name": "Function to create po",
       "type": "n8n-nodes-base.function",
@@ -611,28 +611,6 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "=https://books.zoho.com/api/v3/purchaseorders/{{$node[\"create po\"].json[\"purchaseorder\"][\"purchaseorder_id\"]}}?organization_id=685685414&accept=pdf",
-        "responseFormat": "file",
-        "dataPropertyName": "po_file",
-        "options": {}
-      },
-      "name": "Get PO attachment",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        -3040,
-        800
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "23",
-          "name": "Balco-mozart-bearer-token"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "authentication": "headerAuth",
         "requestMethod": "POST",
         "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/files",
         "allowUnauthorizedCerts": true,
@@ -641,14 +619,14 @@
           "bodyContentType": "multipart-form-data"
         },
         "sendBinaryData": true,
-        "binaryPropertyName": "=input_file:po_file"
+        "binaryPropertyName": "=input_file:data_0.pdf"
       },
       "name": "Upload PO in vpanel",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        -2680,
-        660
+        -2800,
+        500
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -660,7 +638,7 @@
     {
       "parameters": {
         "setAllData": false,
-        "sourceKey": "po_file",
+        "sourceKey": "data_0.pdf",
         "options": {
           "keepSource": true,
           "keepAsBase64": true
@@ -787,6 +765,10 @@
             {
               "name": "extra_cc_mail_ids",
               "value": "={{$node[\"Get po_details\"].json[\"data\"][0][\"vendor\"][\"extra_cc_mail_ids\"]}}"
+            },
+            {
+              "name": "pan",
+              "value": "={{$node[\"Get po_details\"].json[\"data\"][0][\"vendor\"][\"pan\"]}}"
             }
           ]
         }
@@ -1000,11 +982,12 @@
           "id": "51",
           "name": "VendorPanel DMS Token"
         }
-      }
+      },
+      "disabled": true
     },
     {
       "parameters": {
-        "functionCode": "let po_to_products = [];\nlet concat_products = $node[\"Function to create products\"].json.action == \"post the products\"?[...$node[\"post product details\"].json.data,...$node[\"Get the products\"].json.data]:$node[\"Get the products\"].json.data;\n//concat_products.map((obj, i) => ({ ...obj, isMapped: false }));\nconcat_products.forEach(function(product,index){\n  if (product.hasOwnProperty(\"isMapped\")) {\n    // Property exists, update its value\n    product[\"isMapped\"] = false;\n  }else{\n    product[\"isMapped\"] = false;\n  }\n})\nlet product_details = $node[\"Get the po items\"].json[\"data\"];\nproduct_details.forEach(function(obj,index){\n  let product = concat_products.filter(prod=>prod.product_code == obj[\"product\"][\"id\"] && !prod[\"isMapped\"]);\n\n  let findProductIndex = concat_products.findIndex(prod=>prod.product_code == obj[\"product\"][\"id\"]&& !prod[\"isMapped\"]);\n  if(findProductIndex !== -1){\n  \n  concat_products[concat_products.findIndex(prod=>prod.product_code == obj[\"product\"][\"id\"]&& !prod[\"isMapped\"])].isMapped = true;\n  \n  po_to_products[index]={};\n  po_to_products[index].sdv_products_id = product[0].id;\n  po_to_products[index].sdv_vendor_pos_id = Array.isArray($node[\"Create po in vpanel\"].json.data)?$node[\"Create po in vpanel\"].json.data[0].id:$node[\"Create po in vpanel\"].json.data.id;\n  po_to_products[index].req_qty = obj.requested_qty\n  po_to_products[index].rate = obj.unit_price\n  po_to_products[index].sub_total = obj.net_price\n  po_to_products[index].tax_value = obj.tax_value\n  po_to_products[index].product_total = obj.gross_price\n  po_to_products[index].po_items_id = obj.id;\n  po_to_products[index].tax_percentage = obj.tax_percentage;\n  po_to_products[index].hsn = obj.hsn;\n  po_to_products[index].uom = obj.uom\n  }\n  \n})\n\n\nitems[0].json.po_to_products= po_to_products;\nitems[0].json.concat_products= concat_products;\nitems[0].json.product_details= product_details;\nreturn items;"
+        "functionCode": "let po_to_products = [];\nlet psqlQuery = \"INSERT INTO sdv_vendor_pos_sdv_products (sdv_products_id,sdv_vendor_pos_id,req_qty,rate,sub_total,product_total,po_items_id,tax_percentage,hsn,uom) VALUES \"\nlet concat_products = $node[\"Function to create products\"].json.action == \"post the products\"?[...$node[\"post product details\"].json.data,...$node[\"Get the products\"].json.data]:$node[\"Get the products\"].json.data;\n//concat_products.map((obj, i) => ({ ...obj, isMapped: false }));\nconcat_products.forEach(function(product,index){\n  if (product.hasOwnProperty(\"isMapped\")) {\n    // Property exists, update its value\n    product[\"isMapped\"] = false;\n  }else{\n    product[\"isMapped\"] = false;\n  }\n})\nlet product_details = $node[\"Get the po items\"].json[\"data\"];\nproduct_details.forEach(function(obj,index){\n  let product = concat_products.filter(prod=>prod.product_code == obj[\"product\"][\"id\"] && !prod[\"isMapped\"]);\n\n  let findProductIndex = concat_products.findIndex(prod=>prod.product_code == obj[\"product\"][\"id\"]&& !prod[\"isMapped\"]);\n  if(findProductIndex !== -1){\n  \n  concat_products[concat_products.findIndex(prod=>prod.product_code == obj[\"product\"][\"id\"]&& !prod[\"isMapped\"])].isMapped = true;\n  \n  po_to_products[index]={};\n  po_to_products[index].sdv_products_id = product[0].id;\n  po_to_products[index].sdv_vendor_pos_id = Array.isArray($node[\"Create po in vpanel\"].json.data)?$node[\"Create po in vpanel\"].json.data[0].id:$node[\"Create po in vpanel\"].json.data.id;\n  po_to_products[index].req_qty = obj.requested_qty\n  po_to_products[index].rate = obj.unit_price\n  po_to_products[index].sub_total = obj.net_price\n  po_to_products[index].tax_value = obj.tax_value\n  po_to_products[index].product_total = obj.gross_price\n  po_to_products[index].po_items_id = obj.id;\n  po_to_products[index].tax_percentage = obj.tax_percentage;\n  po_to_products[index].hsn = obj.hsn;\n  po_to_products[index].uom = obj.uom\n  }\n  \n})\npo_to_products.forEach(function(product,index){\n  let productValues = `(${product.sdv_products_id},${product.sdv_vendor_pos_id},${product.req_qty},${product.rate},${product.sub_total},${product.product_total},'${product.po_items_id}',${product.tax_percentage},${product.hsn?product.hsn:''},'${product.uom}')`;\n  psqlQuery+=productValues+\",\";\n})\nlet poItemsQuery = psqlQuery.slice(0, -1);\n\nitems[0].json.po_to_products= po_to_products;\nitems[0].json.concat_products= concat_products;\nitems[0].json.product_details= product_details;\nitems[0].json.psqlQuery= psqlQuery;\nitems[0].json.poItemsQuery= poItemsQuery;\nreturn items;"
       },
       "name": "Function to map po and product",
       "type": "n8n-nodes-base.function",
@@ -1013,36 +996,6 @@
         280,
         860
       ]
-    },
-    {
-      "parameters": {
-        "authentication": "headerAuth",
-        "requestMethod": "POST",
-        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_invoice_details",
-        "options": {},
-        "bodyParametersUi": {
-          "parameter": [
-            {
-              "name": "vendor_po_number",
-              "value": "={{$node[\"Update the vendor po_num\"].json[\"data\"][\"id\"]}}"
-            }
-          ]
-        }
-      },
-      "name": "Create vendor invoice details",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        -3220,
-        800
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "31",
-          "name": "header auth creds"
-        }
-      },
-      "disabled": true
     },
     {
       "parameters": {
@@ -1059,8 +1012,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "25",
-          "name": "Local Header Auth"
+          "id": "50",
+          "name": "Mozart DMS Token"
         }
       }
     },
@@ -1075,19 +1028,19 @@
           "bodyContentType": "multipart-form-data"
         },
         "sendBinaryData": true,
-        "binaryPropertyName": "=input_file:po_file"
+        "binaryPropertyName": "=input_file:data_0.pdf"
       },
       "name": "Upload PO in mozart",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        -2700,
-        980
+        -2780,
+        1020
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "25",
-          "name": "Local Header Auth"
+          "id": "50",
+          "name": "Mozart DMS Token"
         }
       }
     },
@@ -1115,8 +1068,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "25",
-          "name": "Local Header Auth"
+          "id": "50",
+          "name": "Mozart DMS Token"
         }
       }
     },
@@ -1136,7 +1089,7 @@
       "parameters": {
         "authentication": "basicAuth",
         "requestMethod": "POST",
-        "url": "=https://athena.shakedeal.com/webhook/get-url",
+        "url": "=https://qan8n.shakedeal.com/webhook/get-url",
         "options": {},
         "bodyParametersUi": {
           "parameter": [
@@ -1184,7 +1137,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        780,
+        820,
         860
       ],
       "credentials": {
@@ -1431,8 +1384,144 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "25",
-          "name": "Local Header Auth"
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let binaries = {}\nconst bufferString = $node[\"Get the PO pdf\"].json.pdf_data\nconst bufferData = Buffer.from(bufferString, 'base64') // Replace 'YourBufferStringHere' with your actual buffer data\n\n\n\n\n\nconst binaryObject = {\n  fileName : \"data.pdf\",\n  data: bufferData.toString('base64'), // Convert buffer data to base64 for storage\n  mimeType: 'application/pdf' // Set the MIME type to indicate binary data\n};\nlet extension = \"pdf\"\n binaries[`data_0.${extension}`] = binaryObject\n\nreturn [{\n    binary: binaries\n}];\n\n"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -3320,
+        800
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "=https://sdpdf.shakedeal.com/po-pdf",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Function to create po\"].json[\"invoiceObj\"]}}"
+      },
+      "name": "Get the PO pdf",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        -3660,
+        800
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/files/{{$node[\"Upload PO in vpanel\"].json[\"data\"][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "title",
+              "value": "={{$node[\"Get po_details\"].json[\"data\"][0][\"id\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update title in vpanel",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        -2600,
+        500
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/files/{{$node[\"Upload PO in mozart\"].json[\"data\"][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "title",
+              "value": "={{$node[\"Get po_details\"].json[\"data\"][0][\"id\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update title in mozart",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        -2600,
+        1020
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/files/{{$node[\"Upload PO in vpanel\"].json[\"data\"][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "uploaded_by",
+              "value": "={{Array.isArray($node[\"Create po in vpanel\"].json.data)?$node[\"Create po in vpanel\"].json.data[0].vendor.vendor:$node[\"Create po in vpanel\"].json.data.vendor.vendor}}"
+            }
+          ]
+        }
+      },
+      "name": "Update user created in pdf",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        180,
+        660
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "={{$node[\"Function to map po and product\"].json.poItemsQuery}}",
+        "additionalFields": {}
+      },
+      "name": "Postgres",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        700,
+        660
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "94",
+          "name": "Vendor Panel qa creds"
         }
       }
     }
@@ -1440,5 +1529,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-12-11T11:49:11.524Z"
+  "updatedAt": "2023-12-12T10:18:02.431Z"
 }
