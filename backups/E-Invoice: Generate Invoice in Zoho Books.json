@@ -67,28 +67,6 @@
         ]
       ]
     },
-    "Function to create bills": {
-      "main": [
-        [
-          {
-            "node": "create bills",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Set": {
-      "main": [
-        [
-          {
-            "node": "Function to create bills",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "wait for order data": {
       "main": [
         [
@@ -491,8 +469,8 @@
       ]
     }
   },
-  "createdAt": "2022-06-07T12:54:21.575Z",
-  "id": "128",
+  "createdAt": "2022-07-07T12:26:30.206Z",
+  "id": "150",
   "name": "E-Invoice: Generate Invoice in Zoho Books",
   "nodes": [
     {
@@ -732,8 +710,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2400,
-        240
+        2260,
+        140
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -763,70 +741,8 @@
       "typeVersion": 1,
       "position": [
         1880,
-        360
+        380
       ]
-    },
-    {
-      "parameters": {
-        "authentication": "headerAuth",
-        "requestMethod": "POST",
-        "url": "https://books.zoho.com/api/v3/bills?organization_id=750449985",
-        "allowUnauthorizedCerts": true,
-        "jsonParameters": true,
-        "options": {
-          "bodyContentType": "json"
-        },
-        "bodyParametersJson": "={{$node[\"Function for create item to create bills\"].json[\"JSONString\"]}}"
-      },
-      "name": "create bills",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        2180,
-        -140
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "29",
-          "name": "zoho books creds"
-        }
-      },
-      "disabled": true
-    },
-    {
-      "parameters": {
-        "functionCode": "let cust_id=$node[\"create contact\"].json[\"contact\"][\"contact_id\"]\nlet items_obj=$node[\"create item\"].json[\"item\"][\"item_id\"]\nlet vend_id=$node[\"Set\"].json[\"vendor_id\"]\nlet pro_bill=$node[\"wait for order data\"].json[\"body\"][\"bill_number\"]\nlet JSONString={\n\"vendor_id\":vend_id,\n\"bill_number\":pro_bill,\n\"line_items\": [{\n\"item_id\":items_obj,\n\"customer_id\":cust_id\n}] \n}\nitems[0].json.JSONString=JSONString\nreturn items;\n"
-      },
-      "name": "Function to create bills",
-      "type": "n8n-nodes-base.function",
-      "typeVersion": 1,
-      "position": [
-        1980,
-        -100
-      ],
-      "disabled": true
-    },
-    {
-      "parameters": {
-        "keepOnlySet": true,
-        "values": {
-          "number": [
-            {
-              "name": "vendor_id",
-              "value": "=2568462000000164553"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "name": "Set",
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 1,
-      "position": [
-        1740,
-        -120
-      ],
-      "disabled": true
     },
     {
       "parameters": {
@@ -865,7 +781,7 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "PATCH",
-        "url": "=https://dmsqa.shakedeal.com/items/orders/{{$node[\"wait for order data\"].json[\"body\"][\"order_number\"]}}",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/orders/{{$node[\"wait for order data\"].json[\"body\"][\"order_number\"]}}",
         "allowUnauthorizedCerts": true,
         "options": {},
         "bodyParametersUi": {
@@ -893,8 +809,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2740,
-        360
+        2960,
+        400
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -979,7 +895,7 @@
       "typeVersion": 1,
       "position": [
         1060,
-        360
+        380
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -1004,13 +920,13 @@
       "typeVersion": 1,
       "position": [
         1220,
-        360
+        380
       ],
       "alwaysOutputData": false
     },
     {
       "parameters": {
-        "functionCode": "let list_items = $node[\"wait for order data\"].json[\"body\"][\"line_items\"]\nlet zoho_taxes = $node[\"Get taxes\"].json[\"taxes\"];\n\nlet returnItems = []\nlet resultFilter = \n   list_items.filter(list=>\n      items.some(\n      data=> data.json[\"page_context\"][\"search_criteria\"][0][\"search_text\"] === list.sku\n    )\n  );\n\n\nresultFilter .forEach(function(obj,index){ \n    let taxes = obj.item_tax_preferences;\n    let igst_tax =  taxes.filter(tax=>tax.tax_name == \"IGST\");\n    let gst_tax = taxes.filter(tax=>tax.tax_name == \"GST\");\n    let igst_tax_name = igst_tax[0].tax_name+parseInt(igst_tax[0].tax_percentage);\n    let gst_tax_name = gst_tax[0].tax_name+parseInt(gst_tax[0].tax_percentage);\n    let igst_taxid_obj = zoho_taxes.filter(tax=>tax.tax_name == igst_tax_name);\n    let gst_taxid_obj = zoho_taxes.filter(tax=>tax.tax_name == gst_tax_name);\n    returnItems.push({\n    json: [{\n       name:obj[\"name\"],\n       item_type :obj[\"item_type\"],\n       sku:obj[\"sku\"],\n       hsn_or_sac:obj[\"hsn_or_sac\"],\n       available_stock:obj.stock,\n       purchase_account_id:\"1763031000000293201\",\n       purchase_account_name: \"Purchase Domestic\",\n       item_type: \"inventory\",\n       \"item_tax_preferences\": [\n          {\n              \"tax_specification\": \"inter\",\n              \"tax_type\": 2,\n              \"tax_name\": igst_tax[0].tax_name+parseInt(igst_tax[0].tax_percentage),\n              \"tax_percentage\": parseInt(igst_tax[0].tax_percentage),\n              \"tax_id\": igst_taxid_obj[0].tax_id\n          },\n          {\n              \"tax_specification\": \"intra\",\n              \"tax_type\": 2,\n              \"tax_name\": gst_tax[0].tax_name+parseInt(gst_tax[0].tax_percentage),\n              \"tax_percentage\": parseInt(gst_tax[0].tax_percentage),\n              \"tax_id\": gst_taxid_obj[0].tax_id\n          }\n        ],\n    }]\n  }); \n})\n\nreturn returnItems ;\n\n"
+        "functionCode": "let list_items = $node[\"wait for order data\"].json[\"body\"][\"line_items\"]\nlet zoho_taxes = $node[\"Get taxes\"].json[\"taxes\"];\n\nlet returnItems = []\nlet resultFilter = \n   list_items.filter(list=>\n      items.some(\n      data=> data.json[\"page_context\"][\"search_criteria\"][0][\"search_text\"] === list.sku\n    )\n  );\n\n\nresultFilter .forEach(function(obj,index){ \n    let taxes = obj.item_tax_preferences;\n    let igst_tax =  taxes.filter(tax=>tax.tax_name == \"IGST\");\n    let gst_tax = taxes.filter(tax=>tax.tax_name == \"GST\");\n    let igst_tax_name = igst_tax[0].tax_name+parseInt(igst_tax[0].tax_percentage);\n    let gst_tax_name = gst_tax[0].tax_name+parseInt(gst_tax[0].tax_percentage);\n    let igst_taxid_obj = zoho_taxes.filter(tax=>tax.tax_name == igst_tax_name);\n    let gst_taxid_obj = zoho_taxes.filter(tax=>tax.tax_name == gst_tax_name);\n    returnItems.push({\n    json: [{\n       name:obj[\"name\"],\n       item_type :obj[\"item_type\"],\n       sku:obj[\"sku\"],\n       hsn_or_sac:obj[\"hsn_or_sac\"],\n       available_stock:obj.stock,\n       purchase_account_id:\"1763031000000293201\",\n       purchase_account_name: \"Purchase Domestic\",\n       item_type: \"inventory\",\n       unit : \"pcs\",\n       is_returnable:true,\n       \"item_tax_preferences\": [\n          {\n              \"tax_specification\": \"inter\",\n              \"tax_type\": 2,\n              \"tax_name\": igst_tax[0].tax_name+parseInt(igst_tax[0].tax_percentage),\n              \"tax_percentage\": parseInt(igst_tax[0].tax_percentage),\n              \"tax_id\": igst_taxid_obj[0].tax_id\n          },\n          {\n              \"tax_specification\": \"intra\",\n              \"tax_type\": 2,\n              \"tax_name\": gst_tax[0].tax_name+parseInt(gst_tax[0].tax_percentage),\n              \"tax_percentage\": parseInt(gst_tax[0].tax_percentage),\n              \"tax_id\": gst_taxid_obj[0].tax_id\n          }\n        ],\n    }]\n  }); \n})\n\nreturn returnItems ;\n\n"
       },
       "name": "Function for create item",
       "type": "n8n-nodes-base.function",
@@ -1030,7 +946,7 @@
       "typeVersion": 1,
       "position": [
         900,
-        360
+        380
       ]
     },
     {
@@ -1053,7 +969,7 @@
             },
             {
               "name": "dms_url",
-              "value": "=https://dmsqa.shakedeal.com"
+              "value": "={{$node[\"wait for order data\"].json[\"headers\"][\"x-sd-env\"] === \"prod\"?\"https://zeus.shakedeal.com\":\"https://dmsqa.shakedeal.com\"}}"
             },
             {
               "name": "=bond_number",
@@ -1145,8 +1061,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        1420,
-        440
+        1460,
+        560
       ]
     },
     {
@@ -1157,22 +1073,22 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        2940,
-        360
+        3320,
+        400
       ]
     },
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "=https://dmsqa.shakedeal.com/items/sd_order_products?filter={\"product_code\":{\"_in\":\"{{$node[\"Get product codes\"].json[\"product_codes\"]}}\"}}",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_order_products?filter={\"product_code\":{\"_in\":\"{{$node[\"Get product codes\"].json[\"product_codes\"]}}\"}}",
         "options": {}
       },
       "name": "Check for items",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        3120,
-        360
+        3660,
+        400
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -1189,8 +1105,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        3280,
-        360
+        3940,
+        400
       ]
     },
     {
@@ -1208,15 +1124,15 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        3460,
-        360
+        4200,
+        400
       ]
     },
     {
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "POST",
-        "url": "=https://dmsqa.shakedeal.com/items/sd_order_products",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_order_products",
         "jsonParameters": true,
         "options": {},
         "bodyParametersJson": "={{$node[\"Function to create products\"].json[\"products_to_post\"]}}"
@@ -1225,7 +1141,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        3700,
+        4500,
         180
       ],
       "credentials": {
@@ -1241,8 +1157,8 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        3740,
-        460
+        4500,
+        560
       ]
     },
     {
@@ -1253,8 +1169,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        4640,
-        320
+        5700,
+        300
       ]
     },
     {
@@ -1270,8 +1186,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        4920,
-        320
+        5940,
+        300
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -1283,14 +1199,14 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "=https://dmsqa.shakedeal.com/items/orders?filter={\"id\":{\"_eq\":\"{{$node[\"wait for order data\"].json[\"body\"][\"order_number\"]}}\"}}",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/orders?filter={\"id\":{\"_eq\":\"{{$node[\"wait for order data\"].json[\"body\"][\"order_number\"]}}\"}}",
         "options": {}
       },
       "name": "Check for order in orders",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        3980,
+        4800,
         340
       ],
       "credentials": {
@@ -1311,7 +1227,7 @@
       "typeVersion": 1,
       "position": [
         2080,
-        360
+        380
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -1405,8 +1321,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2400,
-        500
+        2620,
+        600
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -1430,7 +1346,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        4140,
+        5020,
         340
       ]
     },
@@ -1440,8 +1356,8 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        4360,
-        140
+        5300,
+        160
       ]
     },
     {
@@ -1454,8 +1370,8 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 1,
       "position": [
-        4380,
-        460
+        5300,
+        540
       ],
       "executeOnce": true,
       "alwaysOutputData": true,
@@ -1603,8 +1519,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2680,
-        -80
+        2600,
+        140
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -1626,8 +1542,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        3300,
-        -20
+        2940,
+        140
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -1640,5 +1556,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-06-07T12:54:21.575Z"
+  "updatedAt": "2022-07-07T12:26:30.206Z"
 }
