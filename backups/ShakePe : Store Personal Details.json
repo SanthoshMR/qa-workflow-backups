@@ -67,14 +67,14 @@
       "main": [
         [
           {
-            "node": "Send Campaign Email",
+            "node": "Send Email",
             "type": "main",
             "index": 0
           }
         ],
         [
           {
-            "node": "Send Email",
+            "node": "Send Campaign Email",
             "type": "main",
             "index": 0
           }
@@ -92,8 +92,8 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        250,
-        300
+        220,
+        160
       ]
     },
     {
@@ -116,8 +116,8 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        390,
-        310
+        380,
+        300
       ],
       "webhookId": "5a572ee8-fd1b-4c55-aff3-73559e26ba3c"
     },
@@ -278,10 +278,10 @@
     {
       "parameters": {
         "conditions": {
-          "string": [
+          "boolean": [
             {
-              "value1": "={{$node[\"Wait for Personal details\"].json[\"body\"][\"form_type\"]}}",
-              "value2": "=2"
+              "value1": true,
+              "value2": "={{$node[\"Wait for Personal details\"].json[\"body\"][\"form_type\"]==null}}"
             }
           ]
         }
@@ -307,7 +307,7 @@
       "typeVersion": 1,
       "position": [
         1580,
-        120
+        260
       ],
       "credentials": {
         "smtp": {
@@ -329,7 +329,7 @@
       "typeVersion": 1,
       "position": [
         1580,
-        320
+        40
       ],
       "credentials": {
         "smtp": {
@@ -342,5 +342,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-11-20T13:08:24.846Z"
+  "updatedAt": "2023-12-14T09:46:40.206Z"
 }
