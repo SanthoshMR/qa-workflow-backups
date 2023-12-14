@@ -1,0 +1,134 @@
+{
+  "active": false,
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "Item Lists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Item Lists": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-12-14T12:49:39.208Z",
+  "id": "391",
+  "name": "Email_image_link",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "https://campaignsqa.shakepe.com/items/sp_reward_campaigns?limit=9&fields[]=*.*",
+        "options": {}
+      },
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "102",
+          "name": "Header Auth account 2(campaign qa)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let arr = $node[\"HTTP Request\"].json[\"data\"];\nlet linksArray = [];\nlet y=[];\n\n\nfor (let i = 0; i < arr.length; i++) {\n  let name = arr[i]['name'];\n  let links = arr[i]['reward_links'];\n  let enddate=arr[i]['end_date'];\n\nconst date = new Date(enddate);\nconst options = { day: '2-digit', month: 'short', year: 'numeric' };\nconst formattedDate = date.toLocaleDateString('en-US', options);\n\n  let content_data = arr[i]['html_content'];\n \nif (arr[i]['email_bg_image'] && arr[i]['email_bg_image']['id']) {\n  let email_img = arr[i]['email_bg_image']['id'];\n  let imageSrc =`https://campaignsqa.shakepe.com/assets/${email_img}`;\n  \nfor (let j = 0; j < links.length; j++) {\nlet link = 'https://rewardlinksqa.shakepe.com/links/' + links[j].id;\nlet shakepelink='https://www.shakepe.com';   \nlet firstName = links[j].first_name;\n \nif (content_data !== null && typeof content_data === 'string') {\nlet content_field = content_data.replace('{{name}}', firstName).replace('{{link}}', link).replace('{{img}}', imageSrc).replace('{{shakepelink}}',shakepelink ).replace('{{enddate}}',formattedDate );\n  \nlinksArray.push({ name: firstName, link: link, content_field: content_field,imageSrc:imageSrc,shakepelink:shakepelink,enddate:formattedDate });\n  \n    } else {\n      console.log('Invalid HTML content for item:', link);\n    }\n  }\n  } else {\n  console.log(\"email_bg_image or its id property is null or undefined.\");\n \n}\n}\n\nlet htmlContent = {};\nlinksArray.forEach((linkObj, index) => {\n  htmlContent[`Link${index + 1}`] = linkObj.content_field; \n});\ny.push(htmlContent);\nreturn {y};\n\n"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        680,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "y",
+        "options": {}
+      },
+      "name": "Item Lists",
+      "type": "n8n-nodes-base.itemLists",
+      "typeVersion": 1,
+      "position": [
+        900,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "rooparajput19@gmail.com",
+        "toEmail": "rooparajput19@gmail.com",
+        "text": "hi",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        300
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "103",
+          "name": "SMTP account(Roopa)"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-12-14T13:00:50.078Z"
+}
