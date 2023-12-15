@@ -84,7 +84,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let poNumber = $node[\"Webhook\"].json[\"body\"][\"po_number\"];\nlet poDate = $node[\"Webhook\"].json[\"body\"][\"po_date\"].split(\"-\").reverse().join(\"/\");\nlet poTotal = $node[\"Webhook\"].json[\"body\"][\"po_total\"].toLocaleString('en-IN', { minimumFractionDigits: 2 });\n\nlet vendorName = $node[\"Webhook\"].json[\"body\"][\"vendor_name\"];\nlet operationAgentEmails = $node[\"Webhook\"].json[\"body\"][\"operation_agent_emails\"];\nlet operationAgentNames = $node[\"Webhook\"].json[\"body\"][\"operation_agent_names\"];\n\nlet body = `Dear ${vendorName}, <br><br>The purchase order ${poNumber} is attached with this email. <br><br>An overview of the purchase order is available below: <br> ----------------------------------------------------------------------------------------<br><h2>Purchase Order&nbsp;# :&nbsp;${poNumber}</h2><br> ----------------------------------------------------------------------------------------<br><b>&nbsp;Order Date &nbsp; &nbsp;&nbsp;&nbsp;: &nbsp;<span>${poDate}</span></b><br><b>&nbsp;Amount &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  : &nbsp; &nbsp;₹${poTotal}(in INR)</b><br>----------------------------------------------------------------------------------------<br><br><br>Please go through it and confirm the order. We look forward to working with you again<br><br><br><br>Regards<br><br>${operationAgentNames[0]}<br>Opcommerce Online Private Limited<br>`\n\nitems[0].json.mail_body = body;\n\nreturn items;"
+        "functionCode": "let poNumber = $node[\"Webhook\"].json[\"body\"][\"po_number\"];\nlet poDate = $node[\"Webhook\"].json[\"body\"][\"po_date\"].split(\"-\").reverse().join(\"/\");\nlet poTotal = $node[\"Webhook\"].json[\"body\"][\"po_total\"].toLocaleString('en-IN', { minimumFractionDigits: 2 });\n\n\nlet vendorName = $node[\"Webhook\"].json[\"body\"][\"vendor_name\"];\nlet operationAgentEmails = $node[\"Webhook\"].json[\"body\"][\"operation_agent_emails\"];\nlet operationAgentNames = $node[\"Webhook\"].json[\"body\"][\"operation_agent_names\"];\n\nlet body = `Dear ${vendorName}, <br><br>The purchase order ${poNumber} is attached with this email. <br><br>An overview of the purchase order is available below: <br> ----------------------------------------------------------------------------------------<br><h2>Purchase Order&nbsp;# :&nbsp;${poNumber}</h2><br> ----------------------------------------------------------------------------------------<br><b>&nbsp;Order Date &nbsp; &nbsp;&nbsp;&nbsp;: &nbsp;<span>${poDate}</span></b><br><b>&nbsp;Amount &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  : &nbsp; &nbsp;₹${poTotal}(in INR)</b><br>----------------------------------------------------------------------------------------<br><br><br>Please go through it and confirm the order. We look forward to working with you again<br><br><br><br>Regards,<br><br>${operationAgentNames[0]}<br>Opcommerce Online Private Limited<br>`\n\nitems[0].json.mail_body = body;\n\nreturn items;"
       },
       "name": "Construct obj for sending mail",
       "type": "n8n-nodes-base.function",
@@ -119,7 +119,7 @@
     {
       "parameters": {
         "fromEmail": "=ShakeDeal Mozart <sdmozart@shakedeal.com>",
-        "toEmail": "sairam.reddy@shakedeal.com",
+        "toEmail": "sairam.reddy@shakedeal.com,bijan.krishna@shakedeal.com, anjali.jain@shakedeal.com",
         "subject": "=Purchase Order from Opcommerce Online Private Limited (Purchase Order #: {{$node[\"Webhook\"].json[\"body\"][\"po_number\"]}})",
         "html": "={{$node[\"Construct obj for sending mail\"].json.mail_body}}",
         "attachments": "={{$node[\"Function\"].json[\"binary_keys\"]}}",
@@ -238,5 +238,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-12-14T11:49:29.743Z"
+  "updatedAt": "2023-12-15T11:49:25.847Z"
 }
