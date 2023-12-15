@@ -82,7 +82,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let arr = $node[\"HTTP Request\"].json[\"data\"];\nlet linksArray = [];\nlet y=[];\n\n\nfor (let i = 0; i < arr.length; i++) {\n  let name = arr[i]['name'];\n  let links = arr[i]['reward_links'];\n  let enddate=arr[i]['end_date'];\n\nconst date = new Date(enddate);\nconst options = { day: '2-digit', month: 'short', year: 'numeric' };\nconst formattedDate = date.toLocaleDateString('en-US', options);\n\n  let content_data = arr[i]['html_content'];\n \nif (arr[i]['email_bg_image'] && arr[i]['email_bg_image']['id']) {\n  let email_img = arr[i]['email_bg_image']['id'];\n  let imageSrc =`https://campaignsqa.shakepe.com/assets/${email_img}`;\n  \nfor (let j = 0; j < links.length; j++) {\nlet link = 'https://rewardlinksqa.shakepe.com/links/' + links[j].id;\nlet shakepelink='https://www.shakepe.com';   \nlet firstName = links[j].first_name;\n \nif (content_data !== null && typeof content_data === 'string') {\nlet content_field = content_data.replace('{{name}}', firstName).replace('{{link}}', link).replace('{{img}}', imageSrc).replace('{{shakepelink}}',shakepelink ).replace('{{enddate}}',formattedDate );\n  \nlinksArray.push({ name: firstName, link: link, content_field: content_field,imageSrc:imageSrc,shakepelink:shakepelink,enddate:formattedDate });\n  \n    } else {\n      console.log('Invalid HTML content for item:', link);\n    }\n  }\n  } else {\n  console.log(\"email_bg_image or its id property is null or undefined.\");\n \n}\n}\n\nlet htmlContent = {};\nlinksArray.forEach((linkObj, index) => {\n  htmlContent[`Link${index + 1}`] = linkObj.content_field; \n});\ny.push(htmlContent);\nreturn {y};\n\n"
+        "functionCode": "\nlet arr = $node[\"HTTP Request\"].json[\"data\"];\nlet linksArray = [];\nlet y = [];\n\nfor (let i = 0; i < arr.length; i++) {\n  let name = arr[i]['name'];\n  let links = arr[i]['reward_links'];\n  let enddate = arr[i]['end_date'];\n\n  const date = new Date(enddate);\n  const options = { day: '2-digit', month: 'short', year: 'numeric' };\n  const formattedDate = date.toLocaleDateString('en-US', options);\n\n  let content_data = arr[i]['html_content'];\n\n  if (arr[i]['email_bg_image'] && arr[i]['email_bg_image']['id']) {\n    let email_img = arr[i]['email_bg_image']['id'];\n    let imageSrc = `https://campaignsqa.shakepe.com/assets/${email_img}`;\n\n    for (let j = 0; j < links.length; j++) {\n      let link = 'https://rewardlinksqa.shakepe.com/links/' + links[j].id;\n      let shakepelink = 'https://www.shakepe.com';\n      let firstName = links[j].first_name;\n\n      if (content_data !== null && typeof content_data === 'string') {\n        let content_field = content_data.replace('{{name}}', firstName)\n          .replace('{{link}}', link)\n          .replace('{{img}}', imageSrc)\n          .replace('{{shakepelink}}', shakepelink)\n          .replace('{{enddate}}', formattedDate);\n\n        let linkObj = {\n          name: firstName,\n          link: link,\n          content_field: content_field,\n          imageSrc: imageSrc,\n          shakepelink: shakepelink,\n          enddate: formattedDate\n        };\n\n        y.push(linkObj); // Push each link object into the array y\n      } else {\n        console.log('Invalid HTML content for item:', link);\n      }\n    }\n  } else {\n    console.log(\"email_bg_image or its id property is null or undefined.\");\n  }\n}\n\nreturn { y };\n\n\n"
       },
       "name": "Function",
       "type": "n8n-nodes-base.function",
@@ -94,7 +94,7 @@
     },
     {
       "parameters": {
-        "fieldToSplitOut": "y",
+        "fieldToSplitOut": "=y",
         "options": {}
       },
       "name": "Item Lists",
@@ -109,7 +109,8 @@
       "parameters": {
         "fromEmail": "rooparajput19@gmail.com",
         "toEmail": "rooparajput19@gmail.com",
-        "text": "hi",
+        "subject": "test",
+        "html": "={{$node[\"Item Lists\"].json[\"content_field\"]}}",
         "options": {}
       },
       "name": "Send Email",
@@ -130,5 +131,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-12-14T13:00:50.078Z"
+  "updatedAt": "2023-12-15T07:16:59.773Z"
 }
