@@ -1,0 +1,119 @@
+{
+  "active": false,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "Item Lists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Item Lists": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-12-18T09:54:05.739Z",
+  "id": "393",
+  "name": "Resend Link",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        -260,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "resend",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        280
+      ],
+      "webhookId": "3b435eb2-0edf-495a-b7ca-79b7969a4f15"
+    },
+    {
+      "parameters": {
+        "functionCode": "let arr = $node[\"Webhook\"].json[\"body\"][\"modifiedContentArray\"];\n\nlet linksArray = [];\nlet alldata = [];\n\n\nfor (let i = 0; i < arr.length; i++) {\n  let name = arr[i]['name'];\n  let links = arr[i]['reward_links'];\n\n  let content_data = arr[i]['content'];\n  let firstName=arr[i]['name'];\n  let linkId=arr[i]['linkId'];\n  let imageSrc=arr[i]['imageSrc'];\n  let shakepelink=arr[i]['shakepelink'];\n  let enddate = arr[i]['enddate'];\n  const date = new Date(enddate);\n  const options = { day: '2-digit', month: 'short', year: 'numeric' };\n  const formattedDate = date.toLocaleDateString('en-US', options);\n\n      if (content_data !== null && typeof content_data === 'string') {\n        let content_field = content_data.replace('{{name}}', firstName)\n          .replace('{{link}}', linkId)\n          .replace('{{img}}', imageSrc)\n          .replace('{{shakepelink}}', shakepelink)\n          .replace('{{enddate}}', formattedDate);\n\n        let linkObj = {\n          name: firstName,\n          link: linkId,\n          content_field: content_field,\n          imageSrc: imageSrc,\n          shakepelink: shakepelink,\n          enddate: formattedDate\n        };\n\n        alldata.push(linkObj); // Push each link object into the array y\n      } else {\n        console.log('Invalid HTML content for item:', link);\n      }\n    }\n  \n\n\n\nreturn { alldata};\n\n\n\n\n"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        140,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "alldata",
+        "options": {}
+      },
+      "name": "Item Lists",
+      "type": "n8n-nodes-base.itemLists",
+      "typeVersion": 1,
+      "position": [
+        360,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "rooparajput19@gmail.com",
+        "toEmail": "rooparajput19@gmail.com",
+        "subject": "test ",
+        "html": "={{$node[\"Item Lists\"].json[\"content_field\"]}}",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        580,
+        280
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "103",
+          "name": "SMTP account(Roopa)"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-12-18T12:50:32.655Z"
+}
