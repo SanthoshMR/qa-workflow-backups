@@ -1,28 +1,6 @@
 {
-  "active": false,
+  "active": true,
   "connections": {
-    "Start": {
-      "main": [
-        [
-          {
-            "node": "HTTP Request",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "HTTP Request": {
-      "main": [
-        [
-          {
-            "node": "Function",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Function": {
       "main": [
         [
@@ -44,6 +22,17 @@
           }
         ]
       ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2023-12-14T12:49:39.208Z",
@@ -56,33 +45,13 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        240,
+        140,
         300
       ]
     },
     {
       "parameters": {
-        "authentication": "headerAuth",
-        "url": "https://campaignsqa.shakepe.com/items/sp_reward_campaigns?limit=9&fields[]=*.*",
-        "options": {}
-      },
-      "name": "HTTP Request",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        460,
-        300
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "102",
-          "name": "Header Auth account 2(campaign qa)"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "functionCode": "\nlet arr = $node[\"HTTP Request\"].json[\"data\"];\nlet linksArray = [];\nlet y = [];\n\nfor (let i = 0; i < arr.length; i++) {\n  let name = arr[i]['name'];\n  let links = arr[i]['reward_links'];\n  let enddate = arr[i]['end_date'];\n\n  const date = new Date(enddate);\n  const options = { day: '2-digit', month: 'short', year: 'numeric' };\n  const formattedDate = date.toLocaleDateString('en-US', options);\n\n  let content_data = arr[i]['html_content'];\n\n  if (arr[i]['email_bg_image'] && arr[i]['email_bg_image']['id']) {\n    let email_img = arr[i]['email_bg_image']['id'];\n    let imageSrc = `https://campaignsqa.shakepe.com/assets/${email_img}`;\n\n    for (let j = 0; j < links.length; j++) {\n      let link = 'https://rewardlinksqa.shakepe.com/links/' + links[j].id;\n      let shakepelink = 'https://www.shakepe.com';\n      let firstName = links[j].first_name;\n\n      if (content_data !== null && typeof content_data === 'string') {\n        let content_field = content_data.replace('{{name}}', firstName)\n          .replace('{{link}}', link)\n          .replace('{{img}}', imageSrc)\n          .replace('{{shakepelink}}', shakepelink)\n          .replace('{{enddate}}', formattedDate);\n\n        let linkObj = {\n          name: firstName,\n          link: link,\n          content_field: content_field,\n          imageSrc: imageSrc,\n          shakepelink: shakepelink,\n          enddate: formattedDate\n        };\n\n        y.push(linkObj); // Push each link object into the array y\n      } else {\n        console.log('Invalid HTML content for item:', link);\n      }\n    }\n  } else {\n    console.log(\"email_bg_image or its id property is null or undefined.\");\n  }\n}\n\nreturn { y };\n\n\n"
+        "functionCode": "let arr = $node[\"Webhook\"].json[\"body\"][\"modifiedContentArray\"];\n\nlet linksArray = [];\nlet alldata = [];\n\n\nfor (let i = 0; i < arr.length; i++) {\n  let name = arr[i]['name'];\n  let links = arr[i]['reward_links'];\n\n  let content_data = arr[i]['content'];\n  let firstName=arr[i]['name'];\n  let linkId=arr[i]['linkId'];\n  let imageSrc=arr[i]['imageSrc'];\n  let shakepelink=arr[i]['shakepelink'];\n  let enddate = arr[i]['enddate'];\n const date = new Date(enddate);\n  const options = { day: '2-digit', month: 'short', year: 'numeric' };\n  const formattedDate = date.toLocaleDateString('en-US', options);\n  \n      if (content_data !== null && typeof content_data === 'string') {\n        let content_field = content_data.replace('{{name}}', firstName)\n          .replace('{{link}}', linkId)\n          .replace('{{img}}', imageSrc)\n          .replace('{{shakepelink}}', shakepelink)\n          .replace('{{enddate}}', formattedDate);\n\n        let linkObj = {\n          name: firstName,\n          link: linkId,\n          content_field: content_field,\n          imageSrc: imageSrc,\n          shakepelink: shakepelink,\n          enddate: formattedDate\n        };\n\n        alldata.push(linkObj); // Push each link object into the array y\n      } else {\n        console.log('Invalid HTML content for item:', link);\n      }\n    }\n  \n\n\n\nreturn { alldata};\n\n\n\n\n"
       },
       "name": "Function",
       "type": "n8n-nodes-base.function",
@@ -94,7 +63,7 @@
     },
     {
       "parameters": {
-        "fieldToSplitOut": "=y",
+        "fieldToSplitOut": "=alldata",
         "options": {}
       },
       "name": "Item Lists",
@@ -126,10 +95,25 @@
           "name": "SMTP account(Roopa)"
         }
       }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "154d1988-0513-40ed-b4a9-715db353307b",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        420,
+        300
+      ],
+      "webhookId": "154d1988-0513-40ed-b4a9-715db353307b"
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-12-15T07:16:59.773Z"
+  "updatedAt": "2023-12-18T12:51:46.085Z"
 }
