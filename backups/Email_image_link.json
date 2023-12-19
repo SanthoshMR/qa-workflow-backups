@@ -51,7 +51,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let arr = $node[\"Webhook\"].json[\"body\"][\"modifiedContentArray\"];\n\nlet linksArray = [];\nlet alldata = [];\n\n\nfor (let i = 0; i < arr.length; i++) {\n  let name = arr[i]['name'];\n  let links = arr[i]['reward_links'];\n\n  let content_data = arr[i]['content'];\n  let firstName=arr[i]['name'];\n  let linkId=arr[i]['linkId'];\n  let imageSrc=arr[i]['imageSrc'];\n  let shakepelink=arr[i]['shakepelink'];\n  let enddate = arr[i]['enddate'];\n const date = new Date(enddate);\n  const options = { day: '2-digit', month: 'short', year: 'numeric' };\n  const formattedDate = date.toLocaleDateString('en-US', options);\n  \n      if (content_data !== null && typeof content_data === 'string') {\n        let content_field = content_data.replace('{{name}}', firstName)\n          .replace('{{link}}', linkId)\n          .replace('{{img}}', imageSrc)\n          .replace('{{shakepelink}}', shakepelink)\n          .replace('{{enddate}}', formattedDate);\n\n        let linkObj = {\n          name: firstName,\n          link: linkId,\n          content_field: content_field,\n          imageSrc: imageSrc,\n          shakepelink: shakepelink,\n          enddate: formattedDate\n        };\n\n        alldata.push(linkObj); // Push each link object into the array y\n      } else {\n        console.log('Invalid HTML content for item:', link);\n      }\n    }\n  \n\n\n\nreturn { alldata};\n\n\n\n\n"
+        "functionCode": "let arr = $node[\"Webhook\"].json[\"body\"][\"modifiedContentArray\"];\n\nlet linksArray = [];\nlet alldata = [];\n\n\nfor (let i = 0; i < arr.length; i++) {\n  let name = arr[i]['name'];\n  let links = arr[i]['reward_links'];\n\n  let content_data = arr[i]['content'];\n  let firstName=arr[i]['name'];\n  let linkId=arr[i]['linkId'];\n  let imageSrc=arr[i]['imageSrc'];\n  let shakepelink=arr[i]['shakepelink'];\n  let enddate = arr[i]['enddate'];\n  let email=arr[i]['email'];\n  let subject=arr[i]['subject'];\n const date = new Date(enddate);\n  const options = { day: '2-digit', month: 'short', year: 'numeric' };\n  const formattedDate = date.toLocaleDateString('en-US', options);\n  \n      if (content_data !== null && typeof content_data === 'string') {\n        let content_field = content_data.replace('{{name}}', firstName)\n          .replace('{{link}}', linkId)\n          .replace('{{img}}', imageSrc)\n          .replace('{{shakepelink}}', shakepelink)\n          .replace('{{enddate}}', formattedDate);\n\n        let linkObj = {\n          name: firstName,\n          link: linkId,\n          content_field: content_field,\n          imageSrc: imageSrc,\n          shakepelink: shakepelink,\n          email:email,\n          subject:subject,\n          enddate: formattedDate\n        };\n\n        alldata.push(linkObj); // Push each link object into the array y\n      } else {\n        console.log('Invalid HTML content for item:', link);\n      }\n\n      \n    }\n  \n\n\n\nreturn { alldata,linksArray };\n\n\n\n\n"
       },
       "name": "Function",
       "type": "n8n-nodes-base.function",
@@ -77,8 +77,8 @@
     {
       "parameters": {
         "fromEmail": "rooparajput19@gmail.com",
-        "toEmail": "rooparajput19@gmail.com",
-        "subject": "test",
+        "toEmail": "={{$node[\"Item Lists\"].json[\"email\"]}}",
+        "subject": "={{$node[\"Item Lists\"].json[\"subject\"]}}",
         "html": "={{$node[\"Item Lists\"].json[\"content_field\"]}}",
         "options": {}
       },
@@ -115,5 +115,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-12-18T12:51:46.085Z"
+  "updatedAt": "2023-12-19T10:11:33.549Z"
 }
