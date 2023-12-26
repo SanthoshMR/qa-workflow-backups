@@ -1,0 +1,119 @@
+{
+  "active": true,
+  "connections": {
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "Item Lists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Item Lists": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-12-14T12:49:39.208Z",
+  "id": "391",
+  "name": "Rewardlink- SendMail",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        140,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "/*let arr = $node[\"Webhook\"].json[\"body\"] ;\n\nlet linksArray = [];\nlet alldata = [];\n\n\nfor (let i = 0; i < arr.length; i++) {\n  let name = arr[i]['name'];\n  let links = arr[i]['reward_links'];\n\n  let content_data = arr[i]['content_data'];\n  let firstName=arr[i]['name'];\n  let linkId=arr[i]['linkId'];\n  let imageSrc=arr[i]['imageSrc'];\n  let shakepelink=arr[i]['shakepelink'];\n  let enddate = arr[i]['enddate'];\n  let email=arr[i]['email'];\n  let subject=arr[i]['subject'];\n const date = new Date(enddate);\n  const options = { day: '2-digit', month: 'short', year: 'numeric' };\n  const formattedDate = date.toLocaleDateString('en-US', options);\n  \n      if (content_data !== null && typeof content_data === 'string') {\n        let content_field = content_data.replace('{{name}}', firstName)\n          .replace('{{link}}', linkId)\n          .replace('{{img}}', imageSrc)\n          .replace('{{shakepelink}}', shakepelink)\n          .replace('{{enddate}}', formattedDate);\n\n        let linkObj = {\n          name: firstName,\n          link: linkId,\n          content_field: content_field,\n          imageSrc: imageSrc,\n          shakepelink: shakepelink,\n          email:email,\n          subject:subject,\n          enddate: formattedDate\n        };\n\n        alldata.push(linkObj); // Push each link object into the array y\n      } else {\n    console.log('Invalid HTML content for item:', arr[i]);\n  }\n\n      \n    }\n  \nreturn { alldata};\n*/\n\n/*let arr = $node[\"Webhook\"].json[\"body\"][\"modifiedContentArray\"];\nlet alldata = [];\n\nfor (let i = 0; i < arr.length; i++) {\n  let linkIds = arr[i]['modifiedContentArray']['linkId'];\n  let name = arr[i]['name'];\n  let imageSrc = arr[i]['imageSrc'];\n  let shakepelinks = arr[i]['shakepelink'];\n  let content_data = arr[i]['content_data'];\n  let enddate = arr[i]['enddate'];\n  let email=arr[i]['email'];\n  let subject=arr[i]['subject'];\n  \n\n  if (content_data !== null && typeof content_data === 'string') {\n    for (let j = 0; j < linkIds.length; j++) {\n      let linkId = linkIds[j];\n      let shakepelink = shakepelinks[j];\n      let imageSrc1 = imageSrc[j];   \n      let formattedDate1 = enddate[j];\n      const date = new Date(formattedDate1);\n  const options = { day: '2-digit', month: 'short', year: 'numeric' };\n  const formattedDate = date.toLocaleDateString('en-US', options);\n      let name1 = name[j];\n      let email1=email[j];\n  //let subject1=subject[j];\n\n\n\n      let content_field = content_data\n        .replace('{{name}}', name1)\n        .replace('{{link}}', linkId)\n        .replace('{{img}}', imageSrc1)\n        .replace('{{shakepelink}}', shakepelink)\n        .replace('{{enddate}}', formattedDate); // Assuming formattedDate is defined\n\n      let linkObj = {\n       /* content: content_field,\n        \n        shakepelink: shakepelink,\n        name: name1,\n        imageSrc: imageSrc1,\n        enddate:formattedDate,\n        email:email1,\n        subject:subject\n        content_data: content_data\n        \n      };\n\n      alldata.push(linkObj);\n    }\n  } else {\n    console.log('Invalid HTML content for item:', arr[i]);\n  }\n}\n\nreturn { alldata };\n\n*/\n\n\n/*\nlet dataArray = $node[\"Webhook\"].json[\"body\"];\nlet modifiedContentArray1 = [];\nlet x = $node[\"Webhook\"].json[\"body\"][\"modifiedContentArray\"];\nlet y = $node[\"Webhook\"].json[\"body\"][\"content_data\"];\n\n// Loop through array x and push its elements to modifiedContentArray1\nfor (let i = 0; i < x.length; i++) {\n  modifiedContentArray1.push(y,x[i]);\n}\n\n\n\nreturn { modifiedContentArray1 };\n*/\n\n\nlet dataArray = $node[\"Webhook\"].json[\"body\"];\nlet modifiedContentArray1 = [];\nlet x = $node[\"Webhook\"].json[\"body\"][\"modifiedContentArray\"];\nlet y = $node[\"Webhook\"].json[\"body\"][\"content_data\"];\n\nfor (let i = 0; i < x.length; i++) {\n  let content = y; // Copy the original content_data\n  let currentItem = x[i];\nlet formattedDate1 = currentItem.enddate;\n      const date = new Date(formattedDate1);\n  const options = { day: '2-digit', month: 'short', year: 'numeric' };\n  const formattedDate = date.toLocaleDateString('en-US', options);\n  // Replace placeholders in the content with corresponding values from the current item\n  content = content.replace(/{{link}}/g, currentItem.linkId)\n    .replace(/{{img}}/g, currentItem.imageSrc)\n    .replace(/{{shakepelink}}/g, currentItem.shakepelink)\n    .replace(/{{enddate}}/g, formattedDate)\n    .replace(/{{name}}/g, currentItem.name);\n     \nlet linkObj = {\n        content:content ,\n        shakepelink: currentItem.shakepelink,\n        name: currentItem.name,\n        imageSrc: currentItem.imageSrc,\n        enddate:formattedDate,\n        email:currentItem.email,\n        subject:currentItem.subject,\n        linkId: currentItem.linkId\n        \n      };\n\n      \n  modifiedContentArray1.push(linkObj);\n}\n\nreturn { modifiedContentArray1 };\n\n\n\n"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        680,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "modifiedContentArray1",
+        "options": {}
+      },
+      "name": "Item Lists",
+      "type": "n8n-nodes-base.itemLists",
+      "typeVersion": 1,
+      "position": [
+        900,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "rooparajput19@gmail.com",
+        "toEmail": "={{$node[\"Item Lists\"].json[\"email\"]}}",
+        "subject": "={{$node[\"Item Lists\"].json[\"subject\"]}}",
+        "html": "={{$node[\"Item Lists\"].json[\"content\"]}}",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        300
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "103",
+          "name": "SMTP account(Roopa)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "154d1988-0513-40ed-b4a9-715db353307b",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        420,
+        300
+      ],
+      "webhookId": "154d1988-0513-40ed-b4a9-715db353307b"
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-12-26T06:55:40.921Z"
+}
