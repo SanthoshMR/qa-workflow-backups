@@ -38,7 +38,7 @@
       "main": [
         [
           {
-            "node": "IF",
+            "node": "Update resolution create shipment item",
             "type": "main",
             "index": 0
           }
@@ -112,6 +112,17 @@
         [
           {
             "node": "Update resolution in mozart",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update resolution create shipment item": {
+      "main": [
+        [
+          {
+            "node": "IF",
             "type": "main",
             "index": 0
           }
@@ -210,7 +221,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let shipmentItems = $node[\"Get the shipment items\"].json[\"data\"];\nlet vendorShipment = $node[\"Get the shipment from vpanel\"].json[\"data\"];\nlet sdmResolution = {};\nlet sdvResolution = {};\nlet sdmResolutionItems = [];\nlet sdvResolutionItems = [];\nlet pendingResolution = $node[\"Get the pending resolution\"].json[\"data\"];\nshipmentItems.forEach(function(sItem,index){\n  if((sItem.grn_status == \"grn_pending\" && sItem.received_qty < sItem.shipment_qty) || (sItem.rejected_qty !==0)){\n    let issue = sItem.grn_status == \"grn_pending\"?\"short_supply\":\"rejection\";\n    let rejected_qty = sItem.grn_status == \"grn_pending\"?sItem.shipment_qty - sItem.received_qty :sItem.rejected_qty;\n    let vendorShipmentItemId = vendorShipment[0].shipment_items.filter(vsi=>vsi.sdv_vendor_pos_sdv_products_id.po_items_id == sItem.sdm_po_items_id.id)\n    \n    if(pendingResolution.length>0){\n      sdmResolutionItems.push({\n        shipment_item : sItem.id,\n        issue : issue,\n        rejected_qty : rejected_qty,\n        grn_resolution:pendingResolution[0].mozart_resolution_id\n      });\n      sdvResolutionItems.push({\n        shipment_item : vendorShipmentItemId[0].id,\n        issue : issue,\n        rejected_qty : rejected_qty,\n        mozart_item_id:sItem.id,\n        grn_resolution:pendingResolution[0].id\n      })\n    }else{\n      sdmResolutionItems.push({\n        shipment_item : sItem.id,\n        issue : issue,\n        rejected_qty : rejected_qty\n      });\n      sdvResolutionItems.push({\n        shipment_item : vendorShipmentItemId[0].id,\n        issue : issue,\n        rejected_qty : rejected_qty,\n        mozart_item_id:sItem.id\n      })\n    }\n  }\n  \n \n})\n\nsdmResolution.shipment = shipmentItems[0].sdm_shipments_id.id;\nsdmResolution.resolution_items = sdmResolutionItems\n\nsdvResolution.shipment= vendorShipment[0].id;\nsdvResolution.resolution_items=sdvResolutionItems\n\n\n\nitems[0].json.sdmResolution= sdmResolution;\nitems[0].json.sdvResolution= sdvResolution;\nreturn items;"
+        "functionCode": "let shipmentItems = $node[\"Get the shipment items\"].json[\"data\"];\nlet vendorShipment = $node[\"Get the shipment from vpanel\"].json[\"data\"];\nlet sdmResolution = {};\nlet sdvResolution = {};\nlet sdmResolutionItems = [];\nlet sdvResolutionItems = [];\nlet pendingResolution = $node[\"Get the pending resolution\"].json[\"data\"];\nlet receivedResolution = false;\nlet rejectedResoltuion = false;\nshipmentItems.forEach(function(sItem,index){\n  if(sItem.grn_status == \"grn_pending\" && sItem.received_qty < sItem.shipment_qty && !sItem.received_resolution_created){\n    receivedResolution=true;\n    let issue = sItem.grn_status == \"grn_pending\"?\"short_supply\":\"rejection\";\n    let rejected_qty = sItem.grn_status == \"grn_pending\"?sItem.shipment_qty - sItem.received_qty :sItem.rejected_qty;\n    let vendorShipmentItemId = vendorShipment[0].shipment_items.filter(vsi=>vsi.sdv_vendor_pos_sdv_products_id.po_items_id == sItem.sdm_po_items_id.id)\n    \n    if(pendingResolution.length>0){\n      sdmResolutionItems.push({\n        shipment_item : sItem.id,\n        issue : issue,\n        rejected_qty : rejected_qty,\n        grn_resolution:pendingResolution[0].mozart_resolution_id\n      });\n      sdvResolutionItems.push({\n        shipment_item : vendorShipmentItemId[0].id,\n        issue : issue,\n        rejected_qty : rejected_qty,\n        mozart_item_id:sItem.id,\n        grn_resolution:pendingResolution[0].id\n      })\n    }else{\n      sdmResolutionItems.push({\n        shipment_item : sItem.id,\n        issue : issue,\n        rejected_qty : rejected_qty\n      });\n      sdvResolutionItems.push({\n        shipment_item : vendorShipmentItemId[0].id,\n        issue : issue,\n        rejected_qty : rejected_qty,\n        mozart_item_id:sItem.id\n      })\n    }\n  }else if(!sItem.rejected_resolution_created && sItem.rejected_qty !==0){\n    rejectedResoltuion = true;\n    let issue = \"rejection\";\n    let rejected_qty = sItem.rejected_qty;\n    let vendorShipmentItemId = vendorShipment[0].shipment_items.filter(vsi=>vsi.sdv_vendor_pos_sdv_products_id.po_items_id == sItem.sdm_po_items_id.id)\n    \n    if(pendingResolution.length>0){\n      sdmResolutionItems.push({\n        shipment_item : sItem.id,\n        issue : issue,\n        rejected_qty : rejected_qty,\n        grn_resolution:pendingResolution[0].mozart_resolution_id\n      });\n      sdvResolutionItems.push({\n        shipment_item : vendorShipmentItemId[0].id,\n        issue : issue,\n        rejected_qty : rejected_qty,\n        mozart_item_id:sItem.id,\n        grn_resolution:pendingResolution[0].id\n      })\n    }else{\n      sdmResolutionItems.push({\n        shipment_item : sItem.id,\n        issue : issue,\n        rejected_qty : rejected_qty\n      });\n      sdvResolutionItems.push({\n        shipment_item : vendorShipmentItemId[0].id,\n        issue : issue,\n        rejected_qty : rejected_qty,\n        mozart_item_id:sItem.id\n      })\n    }\n  }\n  \n \n})\n\nsdmResolution.shipment = shipmentItems[0].sdm_shipments_id.id;\nsdmResolution.resolution_items = sdmResolutionItems\n\nsdvResolution.shipment= vendorShipment[0].id;\nsdvResolution.resolution_items=sdvResolutionItems\nlet updateResolutionCreatedItem = {};\n\nif(sdmResolution){\n  updateResolutionCreatedItem.keys = sdmResolution.resolution_items.map(ri=>ri.shipment_item);\n  if(receivedResolution){\n     updateResolutionCreatedItem.data ={\n       received_resolution_created:true\n    }\n  }else{\n     updateResolutionCreatedItem.data ={\n      rejected_resolution_created:true\n    }\n  }\n \n}\n\nitems[0].json.sdmResolution= sdmResolution;\nitems[0].json.sdvResolution= sdvResolution;\nitems[0].json.updateResolutionCreatedItem = updateResolutionCreatedItem;\nreturn items;"
       },
       "name": "Function",
       "type": "n8n-nodes-base.function",
@@ -399,10 +410,33 @@
           "name": "Mozart DMS Token"
         }
       }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_shipment_items",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Function\"].json[\"updateResolutionCreatedItem\"]}}"
+      },
+      "name": "Update resolution create shipment item",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1380,
+        40
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-12-08T09:44:33.235Z"
+  "updatedAt": "2023-12-26T10:21:16.798Z"
 }
