@@ -118,7 +118,7 @@
     },
     {
       "parameters": {
-        "fromEmail": "=ShakeDeal Mozart <sdmozart@shakedeal.com>",
+        "fromEmail": "=vedanta <> sd ops <vedantaiob.ops@shakedeal.com>",
         "toEmail": "sairam.reddy@shakedeal.com,bijan.krishna@shakedeal.com, anjali.jain@shakedeal.com, santhosh.n@shakedeal.com",
         "subject": "=Purchase Order from Opcommerce Online Private Limited (Purchase Order #: {{$node[\"Webhook\"].json[\"body\"][\"po_number\"]}})",
         "html": "={{$node[\"Construct obj for sending mail\"].json.mail_body}}",
@@ -238,5 +238,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-12-19T12:30:40.008Z"
+  "updatedAt": "2023-12-27T11:00:53.526Z"
 }
