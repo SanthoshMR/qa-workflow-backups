@@ -38,7 +38,7 @@
       "main": [
         [
           {
-            "node": "Update resolution create shipment item",
+            "node": "Check for resolution items",
             "type": "main",
             "index": 0
           }
@@ -123,6 +123,24 @@
         [
           {
             "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for resolution items": {
+      "main": [
+        [
+          {
+            "node": "Update resolution create shipment item",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp",
             "type": "main",
             "index": 0
           }
@@ -264,8 +282,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1600,
-        260
+        2000,
+        280
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -287,8 +305,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1820,
-        260
+        2220,
+        280
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -316,8 +334,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2040,
-        260
+        2440,
+        280
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -361,8 +379,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        1420,
-        260
+        1820,
+        280
       ]
     },
     {
@@ -378,8 +396,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1680,
-        0
+        2080,
+        20
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -401,8 +419,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1900,
-        0
+        2300,
+        20
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -424,8 +442,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1380,
-        40
+        1660,
+        280
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -433,10 +451,39 @@
           "name": "Mozart DMS Token"
         }
       }
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1700,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Function\"].json[\"sdmResolution\"][\"resolution_items\"].length>0?true:false}}"
+            }
+          ]
+        }
+      },
+      "name": "Check for resolution items",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1420,
+        260
+      ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-12-26T10:21:16.798Z"
+  "updatedAt": "2024-01-04T10:24:44.805Z"
 }
