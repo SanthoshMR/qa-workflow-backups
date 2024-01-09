@@ -34,7 +34,7 @@
         ],
         [
           {
-            "node": "Check Message ID1",
+            "node": "Insert SES Log",
             "type": "main",
             "index": 0
           }
@@ -81,17 +81,6 @@
         ]
       ]
     },
-    "Insert SES Log": {
-      "main": [
-        [
-          {
-            "node": "Create Response",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Webhook": {
       "main": [
         [
@@ -103,36 +92,7 @@
         ]
       ]
     },
-    "Check Message ID1": {
-      "main": [
-        [
-          {
-            "node": "Insert SES Log",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Insert SES Log1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Insert SES Log1": {
-      "main": [
-        [
-          {
-            "node": "Insert SES Log2",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Insert SES Log2": {
+    "Insert SES Log": {
       "main": [
         [
           {
@@ -275,55 +235,6 @@
     },
     {
       "parameters": {
-        "authentication": "headerAuth",
-        "requestMethod": "POST",
-        "url": "=https://zeus.shakedeal.com/items/sd_delivery_logs",
-        "options": {},
-        "bodyParametersUi": {
-          "parameter": [
-            {
-              "name": "order_id",
-              "value": "={{$node[\"Webhook\"].json[\"body\"][\"order_id\"]}}"
-            },
-            {
-              "name": "message_id",
-              "value": "={{$node[\"Webhook\"].json[\"body\"][\"message_id\"]}}"
-            },
-            {
-              "name": "status",
-              "value": "Send"
-            },
-            {
-              "name": "recipient",
-              "value": "={{$node[\"Webhook\"].json[\"body\"][\"recipient\"]}}"
-            },
-            {
-              "name": "template",
-              "value": "={{$node[\"Webhook\"].json[\"body\"][\"template\"]}}"
-            },
-            {
-              "name": "source",
-              "value": "={{$node[\"Webhook\"].json[\"body\"][\"source\"]}}"
-            }
-          ]
-        }
-      },
-      "name": "Insert SES Log",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        440,
-        220
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "10",
-          "name": "SD-Dms-Token"
-        }
-      }
-    },
-    {
-      "parameters": {
         "functionCode": "let returnItems = [];\nreturnItems.push({\n  json:{\n    message : \"Log already created\"\n  }\n})\n\nreturn returnItems"
       },
       "name": "Order Response",
@@ -393,6 +304,26 @@
     },
     {
       "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Webhook\"].json[\"body\"][\"type\"]}}",
+              "operation": "equal",
+              "value2": "={{2}}"
+            }
+          ]
+        }
+      },
+      "name": "Check Message ID1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        0,
+        400
+      ]
+    },
+    {
+      "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "POST",
         "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_delivery_logs",
@@ -426,81 +357,12 @@
           ]
         }
       },
-      "name": "Insert SES Log1",
+      "name": "Insert SES Log",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        220,
-        420
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "81",
-          "name": "SES Auth"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "number": [
-            {
-              "value1": "={{$node[\"Webhook\"].json[\"body\"][\"type\"]}}",
-              "operation": "equal",
-              "value2": "={{2}}"
-            }
-          ]
-        }
-      },
-      "name": "Check Message ID1",
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 1,
-      "position": [
-        220,
-        240
-      ]
-    },
-    {
-      "parameters": {
-        "authentication": "headerAuth",
-        "requestMethod": "POST",
-        "url": "=https://zeusqa.shakedeal.com/items/sd_delivery_logs",
-        "options": {},
-        "bodyParametersUi": {
-          "parameter": [
-            {
-              "name": "order_id",
-              "value": "={{$node[\"Webhook\"].json[\"body\"][\"order_id\"]}}"
-            },
-            {
-              "name": "message_id",
-              "value": "={{$node[\"Webhook\"].json[\"body\"][\"message_id\"]}}"
-            },
-            {
-              "name": "status",
-              "value": "Send"
-            },
-            {
-              "name": "recipient",
-              "value": "={{$node[\"Webhook\"].json[\"body\"][\"recipient\"]}}"
-            },
-            {
-              "name": "template",
-              "value": "={{$node[\"Webhook\"].json[\"body\"][\"template\"]}}"
-            },
-            {
-              "name": "source",
-              "value": "={{$node[\"Webhook\"].json[\"body\"][\"source\"]}}"
-            }
-          ]
-        }
-      },
-      "name": "Insert SES Log2",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        440,
-        360
+        420,
+        260
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -513,5 +375,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-11-10T09:33:35.699Z"
+  "updatedAt": "2024-01-09T06:59:03.014Z"
 }
