@@ -38,7 +38,7 @@
       "main": [
         [
           {
-            "node": "Get the amended vendor po",
+            "node": "Get all vendor pos",
             "type": "main",
             "index": 0
           }
@@ -72,6 +72,17 @@
         [
           {
             "node": "Function to amend po",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get all vendor pos": {
+      "main": [
+        [
+          {
+            "node": "Get the amended vendor po",
             "type": "main",
             "index": 0
           }
@@ -144,7 +155,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_pos?filter={\"id\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"keys\"][0]}}\"}}",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_pos?filter={\"id\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"keys\"][0]}}\"}}&fields=*,po_num.*",
         "options": {}
       },
       "name": "Get the vendor po",
@@ -191,7 +202,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1100,
+        1200,
         320
       ],
       "credentials": {
@@ -211,7 +222,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1300,
+        1400,
         320
       ],
       "credentials": {
@@ -223,27 +234,47 @@
     },
     {
       "parameters": {
-        "functionCode": "let vendorPoDetails = $node[\"Get the vendor po\"].json.data;\nlet poItemDetails = $node[\"Get the po items\"].json.data;\nlet amendedVendorPoDetails = $node[\"Get the amended vendor po\"].json.data;\nlet amendedPoItemDetaisl = $node[\"Get the amended po items\"].json.data;\nlet newVendorPosArr = [];\n\n\nif($node[\"Webhook\"].json[\"body\"][\"payload\"][\"vendor\"]){\n  newVendorPosArr.push({\n    id:\n  })\n}\n\nreturn items;"
+        "functionCode": "let vendorPoDetails = $node[\"Get the vendor po\"].json.data;\nlet poItemDetails = $node[\"Get the po items\"].json.data;\nlet amendedVendorPoDetails = $node[\"Get the amended vendor po\"].json.data;\nlet amendedPoItemDetails = $node[\"Get the amended po items\"].json.data;\nlet latestVendorPo = $node[\"Get the latest vendor po\"].json.data;\nlet newVendorPosArr = [];\nlet payload = $node[\"Webhook\"].json[\"body\"][\"payload\"];\nlet updateDeliveryDate = false;\nlet vedantaPoDeliveryDate = vendorPoDetails[0].po_num.po_deliver_date;\nlet vendorPoDeliveryDate = vendorPoDetails[0].po_deliver_date;\nlet getAllVendorPos = $node[\"Get all vendor pos\"].json.data;\n\n\nif($node[\"Webhook\"].json[\"body\"][\"payload\"][\"vendor\"]){\n  let poItems = [];\n  amendedPoItemDetails.forEach(function(item,index){\n    poItems.push({\n      //id:\n    })\n  })\n  newVendorPosArr.push({\n    id:amendedVendorPoDetails[0].id.split(\"-\")[1].includes(\"R\")?parseInt(latestVendorPo[0].id.split(\"-\")[1].split(\"R\")[1])+1:amendedVendorPoDetails+\"R1\",\n    vendor:$node[\"Webhook\"].json[\"body\"][\"payload\"][\"vendor\"],\n    po_num:amendedVendorPoDetails[0].po_num,\n    po_date:vendorPoDetails[0].po_date,\n    po_status:\"draft\",\n\n  })\n}else if(payload[\"po_items\"]){\n  let createdItems = payload[\"po_items\"].create;\n  let updatedItems = payload[\"po_items\"].update;\n  let deletedItems = payload[\"po_items\"][\"delete\"];\n  let checkForVendorUpdate = updatedItems.filter(uItems=>uItems.vendor);\n  let checkForDeliveryUpdate = updatedItems.filter(uItems=>uItems.delivery_date);\n  let checkForPriceChange = updatedItems.filter(uItems=>uItems.unit_price);\n  let checkForTaxChange = updatedItems.filter(uItems=>uItems.tax_percentage);\n\n  if(checkForVendorUpdate.length>0){\n\n  }else if(!checkForVendorUpdate.length>0){\n    if(checkForDeliveryUpdate.length>0){\n      updateDeliveryDate=true;\n      let minVendorPoDate = new Date(\n          Math.min(\n            ...amendedPoItemDetails.map(element => {\n              return new Date(element.delivery_date);\n              }),\n            ),\n          );\n      vendorPoDeliveryDate = new Date(minVendorPoDate).toISOString();\n      let getMatchedVendorPo =getAllVendorPos.findIndex(po=>amendedVendorPoDetails[0].id == po.id);\n      getAllVendorPos[getMatchedVendorPo].po_deliver_date = vendorPoDeliveryDate;\n      let minPoDate = new Date(\n        Math.min(\n          ...getAllVendorPos.map(element => {\n            return new Date(element.po_deliver_date);\n            }),\n          ),\n        );\n      vedantaPoDeliveryDate = new Date(minPoDate).toISOString();\n    }\n  }\n}\n\n\n\nreturn items;"
       },
       "name": "Function to amend po",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1660,
+        1780,
         320
       ]
     },
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_pos?filter={\"po_num\":{\"_eq\":\"{{$node[\"Get the amended vendor po\"].json[\"data\"][0][\"po_num\"]}}\"}}&sort=-date_created&limit=1",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_pos?filter={\"po_num\":{\"_eq\":\"{{$node[\"Get the amended vendor po\"].json[\"data\"][0][\"po_num\"][\"id\"]}}\"}}&sort=-date_created&limit=1",
         "options": {}
       },
       "name": "Get the latest vendor po",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1480,
+        1580,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_pos?filter={\"po_num\":{\"_eq\":\"{{$node[\"Get the vendor po\"].json[\"data\"][0][\"po_num\"][\"id\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Get all vendor pos",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1040,
         320
       ],
       "credentials": {
@@ -257,5 +288,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2024-01-08T14:04:10.082Z"
+  "updatedAt": "2024-01-09T12:28:41.950Z"
 }
