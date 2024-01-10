@@ -104,7 +104,7 @@
       "main": [
         [
           {
-            "node": "Update delivery info in mozart",
+            "node": "Get ASN file name",
             "type": "main",
             "index": 0
           }
@@ -185,6 +185,28 @@
         [
           {
             "node": "Update the order_status with that order_id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get ASN file name": {
+      "main": [
+        [
+          {
+            "node": "Update title",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update title": {
+      "main": [
+        [
+          {
+            "node": "Update delivery info in mozart",
             "type": "main",
             "index": 0
           }
@@ -430,8 +452,8 @@
       "type": "n8n-nodes-base.moveBinaryData",
       "typeVersion": 1,
       "position": [
-        1800,
-        0
+        1700,
+        -120
       ]
     },
     {
@@ -445,8 +467,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1580,
-        0
+        1520,
+        -120
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -472,8 +494,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2060,
-        0
+        1880,
+        -120
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -642,6 +664,59 @@
         2660,
         40
       ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"vpanel_url\"]}}/files/{{$node[\"Wait for delivery info\"].json[\"body\"][\"payload\"][\"asn_document\"]}}",
+        "options": {}
+      },
+      "name": "Get ASN file name",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2040,
+        -120
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"mozart_url\"]}}/files/{{$node[\"Upload asn_document in mozart\"].json.data.id}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "title",
+              "value": "={{$node[\"Get ASN file name\"].json.data.title}}"
+            },
+            {
+              "name": "filename_download",
+              "value": "={{$node[\"Get ASN file name\"].json.data.filename_download}}"
+            }
+          ]
+        }
+      },
+      "name": "Update title",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2180,
+        -120
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
     }
   ],
   "settings": {},
@@ -654,5 +729,5 @@
       "updatedAt": "2022-05-30T07:16:52.136Z"
     }
   ],
-  "updatedAt": "2023-11-27T13:08:06.920Z"
+  "updatedAt": "2024-01-10T09:49:39.293Z"
 }
