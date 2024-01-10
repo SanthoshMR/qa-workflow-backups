@@ -49,7 +49,7 @@
       "main": [
         [
           {
-            "node": "Get the invoice details",
+            "node": "Get the pod file name",
             "type": "main",
             "index": 0
           }
@@ -94,6 +94,28 @@
         [
           {
             "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the pod file name": {
+      "main": [
+        [
+          {
+            "node": "Update pod title",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update pod title": {
+      "main": [
+        [
+          {
+            "node": "Get the invoice details",
             "type": "main",
             "index": 0
           }
@@ -236,7 +258,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1500,
+        1700,
         260
       ],
       "credentials": {
@@ -256,7 +278,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1680,
+        1880,
         260
       ],
       "credentials": {
@@ -289,7 +311,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1860,
+        2060,
         260
       ],
       "credentials": {
@@ -318,7 +340,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2080,
+        2280,
         260
       ],
       "credentials": {
@@ -360,6 +382,59 @@
           "name": "SD Basic Auth"
         }
       }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"vpanel_dms_url\"]}}/files/{{$node[\"Wait for pod\"].json[\"body\"][\"payload\"][\"pod_file\"]}}",
+        "options": {}
+      },
+      "name": "Get the pod file name",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1380,
+        100
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"mozart_dms_url\"]}}/files/{{$node[\"Upload shipment in mozart\"].json.data.id}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "title",
+              "value": "={{$node[\"Get the pod file name\"].json.data.title}}"
+            },
+            {
+              "name": "filename_download",
+              "value": "={{$node[\"Get the pod file name\"].json.data.filename_download}}"
+            }
+          ]
+        }
+      },
+      "name": "Update pod title",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1560,
+        100
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
     }
   ],
   "settings": {},
@@ -372,5 +447,5 @@
       "updatedAt": "2022-05-30T07:16:52.136Z"
     }
   ],
-  "updatedAt": "2023-05-21T04:49:35.583Z"
+  "updatedAt": "2024-01-10T10:00:48.958Z"
 }
