@@ -241,8 +241,8 @@
       ],
       "credentials": {
         "smtp": {
-          "id": "36",
-          "name": "SendGrid"
+          "id": "7",
+          "name": "AWS SES Creds"
         }
       }
     },
@@ -350,5 +350,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-10-16T09:40:50.579Z"
+  "updatedAt": "2024-01-12T12:18:39.562Z"
 }
