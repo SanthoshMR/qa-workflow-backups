@@ -1,0 +1,235 @@
+{
+  "active": false,
+  "connections": {
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "Item Lists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Item Lists": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email": {
+      "main": [
+        []
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AWS SES": {
+      "main": [
+        [
+          {
+            "node": "Insert SES Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "createdAt": "2024-01-12T09:06:20.532Z",
+  "id": "398",
+  "name": "My workflow 28",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let dataArray = $node[\"Webhook\"].json[\"body\"];\nlet modifiedContentArray1 = [];\nlet content_array = $node[\"Webhook\"].json[\"body\"][\"modifiedContentArray\"];\nlet content_field = $node[\"Webhook\"].json[\"body\"][\"content_data\"];\n\nfor (let i = 0; i < content_array.length; i++) {\n  let content = content_field; // Copy the original content_data\n  let currentItem = content_array[i];\nlet formattedDate1 = currentItem.enddate;\n      const date = new Date(formattedDate1);\n  const options = { day: '2-digit', month: 'short', year: 'numeric' };\n  const formattedDate = date.toLocaleDateString('en-US', options);\n  // Replace placeholders in the content with corresponding values from the current item\n content = content.replace(/{link}/g, currentItem.linkId)\n    .replace(/{img}/g, currentItem.imageSrc)\n    .replace(/{shakepelink}/g, currentItem.shakepelink)\n    .replace(/{enddate}/g, formattedDate)\n    .replace(/{name}/g, currentItem.name);\n     \nlet linkObj = {\n        content:content ,\n        shakepelink: currentItem.shakepelink,\n        name: currentItem.name,\n        imageSrc: currentItem.imageSrc,\n        enddate:formattedDate,\n        email:currentItem.email,\n        subject:currentItem.subject,\n         campaign_name:currentItem.campaign_name,\n        from:currentItem.from,\n        linkId: currentItem.linkId\n        \n      };\n\n      \n  modifiedContentArray1.push(linkObj);\n}\n\nreturn { modifiedContentArray1 };\n\n\n\n"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        700,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "modifiedContentArray1",
+        "options": {}
+      },
+      "name": "Item Lists",
+      "type": "n8n-nodes-base.itemLists",
+      "typeVersion": 1,
+      "position": [
+        900,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{$node[\"Item Lists\"].json[\"from\"]}}",
+        "toEmail": "={{$node[\"Item Lists\"].json[\"email\"]}}",
+        "subject": "={{$node[\"Item Lists\"].json[\"subject\"]}}",
+        "html": "={{$node[\"Item Lists\"].json[\"content\"]}}",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        1140,
+        300
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "103",
+          "name": "SMTP account(Roopa)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "154d1988-0513-40ed-b4a9-715db353307b",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ],
+      "webhookId": "154d1988-0513-40ed-b4a9-715db353307b"
+    },
+    {
+      "parameters": {
+        "isBodyHtml": true,
+        "subject": "={{$node[\"Item Lists\"].json[\"subject\"]}}",
+        "body": "={{$node[\"Item Lists\"].json[\"content\"]}}",
+        "fromEmail": "={{$node[\"Item Lists\"].json[\"from\"]}}",
+        "toAddresses": [
+          "={{$node[\"Item Lists\"].json[\"email\"]}}"
+        ],
+        "additionalFields": {
+          "configurationSetName": "ses-qa"
+        }
+      },
+      "name": "AWS SES",
+      "type": "n8n-nodes-base.awsSes",
+      "typeVersion": 1,
+      "position": [
+        1460,
+        120
+      ],
+      "credentials": {
+        "aws": {
+          "id": "106",
+          "name": "AWS account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "=https://zeusqa.shakedeal.com/items/sd_delivery_logs",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "order_id",
+              "value": "={{$node[\"Item Lists\"].json[\"campaign_name\"]}}"
+            },
+            {
+              "name": "message_id",
+              "value": "={{$node[\"AWS SES\"].json[\"SendEmailResponse\"][\"SendEmailResult\"][\"MessageId\"]}}"
+            },
+            {
+              "name": "status",
+              "value": "Send"
+            },
+            {
+              "name": "recipient",
+              "value": "={{$node[\"Item Lists\"].json[\"email\"]}}"
+            },
+            {
+              "name": "source",
+              "value": "=Campaigns"
+            },
+            {
+              "name": "template"
+            }
+          ]
+        }
+      },
+      "name": "Insert SES Log",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1600,
+        120
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "81",
+          "name": "SES Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "https://campaignsqa.shakepe.com/items/sp_reward_campaigns",
+        "options": {}
+      },
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        340,
+        40
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "102",
+          "name": "Header Auth account 2(campaign qa)"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2024-01-12T09:09:43.548Z"
+}
