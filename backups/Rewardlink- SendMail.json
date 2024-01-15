@@ -91,7 +91,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let dataArray = $node[\"Webhook\"].json[\"body\"];\nlet modifiedContentArray1 = [];\nlet content_array = $node[\"Webhook\"].json[\"body\"][\"modifiedContentArray\"];\nlet content_field = $node[\"Webhook\"].json[\"body\"][\"content_data\"];\n\nfor (let i = 0; i < content_array.length; i++) {\n  let content = content_field; // Copy the original content_data\n  let currentItem = content_array[i];\nlet formattedDate1 = currentItem.enddate;\nlet amount = parseInt(currentItem.amount);\n      const date = new Date(formattedDate1);\n  const options = { day: '2-digit', month: 'short', year: 'numeric' };\n  const formattedDate = date.toLocaleDateString('en-US', options);\n  // Replace placeholders in the content with corresponding values from the current item\n content = content.replace(/{link}/g, currentItem.linkId)\n    .replace(/{img}/g, currentItem.imageSrc)\n    .replace(/{shakepelink}/g, currentItem.shakepelink)\n    .replace(/{enddate}/g, formattedDate)\n    .replace(/{amount}/g, amount)\n    .replace(/{name}/g, currentItem.name);\n     \nlet linkObj = {\n        content:content ,\n        shakepelink: currentItem.shakepelink,\n        name: currentItem.name,\n        imageSrc: currentItem.imageSrc,\n        enddate:formattedDate,\n        email:currentItem.email,\n        subject:currentItem.subject,\n         campaign_name:currentItem.campaign_name,\n        from:currentItem.from,\n        linkId: currentItem.linkId\n        \n      };\n\n      \n  modifiedContentArray1.push(linkObj);\n}\n\nreturn { modifiedContentArray1 };\n\n\n\n"
+        "functionCode": "let dataArray = $node[\"Webhook\"].json[\"body\"];\nlet modifiedContentArray1 = [];\nlet content_array = $node[\"Webhook\"].json[\"body\"][\"modifiedContentArray\"];\nlet content_field = $node[\"Webhook\"].json[\"body\"][\"content_data\"];\n\nfor (let i = 0; i < content_array.length; i++) {\n  let content = content_field; // Copy the original content_data\n  let currentItem = content_array[i];\nlet formattedDate1 = currentItem.enddate;\nlet amount = parseInt(currentItem.amount);\n      const date = new Date(formattedDate1);\n  const options = { day: '2-digit', month: 'short', year: 'numeric' };\n  const formattedDate = date.toLocaleDateString('en-US', options);\n  // Replace placeholders in the content with corresponding values from the current item\n content = content.replace(/{link}/g, currentItem.linkId)\n    .replace(/{img}/g, currentItem.imageSrc)\n    .replace(/{shakepelink}/g, currentItem.shakepelink)\n    .replace(/{enddate}/g, formattedDate)\n    .replace(/{amount}/g, amount)\n    .replace(/{name}/g, currentItem.name);\n     \nlet linkObj = {\n        content:content ,\n        shakepelink: currentItem.shakepelink,\n        name: currentItem.name,\n        imageSrc: currentItem.imageSrc,\n        enddate:formattedDate,\n        email:currentItem.email,\n        subject:currentItem.subject,\n         campaign_name:currentItem.campaign_name,\n        from:currentItem.from,\n        linkId: currentItem.linkId,\n        is_attachment_required : currentItem.is_attachment_required\n        \n      };\n\n      \n  modifiedContentArray1.push(linkObj);\n}\n\nreturn { modifiedContentArray1 };\n\n\n\n"
       },
       "name": "Function",
       "type": "n8n-nodes-base.function",
@@ -267,10 +267,6 @@
             {
               "name": "htmlbody",
               "value": "={{$node[\"Zepto Item Lists\"].json[\"content\"]}}"
-            },
-            {
-              "name": "attachments",
-              "value": "=[{\"file_cache_key\": \"2d6f.3899390d815a995e.h1.d4f13f60-b134-11ee-b998-5254004d4100.18cfd340e56\",\"mime_type\":\"application/pdf\",\"name\": \"Voucher-Redemption.pdf\"}]"
             }
           ]
         },
@@ -322,10 +318,62 @@
         960,
         520
       ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "=https://api.zeptomail.com/v1.1/email",
+        "options": {
+          "bodyContentType": "json"
+        },
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "bounce_address",
+              "value": "=bounces@zep.shakepe.com"
+            },
+            {
+              "name": "from",
+              "value": "={ \"address\": \"rewards@shakepe.com\", \"name\": \"ShakePe Rewards\"}"
+            },
+            {
+              "name": "to",
+              "value": "=[{\"email_address\": {\"address\": \"{{$node[\"Zepto Item Lists\"].json[\"email\"]}}\",\"name\": \"{{$node[\"Zepto Item Lists\"].json[\"name\"]}}\"}}]"
+            },
+            {
+              "name": "subject",
+              "value": "={{$node[\"Zepto Item Lists\"].json[\"subject\"]}}"
+            },
+            {
+              "name": "htmlbody",
+              "value": "={{$node[\"Zepto Item Lists\"].json[\"content\"]}}"
+            },
+            {
+              "name": "attachments",
+              "value": "=[{\"file_cache_key\": \"2d6f.3899390d815a995e.h1.d4f13f60-b134-11ee-b998-5254004d4100.18cfd340e56\",\"mime_type\":\"application/pdf\",\"name\": \"Voucher-Redemption.pdf\"}]"
+            }
+          ]
+        },
+        "headerParametersUi": {
+          "parameter": [
+            {
+              "name": "Authorization",
+              "value": "Zoho-enczapikey wSsVR6118xTxD/8vzWKpL+s4mlRSAV6gQU963QGmv3H5Hf2Wp8dtw0bPBw6iFPkbF2ZhFGMWpu18mB8JgGVfj9l/mV1UXiiF9mqRe1U4J3x17qnvhDzDW2xakxSJKY4Ozg5jnGFlG8ki+g=="
+            }
+          ]
+        }
+      },
+      "name": "Zepto Mail1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1180,
+        880
+      ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2024-01-12T11:49:39.531Z"
+  "updatedAt": "2024-01-15T06:35:44.304Z"
 }
