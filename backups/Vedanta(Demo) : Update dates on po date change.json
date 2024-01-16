@@ -1,0 +1,452 @@
+{
+  "active": true,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get url and token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get url and token": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the po details": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "Update vendor Pos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Globals": {
+      "main": [
+        [
+          {
+            "node": "Get the po details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update vendor Pos": {
+      "main": [
+        [
+          {
+            "node": "Split to update shipement and orders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split to update shipement and orders": {
+      "main": [
+        [
+          {
+            "node": "Update shipment invoice date",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update shipment invoice date": {
+      "main": [
+        [
+          {
+            "node": "Update order date",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update order date": {
+      "main": [
+        [
+          {
+            "node": "Get the vendor po id from vpanel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the vendor po id from vpanel": {
+      "main": [
+        [
+          {
+            "node": "Update PO date in vendor panel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update PO date in vendor panel": {
+      "main": [
+        [
+          {
+            "node": "Get the shipment from vpanel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the shipment from vpanel": {
+      "main": [
+        [
+          {
+            "node": "Update shipment date in vpanel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2024-01-16T09:13:52.418Z",
+  "id": "399",
+  "name": "Vedanta(Demo) : Update dates on po date change",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "update-dates",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        540,
+        320
+      ],
+      "webhookId": "07d16ff0-999d-4329-80d3-25d2f29cd193"
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sdm_pos/{{$node[\"Webhook\"].json[\"body\"][\"keys\"][0]}}?fields=*,vendor_Pos.*,vendor_Pos.shipments.*,vendor_Pos.shipments.sdm_orders.*",
+        "options": {}
+      },
+      "name": "Get the po details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "=https://athena.shakedeal.com/webhook/get-url",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "client",
+              "value": "=vedanta"
+            },
+            {
+              "name": "env",
+              "value": "=prod"
+            }
+          ]
+        }
+      },
+      "name": "Get url and token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        760,
+        320
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let poDetails = $node[\"Get the po details\"].json.data;\nlet vendorPos = poDetails.vendor_Pos;\nlet updateData  = [];\nlet updatedClientPoDate = $node[\"Webhook\"].json[\"body\"].payload.po_date;\nlet vendorPoIds = vendorPos.map(po=>po.id);\n\nvendorPos.forEach(function(po,index){\n  let vendorPoDate = updatedClientPoDate;\n  let increaseDays = 2;\n  po.shipments.forEach(function(shipment,index){\n    updateData.push({\n      vendor_po_id :po.id,\n      vendor_po_date : vendorPoDate,\n      shipment_id:shipment.id,\n      vendor_invoice_number:shipment.invoice_number,\n      invoice_date:getUpdatedDate(vendorPoDate,increaseDays),\n      order_id : shipment.sdm_orders[0].sdm_orders_id,\n      order_date : getUpdatedDate(vendorPoDate,increaseDays),\n      dms_url:$node[\"Globals\"].json[\"dms_url\"],\n      vpanel_url:$node[\"Globals\"].json[\"vpanel_dms_url\"]\n    });\n    increaseDays=increaseDays+2;\n  })\n  \n});\n\nfunction getUpdatedDate(date,daysToIncrease){\n  let podate = new Date(date);\n  podate.setDate(podate.getDate() + daysToIncrease);\n  return new Date(podate).toISOString();\n}\nlet updateVendorPoDates = {\n\t\"keys\": vendorPoIds,\n\t\"data\": {\n\t\t\"po_date\": updatedClientPoDate\n\t}\n};\n\nitems[0].json.updateVendorPoDates = updateVendorPoDates;\nitems[0].json.updateData = updateData;\nreturn items;"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1220,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sdm_vendor_pos",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Function\"].json[\"updateVendorPoDates\"]}}"
+      },
+      "name": "Update vendor Pos",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1420,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "dms_url",
+              "value": "=https://demo.mozart.shakedeal.com"
+            },
+            {
+              "name": "vpanel_dms_url",
+              "value": "=https://demo.vpanel.shakedeal.com"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Globals",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        920,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let updateShipmentDates=$node[\"Function\"].json[\"updateData\"];\nlet returnItems =[]\nupdateShipmentDates.forEach(function(obj,index){  \n    returnItems.push({\n    json: obj\n  });\n  \n})\n\nreturn returnItems;"
+      },
+      "name": "Split to update shipement and orders",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1640,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Split to update shipement and orders\"].json[\"dms_url\"]}}/items/sdm_shipments/{{$node[\"Split to update shipement and orders\"].json[\"shipment_id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "invoice_date",
+              "value": "={{$node[\"Split to update shipement and orders\"].json[\"invoice_date\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update shipment invoice date",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1860,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Split to update shipement and orders\"].json[\"dms_url\"]}}/items/sdm_orders/{{$node[\"Split to update shipement and orders\"].json[\"order_id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "order_date",
+              "value": "={{$node[\"Split to update shipement and orders\"].json[\"order_date\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update order date",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2120,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Split to update shipement and orders\"].json[\"vpanel_url\"]}}/items/sdv_vendor_pos?filter={\"po_number\":{\"_eq\":\"{{$node[\"Split to update shipement and orders\"].json[\"vendor_po_id\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Get the vendor po id from vpanel",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2360,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Split to update shipement and orders\"].json[\"vpanel_url\"]}}/items/sdv_vendor_pos/{{$node[\"Get the vendor po id from vpanel\"].json[\"data\"][0][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "po_date",
+              "value": "={{$node[\"Split to update shipement and orders\"].json[\"vendor_po_date\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update PO date in vendor panel",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2580,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Split to update shipement and orders\"].json[\"vpanel_url\"]}}/items/sdv_shipments?filter={\"_and\":[{\"vendor_po_number\":{\"po_number\":{\"_eq\":\"{{$node[\"Split to update shipement and orders\"].json[\"vendor_po_id\"]}}\"}}},{\"invoice_number\":{\"_eq\":\"{{$node[\"Split to update shipement and orders\"].json[\"vendor_invoice_number\"]}}\"}}]}",
+        "options": {}
+      },
+      "name": "Get the shipment from vpanel",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2780,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Split to update shipement and orders\"].json[\"vpanel_url\"]}}/items/sdv_shipments/{{$node[\"Get the shipment from vpanel\"].json[\"data\"][0][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "invoice_date",
+              "value": "={{$node[\"Split to update shipement and orders\"].json[\"invoice_date\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update shipment date in vpanel",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3000,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2024-01-16T12:05:12.725Z"
+}
