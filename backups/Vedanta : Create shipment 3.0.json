@@ -591,7 +591,8 @@
           "id": "17",
           "name": "smtp(sai)creds"
         }
-      }
+      },
+      "disabled": true
     },
     {
       "parameters": {
@@ -960,5 +961,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2024-01-02T12:02:38.558Z"
+  "updatedAt": "2024-01-16T06:54:34.763Z"
 }
