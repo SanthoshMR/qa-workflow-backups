@@ -1,0 +1,354 @@
+{
+  "active": true,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get url and token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get url and token": {
+      "main": [
+        [
+          {
+            "node": "Get the open pos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the open pos": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set": {
+      "main": [
+        [
+          {
+            "node": "Start Loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start Loop": {
+      "main": [
+        [
+          {
+            "node": "Function to split data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to split data": {
+      "main": [
+        [
+          {
+            "node": "Update Po date",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Increment index": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "End Loop",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Start Loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Po date": {
+      "main": [
+        [
+          {
+            "node": "Increment index",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2024-01-17T07:01:17.960Z",
+  "id": "401",
+  "name": "Vedanta(demo):Change dates for open status",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "update-open-po-dates",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        440,
+        280
+      ],
+      "webhookId": "3de32006-fca5-49d0-8936-8cd24c8d1bdf"
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "=https://qan8n.shakedeal.com/webhook/get-url",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "client",
+              "value": "=vedanta"
+            },
+            {
+              "name": "env",
+              "value": "=demo"
+            }
+          ]
+        }
+      },
+      "name": "Get url and token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        660,
+        280
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_pos?filter={\"po_status\":{\"_eq\":\"open\"}}&limit=-1",
+        "options": {}
+      },
+      "name": "Get the open pos",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        860,
+        280
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let openPos = $node[\"Get the open pos\"].json.data;\n\nconst size = 10; // size of each subarray\nconst result = [];\nfor (let i = 0; i < openPos.length; i += size) {\n  result.push(openPos.slice(i, i + size));\n}\n\n\n\nreturn [{\n    json: {\n        result: result,\n        resultlength : result.length,\n    },\n}];"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1080,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "number": [
+            {
+              "name": "index"
+            }
+          ],
+          "string": [
+            {}
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1300,
+        280
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "Start Loop",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1520,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let poData = $node[\"Function\"].json[\"result\"];\nlet currentIndex = $node[\"Start Loop\"].json[\"index\"];\nlet currentPo = poData[currentIndex];\nlet returnItems = [];\n\n\n\n\ncurrentPo.forEach(function(obj,index){\n    let poDateRandomNumber = Math.floor(Math.random() * (3 - 1) + 1);\n    let poDeliveryDateRandomNumber = Math.floor(Math.random() * (40 - 20) + 20);\n    let vedantaPoDate = getUpdatedDate(new Date(),-poDateRandomNumber);\n    returnItems.push({\n    json: {\n       id :obj.id,\n       dms_url : $node[\"Get url and token\"].json[\"0\"][\"mozart_url\"],\n       po_date : new Date(vedantaPoDate).toISOString(),\n       po_delivery_date:new Date(getUpdatedDate(vedantaPoDate,poDeliveryDateRandomNumber)).toISOString(),\n    }\n  });\n  \n})\n\nfunction getUpdatedDate(date,daysToIncrease){\n  let podate = new Date(date);\n  podate.setDate(podate.getDate() + daysToIncrease);\n  return new Date(podate).toISOString();\n}\n\nreturn returnItems;\n"
+      },
+      "name": "Function to split data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1700,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "number": [
+            {
+              "name": "index",
+              "value": "={{$node[\"Start Loop\"].json[\"index\"]+1}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Increment index",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        2060,
+        280
+      ],
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Increment index\"].json[\"index\"]}}",
+              "operation": "equal",
+              "value2": "={{$node[\"Function\"].json[\"resultlength\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        2280,
+        280
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "End Loop",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        2440,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Function to split data\"].json[\"dms_url\"]}}/items/sdm_pos/{{$node[\"Function to split data\"].json[\"id\"]}}",
+        "options": {
+          "batchInterval": 10000,
+          "batchSize": 1
+        },
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "po_date",
+              "value": "={{$node[\"Function to split data\"].json[\"po_date\"]}}"
+            },
+            {
+              "name": "po_deliver_date",
+              "value": "={{$node[\"Function to split data\"].json[\"po_delivery_date\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update Po date",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1880,
+        140
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2024-01-17T12:03:59.670Z"
+}
