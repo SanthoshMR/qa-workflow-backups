@@ -1,11 +1,11 @@
 {
-  "active": true,
+  "active": false,
   "connections": {
     "Function": {
       "main": [
         [
           {
-            "node": "IF",
+            "node": "Item Lists",
             "type": "main",
             "index": 0
           }
@@ -47,13 +47,7 @@
     },
     "IF": {
       "main": [
-        [
-          {
-            "node": "Item Lists",
-            "type": "main",
-            "index": 0
-          }
-        ],
+        [],
         [
           {
             "node": "Zepto Item Lists",
@@ -75,8 +69,8 @@
       ]
     }
   },
-  "createdAt": "2023-12-14T12:49:39.208Z",
-  "id": "391",
+  "createdAt": "2024-01-17T09:20:00.519Z",
+  "id": "403",
   "name": "Rewardlink- SendMail",
   "nodes": [
     {
@@ -302,8 +296,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        760,
-        300
+        740,
+        580
       ]
     },
     {
@@ -375,5 +369,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2024-01-15T06:35:44.304Z"
+  "updatedAt": "2024-01-17T09:21:42.870Z"
 }
