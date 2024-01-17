@@ -1,0 +1,248 @@
+{
+  "active": true,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get url and token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get url and token": {
+      "main": [
+        [
+          {
+            "node": "Get the po details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the po details": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Get the po from vendor panel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the po from vendor panel": {
+      "main": [
+        [
+          {
+            "node": "Update po delivery in vpanel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2024-01-17T10:37:23.618Z",
+  "id": "404",
+  "name": "Vedanta(demo):Update po delivery date",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "update-po-delivery-date",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        520,
+        300
+      ],
+      "webhookId": "b384b5fe-b729-4f3c-8970-2e363a7e15b9"
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "=https://qan8n.shakedeal.com/webhook/get-url",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "client",
+              "value": "=vedanta"
+            },
+            {
+              "name": "env",
+              "value": "=demo"
+            }
+          ]
+        }
+      },
+      "name": "Get url and token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        700,
+        300
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_pos/{{$node[\"Webhook\"].json[\"body\"][\"po\"]}}?fields=*,vendor_Pos.*,vendor_Pos.shipments.*,vendor_Pos.shipments.sdm_orders.*",
+        "options": {}
+      },
+      "name": "Get the po details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        900,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let poData = $node[\"Get the po details\"].json.data;\nlet returnItems = [];\nlet decreaseIndex = -2\n\npoData.vendor_Pos.forEach(function(obj,index){  \n    returnItems.push({\n      json: {\n        id:obj.id,\n        po_delivery_date:obj.shipments.length>0?poData.po_deliver_date:getUpdatedDate(new Date(),decreaseIndex),\n        dms_url:$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"],\n        vpanel_url:$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]\n      }\n    });\n    if(obj.shipments.length>0){\n      decreaseIndex = decreaseIndex -2\n    }\n  \n})\n\nfunction getUpdatedDate(date,daysToIncrease){\n  let podate = new Date(date);\n  podate.setDate(podate.getDate() + daysToIncrease);\n  return new Date(podate).toISOString();\n}\n\nreturn returnItems;"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_pos/{{$node[\"Function\"].json[\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "po_deliver_date",
+              "value": "={{$node[\"Function\"].json[\"po_delivery_date\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1360,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Function\"].json[\"vpanel_url\"]}}/items/sdv_vendor_pos?filter={\"po_number\":{\"_eq\":\"{{$node[\"Function\"].json[\"id\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Get the po from vendor panel",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1580,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Function\"].json[\"vpanel_url\"]}}/items/sdv_vendor_pos/{{$node[\"Get the po from vendor panel\"].json[\"data\"][0][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "po_delivery_date",
+              "value": "={{$node[\"Function\"].json[\"po_delivery_date\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update po delivery in vpanel",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1800,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2024-01-17T12:40:16.158Z"
+}
