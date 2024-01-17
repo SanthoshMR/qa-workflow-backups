@@ -60,7 +60,7 @@
       "main": [
         [
           {
-            "node": "Split to update shipement and orders",
+            "node": "Update po delivery date",
             "type": "main",
             "index": 0
           }
@@ -127,6 +127,17 @@
         [
           {
             "node": "Update shipment date in vpanel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update po delivery date": {
+      "main": [
+        [
+          {
+            "node": "Split to update shipement and orders",
             "type": "main",
             "index": 0
           }
@@ -218,7 +229,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let poDetails = $node[\"Get the po details\"].json.data;\nlet vendorPos = poDetails.vendor_Pos;\nlet updateData  = [];\nlet updatedClientPoDate = $node[\"Webhook\"].json[\"body\"].payload.po_date;\nlet vendorPoIds = vendorPos.map(po=>po.id);\n\nvendorPos.forEach(function(po,index){\n  let vendorPoDate = updatedClientPoDate;\n  let increaseDays = 2;\n  po.shipments.forEach(function(shipment,index){\n    updateData.push({\n      vendor_po_id :po.id,\n      vendor_po_date : vendorPoDate,\n      shipment_id:shipment.id,\n      vendor_invoice_number:shipment.invoice_number,\n      invoice_date:getUpdatedDate(vendorPoDate,increaseDays),\n      order_id : shipment.sdm_orders[0].sdm_orders_id,\n      order_date : getUpdatedDate(vendorPoDate,increaseDays),\n      dms_url:$node[\"Globals\"].json[\"dms_url\"],\n      vpanel_url:$node[\"Globals\"].json[\"vpanel_dms_url\"]\n    });\n    increaseDays=increaseDays+2;\n  })\n  \n});\n\nfunction getUpdatedDate(date,daysToIncrease){\n  let podate = new Date(date);\n  podate.setDate(podate.getDate() + daysToIncrease);\n  return new Date(podate).toISOString();\n}\nlet updateVendorPoDates = {\n\t\"keys\": vendorPoIds,\n\t\"data\": {\n\t\t\"po_date\": updatedClientPoDate\n\t}\n};\n\nitems[0].json.updateVendorPoDates = updateVendorPoDates;\nitems[0].json.updateData = updateData;\nreturn items;"
+        "functionCode": "let poDetails = $node[\"Get the po details\"].json.data;\nlet vendorPos = poDetails.vendor_Pos;\nlet updateData  = [];\nlet updatedClientPoDate = $node[\"Webhook\"].json[\"body\"].payload.po_date;\nlet vendorPoIds = vendorPos.map(po=>po.id);\nlet decreaseDays = -2;\n\nvendorPos.forEach(function(po,index){\n  let vendorPoDate = updatedClientPoDate;\n  let increaseDays = 2;\n  \n  po.shipments.forEach(function(shipment,index){\n    updateData.push({\n      vendor_po_id :po.id,\n      vendor_po_date : vendorPoDate,\n      shipment_id:shipment.id,\n      vendor_invoice_number:shipment.invoice_number,\n      invoice_date:getUpdatedDate(vendorPoDate,increaseDays),\n      order_id : shipment.sdm_orders.length>0?shipment.sdm_orders[0].sdm_orders_id:0,\n      order_date : getUpdatedDate(vendorPoDate,increaseDays),\n      dms_url:$node[\"Globals\"].json[\"dms_url\"],\n      vpanel_url:$node[\"Globals\"].json[\"vpanel_dms_url\"]\n    });\n    increaseDays=increaseDays+2;\n  })\n  \n});\n\nfunction getUpdatedDate(date,daysToIncrease){\n  let podate = new Date(date);\n  podate.setDate(podate.getDate() + daysToIncrease);\n  return new Date(podate).toISOString();\n}\nlet updateVendorPoDates = {\n\t\"keys\": vendorPoIds,\n\t\"data\": {\n\t\t\"po_date\": updatedClientPoDate\n\t}\n};\n\nitems[0].json.updateVendorPoDates = updateVendorPoDates;\nitems[0].json.updateData = updateData;\nreturn items;"
       },
       "name": "Function",
       "type": "n8n-nodes-base.function",
@@ -344,7 +355,8 @@
           "id": "50",
           "name": "Mozart DMS Token"
         }
-      }
+      },
+      "continueOnFail": true
     },
     {
       "parameters": {
@@ -443,10 +455,39 @@
           "name": "VendorPanel DMS Token"
         }
       }
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "=https://qan8n.shakedeal.com/webhook/update-po-delivery-date",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "po",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"keys\"][0]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update po delivery date",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1560,
+        140
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2024-01-16T12:05:12.725Z"
+  "updatedAt": "2024-01-17T10:38:43.447Z"
 }
