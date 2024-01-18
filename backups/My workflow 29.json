@@ -1,0 +1,390 @@
+{
+  "active": false,
+  "connections": {
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "Zepto Item Lists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AWS SES": {
+      "main": [
+        [
+          {
+            "node": "Insert SES Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Zepto Item Lists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Zepto Item Lists": {
+      "main": [
+        [
+          {
+            "node": "Prepare Zepto Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Zepto Data": {
+      "main": [
+        [
+          {
+            "node": "Zepto Mail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2024-01-18T12:44:35.201Z",
+  "id": "407",
+  "name": "My workflow 29",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let dataArray = $node[\"Webhook\"].json[\"body\"];\nlet modifiedContentArray1 = [];\nlet content_array = $node[\"Webhook\"].json[\"body\"][\"modifiedContentArray\"];\nlet content_field = $node[\"Webhook\"].json[\"body\"][\"content_data\"];\n\nfor (let i = 0; i < content_array.length; i++) {\n  let content = content_field; // Copy the original content_data\n  let currentItem = content_array[i];\nlet formattedDate1 = currentItem.enddate;\nlet amount = parseInt(currentItem.amount);\n      const date = new Date(formattedDate1);\n  const options = { day: '2-digit', month: 'short', year: 'numeric' };\n  const formattedDate = date.toLocaleDateString('en-US', options);\n  // Replace placeholders in the content with corresponding values from the current item\n content = content.replace(/{link}/g, currentItem.linkId)\n    .replace(/{img}/g, currentItem.imageSrc)\n    .replace(/{shakepelink}/g, currentItem.shakepelink)\n    .replace(/{enddate}/g, formattedDate)\n    .replace(/{amount}/g, amount)\n    .replace(/{name}/g, currentItem.name);\n     \nlet linkObj = {\n        content:content ,\n        shakepelink: currentItem.shakepelink,\n        name: currentItem.name,\n        imageSrc: currentItem.imageSrc,\n        enddate:formattedDate,\n        email:currentItem.email,\n        subject:currentItem.subject,\n         campaign_name:currentItem.campaign_name,\n        from:currentItem.from,\n        linkId: currentItem.linkId,\n        is_attachment_required : currentItem.is_attachment_required,\n        attachment : currentItem.attachment\n  };\n\n      \n  modifiedContentArray1.push(linkObj);\n}\n\nreturn { modifiedContentArray1 };\n\n\n\n"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        440,
+        40
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{$node[\"Item Lists\"].json[\"from\"]}}",
+        "toEmail": "={{$node[\"Item Lists\"].json[\"email\"]}}",
+        "subject": "={{$node[\"Item Lists\"].json[\"subject\"]}}",
+        "html": "={{$node[\"Item Lists\"].json[\"content\"]}}",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        40
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "103",
+          "name": "SMTP account(Roopa)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "154d1988-0513-40ed-b4a9-715db353307b",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        40
+      ],
+      "webhookId": "154d1988-0513-40ed-b4a9-715db353307b"
+    },
+    {
+      "parameters": {
+        "isBodyHtml": true,
+        "subject": "={{$node[\"Item Lists\"].json[\"subject\"]}}",
+        "body": "={{$node[\"Item Lists\"].json[\"content\"]}}",
+        "fromEmail": "={{$node[\"Item Lists\"].json[\"from\"]}}",
+        "toAddresses": [
+          "={{$node[\"Item Lists\"].json[\"email\"]}}"
+        ],
+        "additionalFields": {
+          "configurationSetName": "ses-qa"
+        }
+      },
+      "name": "AWS SES",
+      "type": "n8n-nodes-base.awsSes",
+      "typeVersion": 1,
+      "position": [
+        1280,
+        40
+      ],
+      "credentials": {
+        "aws": {
+          "id": "106",
+          "name": "AWS account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let dataArray = $node[\"AWS SES\"].json[\"SendEmailResponse\"];\r\nreturn {dataArray};"
+      },
+      "name": "Function1",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1300,
+        -180
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "=https://zeusqa.shakedeal.com/items/sd_delivery_logs",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "order_id",
+              "value": "={{$node[\"Item Lists\"].json[\"campaign_name\"]}}"
+            },
+            {
+              "name": "message_id",
+              "value": "={{$node[\"AWS SES\"].json[\"SendEmailResponse\"][\"SendEmailResult\"][\"MessageId\"]}}"
+            },
+            {
+              "name": "status",
+              "value": "Send"
+            },
+            {
+              "name": "recipient",
+              "value": "={{$node[\"Item Lists\"].json[\"email\"]}}"
+            },
+            {
+              "name": "source",
+              "value": "=Campaigns"
+            },
+            {
+              "name": "template"
+            }
+          ]
+        }
+      },
+      "name": "Insert SES Log",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1480,
+        40
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "81",
+          "name": "SES Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Webhook\"].json[\"body\"][\"mail_server\"]}}",
+              "value2": "SendGrid"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        540,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "modifiedContentArray1",
+        "options": {}
+      },
+      "name": "Zepto Item Lists",
+      "type": "n8n-nodes-base.itemLists",
+      "typeVersion": 1,
+      "position": [
+        880,
+        360
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "=https://api.zeptomail.com/v1.1/email",
+        "options": {
+          "bodyContentType": "json"
+        },
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "bounce_address",
+              "value": "=bounces@zep.shakepe.com"
+            },
+            {
+              "name": "from",
+              "value": "={ \"address\": \"rewards@shakepe.com\", \"name\": \"ShakePe Rewards\"}"
+            },
+            {
+              "name": "to",
+              "value": "=[{\"email_address\": {\"address\": \"{{$node[\"Zepto Item Lists\"].json[\"email\"]}}\",\"name\": \"{{$node[\"Zepto Item Lists\"].json[\"name\"]}}\"}}]"
+            },
+            {
+              "name": "subject",
+              "value": "={{$node[\"Zepto Item Lists\"].json[\"subject\"]}}"
+            },
+            {
+              "name": "htmlbody",
+              "value": "={{$node[\"Zepto Item Lists\"].json[\"content\"]}}"
+            },
+            {
+              "name": "attachments",
+              "value": "=[{\"file_cache_key\": \"2d6f.3899390d815a995e.h1.d4f13f60-b134-11ee-b998-5254004d4100.18cfd340e56\",\"mime_type\":\"application/pdf\",\"name\": \"Voucher-Redemption.pdf\"}]"
+            }
+          ]
+        },
+        "headerParametersUi": {
+          "parameter": [
+            {
+              "name": "Authorization",
+              "value": "Zoho-enczapikey wSsVR6118xTxD/8vzWKpL+s4mlRSAV6gQU963QGmv3H5Hf2Wp8dtw0bPBw6iFPkbF2ZhFGMWpu18mB8JgGVfj9l/mV1UXiiF9mqRe1U4J3x17qnvhDzDW2xakxSJKY4Ozg5jnGFlG8ki+g=="
+            }
+          ]
+        }
+      },
+      "name": "Zepto Mail1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        80,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "=https://api.zeptomail.com/v1.1/email",
+        "options": {
+          "bodyContentType": "json"
+        },
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "bounce_address",
+              "value": "=bounces@zep.shakepe.com"
+            },
+            {
+              "name": "from",
+              "value": "={ \"address\": \"rewards@shakepe.com\", \"name\": \"ShakePe Rewards\"}"
+            },
+            {
+              "name": "to",
+              "value": "=[{\"email_address\": {\"address\": \"{{$node[\"Zepto Item Lists\"].json[\"email\"]}}\",\"name\": \"{{$node[\"Zepto Item Lists\"].json[\"name\"]}}\"}}]"
+            },
+            {
+              "name": "subject",
+              "value": "={{$node[\"Zepto Item Lists\"].json[\"subject\"]}}"
+            },
+            {
+              "name": "htmlbody",
+              "value": "={{$node[\"Zepto Item Lists\"].json[\"content\"]}}"
+            }
+          ]
+        },
+        "headerParametersUi": {
+          "parameter": [
+            {
+              "name": "Authorization",
+              "value": "Zoho-enczapikey wSsVR6118xTxD/8vzWKpL+s4mlRSAV6gQU963QGmv3H5Hf2Wp8dtw0bPBw6iFPkbF2ZhFGMWpu18mB8JgGVfj9l/mV1UXiiF9mqRe1U4J3x17qnvhDzDW2xakxSJKY4Ozg5jnGFlG8ki+g=="
+            }
+          ]
+        }
+      },
+      "name": "Zepto Mail2",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1680,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let mail_content = $node[\"Zepto Item Lists\"].json;\n\nlet from = mail_content.from;\n\nlet result = {\n    \"bounce_address\" : \"bounces@zep.shakepe.com\",\n    \"from\": {\n        \"address\": mail_content.from,\n        \"name\": \"ShakePe Rewards\"\n    },\n    \"to\": [\n        {\n            \"email_address\": {\n                \"address\": mail_content.email,\n                \"name\": mail_content.name\n            }\n        }\n    ],\n    \"subject\": mail_content.subject,\n    \"htmlbody\" : mail_content.content\n}\n\nif(mail_content.is_attachment_required == true){\n    result.attachments = [\n        {\n            \"file_cache_key\": mail_content.attachment,\n            \"mime_type\": \"application/pdf\",\n            \"name\": \"myReport.pdf\"\n        }\n    ];\n}\n\nlet headers = {\n    \"Authorization\" : \"Zoho-enczapikey wSsVR60k80HyC6l9yDz5Ib1rm1wEBw6jHUsujFWp7CD6H/2Q8cc6lUDMBwOmTfhJE29pEjQWrbwrkBZU1mZaht8tmFwAACiF9mqRe1U4J3x17qnvhDzDXWpcmxeILYkIxwVtmWlhEMsr+g==\"\n}\n\nitems[0].json.mail_data = result;\nitems[0].json.headers = headers;\nreturn items;\n"
+      },
+      "name": "Prepare Zepto Data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1140,
+        360
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "=https://api.zeptomail.com/v1.1/email",
+        "jsonParameters": true,
+        "options": {
+          "bodyContentType": "json"
+        },
+        "bodyParametersJson": "={{$node[\"Prepare Zepto Data\"].json[\"mail_data\"]}}",
+        "headerParametersJson": "={{$node[\"Prepare Zepto Data\"].json[\"headers\"]}}"
+      },
+      "name": "Zepto Mail",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1380,
+        360
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2024-01-18T13:11:12.289Z"
+}
