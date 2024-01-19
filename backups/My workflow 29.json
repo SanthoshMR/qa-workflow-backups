@@ -16,7 +16,7 @@
       "main": [
         [
           {
-            "node": "Function",
+            "node": "Send Email1",
             "type": "main",
             "index": 0
           }
@@ -67,6 +67,17 @@
           }
         ]
       ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Send Email1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2024-01-18T12:44:35.201Z",
@@ -91,8 +102,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        440,
-        40
+        840,
+        120
       ]
     },
     {
@@ -107,8 +118,8 @@
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 1,
       "position": [
-        1040,
-        40
+        1440,
+        120
       ],
       "credentials": {
         "smtp": {
@@ -149,8 +160,8 @@
       "type": "n8n-nodes-base.awsSes",
       "typeVersion": 1,
       "position": [
-        1280,
-        40
+        1680,
+        120
       ],
       "credentials": {
         "aws": {
@@ -167,8 +178,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1300,
-        -180
+        1700,
+        -100
       ]
     },
     {
@@ -209,8 +220,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1480,
-        40
+        1880,
+        120
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -234,8 +245,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        540,
-        340
+        940,
+        420
       ]
     },
     {
@@ -247,8 +258,8 @@
       "type": "n8n-nodes-base.itemLists",
       "typeVersion": 1,
       "position": [
-        880,
-        360
+        1280,
+        440
       ]
     },
     {
@@ -347,8 +358,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1680,
-        520
+        2080,
+        600
       ]
     },
     {
@@ -359,8 +370,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1140,
-        360
+        1540,
+        440
       ]
     },
     {
@@ -378,13 +389,36 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1380,
-        360
+        1780,
+        440
       ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "=parthiban.n@shakedeal.com",
+        "toEmail": "=anjali.jain@shakedeal.com,bijan.krishna@shakedeal.com",
+        "subject": "=New Purchase Order to be shipped PO #:SDNKES7100035494-10",
+        "html": "=<!-- Free to use, HTML email template designed & built by FullSphere. Learn more about us at www.fullsphere.co.uk -->\n\n<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional //EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n<html\n xmlns=\"http://www.w3.org/1999/xhtml\"\n xmlns:v=\"urn:schemas-microsoft-com:vml\"\n xmlns:o=\"urn:schemas-microsoft-com:office:office\"\n>\n <head>\n <!--[if gte mso 9]>\n <xml>\n <o:OfficeDocumentSettings>\n <o:AllowPNG />\n <o:PixelsPerInch>96</o:PixelsPerInch>\n </o:OfficeDocumentSettings>\n </xml>\n <![endif]-->\n\n <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />\n <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\n <meta name=\"x-apple-disable-message-reformatting\" />\n <!--[if !mso]><!-->\n <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n <!--<![endif]-->\n <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\" />\n <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin />\n <link\n href=\"https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap\"\n rel=\"stylesheet\"\n />\n <!-- Your title goes here -->\n <title>Po Email</title>\n <!-- End title -->\n\n <!-- Start stylesheet -->\n <style type=\"text/css\">\n a,\n a[href],\n a:hover,\n a:link,\n a:visited {\n /* This is the link colour */\n text-decoration: none !important;\n color: white;\n font-size: 15px;\n }\n .link {\n text-decoration: underline !important;\n }\n\n .ExternalClass p,\n .ExternalClass span,\n .ExternalClass font,\n .ExternalClass td {\n line-height: 100%;\n }\n .ExternalClass {\n width: 100%;\n }\n </style>\n <!-- End stylesheet -->\n </head>\n\n <!-- You can change background colour here -->\n <body\n style=\"text-align: center;margin: 0;padding-bottom: 10px;background-color: #e4e4e4;color: #000000;\" align=\"center\">\n\n <div>\n \n <table align=\"center\" style=\"text-align: center;vertical-align: top;width: 740px;max-width: 1000px;background-image: url('https://sdqa.vpanel.shakedeal.com/assets/dabf0992-add0-41b7-87ba-03122f83ffa9');background-size: cover;background-position: center center;background-repeat: no-repeat;margin: 0 auto;\">\n <tbody>\n <tr><th style=\"width: 736px;display: flex;\">\n <img style=\"width: 146px;height: 35px;padding-top: 15px;padding-bottom: 15px;padding-left: 50px;\n \" alt=\"Logo\" src=\"https://sdqa.shakedeal.com/images/logos/2/ShakeDealLogo.png\">\n <p style=\"font-weight: 600;font-family: 'Montserrat', sans-serif;font-size: 13px;color: #3e3e3e;padding-left: 16px;\n padding-top: 15px;\n \"> </p>\n </th>\n </tr><tr>\n <td style=\"padding-left: 50px;font-family: 'Montserrat', sans-serif;\">\n <div style=\"width: 641px;background-color: #fff!important;color:#000!important;height: 700px;border-radius: 14px;margin-bottom:33px;font-size: 11px;\">\n <p style=\"padding-left: 34px;text-align: left; padding-top:31px;\">Dear Sir/Madam,</p>\n \n <p style=\" padding-left: 35px;text-align: justify; padding-top:5px;width: 545px; line-height: 20px\">We’re pleased to award our Purchase order <strong>SDNKES7100035494-10</strong>for the supply of mentioned material to <strong>NKES &nbsp;</strong>Plant,<strong> Vedanta Limited.</strong></p>\n \n <p style=\"height: 20px; padding-left: 35px;text-align: justify;width: 545px;line-height: 20px;\"><span style=\"font-family: 'Montserrat', sans-serif;\">Please log in to our <a style=\"font-size: 11px;color: #282525;\" href=\"https://demo.vpanel.shakedeal.com/admin\"><strong>vendor panel </strong></a>using the button below to review the details and acknowledge your acceptance of the PO on the panel.</span> </p>\n \n<p style=\"background-color: #d5b568; color: #fff;padding: 6px 10px; cursor: pointer; border-radius: 21px; display: inline-block;padding-right: 14px;font-weight: 600;\"><a href=\"{{po_link}}\" style=\"color:#fff;font-family: 'Montserrat',sans-serif;font-size: 15px;\">Access PO</a></p>\n\n\n<p style=\"padding-left: 35px;text-align: justify;line-height: 20px;width: 545px;\">Once you've accepted the PO you can process your shipment. Our operations team will be in touch with you to coordinate invoice submission, ASN updation, and any other assistance you may need. You can contact your POC at <strong><a href=\"mailto:santhosh.n@shakedeal.com\" style=\"font-family: 'Montserrat',sans-serif;color: #2024e8;text-decoration:none;font-size: 10px;\">santhosh.n@shakedeal.com</a></strong> if you have any questions or concerns.</p>\n\n<div style=\"padding-left: 35px\">\n<p style=\"padding-left: 35px;text-align: left;width: 530px;height: 28px;background-color: #fff;color: #0c0c0c;padding: 7px;\">\n <b>Note:</b><span style=\"font-family: 'Montserrat', sans-serif; font-style:italic\"> The login credentials have already been shared in the initial introduction email of the vendor panel. Kindly refer to that email in case you missed it<span>.\n </p>\n </div>\n <div style=\" display: flex; padding-left: 24px; \">\n \n <a href=\"https://shakedeal.portal.trainn.co/share/14joiwhItlpFJRg1oO8I0A\">\n <img style=\"width: 280px;height: 180px;padding-right: 5px\" alt=\"Hero image\" src=\" https://sdqa.vpanel.shakedeal.com/assets/de8dd34c-20fa-4d67-9f26-dd87c9d4c4fb\" align=\"center\">\n \n </a>\n \n <a href=\"https://shakedeal.portal.trainn.co/share/SZMBJtHWFnC7c4ZcSu1BIQ\">\n <img style=\"width: 280px;height: 178px;padding-right: 79px;\" alt=\"Hero image\" src=\"https://sdqa.vpanel.shakedeal.com/assets/73bd617d-f3a7-4564-abf6-7f271ec3fb62\" align=\"center\">\n </a> \n </div>\n \n <div style=\"padding-bottom: 20px;padding-left: 35px;line-height: 18px; width: 545px;\">\n \n <p style=\" text-align: left; font-size: 10px;\"><strong>Terms and conditions</strong></p>\n <ul style=\"padding-left: 17px\">\n <li style=\" text-align: justify; font-size: 9px;\n \">In rare instances, if you have any concerns with respect to this, please reach out to us immediately.</li>\n <li style=\"text-decoration: none;\n text-align: justify;font-size: 9px;color: #000;\">We must be notified 4 hours before dispatch in order to generate ASN and Tax invoices, which are required for goods receipt and without which materials will not be allowed inside the Material gate by security. For order dispatch-related queries E-mail: <a href=\"mailto:vedantaiob.ops@shakedeal.com\" style=\"font-family: 'Montserrat',sans-serif;color: #2024e8;text-decoration:none;font-size: 10px;\">\n vedantaiob.ops@shakedeal.com</a></li>\n \n <li style=\"\n text-align: justify;font-size: 9px;\">Consignment should go only with OP commerce invoice.</li>\n \n <li style=\"\n text-align: justify;font-size: 9px;\">For all other Terms and Conditions please refer to our attached Purchase Order.</li>\n </ul>\n </div>\n </div>\n \n </td>\n </tr>\n </tbody>\n </table>\n \n \n \n \n <!-- Start footer -->\n <table align=\"center\" style=\"width: 742px;background-color: #2d2d2d;\">\n <tbody>\n <tr>\n <td style=\"font-size: 14px;line-height: 20px; font-weight: 300; color: #fff; display: inline-block; width: 275px; text-align: left;\">\n <p style=\"font-family: 'Montserrat',sans-serif;\">ABOUT US</p>\n </td>\n \n <td>\n <p style=\"font-size: 14px;line-height: 20px;font-family: 'Montserrat',sans-serif; font-weight: 300; color: #fff; display: inline-block;width: 300px; text-align: left;\">\n CONTACT US\n </p>\n </td>\n </tr>\n \n <tr>\n <td style=\"font-size: 10px;color: #c3c6c9; display: inline-block; width: 275px;text-align: left;\">\n <p style=\"font-family: 'Montserrat',sans-serif;padding-top: -14px;\">\n ShakeDeal helps enterprises reduce procurement costs, achieve efficiencies and take full advantages of GST Economy through its full stack B2B ecommerce fulfilment model.\n </p>\n </td>\n \n <td style=\"font-size: 10px;color: #fff;width: 275px;text-align: left;\">\n <p style=\"font-family: 'Montserrat',sans-serif;\">\n Address:\n </p>\n <p style=\"font-family: 'Montserrat',sans-serif;color: #c3c6c9;\">\n Head Office: 170-172, Phase 2, EPIP, Whitefield, Bangalore 560066, INDIA\n </p>\n <p style=\"font-family: 'Montserrat',sans-serif;\">\n Email:\n </p>\n <p>\n <a href=\"mailto:support@shakedeal.com\" style=\"font-family: 'Montserrat',sans-serif;color: #c3c6c9;text-decoration:none;font-size: 10px;\">\n support@shakedeal.com</a>\n </p>\n </td>\n </tr>\n </tbody>\n </table>\n <!-- End footer -->\n <table align=\"center\" style=\"width: 742px;background-color: #313131;\">\n <tbody>\n \n <tr>\n <td style=\"font-size: 10px;line-height: 10px;font-weight: 300;color: #fff; display: inline-block;width: 275px;text-align: left;\">\n <p style=\"font-family: 'Montserrat',sans-serif;\">© Powered By ShakeDeal</p>\n </td>\n \n <td style=\"font-size: 12px;line-height: 10px;font-weight: 300;color: #f88c00; width: 300px;text-align: left;\">\n <p style=\" font-family: 'Montserrat',sans-serif;\">\n <!-- Unsubcribe -->\n </p>\n </td>\n </tr>\n \n \n </tbody>\n </table>\n \n <!-- End unsubscribe section -->\n </div>\n </body>\n</html>",
+        "attachments": "=",
+        "options": {}
+      },
+      "name": "Send Email1",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        620,
+        -80
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "103",
+          "name": "SMTP account(Roopa)"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2024-01-18T13:11:12.289Z"
+  "updatedAt": "2024-01-19T12:47:31.661Z"
 }
