@@ -16,7 +16,7 @@
       "main": [
         [
           {
-            "node": "IF",
+            "node": "Prepare New Split Order Data",
             "type": "main",
             "index": 0
           }
@@ -151,7 +151,7 @@
       "main": [
         [
           {
-            "node": "Update Parent Order",
+            "node": "Check Parent Order Items",
             "type": "main",
             "index": 0
           }
@@ -173,7 +173,7 @@
       "main": [
         [
           {
-            "node": "IF1",
+            "node": "Check Update Split Order Items",
             "type": "main",
             "index": 0
           }
@@ -191,11 +191,66 @@
         ]
       ]
     },
-    "IF": {
+    "Function": {
       "main": [
         [
           {
-            "node": "IF1",
+            "node": "Update Parent Order Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Update Split Order Items": {
+      "main": [
+        [
+          {
+            "node": "Update Split Order Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare New Split Order Data": {
+      "main": [
+        [
+          {
+            "node": "Check New Split Order Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Empty 2": {
+      "main": [
+        [
+          {
+            "node": "Update Parent Order",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Parent Order Items": {
+      "main": [
+        [
+          {
+            "node": "Empty 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check New Split Order Data": {
+      "main": [
+        [
+          {
+            "node": "Check Update Split Order Items",
             "type": "main",
             "index": 0
           }
@@ -209,7 +264,7 @@
         ]
       ]
     },
-    "IF1": {
+    "Check Update Split Order Items": {
       "main": [
         [
           {
@@ -220,36 +275,14 @@
         ],
         [
           {
-            "node": "IF2",
+            "node": "Check Parent Order Items",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Function": {
-      "main": [
-        [
-          {
-            "node": "Update Split Order Items1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Update Split Order Items1": {
-      "main": [
-        [
-          {
-            "node": "Update Parent Order",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "IF2": {
+    "Check Parent Order Items": {
       "main": [
         [
           {
@@ -261,17 +294,6 @@
         [
           {
             "node": "Update Parent Order",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Prepare Update Split Order Items": {
-      "main": [
-        [
-          {
-            "node": "Update Split Order Items",
             "type": "main",
             "index": 0
           }
@@ -351,8 +373,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        480,
-        780
+        560,
+        800
       ]
     },
     {
@@ -381,14 +403,14 @@
     },
     {
       "parameters": {
-        "functionCode": "let order_response = $node[\"Webhook\"].json.body;\nlet parent_order_detail = $node[\"Check for Parent Order ID\"].json.data[0];\n\nlet parent_order_products = parent_order_detail.order_items;\nlet products = order_response.products;\n\nlet new_order_product_data = [];\nlet old_order_product_data = [];\n\nlet parent_order_product_data = [];\n\nlet new_product_count = parent_product_count = 0;\nlet new_order_total_gross_value = new_order_total_tax_value = new_order_total_net_value = parent_order_total_gross_value = parent_order_total_tax_value = parent_order_total_net_value = count_for_order_id_change_items = 0;\n\nitems[0].json.parent_order_products = parent_order_products;\n\nlet order_products = [];\n\nlet products_count = parent_order_products.length + 1;\n\n//Product Details\nfor (var key in products) {\n    if (products.hasOwnProperty(key)) {\n        var product = products[key];\n\n        parent_order_products.forEach((parent_order_product,parent_order_product_index)=>{\n            let parent_product = parent_order_product.sds_po_items_id.product;\n            \n            // console.log(\"============parent_product==============\",parent_order_product)\n            if(parent_product.id == product.product_code){\n\n                let product_qty = Number(parseFloat(product.amount).toFixed(2));\n                let parent_product_qty = Number(parseFloat(parent_order_product.ordered_qty).toFixed(2));\n                // let parent_product_qty = parent_order_product.ordered_qty;\n                let product_price = product.price;\n                let tax_percentage = product.prod_tax_rate;\n                let net_amount = product_price / ((100+tax_percentage)/100);\n                let product_net_amount = 0;\n                let total_amount = 0;\n                let product_tax_value = 0;\n                    \n                if(!order_products.includes(parent_product.id)){\n                    product_net_amount = net_amount * product_qty;\n                    total_amount = product_price * product_qty;\n                    product_tax_value = total_amount - product_net_amount;\n\n                    order_products.push(parent_product.id);\n                }\n\n                // let order_qty = product_qty;\n\n                console.log(\"======product_qty=======\",product_qty)\n                console.log(\"======parent_product_qty=======\",parent_product_qty)\n                // console.log(\"======remaining_qty=======\",parent_order_product.ordered_qty)\n                // console.log(\"======remaining_qty=======\",product_qty)\n\n                if(product_qty == parent_product_qty){\n\n                    console.log(\"====iff====\");\n                    let order_qty = parent_order_product.ordered_qty;\n\n                    // let product_price = parent_order_product.sds_po_items_id.unit_price;\n                    // let tax_percentage = parent_order_product.sds_po_items_id.tax_percentage;\n                    \n                    let product_amount_without_tax = net_amount * order_qty;\n                    // console.log(\"======order_qty=======\",order_qty);\n                    // console.log(\"======product_amount_without_tax=======\",product_amount_without_tax);\n                    total_amount = (net_amount + ((net_amount * tax_percentage ) / 100)) * order_qty;\n                    // console.log(\"======total_amount=======\",total_amount);\n                    product_tax_value = total_amount - product_amount_without_tax;\n                    // console.log(\"======product_tax_value=======\",product_tax_value);\n\n                    parent_order_total_gross_value = parent_order_total_gross_value + total_amount;\n                    parent_order_total_tax_value = parent_order_total_tax_value + product_tax_value;\n                    parent_order_total_net_value = parent_order_total_net_value + product_amount_without_tax;\n\n                    count_for_order_id_change_items++;\n                }else{\n\n                    console.log(\"====else====\");\n                    \n                    let remaining_qty = parent_order_product.ordered_qty - product_qty;\n\n                    console.log(\"====remaining_qty====\",remaining_qty);\n\n\n                    new_order_product_data[new_product_count]={};\n                    // new_order_product_data[new_product_count].id = parent_order_detail.po_num + '-'+products_count;\n                    new_order_product_data[new_product_count].sds_po_items_id = parent_order_product.sds_po_items_id.id;\n                    new_order_product_data[new_product_count].product_code = product.product_code;\n                    new_order_product_data[new_product_count].ordered_qty = product_qty;\n                    new_order_product_data[new_product_count].url = $node[\"Globals\"].json.dms_url;\n\n                    console.log(\"====new_order_product_data====\",new_order_product_data);\n                    console.log(\"====new_order_product_data====\",new_order_product_data[new_product_count]);\n\n                    total_amount = (net_amount + ((net_amount * tax_percentage ) / 100)) * product_qty;\n\n                    console.log(\"====product_qty====\",product_qty);\n                    console.log(\"====product_price====\",product_price);\n                    console.log(\"====tax_percentage====\",tax_percentage);\n                    console.log(\"====total_amount====\",total_amount);\n\n                    let product_amount_without_tax = net_amount * product_qty;\n                    console.log(\"====total_amount====\",total_amount);\n                    product_tax_value = total_amount - product_amount_without_tax;\n                    console.log(\"====product_tax_value====\",product_tax_value);\n                    new_order_total_gross_value = new_order_total_gross_value + total_amount;\n                    console.log(\"====new_order_total_gross_value====\",new_order_total_gross_value);\n                    new_order_total_tax_value = new_order_total_tax_value + product_tax_value;\n                    console.log(\"====new_order_total_tax_value====\",new_order_total_tax_value);\n                    new_order_total_net_value = new_order_total_net_value + product_amount_without_tax;\n                    console.log(\"====new_order_total_net_value====\",new_order_total_net_value);\n                    new_product_count++;\n                    products_count++;\n\n                    product_amount_without_tax = net_amount * remaining_qty;\n                    total_amount = (net_amount + ((net_amount * tax_percentage ) / 100)) * remaining_qty;\n                    product_tax_value = total_amount - product_amount_without_tax;\n\n                    parent_order_total_gross_value = parent_order_total_gross_value + total_amount;\n                    parent_order_total_tax_value = parent_order_total_tax_value + product_tax_value;\n                    parent_order_total_net_value = parent_order_total_net_value + product_amount_without_tax;\n\n                    // console.log(\"=============\",new_order_product_data)\n                    // console.log(\"======remaining_qty=======\",remaining_qty)\n                    // console.log(\"======remaining_qty=======\",parent_order_product.ordered_qty)\n                    // console.log(\"======remaining_qty=======\",product_qty)\n\n                    old_order_product_data[parent_product_count]={};\n                    old_order_product_data[parent_product_count].id = parent_order_product.id;\n                    old_order_product_data[parent_product_count].ordered_qty = remaining_qty;\n\n                    parent_product_count++;\n                }\n\n                // new_order_product_data[new_product_count]={};\n                // new_order_product_data[new_product_count].sds_po_items_id = parent_order_product.sds_po_items_id.id;\n                // new_order_product_data[new_product_count].product_code = product.product_code;\n                // // new_order_product_data[new_product_count].ordered_qty = parent_order_product.ordered_qty;\n\n                // new_order_total_gross_value = new_order_total_gross_value + total_amount;\n                // new_order_total_tax_value = new_order_total_tax_value + product_tax_value;\n                // new_order_total_net_value = new_order_total_net_value + product_net_amount;\n\n                // new_product_count++;\n            }\n\n            // if(parent_product.id == product.product_code){\n            //     new_order_product_data[new_product_count]={};\n            //     new_order_product_data[new_product_count].sds_po_items_id = parent_order_product.sds_po_items_id.id;\n            //     new_order_product_data[new_product_count].product_code = product.product_code;\n            //     new_product_count++;\n            // }\n        });\n    }\n}\n\n// let product_avail_status = 0;\n// parent_order_products.forEach((parent_order_product,parent_order_product_index)=>{\n//     let parent_product = parent_order_product.sds_po_items_id.product;\n//     product_avail_status = 0;\n//     new_order_product_data.forEach((product_data,product_index)=>{\n//         if(parent_product.id == product_data.product_code){\n//             product_avail_status = 1;\n//         }\n//     });\n\n//     if(product_avail_status == 0){\n//         let product_qty = parent_order_product.ordered_qty;\n//         if(!product_qty){\n//             product_qty = parent_order_product.sds_po_items_id.ordered_qty;\n//         }\n//         let product_price = parent_order_product.sds_po_items_id.unit_price;\n//         let tax_percentage = parent_order_product.sds_po_items_id.tax_percentage;\n        \n//         let product_amount_without_tax = product_price * product_qty;\n\n//         let total_amount = (product_price + ((product_price * tax_percentage ) / 100)) * product_qty;\n\n//         let product_tax_value = total_amount - product_amount_without_tax;\n\n//         parent_order_total_gross_value = parent_order_total_gross_value + total_amount;\n//         parent_order_total_tax_value = parent_order_total_tax_value + product_tax_value;\n//         parent_order_total_net_value = parent_order_total_net_value + product_amount_without_tax;\n\n//         parent_order_product_data[parent_product_count]={};\n//         parent_order_product_data[parent_product_count].product_qty = product_qty;\n//         parent_order_product_data[parent_product_count].product_price = product_price;\n//         parent_order_product_data[parent_product_count].tax_percentage = tax_percentage;\n\n\n//         parent_order_product_data[parent_product_count].product_amount_without_tax = product_amount_without_tax;\n\n//         parent_order_product_data[parent_product_count].total_amount = total_amount;\n\n//         parent_order_product_data[parent_product_count].product_tax_value = product_tax_value;\n\n//         parent_product_count++;\n//     }\n// });\n\nlet order_id = \"\";\nlet parent_order_id = \"\";\nif(order_response.order_existing_status == 1){\n    parent_order_id = null;\n    order_id = \"OD\"+order_response.parent_order_id;\n}else{\n    parent_order_id = \"OD\"+order_response.parent_order_id;\n    order_id = \"OD\"+order_response.split_order_id;\n}\n\n//Date\nconst date = new Date();\nlet currentDay= String(date.getDate()).padStart(2, '0');\nlet currentMonth = String(date.getMonth()+1).padStart(2,\"0\");\nlet currentYear = date.getFullYear();\nlet currentDate = `${currentYear}-${currentMonth}-${currentDay}`;\n\n// Update the shipping charges\nvar shipping_cost = parseFloat(parseFloat(order_response.shipping_cost) + 0).toFixed(2);\nif (isNaN(shipping_cost)) {\n    shipping_cost = 0;\n}\n\nnew_order_total_gross_value = parseFloat(parseFloat(new_order_total_gross_value) + parseFloat(shipping_cost)).toFixed(2);\n\nlet new_order_data = {\n    \"order_id\": order_id,\n    \"parent_order_id\" : parent_order_id,\n    \"po_num\" : parent_order_detail.po_num,\n    \"order_date\" : order_response.order_date,\n    \"order_value\" : parseFloat(new_order_total_gross_value).toFixed(2),\n    \"order_status\" : order_response.order_status,\n    \"ordered_qty\" : new_product_count,\n    \"net_value\" : parseFloat(new_order_total_net_value).toFixed(2),\n    \"gross_value\" : parseFloat(new_order_total_gross_value).toFixed(2),\n    \"tax_value\" : parseFloat(new_order_total_tax_value).toFixed(2),\n    \"order_ref_number\" : order_response.reference_number,\n    \"shipping_charge\" : shipping_cost,\n    \"po_shipping_charge\" : order_response.po_shipping_cost,\n    \"order_date\" : currentDate\n    // \"order_items\":new_order_product_data\n}\n\nlet parent_order_data = {\n    \"order_value\" : parent_order_total_gross_value,\n    \"ordered_qty\" : parent_product_count,\n    \"net_value\" : parent_order_total_net_value,\n    \"gross_value\" : parent_order_total_gross_value,\n    \"tax_value\" : parent_order_total_tax_value,\n}\n\nitems[0].json.new_order_data = new_order_data;\nitems[0].json.new_order_product_data = new_order_product_data;\n\nitems[0].json.parent_order_data = parent_order_data;\nitems[0].json.parent_order_product_data = parent_order_product_data;\nitems[0].json.old_order_product_data = old_order_product_data;\nitems[0].json.count_for_order_id_change_items = count_for_order_id_change_items;\n\n// items[0].json.parent_order_item_ids_for_delete = item_ids_for_delete;\n\n// items[0].json.parent_order_item_ids_for_delete = [283,284];\n\nreturn items;"
+        "functionCode": "let order_response = $node[\"Webhook\"].json.body;\nlet parent_order_detail = $node[\"Check for Parent Order ID\"].json.data[0];\n\nlet parent_order_products = parent_order_detail.order_items;\nlet products = order_response.products;\n\nlet new_order_product_data = [];\nlet old_order_product_data = [];\n\nlet parent_order_product_data = [];\n\nlet new_product_count = parent_product_count = 0;\nlet new_order_total_gross_value = new_order_total_tax_value = new_order_total_net_value = parent_order_total_gross_value = parent_order_total_tax_value = parent_order_total_net_value = count_for_order_id_change_items = 0;\n\nitems[0].json.parent_order_products = parent_order_products;\n\nlet order_products = [];\n\nlet products_count = parent_order_products.length + 1;\n\n//Product Details\nfor (var key in products) {\n    if (products.hasOwnProperty(key)) {\n        var product = products[key];\n\n        parent_order_products.forEach((parent_order_product,parent_order_product_index)=>{\n            let parent_product = parent_order_product.sds_po_items_id.product;\n            \n            if(parent_product.id == product.product_code){\n\n                let product_qty = Number(parseFloat(product.amount).toFixed(2));\n                let parent_product_qty = Number(parseFloat(parent_order_product.ordered_qty).toFixed(2));\n                // let parent_product_qty = parent_order_product.ordered_qty;\n                let product_price = product.price;\n                let tax_percentage = product.prod_tax_rate;\n                let net_amount = product_price / ((100+tax_percentage)/100);\n                let product_net_amount = 0;\n                let total_amount = 0;\n                let product_tax_value = 0;\n                    \n                if(!order_products.includes(parent_product.id)){\n                    product_net_amount = net_amount * product_qty;\n                    total_amount = product_price * product_qty;\n                    product_tax_value = total_amount - product_net_amount;\n\n                    order_products.push(parent_product.id);\n                }\n\n                if(product_qty == parent_product_qty){\n\n                    let order_qty = parent_order_product.ordered_qty;\n                    \n                    let product_amount_without_tax = net_amount * order_qty;\n                    total_amount = (net_amount + ((net_amount * tax_percentage ) / 100)) * order_qty;\n                    product_tax_value = total_amount - product_amount_without_tax;\n\n                    product_tax_value = total_amount - product_amount_without_tax;\n                    new_order_total_gross_value = new_order_total_gross_value + total_amount;\n                    new_order_total_tax_value = new_order_total_tax_value + product_tax_value;\n                    new_order_total_net_value = new_order_total_net_value + product_amount_without_tax;\n                    count_for_order_id_change_items++;\n                }else{\n                    let remaining_qty = parent_order_product.ordered_qty - product_qty;\n                    new_order_product_data[new_product_count]={};\n                    // new_order_product_data[new_product_count].id = parent_order_detail.po_num + '-'+products_count;\n                    new_order_product_data[new_product_count].sds_po_items_id = parent_order_product.sds_po_items_id.id;\n                    new_order_product_data[new_product_count].product_code = product.product_code;\n                    new_order_product_data[new_product_count].ordered_qty = product_qty;\n                    new_order_product_data[new_product_count].url = $node[\"Globals\"].json.dms_url;\n\n                    total_amount = (net_amount + ((net_amount * tax_percentage ) / 100)) * product_qty;\n\n                    let product_amount_without_tax = net_amount * product_qty;\n                    product_tax_value = total_amount - product_amount_without_tax;\n                    new_order_total_gross_value = new_order_total_gross_value + total_amount;\n                    new_order_total_tax_value = new_order_total_tax_value + product_tax_value;\n                    new_order_total_net_value = new_order_total_net_value + product_amount_without_tax;\n                    new_product_count++;\n                    products_count++;\n\n                    product_amount_without_tax = net_amount * remaining_qty;\n                    total_amount = (net_amount + ((net_amount * tax_percentage ) / 100)) * remaining_qty;\n                    product_tax_value = total_amount - product_amount_without_tax;\n\n                    parent_order_total_gross_value = parent_order_total_gross_value + total_amount;\n                    parent_order_total_tax_value = parent_order_total_tax_value + product_tax_value;\n                    parent_order_total_net_value = parent_order_total_net_value + product_amount_without_tax;\n\n                    old_order_product_data[parent_product_count]={};\n                    old_order_product_data[parent_product_count].id = parent_order_product.id;\n                    old_order_product_data[parent_product_count].ordered_qty = remaining_qty;\n\n                    parent_product_count++;\n                }\n            }\n        });\n    }\n}\n\nlet order_id = \"\";\nlet parent_order_id = \"\";\nif(order_response.order_existing_status == 1){\n    parent_order_id = null;\n    order_id = \"OD\"+order_response.parent_order_id;\n}else{\n    parent_order_id = \"OD\"+order_response.parent_order_id;\n    order_id = \"OD\"+order_response.split_order_id;\n}\n\n//Date\nconst date = new Date();\nlet currentDay= String(date.getDate()).padStart(2, '0');\nlet currentMonth = String(date.getMonth()+1).padStart(2,\"0\");\nlet currentYear = date.getFullYear();\nlet currentDate = `${currentYear}-${currentMonth}-${currentDay}`;\n\n// Update the shipping charges\nvar shipping_cost = parseFloat(parseFloat(order_response.shipping_cost) + 0).toFixed(2);\nif (isNaN(shipping_cost)) {\n    shipping_cost = 0;\n}\n\nnew_order_total_gross_value = parseFloat(parseFloat(new_order_total_gross_value) + parseFloat(shipping_cost)).toFixed(2);\n\nlet new_order_data = {\n    \"order_id\": order_id,\n    \"parent_order_id\" : parent_order_id,\n    \"po_num\" : parent_order_detail.po_num,\n    \"order_date\" : order_response.order_date,\n    \"order_value\" : parseFloat(new_order_total_gross_value).toFixed(2),\n    \"order_status\" : order_response.order_status,\n    \"ordered_qty\" : new_product_count,\n    \"net_value\" : parseFloat(new_order_total_net_value).toFixed(2),\n    \"gross_value\" : parseFloat(new_order_total_gross_value).toFixed(2),\n    \"tax_value\" : parseFloat(new_order_total_tax_value).toFixed(2),\n    \"order_ref_number\" : order_response.reference_number,\n    \"shipping_charge\" : shipping_cost,\n    \"po_shipping_charge\" : order_response.po_shipping_cost,\n    \"order_date\" : currentDate\n    // \"order_items\":new_order_product_data\n}\n\nlet parent_order_data = {\n    \"order_value\" : parent_order_total_gross_value,\n    \"ordered_qty\" : parent_product_count,\n    \"net_value\" : parent_order_total_net_value,\n    \"gross_value\" : parent_order_total_gross_value,\n    \"tax_value\" : parent_order_total_tax_value,\n}\n\nitems[0].json.new_order_data = new_order_data;\nitems[0].json.new_order_product_data = new_order_product_data;\n\nitems[0].json.parent_order_data = parent_order_data;\nitems[0].json.parent_order_product_data = parent_order_product_data;\nitems[0].json.old_order_product_data = old_order_product_data;\nitems[0].json.count_for_order_id_change_items = count_for_order_id_change_items;\n\nreturn items;"
       },
       "name": "Prepare Split Order Data",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        -340,
-        300
+        -380,
+        280
       ]
     },
     {
@@ -404,8 +426,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        -100,
-        300
+        -160,
+        280
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -427,8 +449,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1040,
-        260
+        1100,
+        240
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -468,7 +490,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1560,
+        1300,
         900
       ],
       "credentials": {
@@ -646,8 +668,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1260,
-        260
+        1320,
+        240
       ]
     },
     {
@@ -682,8 +704,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        760,
-        260
+        860,
+        240
       ]
     },
     {
@@ -694,8 +716,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        -60,
-        100
+        -80,
+        -100
       ]
     },
     {
@@ -706,7 +728,7 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        440,
+        560,
         540
       ]
     },
@@ -717,14 +739,85 @@
         "url": "={{$node[\"Prepare Split Order Data\"].json[\"new_order_product_data\"][0][\"url\"]}}/items/sds_order_items",
         "jsonParameters": true,
         "options": {},
-        "bodyParametersJson": "={{$node[\"Prepare Split Order Data\"].json[\"new_order_product_data\"]}}"
+        "bodyParametersJson": "={{$node[\"Prepare New Split Order Data\"].json[\"new_order_product_data\"]}}"
       },
       "name": "Insert Split Order Items",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        120,
+        280,
         540
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "90",
+          "name": "Simens Order Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let parent_order_products = $node[\"Prepare Split Order Data\"].json.old_order_product_data;\n\nlet split_order_product_data = [];\n\nparent_order_products.forEach((parent_order_product,parent_order_product_index)=>{\n    \n    let order_item_keys = [];\n    order_item_keys.push(parent_order_product.id);\n\n    let new_order_data = {\n        \"url\": $node[\"Globals\"].json.dms_url,\n        \"ordered_qty\" : parent_order_product.ordered_qty\n    }\n\n    split_order_product_data.push({\n        json: {\n            keys:order_item_keys,\n            data:new_order_data,\n        }\n    });\n});\n\nreturn split_order_product_data;"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let order_response = $node[\"Webhook\"].json.body;\nlet parent_order_detail = $node[\"Check for Parent Order ID\"].json.data[0];\nlet split_order_info = $node[\"Create Split Order\"].json.data;\n\n\nlet parent_order_products = parent_order_detail.order_items;\nlet products = order_response.products;\n\nlet new_order_product_data = [];\nlet old_order_product_data = [];\n\nlet parent_order_product_data = [];\n\nlet new_product_count = parent_product_count = 0;\nlet new_order_total_gross_value = new_order_total_tax_value = new_order_total_net_value = parent_order_total_gross_value = parent_order_total_tax_value = parent_order_total_net_value = count_for_order_id_change_items = 0;\n\nitems[0].json.parent_order_products = parent_order_products;\n\nlet order_products = [];\n\nlet products_count = parent_order_products.length + 1;\n\n//Product Details\nfor (var key in products) {\n    if (products.hasOwnProperty(key)) {\n        var product = products[key];\n\n        parent_order_products.forEach((parent_order_product,parent_order_product_index)=>{\n            let parent_product = parent_order_product.sds_po_items_id.product;\n            \n            if(parent_product.id == product.product_code){\n\n                let product_qty = Number(parseFloat(product.amount).toFixed(2));\n                let parent_product_qty = Number(parseFloat(parent_order_product.ordered_qty).toFixed(2));\n\n                if(product_qty == parent_product_qty){\n                }else{\n                    new_order_product_data[new_product_count]={};\n                    new_order_product_data[new_product_count].sds_po_items_id = parent_order_product.sds_po_items_id.id;\n                    new_order_product_data[new_product_count].product_code = product.product_code;\n                    new_order_product_data[new_product_count].sds_orders_id = split_order_info.id,\n                    new_order_product_data[new_product_count].ordered_qty = product_qty;\n                    new_order_product_data[new_product_count].url = $node[\"Globals\"].json.dms_url;\n\n                    new_product_count++;\n                }\n            }\n        });\n    }\n}\nitems[0].json.new_order_product_data = new_order_product_data;\n\nreturn items;"
+      },
+      "name": "Prepare New Split Order Data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        80,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let order_response = $node[\"Webhook\"].json.body;\nlet parent_order_detail = $node[\"Check for Parent Order ID\"].json.data[0];\n\nlet parent_order_products = parent_order_detail.order_items;\nlet products = order_response.products;\n\nlet new_order_product_data = [];\nlet old_order_product_data = [];\n\nlet parent_order_product_data = [];\n\nlet new_product_count = parent_product_count = 0;\nlet new_order_total_gross_value = new_order_total_tax_value = new_order_total_net_value = parent_order_total_gross_value = parent_order_total_tax_value = parent_order_total_net_value = count_for_order_id_change_items = 0;\n\nitems[0].json.parent_order_products = parent_order_products;\n\nlet order_products = [];\n\nlet products_count = parent_order_products.length + 1;\n\n//Product Details\nfor (var key in products) {\n    if (products.hasOwnProperty(key)) {\n        var product = products[key];\n\n        parent_order_products.forEach((parent_order_product,parent_order_product_index)=>{\n            let parent_product = parent_order_product.sds_po_items_id.product;\n            \n            // console.log(\"============parent_product==============\",parent_order_product)\n            if(parent_product.id == product.product_code){\n\n                let product_qty = Number(parseFloat(product.amount).toFixed(2));\n                let parent_product_qty = Number(parseFloat(parent_order_product.ordered_qty).toFixed(2));\n                // let parent_product_qty = parent_order_product.ordered_qty;\n                let product_price = product.price;\n                let tax_percentage = product.prod_tax_rate;\n                let net_amount = product_price / ((100+tax_percentage)/100);\n                let product_net_amount = 0;\n                let total_amount = 0;\n                let product_tax_value = 0;\n                    \n                if(!order_products.includes(parent_product.id)){\n                    product_net_amount = net_amount * product_qty;\n                    total_amount = product_price * product_qty;\n                    product_tax_value = total_amount - product_net_amount;\n\n                    order_products.push(parent_product.id);\n                }\n\n                // let order_qty = product_qty;\n\n                console.log(\"======product_qty=======\",product_qty)\n                console.log(\"======parent_product_qty=======\",parent_product_qty)\n                // console.log(\"======remaining_qty=======\",parent_order_product.ordered_qty)\n                // console.log(\"======remaining_qty=======\",product_qty)\n\n                if(product_qty == parent_product_qty){\n\n                    console.log(\"====iff====\");\n                    let order_qty = parent_order_product.ordered_qty;\n\n                    // let product_price = parent_order_product.sds_po_items_id.unit_price;\n                    // let tax_percentage = parent_order_product.sds_po_items_id.tax_percentage;\n                    \n                    let product_amount_without_tax = net_amount * order_qty;\n                    // console.log(\"======order_qty=======\",order_qty);\n                    // console.log(\"======product_amount_without_tax=======\",product_amount_without_tax);\n                    total_amount = (net_amount + ((net_amount * tax_percentage ) / 100)) * order_qty;\n                    // console.log(\"======total_amount=======\",total_amount);\n                    product_tax_value = total_amount - product_amount_without_tax;\n                    // console.log(\"======product_tax_value=======\",product_tax_value);\n\n                    parent_order_total_gross_value = parent_order_total_gross_value + total_amount;\n                    parent_order_total_tax_value = parent_order_total_tax_value + product_tax_value;\n                    parent_order_total_net_value = parent_order_total_net_value + product_amount_without_tax;\n\n                    count_for_order_id_change_items++;\n                }else{\n\n                    console.log(\"====else====\");\n                    \n                    let remaining_qty = parent_order_product.ordered_qty - product_qty;\n\n                    console.log(\"====remaining_qty====\",remaining_qty);\n\n\n                    new_order_product_data[new_product_count]={};\n                    // new_order_product_data[new_product_count].id = parent_order_detail.po_num + '-'+products_count;\n                    new_order_product_data[new_product_count].sds_po_items_id = parent_order_product.sds_po_items_id.id;\n                    new_order_product_data[new_product_count].product_code = product.product_code;\n                    new_order_product_data[new_product_count].ordered_qty = product_qty;\n                    new_order_product_data[new_product_count].url = $node[\"Globals\"].json.dms_url;\n\n                    console.log(\"====new_order_product_data====\",new_order_product_data);\n                    console.log(\"====new_order_product_data====\",new_order_product_data[new_product_count]);\n\n                    total_amount = (net_amount + ((net_amount * tax_percentage ) / 100)) * product_qty;\n\n                    console.log(\"====product_qty====\",product_qty);\n                    console.log(\"====product_price====\",product_price);\n                    console.log(\"====tax_percentage====\",tax_percentage);\n                    console.log(\"====total_amount====\",total_amount);\n\n                    let product_amount_without_tax = net_amount * product_qty;\n                    console.log(\"====total_amount====\",total_amount);\n                    product_tax_value = total_amount - product_amount_without_tax;\n                    console.log(\"====product_tax_value====\",product_tax_value);\n                    new_order_total_gross_value = new_order_total_gross_value + total_amount;\n                    console.log(\"====new_order_total_gross_value====\",new_order_total_gross_value);\n                    new_order_total_tax_value = new_order_total_tax_value + product_tax_value;\n                    console.log(\"====new_order_total_tax_value====\",new_order_total_tax_value);\n                    new_order_total_net_value = new_order_total_net_value + product_amount_without_tax;\n                    console.log(\"====new_order_total_net_value====\",new_order_total_net_value);\n                    new_product_count++;\n                    products_count++;\n\n                    product_amount_without_tax = net_amount * remaining_qty;\n                    total_amount = (net_amount + ((net_amount * tax_percentage ) / 100)) * remaining_qty;\n                    product_tax_value = total_amount - product_amount_without_tax;\n\n                    parent_order_total_gross_value = parent_order_total_gross_value + total_amount;\n                    parent_order_total_tax_value = parent_order_total_tax_value + product_tax_value;\n                    parent_order_total_net_value = parent_order_total_net_value + product_amount_without_tax;\n\n                    // console.log(\"=============\",new_order_product_data)\n                    // console.log(\"======remaining_qty=======\",remaining_qty)\n                    // console.log(\"======remaining_qty=======\",parent_order_product.ordered_qty)\n                    // console.log(\"======remaining_qty=======\",product_qty)\n\n                    old_order_product_data[parent_product_count]={};\n                    old_order_product_data[parent_product_count].id = parent_order_product.id;\n                    old_order_product_data[parent_product_count].ordered_qty = remaining_qty;\n\n                    parent_product_count++;\n                }\n\n                // new_order_product_data[new_product_count]={};\n                // new_order_product_data[new_product_count].sds_po_items_id = parent_order_product.sds_po_items_id.id;\n                // new_order_product_data[new_product_count].product_code = product.product_code;\n                // // new_order_product_data[new_product_count].ordered_qty = parent_order_product.ordered_qty;\n\n                // new_order_total_gross_value = new_order_total_gross_value + total_amount;\n                // new_order_total_tax_value = new_order_total_tax_value + product_tax_value;\n                // new_order_total_net_value = new_order_total_net_value + product_net_amount;\n\n                // new_product_count++;\n            }\n\n            // if(parent_product.id == product.product_code){\n            //     new_order_product_data[new_product_count]={};\n            //     new_order_product_data[new_product_count].sds_po_items_id = parent_order_product.sds_po_items_id.id;\n            //     new_order_product_data[new_product_count].product_code = product.product_code;\n            //     new_product_count++;\n            // }\n        });\n    }\n}\n\n// let product_avail_status = 0;\n// parent_order_products.forEach((parent_order_product,parent_order_product_index)=>{\n//     let parent_product = parent_order_product.sds_po_items_id.product;\n//     product_avail_status = 0;\n//     new_order_product_data.forEach((product_data,product_index)=>{\n//         if(parent_product.id == product_data.product_code){\n//             product_avail_status = 1;\n//         }\n//     });\n\n//     if(product_avail_status == 0){\n//         let product_qty = parent_order_product.ordered_qty;\n//         if(!product_qty){\n//             product_qty = parent_order_product.sds_po_items_id.ordered_qty;\n//         }\n//         let product_price = parent_order_product.sds_po_items_id.unit_price;\n//         let tax_percentage = parent_order_product.sds_po_items_id.tax_percentage;\n        \n//         let product_amount_without_tax = product_price * product_qty;\n\n//         let total_amount = (product_price + ((product_price * tax_percentage ) / 100)) * product_qty;\n\n//         let product_tax_value = total_amount - product_amount_without_tax;\n\n//         parent_order_total_gross_value = parent_order_total_gross_value + total_amount;\n//         parent_order_total_tax_value = parent_order_total_tax_value + product_tax_value;\n//         parent_order_total_net_value = parent_order_total_net_value + product_amount_without_tax;\n\n//         parent_order_product_data[parent_product_count]={};\n//         parent_order_product_data[parent_product_count].product_qty = product_qty;\n//         parent_order_product_data[parent_product_count].product_price = product_price;\n//         parent_order_product_data[parent_product_count].tax_percentage = tax_percentage;\n\n\n//         parent_order_product_data[parent_product_count].product_amount_without_tax = product_amount_without_tax;\n\n//         parent_order_product_data[parent_product_count].total_amount = total_amount;\n\n//         parent_order_product_data[parent_product_count].product_tax_value = product_tax_value;\n\n//         parent_product_count++;\n//     }\n// });\n\nlet order_id = \"\";\nlet parent_order_id = \"\";\nif(order_response.order_existing_status == 1){\n    parent_order_id = null;\n    order_id = \"OD\"+order_response.parent_order_id;\n}else{\n    parent_order_id = \"OD\"+order_response.parent_order_id;\n    order_id = \"OD\"+order_response.split_order_id;\n}\n\n//Date\nconst date = new Date();\nlet currentDay= String(date.getDate()).padStart(2, '0');\nlet currentMonth = String(date.getMonth()+1).padStart(2,\"0\");\nlet currentYear = date.getFullYear();\nlet currentDate = `${currentYear}-${currentMonth}-${currentDay}`;\n\n// Update the shipping charges\nvar shipping_cost = parseFloat(parseFloat(order_response.shipping_cost) + 0).toFixed(2);\nif (isNaN(shipping_cost)) {\n    shipping_cost = 0;\n}\n\nnew_order_total_gross_value = parseFloat(parseFloat(new_order_total_gross_value) + parseFloat(shipping_cost)).toFixed(2);\n\nlet new_order_data = {\n    \"order_id\": order_id,\n    \"parent_order_id\" : parent_order_id,\n    \"po_num\" : parent_order_detail.po_num,\n    \"order_date\" : order_response.order_date,\n    \"order_value\" : parseFloat(new_order_total_gross_value).toFixed(2),\n    \"order_status\" : order_response.order_status,\n    \"ordered_qty\" : new_product_count,\n    \"net_value\" : parseFloat(new_order_total_net_value).toFixed(2),\n    \"gross_value\" : parseFloat(new_order_total_gross_value).toFixed(2),\n    \"tax_value\" : parseFloat(new_order_total_tax_value).toFixed(2),\n    \"order_ref_number\" : order_response.reference_number,\n    \"shipping_charge\" : shipping_cost,\n    \"po_shipping_charge\" : order_response.po_shipping_cost,\n    \"order_date\" : currentDate\n    // \"order_items\":new_order_product_data\n}\n\nlet parent_order_data = {\n    \"order_value\" : parent_order_total_gross_value,\n    \"ordered_qty\" : parent_product_count,\n    \"net_value\" : parent_order_total_net_value,\n    \"gross_value\" : parent_order_total_gross_value,\n    \"tax_value\" : parent_order_total_tax_value,\n}\n\nitems[0].json.new_order_data = new_order_data;\nitems[0].json.new_order_product_data = new_order_product_data;\n\nitems[0].json.parent_order_data = parent_order_data;\nitems[0].json.parent_order_product_data = parent_order_product_data;\nitems[0].json.old_order_product_data = old_order_product_data;\nitems[0].json.count_for_order_id_change_items = count_for_order_id_change_items;\n\n// items[0].json.parent_order_item_ids_for_delete = item_ids_for_delete;\n\n// items[0].json.parent_order_item_ids_for_delete = [283,284];\n\nreturn items;"
+      },
+      "name": "Prepare Split Order Data-Old",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -360,
+        -140
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let returnItems = [];\n\nlet message = [];\n\nreturnItems.push({\n  json:{\n    message\n  }\n})\n\nreturn returnItems\n"
+      },
+      "name": "Empty 2",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1660,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Function\"].json[\"data\"][\"url\"]}}/items/sds_order_items",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Function\"].json}}"
+      },
+      "name": "Update Parent Order Items",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1400,
+        560
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -738,18 +831,18 @@
         "conditions": {
           "boolean": [
             {
-              "value1": "={{$node[\"Prepare Split Order Data\"].json[\"new_order_product_data\"].length}}",
+              "value1": "={{$node[\"Prepare New Split Order Data\"].json[\"new_order_product_data\"].length}}",
               "value2": "={{0}}"
             }
           ]
         }
       },
-      "name": "IF",
+      "name": "Check New Split Order Data",
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        120,
-        300
+        280,
+        280
       ]
     },
     {
@@ -764,48 +857,13 @@
           ]
         }
       },
-      "name": "IF1",
+      "name": "Check Update Split Order Items",
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        440,
-        280
+        560,
+        260
       ]
-    },
-    {
-      "parameters": {
-        "functionCode": "let parent_order_products = $node[\"Prepare Split Order Data\"].json.old_order_product_data;\n\nlet split_order_product_data = [];\n\nparent_order_products.forEach((parent_order_product,parent_order_product_index)=>{\n    \n    let order_item_keys = [];\n    order_item_keys.push(parent_order_product.id);\n\n    let new_order_data = {\n        \"url\": $node[\"Globals\"].json.dms_url,\n        \"ordered_qty\" : parent_order_product.ordered_qty\n    }\n\n    split_order_product_data.push({\n        json: {\n            keys:order_item_keys,\n            data:new_order_data,\n        }\n    });\n});\n\nreturn split_order_product_data;"
-      },
-      "name": "Function",
-      "type": "n8n-nodes-base.function",
-      "typeVersion": 1,
-      "position": [
-        1080,
-        560
-      ]
-    },
-    {
-      "parameters": {
-        "authentication": "headerAuth",
-        "requestMethod": "PATCH",
-        "url": "={{$node[\"Function\"].json[\"data\"][\"url\"]}}/items/sds_order_items",
-        "jsonParameters": true,
-        "options": {},
-        "bodyParametersJson": "={{$node[\"Function\"].json}}"
-      },
-      "name": "Update Split Order Items1",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        1280,
-        560
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "90",
-          "name": "Simens Order Token"
-        }
-      }
     },
     {
       "parameters": {
@@ -819,11 +877,11 @@
           ]
         }
       },
-      "name": "IF2",
+      "name": "Check Parent Order Items",
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        840,
+        960,
         580
       ]
     }
@@ -838,5 +896,5 @@
       "updatedAt": "2023-05-30T07:00:01.982Z"
     }
   ],
-  "updatedAt": "2024-01-15T13:16:46.302Z"
+  "updatedAt": "2024-01-18T10:06:46.799Z"
 }
