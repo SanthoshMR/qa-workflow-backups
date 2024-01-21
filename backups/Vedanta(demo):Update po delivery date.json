@@ -166,7 +166,7 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "PATCH",
-        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_pos/{{$node[\"Function\"].json[\"id\"]}}",
+        "url": "={{$node[\"Function\"].json[\"dms_url\"]}}/items/sdm_vendor_pos/{{$node[\"Function\"].json[\"id\"]}}",
         "options": {},
         "bodyParametersUi": {
           "parameter": [
@@ -244,5 +244,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2024-01-17T12:40:16.158Z"
+  "updatedAt": "2024-01-18T06:06:37.154Z"
 }
