@@ -262,7 +262,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_pos/{{$node[\"Wait for approval\"].json[\"body\"][\"payload\"][\"vendor_po_number\"]}}?fields= *.*.*,vendor.*,vendor_payments.user_created",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_pos/{{$node[\"Wait for approval\"].json[\"body\"][\"payload\"][\"vendor_po_number\"].replace(\"%2F\")}}?fields= *.*.*,vendor.*,vendor_payments.user_created",
         "options": {}
       },
       "name": "Get vendor PO details",
@@ -634,5 +634,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-07-17T12:05:02.718Z"
+  "updatedAt": "2024-01-25T11:56:29.922Z"
 }
