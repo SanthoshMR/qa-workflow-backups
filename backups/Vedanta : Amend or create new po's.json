@@ -93,29 +93,145 @@
       "main": [
         [
           {
-            "node": "Check for delivery update",
+            "node": "Check for new pos",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Check for delivery update": {
+    "Check for new pos": {
       "main": [
         [
           {
-            "node": "Udpate delivery dates",
+            "node": "Create new pos",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Check for new items",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Udpate delivery dates": {
+    "Create new pos": {
       "main": [
         [
           {
-            "node": "Udpate vedanta delivery date",
+            "node": "Check for new items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for new items": {
+      "main": [
+        [
+          {
+            "node": "Create new Items",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Check for update items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create new Items": {
+      "main": [
+        [
+          {
+            "node": "Check for update items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for update items": {
+      "main": [
+        [
+          {
+            "node": "Update Items",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Check for dates updates",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Items": {
+      "main": [
+        [
+          {
+            "node": "Check for dates updates",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for dates updates": {
+      "main": [
+        [
+          {
+            "node": "Update delivery dates",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get all po vendor pos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update delivery dates": {
+      "main": [
+        [
+          {
+            "node": "Get all po vendor pos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get all po vendor pos": {
+      "main": [
+        [
+          {
+            "node": "Function to update po date",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to update po date": {
+      "main": [
+        [
+          {
+            "node": "Update po delivery date in po",
             "type": "main",
             "index": 0
           }
@@ -188,7 +304,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_pos?filter={\"id\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"keys\"][0]}}\"}}&fields=*,po_num.*",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_pos?filter={\"id\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"keys\"][0]}}\"}}&fields=*,po_num.*,buyers.*,operation_agents.*",
         "options": {}
       },
       "name": "Get the vendor po",
@@ -267,7 +383,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let vendorPoDetails = $node[\"Get the vendor po\"].json.data;\nlet poItemDetails = $node[\"Get the po items\"].json.data;\nlet amendedVendorPoDetails = $node[\"Get the amended vendor po\"].json.data;\nlet amendedPoItemDetails = $node[\"Get the amended po items\"].json.data;\nlet latestVendorPo = $node[\"Get the latest vendor po\"].json.data;\nlet newVendorPosArr = [];\nlet payload = $node[\"Webhook\"].json[\"body\"][\"payload\"];\nlet updateDeliveryDate = false;\nlet vedantaPoDeliveryDate = vendorPoDetails[0].po_num.po_deliver_date;\nlet vendorPoDeliveryDate = vendorPoDetails[0].po_deliver_date;\nlet getAllVendorPos = $node[\"Get all vendor pos\"].json.data;\n\n\nif($node[\"Webhook\"].json[\"body\"][\"payload\"][\"vendor\"]){\n  let poItems = [];\n  amendedPoItemDetails.forEach(function(item,index){\n    poItems.push({\n      //id:\n    })\n  })\n  newVendorPosArr.push({\n    id:amendedVendorPoDetails[0].id.split(\"-\")[1].includes(\"R\")?parseInt(latestVendorPo[0].id.split(\"-\")[1].split(\"R\")[1])+1:amendedVendorPoDetails+\"R1\",\n    vendor:$node[\"Webhook\"].json[\"body\"][\"payload\"][\"vendor\"],\n    po_num:amendedVendorPoDetails[0].po_num,\n    po_date:vendorPoDetails[0].po_date,\n    po_status:\"draft\",\n\n  })\n}else if(payload[\"po_items\"]){\n  let createdItems = payload[\"po_items\"].create;\n  let updatedItems = payload[\"po_items\"].update;\n  let deletedItems = payload[\"po_items\"][\"delete\"];\n  let checkForVendorUpdate = updatedItems.filter(uItems=>uItems.vendor);\n  let checkForDeliveryUpdate = updatedItems.filter(uItems=>uItems.delivery_date);\n  let checkForPriceChange = updatedItems.filter(uItems=>uItems.unit_price);\n  let checkForTaxChange = updatedItems.filter(uItems=>uItems.tax_percentage);\n\n  if(checkForVendorUpdate.length>0){\n\n  }else if(!checkForVendorUpdate.length>0){\n    if(checkForDeliveryUpdate.length>0){\n      updateDeliveryDate=true;\n      let minVendorPoDate = new Date(\n          Math.min(\n            ...amendedPoItemDetails.map(element => {\n              return new Date(element.delivery_date);\n              }),\n            ),\n          );\n      vendorPoDeliveryDate = new Date(minVendorPoDate).toISOString();\n      let getMatchedVendorPo =getAllVendorPos.findIndex(po=>amendedVendorPoDetails[0].id == po.id);\n      getAllVendorPos[getMatchedVendorPo].po_deliver_date = vendorPoDeliveryDate;\n      let minPoDate = new Date(\n        Math.min(\n          ...getAllVendorPos.map(element => {\n            return new Date(element.po_deliver_date);\n            }),\n          ),\n        );\n      vedantaPoDeliveryDate = new Date(minPoDate).toISOString();\n    }\n  }\n}\n\n\n\nitems[0].json.updateDeliveryDate =updateDeliveryDate;\nitems[0].json.vedantaPoDeliveryDate=vedantaPoDeliveryDate;\nitems[0].json.vendorPoDeliveryDate=vendorPoDeliveryDate;\nreturn items;"
+        "functionCode": "let vendorPoDetails = $node[\"Get the vendor po\"].json.data;\nlet poItemDetails = $node[\"Get the po items\"].json.data;\nlet amendedVendorPoDetails = $node[\"Get the amended vendor po\"].json.data;\nlet amendedPoItemDetails = $node[\"Get the amended po items\"].json.data;\nlet latestVendorPo = $node[\"Get the latest vendor po\"].json.data;\nlet newVendorPosArr = [];\nlet payload = $node[\"Webhook\"].json[\"body\"][\"payload\"];\nlet updateDeliveryDate = false;\nlet vedantaPoDeliveryDate = vendorPoDetails[0].po_num.po_deliver_date;\nlet vendorPoDeliveryDate = vendorPoDetails[0].po_deliver_date;\nlet getAllVendorPos = $node[\"Get all vendor pos\"].json.data;\nlet createdItems = payload[\"po_items\"]? payload[\"po_items\"].create:[];\nlet updatedItems = payload[\"po_items\"]?payload[\"po_items\"].update:[];\nlet deletedItems = payload[\"po_items\"]?payload[\"po_items\"][\"delete\"]:[];\nlet checkForVendorUpdate = updatedItems.filter(uItems=>uItems.vendor);\nlet updatePoItems = [];\nlet createPoItems = [];\nlet updateVendorPoDeliveryDates=[];\nlet updateItemQuery=\"\";\nlet updateVendorPoDeliveryDatesQuery=\"\";\nlet cancealPo = \"\"\n\n//Get the buyers and ops\n let buyers = [];\n let ops = [];\nvendorPoDetails[0].buyers.forEach(function(buyer,index){\n    buyers.push({\n      sdm_buyers_id:buyer.sdm_buyers_id\n    })\n  });\n  vendorPoDetails[0].operation_agents.forEach(function(op,index){\n    ops.push({\n      sdm_operation_agents_id:op.sdm_operation_agents_id\n    })\n  });\n//Get the buyers and ops\n\n\n//Group by vendor\nconst groupedByVendor = amendedPoItemDetails.reduce((result, product) => {\n  const vendor = product.vendor;\n\n  // Create an array for the vendor if it doesn't exist in the result object\n  if (!result[vendor]) {\n    result[vendor] = [];\n  }\n\n  // Push the current product to the vendor's array\n  result[vendor].push(product);\n\n  return result;\n}, {});\n//Group by vendor\n\nif($node[\"Webhook\"].json[\"body\"][\"payload\"][\"vendor\"]){\n  let vendorPoId = amendedVendorPoDetails[0].id.split(\"-\")[1].includes(\"R\")?parseInt(latestVendorPo[0].id.split(\"-\")[1].split(\"R\")[1])+1:amendedVendorPoDetails[0].id+\"R1\"\n  let poItems = [];\n  let updatedItems = pushUpdateItems(amendedPoItemDetails,vendorPoId)\n  if(createdItems.length>0){\n    let createItems = pushCreateItems(vendorPoId);\n  }\n  let netPoValue =  amendedPoItemDetails.reduce((total,obj)=>(parseFloat(obj.unit_price )*parseFloat(obj.requested_qty))+total, 0);\n  let poValue = amendedPoItemDetails.reduce((total,obj)=>((parseFloat(obj.unit_price )*parseFloat(obj.requested_qty))+((parseFloat(obj.unit_price )*parseFloat(obj.requested_qty))*obj.tax_percentage)/100)+total, 0);\n  let minVendorPoDate = getPoDeliveryDate(amendedPoItemDetails)\n  pushNewVendorPo(vendorPoId,$node[\"Webhook\"].json[\"body\"][\"payload\"][\"vendor\"],minVendorPoDate,poValue,netPoValue);\n  cancealPo=amendedVendorPoDetails[0].id;\n}else if(checkForVendorUpdate.length == 0 && createdItems.length>0){\n  let createItems = pushCreateItems(vendorPoDetails[0].id)\n}else if(checkForVendorUpdate.length>0){\n  let vendorGroupObj = groupedByVendor;\n  let matchedOriginalVendor = vendorGroupObj[amendedVendorPoDetails[0].vendor];\n  let matchedOriginalVendorUpdatePoItems = pushUpdateItems(matchedOriginalVendor,vendorPoDetails[0].id);\n  let checkForNewItemVendor = createdItems.filter(cItem=>cItem.vendor == amendedVendorPoDetails[0].vendor);\n  if(checkForNewItemVendor.length>0){\n    pushCreateItems(checkForNewItemVendor,vendorPoDetails[0].id);\n  }\n  updateVendorPoDeliveryDates.push({\n    vendor_po:vendorPoDetails[0].id,\n    delivery_date:getPoDeliveryDate(matchedOriginalVendor)\n  })\n  let vendorPoIndex = 0\n\n  delete vendorGroupObj[amendedVendorPoDetails[0].vendor];\n  let newVendorPoId = amendedVendorPoDetails[0].id.split(\"-\")[1].includes(\"R\")?parseInt(latestVendorPo[0].id.split(\"-\")[1].split(\"R\")[1])+1:amendedVendorPoDetails[0].id+\"R1\"\n  for (const vendor in vendorGroupObj) {\n    if (vendorGroupObj.hasOwnProperty(vendor)) {\n      const productsForVendor = groupedByVendor[vendor];\n      let vendorPo = vendorPoIndex == 0? newVendorPoId: parseInt(newVendorPoId[0].split(\"-\")[1].split(\"R\")[1])+1;\n      let netPovalue = productsForVendor.reduce((total,obj)=>(parseFloat(obj.unit_price )*parseFloat(obj.requested_qty))+total, 0);\n      let poValue = productsForVendor.reduce((total,obj)=>((parseFloat(obj.unit_price )*parseFloat(obj.requested_qty))+((parseFloat(obj.unit_price )*parseFloat(obj.requested_qty))*obj.tax_percentage)/100)+total, 0);\n      let poDeliveryDate = getPoDeliveryDate(productsForVendor);\n      pushNewVendorPo(vendorPo,vendor,poDeliveryDate,poValue,netPovalue);\n      vendorPoIndex = vendorPoIndex+1;\n      let matchedNewItemCreatedVendor = createdItems.filter(cItem=>cItem.vendor == vendor);\n      if(matchedNewItemCreatedVendor.length>0){\n        pushCreateItems(matchedNewItemCreatedVendor,vendorPo);\n      };\n      pushUpdateItems(productsForVendor,vendorPo);\n    }\n  }\n}else {\n  pushUpdateItems(amendedPoItemDetails,vendorPoDetails[0].id);\n  updateVendorPoDeliveryDates.push({\n    vendor_po:vendorPoDetails[0].id,\n    delivery_date:getPoDeliveryDate(amendedPoItemDetails)\n  })\n}\n\n//Function to push Po items for creating\nfunction pushCreateItems(createdPoItems,vendorPo){\n  createdPoItems.forEach(function(cItem,index){\n    let cItemNetPrice = parseFloat(cItem.unit_price )*parseFloat(cItem.requested_qty);\n    createPoItems.push({\n      id:cItem.id,\n      product:cItem.product,\n      vendor:cItem.vendor,\n      net_price:cItemNetPrice,\n      gross_price:cItemNetPrice+(cItemNetPrice*cItem.tax_percentage)/100,\n      delivery_date:cItem.delivery_date,\n      unit_price:cItem.unit_price,\n      requested_qty:cItem.requested_qty,\n      po:vendorPoDetails[0].po_num.id,\n      tax_percentage:cItem.tax_percentage,\n      uom:cItem.uom,\n      plant:cItem.plant,\n      hsn:cItem.hsn,\n      vendor_po:vendorPo\n    })\n  })\n};\n//Function to push Po items for creating\n\n//Function to push Po items for update\nfunction pushUpdateItems(poItems,vendorPo){\n  poItems.forEach(function(item,index){\n    let netPrice = parseFloat(item.unit_price )*parseFloat(item.requested_qty);\n    updatePoItems.push({\n      id:item.id,\n      product:item.product,\n      vendor:$node[\"Webhook\"].json[\"body\"][\"payload\"][\"vendor\"]?$node[\"Webhook\"].json[\"body\"][\"payload\"][\"vendor\"]:item.vendor,\n      net_price:netPrice,\n      gross_price:netPrice+(netPrice*item.tax_percentage)/100,\n      delivery_date:item.delivery_date,\n      unit_price:item.unit_price,\n      requested_qty:item.requested_qty,\n      po:vendorPoDetails[0].po_num.id,\n      tax_percentage:item.tax_percentage,\n      uom:item.uom,\n      plant:item.plant,\n      hsn:item.hsn,\n      vendor_po:vendorPo\n    })\n  })\n};\n//Function to push Po items for update\n\n//Function to push new vendor po's\nfunction pushNewVendorPo(vendorPo,vendor,poDeliverDate,poValue,netPoValue,){\n  newVendorPosArr.push({\n    id:vendorPo,\n    vendor:vendor,\n    po_num:amendedVendorPoDetails[0].po_num,\n    po_date:vendorPoDetails[0].po_date,\n    po_deliver_date:new Date(poDeliverDate).toISOString(),\n    po_status:\"draft\",\n    po_value:vendorPoDetails[0].po_type == \"routing\"?poValue/1.02:poValue,\n    net_po_value:vendorPoDetails[0].po_type == \"routing\"?netPoValue/1.02:netPoValue,\n    payment_terms:vendorPoDetails[0].payment_terms,\n    po_type:vendorPoDetails[0].po_type,\n    sd_billing_address:vendorPoDetails[0].sd_billing_address,\n    consignment_type:vendorPoDetails[0].consignment_type,\n    buyers:buyers,\n    operation_agents:ops\n  })\n}\n//Function to push new vendor po's\n\n//Function to get vendor po delivery date\nfunction getPoDeliveryDate(poItems){\n   let minVendorPoDate = new Date(\n      Math.min(\n        ...poItems.map(element => {\n          return new Date(element.delivery_date);\n          }),\n        ),\n      );\n    return new Date(minVendorPoDate).toISOString();\n}\n//Function to get vendor po delivery date\n\nif(updatePoItems.length>0){\n  updatePoItems.forEach(function(poItem,index){\n    updateItemQuery=updateItemQuery+`update sdm_po_items set product='${poItem.product}',vendor='${poItem.vendor}',net_price=${poItem.net_price},gross_price=${poItem.gross_price},delivery_date='${poItem.delivery_date}',unit_price=${poItem.unit_price},requested_qty=${poItem.requested_qty},po='${poItem.po}',tax_percentage=${poItem.tax_percentage},uom='${poItem.uom}',plant='${poItem.plant}',hsn='${poItem.hsn}',vendor_po='${poItem.vendor_po}' where id='${poItem.id}'`\n  })\n};\n\nif(updateVendorPoDeliveryDates.length>0){\n  updateVendorPoDeliveryDates.forEach(function(po,index){\n    updateVendorPoDeliveryDatesQuery=updateVendorPoDeliveryDatesQuery+`update sdm_vendor_pos set po_deliver_date='${po.delivery_date}' where id='${po.vendor_po}'`\n  })\n}\n\n\n\nitems[0].json.updateDeliveryDate =updateDeliveryDate;\nitems[0].json.vedantaPoDeliveryDate=vedantaPoDeliveryDate;\nitems[0].json.vendorPoDeliveryDate=vendorPoDeliveryDate;\nitems[0].json.newVendorPosArr= newVendorPosArr;\nitems[0].json.updatePoItems= updatePoItems;\nitems[0].json.createPoItems= createPoItems;\nitems[0].json.updateVendorPoDeliveryDates= updateVendorPoDeliveryDates;\nitems[0].json.cancealPo= cancealPo;\nitems[0].json.updateVendorPoDeliveryDatesQuery= updateVendorPoDeliveryDatesQuery;\nitems[0].json.updateItemQuery=updateItemQuery;\nreturn items;"
       },
       "name": "Function to amend po",
       "type": "n8n-nodes-base.function",
@@ -318,8 +434,17 @@
       }
     },
     {
-      "parameters": {},
-      "name": "Check for delivery update",
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Function to amend po\"].json[\"newVendorPosArr\"].length>0?true:false}}"
+            }
+          ]
+        }
+      },
+      "name": "Check for new pos",
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
@@ -330,24 +455,170 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "requestMethod": "PATCH",
-        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_pos/{{$node[\"Webhook\"].json[\"body\"][\"keys\"][0]}}",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_pos",
+        "jsonParameters": true,
         "options": {},
-        "bodyParametersUi": {
-          "parameter": [
+        "bodyParametersJson": "={{$node[\"Function to amend po\"].json[\"newVendorPosArr\"]}}"
+      },
+      "name": "Create new pos",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2180,
+        100
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
             {
-              "name": "po_deliver_date",
-              "value": "={{$node[\"Function to amend po\"].json[\"vendorPoDeliveryDate\"]}}"
+              "value1": true,
+              "value2": "={{$node[\"Function to amend po\"].json[\"createPoItems\"].length>0?true:false}}"
             }
           ]
         }
       },
-      "name": "Udpate delivery dates",
+      "name": "Check for new items",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        2400,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_po_items",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Function to amend po\"].json[\"createPoItems\"]}}"
+      },
+      "name": "Create new Items",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2080,
-        180
+        2560,
+        100
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Function to amend po\"].json[\"updateItemQuery\"]?true:false}}"
+            }
+          ]
+        }
+      },
+      "name": "Check for update items",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        2720,
+        360
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "={{$node[\"Function to amend po\"].json[\"updateItemQuery\"]}}",
+        "additionalFields": {}
+      },
+      "name": "Update Items",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        2900,
+        140
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "78",
+          "name": "Vedanta postgres qa"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Function to amend po\"].json[\"updateVendorPoDeliveryDatesQuery\"]?true:false}}"
+            }
+          ]
+        }
+      },
+      "name": "Check for dates updates",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        3040,
+        360
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "={{$node[\"Function to amend po\"].json[\"updateVendorPoDeliveryDatesQuery\"]}}",
+        "additionalFields": {}
+      },
+      "name": "Update delivery dates",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        3220,
+        140
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "78",
+          "name": "Vedanta postgres qa"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let allVendorPos = $node[\"Get all po vendor pos\"].json.data;\n\n\n   let minVendorPoDate = new Date(\n      Math.min(\n        ...allVendorPos.map(element => {\n          return new Date(element.po_deliver_date);\n          }),\n        ),\n      );\n\nitems[0].json.delivery_date = new Date(minVendorPoDate).toISOString();\nreturn items;"
+      },
+      "name": "Function to update po date",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        3600,
+        360
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_pos?filter={\"po_num\":{\"_eq\":\"{{$node[\"Get the vendor po\"].json[\"data\"][0][\"po_num\"][\"id\"]}}\"}}&limit=-1",
+        "options": {}
+      },
+      "name": "Get all po vendor pos",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3420,
+        360
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -360,23 +631,23 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "PATCH",
-        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_pos/{{$node[\"Get the amended vendor po\"].json[\"data\"][0][\"po_num\"]}}",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_pos/{{$node[\"Get the vendor po\"].json[\"data\"][0][\"po_num\"][\"id\"]}}",
         "options": {},
         "bodyParametersUi": {
           "parameter": [
             {
               "name": "po_deliver_date",
-              "value": "={{$node[\"Function to amend po\"].json[\"vedantaPoDeliveryDate\"]}}"
+              "value": "={{$node[\"Function to update po date\"].json[\"delivery_date\"]}}"
             }
           ]
         }
       },
-      "name": "Udpate vedanta delivery date",
+      "name": "Update po delivery date in po",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2280,
-        180
+        3840,
+        360
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -386,8 +657,10 @@
       }
     }
   ],
-  "settings": {},
+  "settings": {
+    "saveManualExecutions": true
+  },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2024-01-10T11:50:02.189Z"
+  "updatedAt": "2024-01-25T12:39:57.814Z"
 }
