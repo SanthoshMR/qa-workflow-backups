@@ -597,7 +597,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let allVendorPos = $node[\"Get all po vendor pos\"].json.data;\n\n\n   let minVendorPoDate = new Date(\n      Math.min(\n        ...allVendorPos.map(element => {\n          return new Date(element.po_deliver_date);\n          }),\n        ),\n      );\n\nitems[0].json.delivery_date = new Date(minVendorPoDate).toISOString();\nreturn items;"
+        "functionCode": "let allVendorPos = $node[\"Get all po vendor pos\"].json.data;\n\n\n   let minVendorPoDate = new Date(\n      Math.min(\n        ...allVendorPos.map(element => {\n          return new Date(element.po_deliver_date);\n          }),\n        ),\n      );\n\nitems[0].json.delivery_date = new Date(minVendorPoDate).toISOString().split(\"T\")[0];\nreturn items;"
       },
       "name": "Function to update po date",
       "type": "n8n-nodes-base.function",
@@ -662,5 +662,5 @@
   },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2024-01-25T12:39:57.814Z"
+  "updatedAt": "2024-01-29T05:56:37.386Z"
 }
