@@ -1,0 +1,199 @@
+{
+  "active": false,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get url and token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get url and token": {
+      "main": [
+        [
+          {
+            "node": "Get the amended po",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the amended po": {
+      "main": [
+        [
+          {
+            "node": "Get all vendor pos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get all vendor pos": {
+      "main": [
+        [
+          {
+            "node": "Get all po items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get all po items": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2024-01-29T06:57:13.246Z",
+  "id": "414",
+  "name": "Vedanta : Amended client po",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "amended-client-po",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ],
+      "webhookId": "53cb5638-6f69-4392-8e31-f3464aa16a60"
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "=https://qan8n.shakedeal.com/webhook/get-url",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "client",
+              "value": "=vedanta"
+            },
+            {
+              "name": "env",
+              "value": "=qa"
+            }
+          ]
+        }
+      },
+      "name": "Get url and token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        660,
+        300
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_po_items_ammend?filter={\"po\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"keys\"][0]}}\"}}&limit=-1&fields=id,net_price,gross_price,delivery_date,vendor_po,unit_price,tax_percentage,uom,plant,vendor,hsn,requested_qty,product",
+        "options": {}
+      },
+      "name": "Get the amended po",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        880,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let getAllVendorPos = $node[\"Get all vendor pos\"].json.data;\nlet createdItems = $node[\"Webhook\"].json[\"body\"][\"payload\"][\"po_items\"][\"create\"];\nuniqueArr = Object.create(null),\n    uniqueVendorPlantArr = createdItems.filter(o => {\n        var key = ['plant', 'vendor'].map(k => o[k]).join('|');\n        if (!uniqueArr[key]) {\n            uniqueArr[key] = true;\n            return true;\n        }\n    });\nuniqueVendorPlantArr.forEach(function(uItem,index){\n  let matchedVendorPo = getAllVendorPos.filter(mvp =>mvp.vendor == uItem.vendor);\n  if(matchedVendorPo.length>0){\n    matchedVendorPo.forEach()\n  }\n})\nreturn items;"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1400,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_pos?filter={\"po_num\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"keys\"][0]}}\"}}",
+        "options": {}
+      },
+      "name": "Get all vendor pos",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1080,
+        280
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_po_items?filter={\"po\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"keys\"][0]}}\"}}&limit=-1",
+        "options": {}
+      },
+      "name": "Get all po items",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1220,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2024-01-29T10:06:34.393Z"
+}
