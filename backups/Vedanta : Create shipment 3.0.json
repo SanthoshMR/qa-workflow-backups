@@ -148,7 +148,7 @@
       "main": [
         [
           {
-            "node": "Function to update hsn",
+            "node": "Function to update gst mismatch",
             "type": "main",
             "index": 0
           }
@@ -284,6 +284,57 @@
         [
           {
             "node": "Get the vendor payments id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for gst mismatch": {
+      "main": [
+        [
+          {
+            "node": "Update status for gstmismatch in shipment",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Function to update hsn",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to update gst mismatch": {
+      "main": [
+        [
+          {
+            "node": "Check for gst mismatch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update status for gstmismatch in shipment": {
+      "main": [
+        [
+          {
+            "node": "Send Email for gst mismatch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email for gst mismatch": {
+      "main": [
+        [
+          {
+            "node": "Function to update hsn",
             "type": "main",
             "index": 0
           }
@@ -687,7 +738,7 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "POST",
-        "url": "={{$node[\"Globals\"].json[\"mozart_dms_url\"]}}/items/sdm_shipment_items",
+        "url": "={{$node[\"Globals\"].json[\"mozart_dms_url\"]}}/items/sdm_shipment_items?fields=*,sdm_po_items_id.*",
         "jsonParameters": true,
         "options": {},
         "bodyParametersJson": "={{$node[\"Function\"].json[\"sdmShipmentItems\"]}}"
@@ -708,13 +759,13 @@
     },
     {
       "parameters": {
-        "functionCode": "let shipmentItems = $node[\"Function\"].json[\"sdmShipmentItems\"];\nlet returnItems =[];\nshipmentItems.forEach(function(item,index){\n  returnItems.push({\n    json: \n      {\n       poItemId : item.sdm_po_items_id,\n       hsn : item.hsn,\n       tax_percentage:item.tax_percentage,\n       uom:item.uom,\n       dms_url : $node[\"Globals\"].json[\"0\"][\"mozart_url\"]\n    }\n  });\n})\n\nreturn returnItems;"
+        "functionCode": "let shipmentItems = $node[\"Function\"].json[\"sdmShipmentItems\"];\nlet mozartItems = $node[\"HTTP Request2\"].json.data;\nlet returnItems =[];\nshipmentItems.forEach(function(item,index){\n  let matchedMozartItem = mozartItems.filter(mItem=>mItem.sdm_po_items_id.id == item.sdm_po_items_id);\n  let gstMisMatch = false;\n  let maxGstMisMatch = false\n  if(matchedMozartItem[0].sdm_po_items_id.tax_percentage !== item.tax_percentage){\n    gstMisMatch=true;\n    if(item.tax_percentage>18){\n      maxGstMisMatch=true\n    }\n  }\n  returnItems.push({\n    json: \n      {\n       poItemId : item.sdm_po_items_id,\n       hsn : item.hsn,\n       tax_percentage:item.tax_percentage,\n       uom:item.uom,\n       dms_url : $node[\"Globals\"].json[\"0\"][\"mozart_url\"],\n       gst_mis_match:gstMisMatch\n    }\n  });\n})\n\nreturn returnItems;"
       },
       "name": "Function to update hsn",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        3880,
+        4240,
         440
       ]
     },
@@ -737,6 +788,10 @@
             {
               "name": "uom",
               "value": "={{$node[\"Function to update hsn\"].json[\"uom\"]}}"
+            },
+            {
+              "name": "gst_mis_match",
+              "value": "={{$node[\"Function to update hsn\"].json[\"gst_mis_match\"]}}"
             }
           ]
         }
@@ -745,7 +800,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        4200,
+        4500,
         440
       ],
       "credentials": {
@@ -763,7 +818,7 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        4660,
+        4820,
         320
       ],
       "disabled": true
@@ -783,7 +838,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        4420,
+        4700,
         440
       ],
       "executeOnce": true
@@ -801,7 +856,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        4880,
+        5040,
         320
       ],
       "credentials": {
@@ -818,7 +873,7 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        4660,
+        4820,
         600
       ]
     },
@@ -956,10 +1011,96 @@
           "name": "Mozart DMS Token"
         }
       }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Function to update gst mismatch\"].json[\"gst_mis_match\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Check for gst mismatch",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        4000,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"mozart_dms_url\"]}}/items/sdm_shipments/{{$node[\"Create shipment in mozart\"].json[\"data\"][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "gst_mismatch",
+              "value": "={{$node[\"Function to update gst mismatch\"].json[\"gst_mis_match\"]}}"
+            },
+            {
+              "name": "max_tax_percentage",
+              "value": "={{$node[\"Function to update gst mismatch\"].json[\"max_gst_mis_match\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update status for gstmismatch in shipment",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        4080,
+        200
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let shipmentItems = $node[\"Function\"].json[\"sdmShipmentItems\"];\nlet mozartItems = $node[\"HTTP Request2\"].json.data;\nlet gstMisMatch = false;\nlet maxGstMisMatch = false;\nshipmentItems.forEach(function(sItem,index){\n  let matchedMozartItem = mozartItems.filter(mItem=>mItem.sdm_po_items_id.id == item.sdm_po_items_id);\n  if(matchedMozartItem[0].sdm_po_items_id.tax_percentage !== item.tax_percentage){\n    gstMisMatch=true;\n    if(item.tax_percentage>18){\n      maxGstMisMatch=true\n    }\n  }\n})\n\nitems[0].json.gst_mis_match=gstMisMatch;\nitems[0].json.max_gst_mis_match=maxGstMisMatch\nreturn items;"
+      },
+      "name": "Function to update gst mismatch",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        3820,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "=ShakeDeal Mozart <sdmozart@shakedeal.com>",
+        "toEmail": "sairam.reddy@shakedeal.com",
+        "subject": "=Shipment created with GST Mismatch for invoice no {{$node[\"Wait for shipment\"].json[\"body\"][\"payload\"][\"invoice_number\"]}}",
+        "html": "=<p>Dear Team</p><br><br>\n<p>A new shipment {{$node[\"Wait for shipment\"].json[\"body\"][\"payload\"][\"invoice_number\"]}} with mismatched GST has been created for PO {{$node[\"Get po_id from mozart\"].json[\"data\"][0][\"id\"]}} by {{$node[\"Get po_id from mozart\"].json[\"data\"][0][\"vendor\"][\"vendor_name\"]}}. Please verify the changed GST %, Vendor invoice for DS and update the ASN number for order processing.</p><br><br>\n<p>Thanks</p>",
+        "options": {}
+      },
+      "name": "Send Email for gst mismatch",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        4240,
+        200
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "7",
+          "name": "AWS SES Creds"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2024-01-16T06:54:34.763Z"
+  "updatedAt": "2024-02-01T13:09:33.929Z"
 }
