@@ -1,0 +1,684 @@
+{
+  "active": false,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get url and token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get url and token": {
+      "main": [
+        [
+          {
+            "node": "Get the amended po",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the amended po": {
+      "main": [
+        [
+          {
+            "node": "Get plants for created items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get all vendor pos": {
+      "main": [
+        [
+          {
+            "node": "Get plant details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get all po items": {
+      "main": [
+        [
+          {
+            "node": "Get all ops",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get plant details": {
+      "main": [
+        [
+          {
+            "node": "Get vendor Details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get plants for created items": {
+      "main": [
+        [
+          {
+            "node": "Get all vendor pos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get vendor Details": {
+      "main": [
+        [
+          {
+            "node": "Get all po items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get all ops": {
+      "main": [
+        [
+          {
+            "node": "Get client po details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "Check for new po",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for new po": {
+      "main": [
+        [
+          {
+            "node": "Create new po's",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Check for new items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create new po's": {
+      "main": [
+        [
+          {
+            "node": "Check for new items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for new items": {
+      "main": [
+        [
+          {
+            "node": "Create new items",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Check for vendor po update",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get client po details": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create new items": {
+      "main": [
+        [
+          {
+            "node": "Check for vendor po update",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for vendor po update": {
+      "main": [
+        [
+          {
+            "node": "Update vendor po's",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update client po details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update vendor po's": {
+      "main": [
+        [
+          {
+            "node": "Update client po details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update client po details": {
+      "main": [
+        [
+          {
+            "node": "Check for vendor panel updates",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for vendor panel updates": {
+      "main": [
+        [
+          {
+            "node": "Function to split vendor po's",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to split vendor po's": {
+      "main": [
+        [
+          {
+            "node": "Call workflow to update vendor po in vPanel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2024-01-29T06:57:13.246Z",
+  "id": "414",
+  "name": "Amended client po",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "amended-client-po",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ],
+      "webhookId": "53cb5638-6f69-4392-8e31-f3464aa16a60"
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "=https://qan8n.shakedeal.com/webhook/get-url",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "client",
+              "value": "=vedanta"
+            },
+            {
+              "name": "env",
+              "value": "=qa"
+            }
+          ]
+        }
+      },
+      "name": "Get url and token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        660,
+        300
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_po_items_ammend?filter={\"po\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"keys\"][0]}}\"}}&limit=-1&fields=id,net_price,gross_price,delivery_date,vendor_po,unit_price,tax_percentage,uom,plant,vendor,hsn,requested_qty,product",
+        "options": {}
+      },
+      "name": "Get the amended po",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        840,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let getAllVendorPos = $node[\"Get all vendor pos\"].json.data;\nlet createdItems = $node[\"Webhook\"].json[\"body\"][\"payload\"][\"po_items\"][\"create\"];\nlet getPlantDetails = $node[\"Get plant details\"].json.data;\nlet getVendorDetails = $node[\"Get vendor Details\"].json.data;\nlet allPoItems = $node[\"Get all po items\"].json.data;\nlet opsAgents = $node[\"Get all ops\"].json.data;\nlet updateVendorPoQuery = \"\";\nlet vendorOps = [\n  {\n    \"vendor_alphabets\":[\"a\",\"b\",\"c\",\"d\",\"e\",\"f\",\"g\",\"h\",\"i\",\"m\",\"n\",\"v\"],\n    \"ops_agent\":\"lalit.mohangouda@shakedeal.com\"\n  },\n  {\n    \"vendor_alphabets\":[\"j\",\"k\",\"l\",\"o\",\"p\",\"q\",\"r\",\"s\",\"t\",\"u\",\"w\",\"y\"],\n    \"ops_agent\":\"manoj.kumar@shakedeal.com\"\n  }\n];\nlet ignorableKeywords = [\"M/S\",\"M/s\",\"m/s\"];\nlet netPoValue = 0;\nlet grossPoValue = 0;\nuniqueArr = Object.create(null),\n    uniqueVendorPlantArr = createdItems.filter(o => {\n        var key = ['plant', 'vendor'].map(k => o[k]).join('|');\n        if (!uniqueArr[key]) {\n            uniqueArr[key] = true;\n            return true;\n        }\n    });\nlet createNewPo = [];\nlet createItems=[];\nlet updateVendorPoDetails = [];\nlet vPanelPoUpdate = [];\n\nlet addedClientNetPoValue = createdItems.reduce((total,obj)=>(parseFloat(obj.unit_price )*parseFloat(obj.requested_qty))+total, 0);\nlet addedClientGrossValue = createdItems.reduce((total,obj)=>((parseFloat(obj.unit_price )*parseFloat(obj.requested_qty))+((parseFloat(obj.unit_price )*parseFloat(obj.requested_qty))*obj.tax_percentage)/100)+total, 0);\nlet updateClientPoDetails = {\n  net_po_value:parseFloat($node[\"Get client po details\"].json.data.net_po_value)+addedClientNetPoValue,\n  po_value:parseFloat($node[\"Get client po details\"].json.data.po_value)+addedClientGrossValue\n};\nlet removeRevisedVendorPos  = getAllVendorPos.filter(vpo=>!vpo.id.split(\"-\")[1].includes(\"R\"));\nconst extractNumericValue = (str) => {\n  const match = str.split(\"-\").join(\"\").match(/\\d+/);\n  return match ? parseInt(match[0], 10) : 0;\n};\n\n// Find the object with the highest 'id' value\nconst maxObject = removeRevisedVendorPos.reduce((maxObj, currentObj) => {\n  const maxValue = extractNumericValue(maxObj.id);\n  const currentValue = extractNumericValue(currentObj.id);  \n  return maxValue > currentValue ? maxObj : currentObj;\n}, removeRevisedVendorPos[0]);\n\nuniqueVendorPlantArr.forEach(function(uItem,index){\n  let matchedVendorPo = allPoItems.filter(pItem =>pItem.vendor == uItem.vendor && pItem.plant == uItem.plant);\n  let getAllVendorPlantItem = createdItems.filter(cItem=>cItem.plant == uItem.plant && cItem.vendor == uItem.vendor);\n  if(matchedVendorPo.length>0){\n    let getVendorPo = getAllVendorPos.filter(po=>po.id == matchedVendorPo[0].vendor_po);\n    let netPoValue =  getAllVendorPlantItem.reduce((total,obj)=>(parseFloat(obj.unit_price )*parseFloat(obj.requested_qty))+total, 0);\n    let poValue = getAllVendorPlantItem.reduce((total,obj)=>((parseFloat(obj.unit_price )*parseFloat(obj.requested_qty))+((parseFloat(obj.unit_price )*parseFloat(obj.requested_qty))*obj.tax_percentage)/100)+total, 0);\n    updateVendorPoDetails.push({\n      vendor_po : matchedVendorPo[0].vendor_po,\n      net_po_value : parseFloat(getVendorPo[0].net_price)+netPoValue,\n      gross_po_value:parseFloat(getVendorPo[0].gross_price)+poValue\n    });\n    if(getVendorPo[0].po_status !== \"draft\" || getVendorPo[0].po_status !== \"open\"){\n      vPanelPoUpdate.push(getVendorPo[0].id);\n    }\n    pushCreateItems(getAllVendorPlantItem,matchedVendorPo[0].vendor_po);\n  }else{\n    let netPoValue =  getAllVendorPlantItem.reduce((total,obj)=>(parseFloat(obj.unit_price )*parseFloat(obj.requested_qty))+total, 0);\n    let poValue = getAllVendorPlantItem.reduce((total,obj)=>((parseFloat(obj.unit_price )*parseFloat(obj.requested_qty))+((parseFloat(obj.unit_price )*parseFloat(obj.requested_qty))*obj.tax_percentage)/100)+total, 0);\n    let matchedPlantDetails = getPlantDetails.filter(plant=>plant.id=uItem.plant);\n    let matchedVendor = getVendorDetails.filter(vendor=>vendor.id == uItem.vendor);\n    let vendorName = matchedVendor[0].vendor_name.trim();\n    let findValue = findNegligibleValue(vendorName,ignorableKeywords);\n    let newVendorPo = `SD${uItem.plant}${maxObject.po_num}-${parseInt(maxObject.id.split(\"-\")[1])+1}`\n    if(findValue !== null){\n      vendorName = vendorName.replace(findValue,\"\").trim();\n    }\n    let ops = [];\n    if(matchedPlantDetails[0].is_alphabatic_wise){\n      let opsId= vendorOps.filter(vOp=>vOp.vendor_alphabets.includes(vendorName[0].toLowerCase()));\n      let matchedOpsAgent = opsAgents.filter(op=>op.operation_agent.email == opsId[0].ops_agent)\n      ops.push({\n        sdm_operation_agents_id:matchedOpsAgent[0].id\n      })\n    }else {\n      let matchedOpsAgent = opsAgents.filter(op=>op.operation_agent.email == matchedPlantDetails[0].poc_emails)\n      ops.push({\n        sdm_operation_agents_id:matchedOpsAgent[0].id\n      })\n    }\n    pushCreateItems(getAllVendorPlantItem,newVendorPo);\n    createNewPo.push({\n      vendor:uItem.vendor,\n      id:newVendorPo,\n      po_num:maxObject.po_num,\n      po_date:maxObject.po_date,\n      net_po_value:netPoValue,\n      po_value:poValue,\n      po_type:maxObject.po_type,\n      po_deliver_date:new Date(getPoDeliveryDate(getAllVendorPlantItem)).toISOString(),\n      sd_billing_address:maxObject.sd_billing_address,\n      consignment_type:maxObject.consignment_type,\n      operation_agents:ops\n    })\n  }\n})\n\nfunction getPoDeliveryDate(poItems){\n   let minVendorPoDate = new Date(\n      Math.min(\n        ...poItems.map(element => {\n          return new Date(element.delivery_date);\n          }),\n        ),\n      );\n    return new Date(minVendorPoDate).toISOString();\n};\nfunction findNegligibleValue(inputString, negligibleArray) {\n  for (const negligibleValue of negligibleArray) {\n    if (inputString.includes(negligibleValue)) {\n      return negligibleValue;\n    }\n  }\n  return null; \n}\n\nfunction pushCreateItems(poItems,vendorPo){\n  poItems.forEach(function(vendorItem,index){\n      let itemNetPrice = vendorItem.requested_qty*vendorItem.unit_price;\n      let itemGrossPrice = itemNetPrice+(itemNetPrice*vendorItem.tax_percentage)/100;\n      createItems.push({\n        product:vendorItem.product,\n        vendor:vendorItem.vendor,\n        net_price:itemNetPrice,\n        gross_price:itemGrossPrice,\n        requested_qty:vendorItem.requested_qty,\n        delivery_date:vendorItem.delivery_date,\n        unit_price:vendorItem.unit_price,\n        po:$node[\"Webhook\"].json[\"body\"][\"keys\"][0].trim(),\n        vendor_po:vendorPo,\n        tax_percentage:vendorItem.tax_percentage,\n        uom:vendorItem.uom,\n        plant:vendorItem.plant,\n        hsn:vendorItem.hsn\n      })\n    }) \n};\nif(updateVendorPoDetails.length>0){\n  updateVendorPoDetails.forEach(function(po,index){\n    updateVendorPoQuery=updateVendorPoQuery+`update sdm_vendor_pos set net_po_value=${po.net_po_value},po_value=${po.gross_po_value} where id='po.vendor_po'`\n  })\n  \n}\n\n\nitems[0].json.remove_revised_vendor_pos=removeRevisedVendorPos;\nitems[0].json.max_object= maxObject;\nitems[0].json.create_new_po = createNewPo;\nitems[0].json.create_items = createItems;\nitems[0].json.update_vendor_po_details=updateVendorPoDetails;\nitems[0].json.update_vendor_po_query=updateVendorPoQuery;\nitems[0].json.update_client_po_details = updateClientPoDetails;\nitems[0].json.vPanel_po_update=vPanelPoUpdate\nreturn items;"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        2060,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_pos?filter={\"_and\":[{\"po_num\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"keys\"][0]}}\"}}]}",
+        "options": {}
+      },
+      "name": "Get all vendor pos",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1180,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_po_items?filter={\"po\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"keys\"][0]}}\"}}&limit=-1",
+        "options": {}
+      },
+      "name": "Get all po items",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1680,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_plants?filter={\"id\":{\"_in\":\"{{$node[\"Get plants for created items\"].json[\"createdPlants\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Get plant details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let createdPlants = $node[\"Webhook\"].json[\"body\"][\"payload\"][\"po_items\"][\"create\"].map(item=>item.plant);\nlet vendors = $node[\"Webhook\"].json[\"body\"][\"payload\"][\"po_items\"][\"create\"].map(item=>item.vendor);\n\nitems[0].json.createdPlants= createdPlants;\nitems[0].json.vendors = vendors;\nreturn items;"
+      },
+      "name": "Get plants for created items",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1020,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendors?filter={\"id\":{\"_in\":\"{{$node[\"Get plants for created items\"].json[\"vendors\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Get vendor Details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1520,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_operation_agents?filter={\"operation_agent\":{\"_nnull\":true}}&limit=-1&fields=*,operation_agent.*",
+        "options": {}
+      },
+      "name": "Get all ops",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1860,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Function\"].json[\"create_new_po\"].length>0?true:false}}"
+            }
+          ]
+        }
+      },
+      "name": "Check for new po",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        2240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_pos",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Function\"].json[\"create_new_po\"]}}"
+      },
+      "name": "Create new po's",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2420,
+        160
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Function\"].json[\"create_items\"].length>0?true:false}}"
+            }
+          ]
+        }
+      },
+      "name": "Check for new items",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        2620,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_po_items",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Function\"].json[\"create_items\"]}}"
+      },
+      "name": "Create new items",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2760,
+        160
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_pos/{{$node[\"Webhook\"].json[\"body\"][\"keys\"][0].trim()}}",
+        "options": {}
+      },
+      "name": "Get client po details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1960,
+        140
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Function\"].json[\"update_vendor_po_details\"].length>0?true:false}}"
+            }
+          ]
+        }
+      },
+      "name": "Check for vendor po update",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        3000,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "={{$node[\"Function\"].json[\"update_vendor_po_query\"]}}",
+        "additionalFields": {}
+      },
+      "name": "Update vendor po's",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        3220,
+        200
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "78",
+          "name": "Vedanta postgres qa"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_pos/{{$node[\"Webhook\"].json[\"body\"][\"keys\"][0]}}",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Function\"].json[\"update_client_po_details\"]}}"
+      },
+      "name": "Update client po details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3460,
+        360
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Function\"].json[\"vPanel_po_update\"].length>0?true:false}}"
+            }
+          ]
+        }
+      },
+      "name": "Check for vendor panel updates",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        3700,
+        360
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "=https://qan8n.shakedeal.com/webhook/update-vendor-po",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "pos",
+              "value": "={{$node[\"Function to split vendor po's\"].json[\"po\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Call workflow to update vendor po in vPanel",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        4020,
+        220
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let vendorPos=$node[\"Function\"].json[\"vPanel_po_update\"];\nlet returnItems =[]\nvendorPos.forEach(function(vPo,index){  \n    returnItems.push({\n    json: {\n       po:vPo,\n    }\n  });\n  \n})\n\nreturn returnItems;"
+      },
+      "name": "Function to split vendor po's",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        3820,
+        220
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2024-02-01T11:36:54.811Z"
+}
