@@ -1,0 +1,1014 @@
+{
+  "active": true,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get url and token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get url and token": {
+      "main": [
+        [
+          {
+            "node": "Get the vendor po from mozart",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the vendor po from mozart": {
+      "main": [
+        [
+          {
+            "node": "Get the po items from mozart",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the vendor po from vpanel": {
+      "main": [
+        [
+          {
+            "node": "Get the po items from vpanel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the po items from mozart": {
+      "main": [
+        [
+          {
+            "node": "Get the vendor po from vpanel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the po items from vpanel": {
+      "main": [
+        [
+          {
+            "node": "Function to get product skus",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to get product skus": {
+      "main": [
+        [
+          {
+            "node": "Get the products from vpanel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the products from vpanel": {
+      "main": [
+        [
+          {
+            "node": "Function to post products",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to post products": {
+      "main": [
+        [
+          {
+            "node": "Check for products to create",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for products to create": {
+      "main": [
+        [
+          {
+            "node": "Create products",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create products": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "Check for new items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for new items": {
+      "main": [
+        [
+          {
+            "node": "Create Items",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Check for Delete Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for Delete Items": {
+      "main": [
+        [
+          {
+            "node": "Delete Items",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Check for Update Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for Update Items": {
+      "main": [
+        [
+          {
+            "node": "Update Items",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get contact details based on plant",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete Items": {
+      "main": [
+        [
+          {
+            "node": "Check for Update Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to create po": {
+      "main": [
+        [
+          {
+            "node": "Get the PO pdf",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Items": {
+      "main": [
+        [
+          {
+            "node": "Get contact details based on plant",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get contact details based on plant": {
+      "main": [
+        [
+          {
+            "node": "Update po details in vpanel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the PO pdf": {
+      "main": [
+        [
+          {
+            "node": "Function to get binary data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload PO in vpanel": {
+      "main": [
+        [
+          {
+            "node": "Update title in vpanel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Move Binary Data": {
+      "main": [
+        [
+          {
+            "node": "Upload PO in vpanel",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Upload PO in mozart",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload PO in mozart": {
+      "main": [
+        [
+          {
+            "node": "Update title in mozart",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update title in vpanel": {
+      "main": [
+        [
+          {
+            "node": "Wait for file upload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update title in mozart": {
+      "main": [
+        [
+          {
+            "node": "Wait for file upload",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Function to get binary data": {
+      "main": [
+        [
+          {
+            "node": "Move Binary Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait for file upload": {
+      "main": [
+        [
+          {
+            "node": "Construct obj for sending mail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Construct obj for sending mail": {
+      "main": [
+        [
+          {
+            "node": "Send mail to vendor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Items": {
+      "main": [
+        [
+          {
+            "node": "Check for Delete Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update po details in vpanel": {
+      "main": [
+        [
+          {
+            "node": "Function to create po",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2024-01-31T12:57:30.490Z",
+  "id": "415",
+  "name": "V : Update Vendor Po in vendor panel and send mail to vendor",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "update-vendor-po",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        440,
+        300
+      ],
+      "webhookId": "53c8da45-154a-4241-9490-5814650fa91c"
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "=https://qan8n.shakedeal.com/webhook/get-url",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "client",
+              "value": "=vedanta"
+            },
+            {
+              "name": "env",
+              "value": "=qa"
+            }
+          ]
+        }
+      },
+      "name": "Get url and token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        620,
+        300
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_pos/{{$node[\"Webhook\"].json[\"body\"][\"po\"]}}?fields=*,vendor.*,sd_billing_address.*,operation_agents.sdm_operation_agents_id.operation_agent.*",
+        "options": {}
+      },
+      "name": "Get the vendor po from mozart",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        820,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_vendor_pos?filter={\"po_number\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"po\"]}}\"}}&sort=-date_created&limit=1",
+        "options": {}
+      },
+      "name": "Get the vendor po from vpanel",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1220,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let mozartItems = $node[\"Get the po items from mozart\"].json.data;\nlet vpanelItems = $node[\"Get the po items from vpanel\"].json.data;\nlet mozartvendorPoDetails = $node[\"Get the vendor po from mozart\"].json.data;\nlet vPanelPoDetails = $node[\"Get the vendor po from vpanel\"].json.data;\nlet cratedVpanelProducts = $node[\"Function to post products\"].json[\"create_products\"].length>0?$node[\"Create products\"].json.data:[];\nlet existingVpanelProducts = $node[\"Get the products from vpanel\"].json.data;\nlet vPanelProducts = [...cratedVpanelProducts,...existingVpanelProducts];\nlet createItems = [];\nlet deleteItemsQuery = \"\";\nlet updateItemsQuery = \"\";\nlet createdItemsQuery = \"INSERT INTO sdv_vendor_pos_sdv_products (sdv_products_id,sdv_vendor_pos_id,req_qty,rate,sub_total,product_total,po_items_id,tax_percentage,hsn,uom) VALUES \"\n\n\nif(mozartItems.length>vpanelItems.length){\n  let resultFilter = \n   mozartItems.filter(mItem=>\n     !vpanelItems.some(\n      data=> data.po_items_id === mItem.id \n    )\n  );\n  resultFilter.forEach(function(rItem,index){\n    let matchedProduct = vPanelProducts.filter(vProd=>vProd.product_code == rItem.product.id);\n    createItems.push({\n      sdv_products_id:matchedProduct[0].id,\n      sdv_vendor_pos_id:vPanelPoDetails[0].id,\n      hsn:rItem.hsn,\n      tax_percentage:rItem.tax_percentage,\n      uom:rItem.uom,\n      product_total:mozartvendorPoDetails.po_type == \"routing\"?parseFloat(rItem.gross_price)/1.02:rItem.gross_price,\n      rate:mozartvendorPoDetails.po_type == \"routing\"?parseFloat(rItem.unit_price)/1.02:rItem.unit_price,\n      sub_total:mozartvendorPoDetails.po_type == \"routing\"?parseFloat(rItem.net_price)/1.02:rItem.net_price,\n      req_qty:rItem.requested_qty,\n      po_items_id:rItem.id\n    })\n  })\n}else if(mozartItems.length<vpanelItems.length){\n  let resultFilter = \n   vpanelItems.filter(vItem=>\n     !mozartItems.some(\n      data=> data.id === vItem.po_items_id \n    )\n  );\n  resultFilter.forEach(function(rItem,index){\n    deleteItemsQuery=deleteItemsQuery+`delete from sdv_vendor_pos_sdv_products where id='${rItem.id}'`\n  })\n}\nmozartItems.forEach(function(mItem,index){\n  let productTotal=mozartvendorPoDetails.po_type == \"routing\"?parseFloat(mItem.gross_price)/1.02:mItem.gross_price;\n  let rate=mozartvendorPoDetails.po_type == \"routing\"?parseFloat(mItem.unit_price)/1.02:mItem.unit_price;\n  let subTotal=mozartvendorPoDetails.po_type == \"routing\"?parseFloat(mItem.net_price)/1.02:mItem.net_price; \n  updateItemsQuery=updateItemsQuery+`update sdv_vendor_pos_sdv_products set hsn='${mItem.hsn}',tax_percentage=${mItem.tax_percentage},uom='${mItem.uom}',product_total=${productTotal},rate=${rate},sub_total=${subTotal},req_qty=${mItem.requested_qty} where po_items_id='${mItem.id}' and sdv_vendor_pos_id='${vPanelPoDetails[0].id}';`\n});\n\ncreateItems.forEach(function(product,index){\n  let productValues = `(${product.sdv_products_id},${product.sdv_vendor_pos_id},${product.req_qty},${product.rate},${product.sub_total},${product.product_total},'${product.po_items_id}',${product.tax_percentage},${product.hsn?product.hsn:''},'${product.uom}')`;\n  if(createItems.length>1){\n    createdItemsQuery+=productValues+\",\";\n  }else{\n    createdItemsQuery+=productValues;\n  }\n  \n})\n\n\nitems[0].json.create_items = createItems;\nitems[0].json.delete_items_query=deleteItemsQuery;\nitems[0].json.update_items_query=updateItemsQuery;\nitems[0].json.created_items_query=createdItemsQuery\n\nreturn items;"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        2520,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_po_items?filter={\"vendor_po\":{\"_eq\":\"{{$node[\"Get the vendor po from mozart\"].json[\"data\"][\"id\"]}}\"}}&limit=-1&fields=*,product.*",
+        "options": {}
+      },
+      "name": "Get the po items from mozart",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1020,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_vendor_pos_sdv_products?filter={\"sdv_vendor_pos_id\":{\"_eq\":\"{{$node[\"Get the vendor po from vpanel\"].json[\"data\"][0][\"id\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Get the po items from vpanel",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1420,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let productSkus = $node[\"Get the po items from mozart\"].json.data.map(product=>product.product.id);\n\nitems[0].json.skus= productSkus;\nreturn items;"
+      },
+      "name": "Function to get product skus",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1620,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_products?filter={\"product_code\":{\"_in\":\"{{$node[\"Function to get product skus\"].json[\"skus\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Get the products from vpanel",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1820,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let mozartProducts = $node[\"Get the po items from mozart\"].json.data;\nlet vPanelProducts = $node[\"Get the products from vpanel\"].json.data;\nlet createProducts = [];\n\nlet resultFilter = \n   mozartProducts.filter(product=>\n     !vPanelProducts.some(\n      data=> data.product_code === product.product.id \n    )\n  );\nif(resultFilter.length>0){\n  resultFilter.forEach(function(product,index){\n    createProducts.push({\n      hsn:product.hsn,\n      product_code:product.product.id,\n      description:product.product.description,\n      product_name:product.product.product_name\n    })\n  })\n};\n\nitems[0].json.create_products = createProducts;\nitems[0].json.result_filter= resultFilter;\n\nreturn items;"
+      },
+      "name": "Function to post products",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        2020,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Function to post products\"].json[\"create_products\"].length>0?true:false}}"
+            }
+          ]
+        }
+      },
+      "name": "Check for products to create",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        2220,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_products",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Function to post products\"].json[\"create_products\"]}}"
+      },
+      "name": "Create products",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2320,
+        120
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Function\"].json[\"create_items\"].length>0?true:false}}"
+            }
+          ]
+        }
+      },
+      "name": "Check for new items",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        2780,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Function\"].json[\"delete_items_query\"]?true:false}}"
+            }
+          ]
+        }
+      },
+      "name": "Check for Delete Items",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        3220,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Function\"].json[\"update_items_query\"]?true:false}}"
+            }
+          ]
+        }
+      },
+      "name": "Check for Update Items",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        3580,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "={{$node[\"Function\"].json[\"delete_items_query\"]}}",
+        "additionalFields": {}
+      },
+      "name": "Delete Items",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        3420,
+        140
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "94",
+          "name": "Vendor Panel qa creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "={{$node[\"Function\"].json[\"update_items_query\"]}}",
+        "additionalFields": {}
+      },
+      "name": "Update Items",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        3820,
+        160
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "94",
+          "name": "Vendor Panel qa creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "\nlet poDetails = $node[\"Get the vendor po from mozart\"].json.data;\nlet routing_commission = 1.02;\nlet poItemsData = $node[\"Get the po items from mozart\"].json.data;\nlet plantDetails = $node[\"Get contact details based on plant\"].json.data;\nlet pdfPoItems = [];\nlet taxItems = [];\nlet allPoTaxes = poItemsData.map(pItem =>pItem.tax_percentage);\nlet uniquePoTaxes =[...new Set(allPoTaxes)];\nlet subtotal = poItemsData.reduce((acc, obj) => acc +  parseFloat(obj.net_price), 0);\nlet totalValue = poItemsData.reduce((acc, obj) => acc +  parseFloat(obj.gross_price), 0);\nlet totalPoQty = poItemsData.reduce((acc, obj) => acc +  parseFloat(obj.requested_qty), 0);\nlet transportationChargesHtml = \"\";\nlet otherChargesHtml = \"\";\n\nlet taxType = poDetails.vendor.gstin.slice(0,2) == plantDetails[0].gst.slice(0,2)?\"intrastate\":\"interstate\";\n\nlet ldChargeApplicable =  $node[\"Get the vendor po from mozart\"].json[\"data\"][\"ld_charges_applicable\"];\nlet transportationChargesApplicable = $node[\"Get the vendor po from mozart\"].json[\"data\"][\"transportation_charges_applicable\"];\nlet transportationCharges = $node[\"Get the vendor po from mozart\"].json[\"data\"][\"transportation_charges\"];\nlet otherChargesApplicable = $node[\"Get the vendor po from mozart\"].json[\"data\"][\"other_charges_applicable\"];\nlet otherCharges = $node[\"Get the vendor po from mozart\"].json[\"data\"][\"other_charges\"];\n\nlet payment_terms = $node[\"Get the vendor po from mozart\"].json[\"data\"][\"payment_terms\"]?parseInt($node[\"Get the vendor po from mozart\"].json[\"data\"][\"payment_terms\"]):30;\npayment_terms = payment_terms == 0 ? \"Advance\" : payment_terms + \" Days Credit\";\nlet advanceDescription = $node[\"Get the vendor po from mozart\"].json[\"data\"][\"advance_description\"]\n\nif(transportationChargesApplicable){\n    let splitTransportationCharges = transportationCharges.split(\"\\n\");\n    splitTransportationCharges.forEach(function(charge,index){\n        transportationChargesHtml=transportationChargesHtml+`<p>${charge}</p>`\n    })\n}\nif(otherChargesApplicable){\n    let splitOtherCharges = otherCharges.split(\"\\n\");\n    splitOtherCharges.forEach(function(charge,index){\n        otherChargesHtml=otherChargesHtml+`<p>${charge}</p>`\n    })\n}\n\nlet termsAndConditions = `<p><b>Terms & Conditions<b></p>\n${transportationChargesApplicable?\"\":\"<p>Price basis : FOR - Free on Road</p>\"}\n<p>FOR SITE\nInsurance :\nTaxes : GST Extra @ Actuals\nShipping Instruction : OP COMMERCE INVOICE HAS TO BE ATTACHED TO PRODUCT.\nPayment mode : NEFT/RTGS</p>\n<p>Payment terms : ${payment_terms == \"Advance\" && advanceDescription?advanceDescription:payment_terms}</p><br>\n${transportationChargesApplicable?transportationChargesHtml:\"\"}<br>\n\n${otherChargesApplicable?otherChargesHtml:\"\"}<br>\n\n<p>Warranty : The equipment's/spares supplied to us under this Contract shall be warranted against defects in workmanship and material under normal use, service and duty conditions as specified in the Purchase Order, for a period of 12 months from the date of installation or 18 months from the date of supply, whichever is earlier. If any defects are noticed in the equipment during the warranty period, the same shall be intimated to you in writing and the equipment will be sent to you on a freight-to-pay basis. All rectification/replacement will be undertaken at your own cost.</p>\n\n<p>For deliveries through dedicated vehicle at site/inside site of Vedanta Ltd., the below compliances and safety requirements to be adhered-to by the transporters carrying the material.</p>\n<p>a) All the legal documents pertaining to the vehicle namely Vehicle Insurance, Registration certificate, Pollution certificate etc in which dispatch is being done to be valid.</p><br>\n<p>b) The driver should possess valid driving license w.r.t the type of vehicle he has arrived inside the premises with the material.</p><br>\n<p>c) The vehicle carrying the material to be compulsorily equipped with reverse horn & reverse camera which should be in working condition.</p><br>\n\n${ldChargeApplicable?\"<p>LD clause # Applicable as below</p>\":\"<p>LD clause # not Applicable</p>\"}\n${ldChargeApplicable?\"<p>LD Clause: In the event you fail to supply the material within the time specified in the contract, you shall pay to us penalty @ 0.5% of the value of the contract for each weeks delay and part thereof. However, such payment shall not exceed 5% of the total value of the contract. We may, without prejudice to any other method of recovery, deduct an amount of such damages from any monies due or which may become due to you.<p>\":\"\"}\n\n<p>OP Commerce Online Pvt. Ltd. stands as an aggregator in the Procurement & Stores sector for Vedanta Ltd. For Vendor payments we solely depend on payments received from Vedanta Ltd. post adherence to all procurement and billing procedures. However, payments will be done by us to our Source vendors as per the Payment terms mentioned on the face page of this Contract agreement mentioned above on a case to case basis. But during occurrences of Force Majeure or any other rare/seldom circumstances payment will be made on Paid-when-Paid basis</p>\n\n<p>Do not dispatch consignment through DTDC, Trackon, Maruti or Professional Couriers as the don't supply any consignments to Goa on door delivery basis. Kindly prefer Bluedart, TCI Express, TCI Freight, VRL, ACPL or Deccan Queen Transport to book for door delivery basis.</p>\n`\npoItemsData.forEach(function(pItem,index){\n    let itemUnitPrice = poDetails.po_type==\"routing\"?pItem[\"unit_price\"]/routing_commission:parseFloat(pItem.unit_price);\n    let itemNetPrice = pItem.requested_qty*itemUnitPrice;\n    let itemGrossPrice = itemNetPrice+(itemNetPrice*pItem.tax_percentage)/100;\n    pdfPoItems.push({\n        product :`${pItem.product.product_name}<br>${pItem.product.description}`,\n        product_code:pItem.product.id,\n        hsn:pItem.hsn,\n        quantity:`${pItem.requested_qty.toFixed(2)} ${pItem.uom}`,\n        unit_price:parseFloat(itemUnitPrice).toFixed(2),\n        sgst_tax_percentage:taxType==\"intrastate\"?(pItem.tax_percentage)/2:0,\n        cgst_tax_percentage:taxType==\"intrastate\"?(pItem.tax_percentage)/2:0,\n        sgst_tax_value:taxType==\"intrastate\"?((itemGrossPrice - itemNetPrice)/2).toFixed(2):0,\n        cgst_tax_value:taxType==\"intrastate\"?((itemGrossPrice - itemNetPrice)/2).toFixed(2):0,\n        igst_tax_percentage:taxType==\"interstate\"?pItem.tax_percentage:0,\n        igst_tax_value:taxType==\"interstate\"?(itemGrossPrice-itemNetPrice).toFixed(2):0,\n        subtotal:itemNetPrice.toFixed(2)\n    })\n});\n\nuniquePoTaxes.forEach(function(tax,index){\n    let getAllTaxes = poItemsData.filter(pItem=>pItem.tax_percentage == tax);\n    const taxValue = getAllTaxes.reduce((acc, obj) => acc + (parseFloat(obj.gross_price) - parseFloat(obj.net_price)), 0);\n    let poTypeTaxValue = poDetails.po_type==\"routing\"?taxValue/routing_commission:taxValue;\n    if(taxType == \"intrastate\"){\n        taxItems.push(\n            {\n                tax :`CGST (${tax/2}%)`,\n                amount:(poTypeTaxValue/2).toFixed(2)\n            },\n            {\n                tax :`SGST (${tax/2}%)`,\n                amount:(poTypeTaxValue/2).toFixed(2)\n            }\n        )\n    }else{\n        taxItems.push(\n            {\n                tax :`IGST (${tax}%)`,\n                amount:(poTypeTaxValue).toFixed(2)\n            }\n        )\n    }\n})\n\nconst options = { day: '2-digit', month: '2-digit', year: 'numeric' };\n\nlet delivery_date = new Intl.DateTimeFormat('en-IN', options).format(new Date(poDetails.po_deliver_date)).replace(/\\//g,\"-\");\nlet po_date = new Intl.DateTimeFormat('en-IN', options).format(new Date(poDetails.po_date)).replace(/\\//g,\"-\");\n  \nlet invoiceObj={\n    security_key:\"6f34f84465f9a02\",\n    po_data:{\n        po_number:poDetails.id,\n        delivery_date:delivery_date,\n        po_date:po_date,\n        reference_number:poDetails.po_num,\n        place_of_supply:`${plantDetails[0].destination_of_supply} (${plantDetails[0].gst.slice(0,2)})`,\n        company_data:{\n            name:\"Opcommerce Online Private Limited\",\n            gstin:poDetails.sd_billing_address.gstin,\n            address:poDetails.sd_billing_address.address,\n            email:\"accounts@shakedeal.com\"\n        },\n        vendor:{\n            email:poDetails.vendor.id,\n            gstin:poDetails.vendor.gstin,\n            company_name:poDetails.vendor.vendor_company?poDetails.vendor.vendor_company:poDetails.vendor.vendor_name,\n            phone:poDetails.vendor.vendor_phone,\n            address:poDetails.vendor.vendor_address,\n            delivery_company_name:plantDetails[0].company_name,\n            delivery_company_address:plantDetails[0].delivery_address,\n        },\n        tax_type:taxType,\n        po_items:pdfPoItems,\n        tax_items:taxItems,\n        total_items:totalPoQty.toFixed(2),\n        notes:\"<p><b>Notes</b></p><p>We must be notified 4 hours before dispatch in order to generate ASN and Tax invoices, which are required for goods receipt and without which materials will not be allowed inside the Material gate by security. For order dispatch related queries E-mail:vedantaiob.ops@shakedeal.com </p>\",\n        subtotal:poDetails.po_type==\"routing\"?(subtotal/routing_commission).toFixed(2):subtotal.toFixed(2),\n        total_value:poDetails.po_type==\"routing\"?(totalValue/routing_commission).toFixed(2):totalValue.toFixed(2),\n        terms_conditions:termsAndConditions\n    }\n}\n\n\nitems[0].json.invoiceObj= invoiceObj\nreturn items\n"
+      },
+      "name": "Function to create po",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        4240,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "=https://sdpdf.shakedeal.com/po-pdf",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Function to create po\"].json[\"invoiceObj\"]}}"
+      },
+      "name": "Get the PO pdf",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        4420,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_plants?filter={\"id\":{\"_eq\":\"{{$node[\"Get the po items from mozart\"].json[\"data\"][0][\"plant\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Get contact details based on plant",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        3960,
+        340
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let binaries = {}\nconst bufferString = $node[\"Get the PO pdf\"].json.pdf_data\nconst bufferData = Buffer.from(bufferString, 'base64') // Replace 'YourBufferStringHere' with your actual buffer data\n\n\n\n\n\nconst binaryObject = {\n  fileName : \"data.pdf\",\n  data: bufferData.toString('base64'), // Convert buffer data to base64 for storage\n  mimeType: 'application/pdf' // Set the MIME type to indicate binary data\n};\nlet extension = \"pdf\"\n binaries[`data_0.${extension}`] = binaryObject\n\nreturn [{\n    binary: binaries\n}];\n\n"
+      },
+      "name": "Function to get binary data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        4660,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/files",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {
+          "bodyContentType": "multipart-form-data"
+        },
+        "sendBinaryData": true,
+        "binaryPropertyName": "=input_file:data_0.pdf"
+      },
+      "name": "Upload PO in vpanel",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        4980,
+        40
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "setAllData": false,
+        "sourceKey": "data_0.pdf",
+        "options": {
+          "keepSource": true,
+          "keepAsBase64": true
+        }
+      },
+      "name": "Move Binary Data",
+      "type": "n8n-nodes-base.moveBinaryData",
+      "typeVersion": 1,
+      "position": [
+        4920,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/files",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {
+          "bodyContentType": "multipart-form-data"
+        },
+        "sendBinaryData": true,
+        "binaryPropertyName": "=input_file:data_0.pdf"
+      },
+      "name": "Upload PO in mozart",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        5000,
+        560
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "wait"
+      },
+      "name": "Wait for file upload",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 1,
+      "position": [
+        5280,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/files/{{$node[\"Upload PO in vpanel\"].json[\"data\"][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "title",
+              "value": "={{$node[\"Get the vendor po from mozart\"].json[\"data\"][\"id\"]}}"
+            },
+            {
+              "name": "filename_download",
+              "value": "={{$node[\"Get the vendor po from mozart\"].json[\"data\"][\"id\"]+\".pdf\"}}"
+            }
+          ]
+        }
+      },
+      "name": "Update title in vpanel",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        5180,
+        40
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/files/{{$node[\"Upload PO in mozart\"].json[\"data\"][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "title",
+              "value": "={{$node[\"Get the vendor po from mozart\"].json[\"data\"][\"id\"]}}"
+            },
+            {
+              "name": "filename_download",
+              "value": "={{$node[\"Get the vendor po from mozart\"].json[\"data\"][\"id\"]+\".pdf\"}}"
+            }
+          ]
+        }
+      },
+      "name": "Update title in mozart",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        5180,
+        560
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let poNumber = $node[\"Get the vendor po from mozart\"].json[\"data\"].id;\nlet poDate = $node[\"Get the vendor po from mozart\"].json[\"data\"].po_date;\nlet poTotal =$node[\"Get the vendor po from mozart\"].json[\"data\"].po_value;\nlet ccMailIds = $node[\"Get the vendor po from mozart\"].json.data.vendor.extra_cc_mail_ids?$node[\"Get the vendor po from mozart\"].json.data.vendor.extra_cc_mail_ids.map(cc=>cc.email):[];\nlet toMailIds = $node[\"Get the vendor po from mozart\"].json.data.vendor.extra_to_mail_ids?$node[\"Get the vendor po from mozart\"].json.data.vendor.extra_to_mail_ids.map(to=>to.email):[];\nlet vendorName = $node[\"Get the vendor po from mozart\"].json[\"data\"][\"vendor\"][\"vendor_name\"];\nlet fileId = $node[\"Upload PO in mozart\"].json[\"data\"][\"id\"];\nlet operationAgentEmails = $node[\"Get the vendor po from mozart\"].json[\"data\"].operation_agents.map(agent=>agent.sdm_operation_agents_id.operation_agent.email);\nlet operationAgentNames = $node[\"Get the vendor po from mozart\"].json[\"data\"].operation_agents.map(agent=>agent.sdm_operation_agents_id.operation_agent.first_name);\nlet allCcEmails = [...ccMailIds,...operationAgentEmails];\ntoMailIds.push($node[\"Get the vendor po from mozart\"].json[\"data\"][\"vendor\"][\"id\"].trim());\nallCcEmails.push(\"vedantaiob.ops@shakedeal.com\");\nlet mailObj={\n  po_number : poNumber,\n  po_date : poDate,\n  po_total : poTotal,\n  cc_mail_ids : allCcEmails,\n  to_mail_ids:toMailIds,\n  vendor_name:vendorName,\n  file_id:fileId,\n  operation_agent_emails:operationAgentEmails,\n  operation_agent_names:operationAgentNames,\n  po_status:$node[\"Get the vendor po from vpanel\"].json.data[0].vendor_po_status\n}\n\nitems[0].json.mail_obj = mailObj;\nreturn items;"
+      },
+      "name": "Construct obj for sending mail",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        5480,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "=https://qan8n.shakedeal.com/webhook/send-vendor-po-mail",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Construct obj for sending mail\"].json.mail_obj}}"
+      },
+      "name": "Send mail to vendor",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        5680,
+        340
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "={{$node[\"Function\"].json[\"created_items_query\"]}}",
+        "additionalFields": {}
+      },
+      "name": "Create Items",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        3000,
+        160
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "94",
+          "name": "Vendor Panel qa creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_vendor_pos/{{$node[\"Get the vendor po from vpanel\"].json[\"data\"][0][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "po_value",
+              "value": "={{$node[\"Get the vendor po from mozart\"].json[\"data\"][\"po_value\"]}}"
+            },
+            {
+              "name": "po_date",
+              "value": "={{$node[\"Get the vendor po from mozart\"].json[\"data\"][\"po_date\"]}}"
+            },
+            {
+              "name": "po_delivery_date",
+              "value": "={{$node[\"Get the vendor po from mozart\"].json[\"data\"][\"po_deliver_date\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Update po details in vpanel",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        4120,
+        160
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2024-02-01T13:19:02.959Z"
+}
