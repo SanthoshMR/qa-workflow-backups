@@ -77,6 +77,28 @@
           }
         ]
       ]
+    },
+    "Create sdm_orders_sdm_shipments": {
+      "main": [
+        [
+          {
+            "node": "Check for gst mismatch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for gst mismatch": {
+      "main": [
+        [
+          {
+            "node": "Call workflow to update prices",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2023-05-05T05:13:34.508Z",
@@ -291,10 +313,58 @@
         }
       },
       "disabled": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Get the shipment\"].json[\"data\"][\"gst_mismatch\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Check for gst mismatch",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1940,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "=https://qan8n.shakedeal.com/webhook/gst-mismatch",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "shipment",
+              "value": "={{$node[\"Get the shipment\"].json[\"data\"][\"id\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Call workflow to update prices",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2080,
+        160
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-07-13T11:38:17.893Z"
+  "updatedAt": "2024-02-05T05:56:16.935Z"
 }
