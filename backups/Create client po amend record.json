@@ -55,6 +55,17 @@
           }
         ]
       ]
+    },
+    "Create amend po record": {
+      "main": [
+        [
+          {
+            "node": "Create history",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2024-01-29T05:59:34.709Z",
@@ -193,10 +204,39 @@
           "name": "Mozart DMS Token"
         }
       }
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "=https://qan8n.shakedeal.com/webhook/amended-po-history",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "po",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"keys\"][0]}}"
+            }
+          ]
+        }
+      },
+      "name": "Create history",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1740,
+        300
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2024-01-31T09:02:47.557Z"
+  "updatedAt": "2024-02-06T12:10:03.848Z"
 }
