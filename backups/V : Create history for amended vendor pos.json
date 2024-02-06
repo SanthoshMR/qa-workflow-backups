@@ -1,0 +1,171 @@
+{
+  "active": true,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get url and token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get url and token": {
+      "main": [
+        [
+          {
+            "node": "Get the vendor po",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the vendor po": {
+      "main": [
+        [
+          {
+            "node": "Function to create history",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to create history": {
+      "main": [
+        [
+          {
+            "node": "Create history",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2024-02-05T11:11:26.190Z",
+  "id": "417",
+  "name": "V : Create history for amended vendor pos",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "amended-vendor-po-history",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        480,
+        300
+      ],
+      "webhookId": "fac82268-f33b-4e7e-a629-4ae06ea2248a"
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "=https://qan8n.shakedeal.com/webhook/get-url",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "client",
+              "value": "=vedanta"
+            },
+            {
+              "name": "env",
+              "value": "=qa"
+            }
+          ]
+        }
+      },
+      "name": "Get url and token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        680,
+        300
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_pos/{{$node[\"Webhook\"].json[\"body\"][\"po\"]}}?fields=*,po_items.*",
+        "options": {}
+      },
+      "name": "Get the vendor po",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        880,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let vendorPoData = $node[\"Get the vendor po\"].json.data;\n\nlet historyPoItems = [];\nvendorPoData.po_items.forEach(function(pItem,index){\n  historyPoItems.push({\n    id:pItem.id,\n    product:pItem.product,\n    vendor:pItem.vendor,\n    net_price:pItem.net_price,\n    gross_price:pItem.gross_price,\n    requested_qty:pItem.requested_qty,\n    unit_price:pItem.unit_price,\n    po:pItem.po,\n    tax_percentage:pItem.tax_percentage,\n    uom:pItem.uom,\n    plant:pItem.plant,\n    hsn:pItem.hsn\n  })\n});\n\nlet historyVendorPoObj = {\n  vendor_po_number:vendorPoData.id,\n  vendor:vendorPoData.vendor,\n  po_file:vendorPoData.po_file,\n  po_date:vendorPoData.po_date,\n  po_status:vendorPoData.po_status,\n  po_value:vendorPoData.po_value,\n  net_po_value:vendorPoData.net_po_value,\n  payment_terms:vendorPoData.payment_terms,\n  po_deliver_date:vendorPoData.po_deliver_date,\n  ld_charges_applicable:vendorPoData.ld_charges_applicable,\n  transportation_charges_applicable:vendorPoData.transportation_charges_applicable,\n  transportation_charges_amount:vendorPoData.transportation_charges_amount,\n  transportation_charges:vendorPoData.transportation_charges,\n  other_charges_applicable:vendorPoData.other_charges_applicable,\n  other_charges_amount:vendorPoData.other_charges_amount,\n  other_charges:vendorPoData.other_charges,\n  po_items :historyPoItems,\n  vendor_po:vendorPoData.id\n}\n\n\nitems[0].json.historyVendorPoObj=historyVendorPoObj;\nreturn items;"
+      },
+      "name": "Function to create history",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1080,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_po_history",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Function to create history\"].json[\"historyVendorPoObj\"]}}"
+      },
+      "name": "Create history",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1280,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2024-02-06T07:14:12.697Z"
+}
