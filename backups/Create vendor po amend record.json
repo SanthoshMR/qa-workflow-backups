@@ -55,6 +55,17 @@
           }
         ]
       ]
+    },
+    "Create amend po record": {
+      "main": [
+        [
+          {
+            "node": "Create vendor po history",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2024-01-08T10:20:35.964Z",
@@ -193,10 +204,39 @@
           "name": "Mozart DMS Token"
         }
       }
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "=https://qan8n.shakedeal.com/webhook/amended-vendor-po-history",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "po",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"keys\"][0]}}"
+            }
+          ]
+        }
+      },
+      "name": "Create vendor po history",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1760,
+        320
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2024-01-31T09:02:33.948Z"
+  "updatedAt": "2024-02-06T07:18:08.209Z"
 }
