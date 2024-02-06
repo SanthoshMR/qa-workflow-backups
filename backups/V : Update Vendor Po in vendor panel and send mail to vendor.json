@@ -324,7 +324,7 @@
       "main": [
         [
           {
-            "node": "Construct obj for sending mail",
+            "node": "Map po file in mozart",
             "type": "main",
             "index": 0
           }
@@ -358,6 +358,28 @@
         [
           {
             "node": "Function to create po",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Map po file in mozart": {
+      "main": [
+        [
+          {
+            "node": "Map file in vpanel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Map file in vpanel": {
+      "main": [
+        [
+          {
+            "node": "Construct obj for sending mail",
             "type": "main",
             "index": 0
           }
@@ -921,7 +943,7 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        5480,
+        5900,
         340
       ]
     },
@@ -938,7 +960,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        5680,
+        6160,
         340
       ],
       "credentials": {
@@ -1005,10 +1027,68 @@
           "name": "VendorPanel DMS Token"
         }
       }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_pos/{{$node[\"Get the vendor po from mozart\"].json[\"data\"][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "po_file",
+              "value": "={{$node[\"Upload PO in mozart\"].json[\"data\"][\"id\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Map po file in mozart",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        5460,
+        340
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_vendor_pos/{{$node[\"Get the vendor po from vpanel\"].json[\"data\"][0][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "po_file",
+              "value": "={{$node[\"Upload PO in vpanel\"].json[\"data\"][\"id\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Map file in vpanel",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        5680,
+        340
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "51",
+          "name": "VendorPanel DMS Token"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2024-02-01T13:19:02.959Z"
+  "updatedAt": "2024-02-06T06:29:00.618Z"
 }
