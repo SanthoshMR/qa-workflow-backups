@@ -1,0 +1,202 @@
+{
+  "active": false,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get url and token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get url and token": {
+      "main": [
+        [
+          {
+            "node": "Get the po",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to create history": {
+      "main": [
+        [
+          {
+            "node": "Create history",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the po": {
+      "main": [
+        [
+          {
+            "node": "Get the po items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the po items": {
+      "main": [
+        [
+          {
+            "node": "Function to create history",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2024-02-06T07:18:34.929Z",
+  "id": "418",
+  "name": "V : Create history for vedanta po",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "amended-po-history",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        480,
+        300
+      ],
+      "webhookId": "fac82268-f33b-4e7e-a629-4ae06ea2248a"
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "=https://qan8n.shakedeal.com/webhook/get-url",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "client",
+              "value": "=vedanta"
+            },
+            {
+              "name": "env",
+              "value": "=qa"
+            }
+          ]
+        }
+      },
+      "name": "Get url and token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        680,
+        300
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let poData = $node[\"Get the po\"].json.data;\nlet poItems = $node[\"Get the po items\"].json.data;\n\nlet historyPoItems = [];\npoItems.forEach(function(pItem,index){\n  historyPoItems.push({\n    po_items_id:pItem.id,\n    product:pItem.product,\n    vendor:pItem.vendor,\n    net_price:pItem.net_price,\n    gross_price:pItem.gross_price,\n    requested_qty:pItem.requested_qty,\n    unit_price:pItem.unit_price,\n    po:pItem.po,\n    tax_percentage:pItem.tax_percentage,\n    uom:pItem.uom,\n    plant:pItem.plant,\n    hsn:pItem.hsn\n  })\n});\n\nlet historyVendorPoObj = {\n  po_number:poData.id,\n  po_file:poData.po_file,\n  po_date:poData.po_date,\n  po_status:poData.po_status,\n  po_value:poData.po_value,\n  po_type:poData.po_type,\n  net_po_value:poData.net_po_value,\n  po_deliver_date:poData.po_deliver_date,\n  sdm_po_items_history :historyPoItems,\n  po:poData.id\n}\n\n\nitems[0].json.historyVendorPoObj=historyVendorPoObj;\nreturn items;"
+      },
+      "name": "Function to create history",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_pos_history",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Function to create history\"].json[\"historyVendorPoObj\"]}}"
+      },
+      "name": "Create history",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1480,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_pos/{{$node[\"Webhook\"].json[\"body\"][\"po\"]}}?fields=*,po_items.*",
+        "options": {}
+      },
+      "name": "Get the po",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        880,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_po_items?filter={\"po\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"po\"]}}\"}}&limit=-1",
+        "options": {}
+      },
+      "name": "Get the po items",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1060,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2024-02-06T09:58:19.722Z"
+}
