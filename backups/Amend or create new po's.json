@@ -5,7 +5,7 @@
       "main": [
         [
           {
-            "node": "Create vendor po history",
+            "node": "Get url and token",
             "type": "main",
             "index": 0
           }
@@ -307,11 +307,22 @@
         ]
       ]
     },
-    "Create vendor po history": {
+    "Call flow to update po in vpanel": {
       "main": [
         [
           {
-            "node": "Get url and token",
+            "node": "Update file in vedanta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NoOp": {
+      "main": [
+        [
+          {
+            "node": "Update file in vedanta",
             "type": "main",
             "index": 0
           }
@@ -874,33 +885,30 @@
     },
     {
       "parameters": {
-        "authentication": "basicAuth",
-        "requestMethod": "POST",
-        "url": "=https://qan8n.shakedeal.com/webhook/amended-vendor-po-history",
-        "options": {
-          "batchInterval": 5000,
-          "batchSize": 1
-        },
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_pos/{{$node[\"Get the vendor po\"].json.data[0].po_num.id}}",
+        "options": {},
         "bodyParametersUi": {
           "parameter": [
             {
-              "name": "po",
-              "value": "={{$node[\"Webhook\"].json[\"body\"][\"keys\"][0]}}"
+              "name": "po_file",
+              "value": "={{$node[\"Get the amended vendor po\"].json.data[0].vedanta_file}}"
             }
           ]
         }
       },
-      "name": "Create vendor po history",
+      "name": "Update file in vedanta",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        320,
-        100
+        5260,
+        360
       ],
       "credentials": {
-        "httpBasicAuth": {
-          "id": "2",
-          "name": "SD Basic Auth"
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
         }
       }
     }
@@ -910,5 +918,5 @@
   },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2024-02-06T07:17:07.475Z"
+  "updatedAt": "2024-02-07T10:22:12.438Z"
 }
