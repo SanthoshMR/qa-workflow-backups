@@ -187,6 +187,35 @@
       "main": [
         [
           {
+            "node": "Check Vendor Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Vendor Status": {
+      "main": [
+        [
+          {
+            "node": "IF UNIQUE REF ID",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Save Failed Orders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Failed Orders": {
+      "main": [
+        [
+          {
             "node": "IF UNIQUE REF ID",
             "type": "main",
             "index": 0
@@ -427,7 +456,7 @@
         "options": {
           "bodyContentType": "json"
         },
-        "bodyParametersJson": "={\n\t\"required_vouchers\": [\n         {\n           \"sku\": \"{{$node[\"Wait for order\"].json[\"body\"][\"product_code\"]}}\",\n           \"qty\": {{$node[\"Wait for order\"].json[\"body\"][\"quantity\"]}},\n           \"amt\": {{$node[\"Check for gift card amount\"].json[\"data\"][0]?$node[\"Check for gift card amount\"].json[\"data\"][0][\"amount\"]*1:0}}\n          }\n     ],\n\t \"options\": {\n\t \t\"redeemed\": true,\n        \"retrieveIfRedeemed\": true,\n        \"reference_id\":\"{{$node[\"Wait for order\"].json[\"body\"][\"product_code\"]+\"-\"+$node[\"Wait for order\"].json[\"body\"][\"order_id\"]}}\", \n\t \t\"order_id\": {{$node[\"Wait for order\"].json[\"body\"][\"order_id\"]?$node[\"Wait for order\"].json[\"body\"][\"order_id\"]+\"\":null}},\n\t    \"extra\": {\n               \"client\": \" {{$node[\"Wait for order\"].json[\"body\"][\"client\"]}}\"\n\t\t}\t\t\t\n\t }\n}"
+        "bodyParametersJson": "={\n\t\"required_vouchers\": [\n         {\n           \"sku\": \"{{$node[\"Wait for order\"].json[\"body\"][\"product_code\"]}}\",\n           \"qty\": {{$node[\"Wait for order\"].json[\"body\"][\"quantity\"]}},\n           \"amt\": {{$node[\"Check for gift card amount\"].json[\"data\"][0]?$node[\"Check for gift card amount\"].json[\"data\"][0][\"amount\"]*1:0}}\n          }\n     ],\n\t \"options\": {\n\t \t\"redeemed\": true,\n        \"retrieveIfRedeemed\": true,\n        \"reference_id\":\"{{$node[\"Wait for order\"].json[\"body\"][\"product_code\"]+\"-\"+$node[\"Wait for order\"].json[\"body\"][\"order_id\"]}}\", \n\t \t\"order_id\": {{$node[\"Wait for order\"].json[\"body\"][\"order_id\"]?$node[\"Wait for order\"].json[\"body\"][\"order_id\"]+\"\":null}},\n\t    \"extra\": {\n               \"client\": \"{{$node[\"Wait for order\"].json[\"body\"][\"client\"]}}\"\n\t\t}\t\t\t\n\t }\n}"
       },
       "name": "Get Voucher from VPP API",
       "type": "n8n-nodes-base.httpRequest",
@@ -485,8 +514,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1660,
-        760
+        1440,
+        1000
       ],
       "continueOnFail": true
     },
@@ -604,8 +633,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2040,
-        660
+        1740,
+        840
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -614,6 +643,62 @@
         }
       },
       "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Get Voucher from VPP API\"].json[\"0\"][\"orderStatusFromVendor\"]}}",
+              "value2": "=PROCESSING"
+            }
+          ]
+        }
+      },
+      "name": "Check Vendor Status",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1960,
+        840
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_failed_orders",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "reference_number",
+              "value": "={{$node[\"Wait for order\"].json[\"body\"][\"product_code\"]+\"-\"+$node[\"Wait for order\"].json[\"body\"][\"order_id\"]}}"
+            },
+            {
+              "name": "message",
+              "value": "={{$node[\"Get Voucher from VPP API\"].json[\"0\"][\"message\"]}}"
+            },
+            {
+              "name": "vendor_code",
+              "value": "={{$node[\"Get Voucher from VPP API\"].json[\"0\"][\"vendorCode\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Save Failed Orders",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2180,
+        860
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "75",
+          "name": "Vendor Partner Program Zeus QA"
+        }
+      }
     }
   ],
   "settings": {},
@@ -626,5 +711,5 @@
       "updatedAt": "2022-06-27T13:07:10.771Z"
     }
   ],
-  "updatedAt": "2023-11-02T06:11:33.292Z"
+  "updatedAt": "2024-02-08T12:48:42.399Z"
 }
