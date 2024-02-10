@@ -690,7 +690,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let allVendorPos = $node[\"Get all po vendor pos\"].json.data;\nlet netPoValue =  allVendorPos.reduce((total,obj)=>parseFloat(obj.net_po_value)+total, 0);\nlet poValue = allVendorPos.reduce((total,obj)=>parseFloat(obj.po_value )+total, 0);\n\n\n   let minVendorPoDate = new Date(\n      Math.min(\n        ...allVendorPos.map(element => {\n          return new Date(element.po_deliver_date);\n          }),\n        ),\n      );\n\nitems[0].json.delivery_date = new Date(minVendorPoDate).toISOString().split(\"T\")[0];\nitems[0].json.net_value = netPoValue;\nitems[0].json.po_value = poValue;\nreturn items;"
+        "functionCode": "let allVendorPos = $node[\"Get all po vendor pos\"].json.data;\nlet netPoValue =  allVendorPos.reduce((total,obj)=>parseFloat(obj.net_po_value)+total, 0);\nlet poValue = allVendorPos.reduce((total,obj)=>parseFloat(obj.po_value )+total, 0);\n\n\n   let minVendorPoDate = new Date(\n      Math.min(\n        ...allVendorPos.map(element => {\n          return new Date(element.po_deliver_date);\n          }),\n        ),\n      );\n\nitems[0].json.delivery_date = new Date(minVendorPoDate).toISOString().split(\"T\")[0];\nitems[0].json.net_value = allVendorPos[0].po_type==\"routing\"?parseFloat(netPoValue)*1.02:netPoValue;\nitems[0].json.po_value = allVendorPos[0].po_type==\"routing\"?parseFloat(poValue)*1.02:poValue;\nreturn items;"
       },
       "name": "Function to update po date",
       "type": "n8n-nodes-base.function",
@@ -918,5 +918,5 @@
   },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2024-02-07T10:22:12.438Z"
+  "updatedAt": "2024-02-09T09:04:53.642Z"
 }
