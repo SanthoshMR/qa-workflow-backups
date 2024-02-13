@@ -334,6 +334,17 @@
       "main": [
         [
           {
+            "node": "Create history",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create history": {
+      "main": [
+        [
+          {
             "node": "Function to update hsn",
             "type": "main",
             "index": 0
@@ -507,7 +518,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_pos?filter={\"id\":{\"_eq\":\"{{$node[\"Get the po number\"].json[\"data\"][\"po_number\"]}}\"}}",
+        "url": "={{$node[\"Globals\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_pos?filter={\"id\":{\"_eq\":\"{{$node[\"Get the po number\"].json[\"data\"][\"po_number\"]}}\"}}&fields=*,vendor.*",
         "options": {}
       },
       "name": "Get po_id from mozart",
@@ -759,7 +770,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let shipmentItems = $node[\"Function\"].json[\"sdmShipmentItems\"];\nlet mozartItems = $node[\"HTTP Request2\"].json.data;\nlet returnItems =[];\nshipmentItems.forEach(function(item,index){\n  let matchedMozartItem = mozartItems.filter(mItem=>mItem.sdm_po_items_id.id == item.sdm_po_items_id);\n  let gstMisMatch = false;\n  let maxGstMisMatch = false\n  if(matchedMozartItem[0].sdm_po_items_id.tax_percentage !== item.tax_percentage){\n    gstMisMatch=true;\n    if(item.tax_percentage>18){\n      maxGstMisMatch=true\n    }\n  }\n  returnItems.push({\n    json: \n      {\n       poItemId : item.sdm_po_items_id,\n       hsn : item.hsn,\n       tax_percentage:item.tax_percentage,\n       uom:item.uom,\n       dms_url : $node[\"Globals\"].json[\"0\"][\"mozart_url\"],\n       gst_mis_match:gstMisMatch\n    }\n  });\n})\n\nreturn returnItems;"
+        "functionCode": "let shipmentItems = $node[\"Function\"].json[\"sdmShipmentItems\"];\nlet mozartItems = $node[\"HTTP Request2\"].json.data;\nlet returnItems =[];\nshipmentItems.forEach(function(item,index){\n  let matchedMozartItem = mozartItems.filter(mItem=>mItem.sdm_po_items_id.id == item.sdm_po_items_id);\n  let gstMisMatch = false;\n  let maxGstMisMatch = false\n  if(matchedMozartItem[0].sdm_po_items_id.tax_percentage !== item.tax_percentage){\n    gstMisMatch=true;\n    if(item.tax_percentage>18){\n      maxGstMisMatch=true\n    }\n  }\n  returnItems.push({\n    json: \n      {\n       poItemId : item.sdm_po_items_id,\n       hsn : item.hsn,\n       tax_percentage:item.tax_percentage,\n       uom:item.uom,\n       dms_url : $node[\"Globals\"].json[\"0\"][\"mozart_url\"],\n       gst_mis_match:gstMisMatch,\n       old_tax_percentage:matchedMozartItem[0].sdm_po_items_id.tax_percentage !== item.tax_percentage?matchedMozartItem[0].sdm_po_items_id.tax_percentage:null\n    }\n  });\n})\n\nreturn returnItems;"
       },
       "name": "Function to update hsn",
       "type": "n8n-nodes-base.function",
@@ -792,6 +803,10 @@
             {
               "name": "gst_mis_match",
               "value": "={{$node[\"Function to update hsn\"].json[\"gst_mis_match\"]}}"
+            },
+            {
+              "name": "old_tax_percentage",
+              "value": "={{$node[\"Function to update hsn\"].json[\"old_tax_percentage\"]}}"
             }
           ]
         }
@@ -1066,7 +1081,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let shipmentItems = $node[\"Function\"].json[\"sdmShipmentItems\"];\nlet mozartItems = $node[\"HTTP Request2\"].json.data;\nlet gstMisMatch = false;\nlet maxGstMisMatch = false;\nshipmentItems.forEach(function(sItem,index){\n  let matchedMozartItem = mozartItems.filter(mItem=>mItem.sdm_po_items_id.id == item.sdm_po_items_id);\n  if(matchedMozartItem[0].sdm_po_items_id.tax_percentage !== item.tax_percentage){\n    gstMisMatch=true;\n    if(item.tax_percentage>18){\n      maxGstMisMatch=true\n    }\n  }\n})\n\nitems[0].json.gst_mis_match=gstMisMatch;\nitems[0].json.max_gst_mis_match=maxGstMisMatch\nreturn items;"
+        "functionCode": "let shipmentItems = $node[\"Function\"].json[\"sdmShipmentItems\"];\nlet mozartItems = $node[\"HTTP Request2\"].json.data;\nlet gstMisMatch = false;\nlet maxGstMisMatch = false;\nshipmentItems.forEach(function(sItem,index){\n  let matchedMozartItem = mozartItems.filter(mItem=>mItem.sdm_po_items_id.id == sItem.sdm_po_items_id);\n  if(matchedMozartItem[0].sdm_po_items_id.tax_percentage !== sItem.tax_percentage){\n    gstMisMatch=true;\n    if(sItem.tax_percentage>18){\n      maxGstMisMatch=true\n    }\n  }\n})\n\nitems[0].json.gst_mis_match=gstMisMatch;\nitems[0].json.max_gst_mis_match=maxGstMisMatch\nreturn items;"
       },
       "name": "Function to update gst mismatch",
       "type": "n8n-nodes-base.function",
@@ -1097,10 +1112,39 @@
           "name": "AWS SES Creds"
         }
       }
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "=https://qan8n.shakedeal.com/webhook/amended-vendor-po-history",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "po",
+              "value": "={{$node[\"Get po_id from mozart\"].json.data[0].id}}"
+            }
+          ]
+        }
+      },
+      "name": "Create history",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        4460,
+        200
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2024-02-05T10:26:48.741Z"
+  "updatedAt": "2024-02-12T10:02:14.598Z"
 }
