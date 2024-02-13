@@ -172,6 +172,11 @@
             "node": "IF UNIQUE REF ID",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "Check Reference Number",
+            "type": "main",
+            "index": 0
           }
         ],
         [
@@ -198,6 +203,46 @@
       "main": [
         [
           {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Failed Orders": {
+      "main": [
+        [
+          {
+            "node": "IF UNIQUE REF ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "IF1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF1": {
+      "main": [
+        [
+          {
             "node": "IF UNIQUE REF ID",
             "type": "main",
             "index": 0
@@ -212,11 +257,22 @@
         ]
       ]
     },
-    "Save Failed Orders": {
+    "Check Reference Number": {
       "main": [
         [
           {
-            "node": "IF UNIQUE REF ID",
+            "node": "IF2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF2": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request2",
             "type": "main",
             "index": 0
           }
@@ -501,7 +557,7 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        2620,
+        3200,
         460
       ]
     },
@@ -534,7 +590,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        2200,
+        2780,
         480
       ]
     },
@@ -546,7 +602,7 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        2620,
+        3200,
         660
       ]
     },
@@ -589,7 +645,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2400,
+        2980,
         660
       ],
       "credentials": {
@@ -690,8 +746,117 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2180,
+        2280,
         860
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "75",
+          "name": "Vendor Partner Program Zeus QA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_failed_orders?filter={\"reference_number\": {\"_eq\": \"{{$node[\"Wait for order\"].json[\"body\"][\"product_code\"]+\"-\"+$node[\"Wait for order\"].json[\"body\"][\"order_id\"]}}\"}}",
+        "options": {}
+      },
+      "name": "HTTP Request1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2020,
+        1080
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "75",
+          "name": "Vendor Partner Program Zeus QA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"HTTP Request1\"].json[\"data\"].length}}",
+              "operation": "largerEqual",
+              "value2": "={{1}}"
+            }
+          ]
+        }
+      },
+      "name": "IF1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        2240,
+        1100
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_failed_orders?filter={\"reference_number\": {\"_eq\": \"{{$node[\"Wait for order\"].json[\"body\"][\"product_code\"]+\"-\"+$node[\"Wait for order\"].json[\"body\"][\"order_id\"]}}\"}}",
+        "options": {}
+      },
+      "name": "Check Reference Number",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2260,
+        260
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "75",
+          "name": "Vendor Partner Program Zeus QA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Check Reference Number\"].json[\"data\"].length}}",
+              "operation": "largerEqual",
+              "value2": "={{1}}"
+            }
+          ]
+        }
+      },
+      "name": "IF2",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        2500,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_failed_orders/{{$node[\"Get Details From Serial\"].json[\"data\"][0][\"id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "send_email",
+              "value": "=true"
+            }
+          ]
+        }
+      },
+      "name": "HTTP Request2",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2760,
+        240
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -711,5 +876,5 @@
       "updatedAt": "2022-06-27T13:07:10.771Z"
     }
   ],
-  "updatedAt": "2024-02-08T12:48:42.399Z"
+  "updatedAt": "2024-02-12T09:45:19.813Z"
 }
