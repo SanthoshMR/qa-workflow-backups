@@ -1094,7 +1094,7 @@
     {
       "parameters": {
         "fromEmail": "=ShakeDeal Mozart <sdmozart@shakedeal.com>",
-        "toEmail": "sairam.reddy@shakedeal.com,bijan.krishna@shakedeal.com",
+        "toEmail": "sairam.reddy@shakedeal.com,bijan.krishna@shakedeal.com,anjali.jain@shakedeal.com",
         "subject": "=Shipment created with GST Mismatch for invoice no {{$node[\"Wait for shipment\"].json[\"body\"][\"payload\"][\"invoice_number\"]}}",
         "html": "=<p>Dear Team</p><br><br>\n<p>A new shipment {{$node[\"Wait for shipment\"].json[\"body\"][\"payload\"][\"invoice_number\"]}} with mismatched GST has been created for PO {{$node[\"Get po_id from mozart\"].json[\"data\"][0][\"id\"]}} by {{$node[\"Get po_id from mozart\"].json[\"data\"][0][\"vendor\"][\"vendor_name\"]}}. Please verify the changed GST %, Vendor invoice for DS and update the ASN number for order processing.</p><br><br>\n<p>Thanks</p>",
         "options": {}
@@ -1146,5 +1146,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2024-02-12T10:02:14.598Z"
+  "updatedAt": "2024-02-14T09:52:14.998Z"
 }
