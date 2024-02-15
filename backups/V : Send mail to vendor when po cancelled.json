@@ -1,0 +1,170 @@
+{
+  "active": true,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get url and token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get url and token": {
+      "main": [
+        [
+          {
+            "node": "Get the vendor po",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the vendor po": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2024-02-15T09:37:06.548Z",
+  "id": "420",
+  "name": "V : Send mail to vendor when po cancelled",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "cancel-po-mail",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        480,
+        320
+      ],
+      "webhookId": "c3b8bcbb-78e7-4457-870b-3f356bc57316"
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "=https://qan8n.shakedeal.com/webhook/get-url",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "client",
+              "value": "=vedanta"
+            },
+            {
+              "name": "env",
+              "value": "=qa"
+            }
+          ]
+        }
+      },
+      "name": "Get url and token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        680,
+        320
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_pos?filter={\"id\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"po\"]}}\"}}&fields=*,po_num.*,buyers.*,operation_agents.sdm_operation_agents_id.operation_agent.*,vendor.*",
+        "options": {}
+      },
+      "name": "Get the vendor po",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        920,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let operationAgentEmail = $node[\"Get the vendor po\"].json.data[0].operation_agents[0].sdm_operation_agents_id.operation_agent.email;\nlet opAgentName = $node[\"Get the vendor po\"].json.data[0].operation_agents[0].sdm_operation_agents_id.operation_agent.first_name;\nlet extraCcMailIds = $node[\"Get the vendor po\"].json.data[0].vendor.extra_cc_mail_ids.map(mail=>mail.email).join(\",\");\n\nitems[0].json.ops_email = operationAgentEmail;\nitems[0].json.ops_name = opAgentName;\nitems[0].json.extra_cc_mail_ids = extraCcMailIds;\nreturn items;"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1140,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "=vedanta <> sd ops <vedantaiob.ops@shakedeal.com>",
+        "toEmail": "sairam.reddy@shakedeal.com",
+        "subject": "=Cancellation of Purchase Order - PO# {{$node[\"Get the vendor po\"].json[\"data\"][0][\"id\"]}}",
+        "html": "=<p>Dear </p>",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        1360,
+        320
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "7",
+          "name": "AWS SES Creds"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2024-02-15T09:55:53.882Z"
+}
