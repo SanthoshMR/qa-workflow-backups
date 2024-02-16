@@ -282,7 +282,7 @@
       "main": [
         [
           {
-            "node": "Check for update in vpanel",
+            "node": "Send Cancellation mail",
             "type": "main",
             "index": 0
           }
@@ -323,6 +323,17 @@
         [
           {
             "node": "Update file in vedanta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Cancellation mail": {
+      "main": [
+        [
+          {
+            "node": "Check for update in vpanel",
             "type": "main",
             "index": 0
           }
@@ -855,6 +866,10 @@
             {
               "name": "po",
               "value": "={{$node[\"Webhook\"].json[\"body\"][\"keys\"][0]}}"
+            },
+            {
+              "name": "amend_message",
+              "value": "={{$node[\"Get the amended vendor po\"].json.data[0][\"amend_message\"]}}"
             }
           ]
         }
@@ -911,6 +926,35 @@
           "name": "Mozart DMS Token"
         }
       }
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "=https://qan8n.shakedeal.com/webhook/cancel-po-mail",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "po",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"keys\"][0]}}"
+            }
+          ]
+        }
+      },
+      "name": "Send Cancellation mail",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        4660,
+        180
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
     }
   ],
   "settings": {
@@ -918,5 +962,5 @@
   },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2024-02-09T09:04:53.642Z"
+  "updatedAt": "2024-02-16T06:32:50.338Z"
 }
