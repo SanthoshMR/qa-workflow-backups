@@ -665,7 +665,7 @@
         "conditions": {
           "boolean": [
             {
-              "value1": "={{$node[\"Get the latest DC\"].json[\"data\"].length>0?true:false}}",
+              "value1": "={{latestDc[0].shipment_Status==\"awaiting_asn\"?true:false}}",
               "value2": true
             }
           ]
@@ -974,5 +974,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2024-01-05T09:22:03.179Z"
+  "updatedAt": "2024-02-16T10:14:39.595Z"
 }
