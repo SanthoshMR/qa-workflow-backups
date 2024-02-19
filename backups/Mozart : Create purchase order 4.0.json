@@ -859,7 +859,7 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "POST",
-        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_vendor_pos",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_vendor_pos?fields=*,vendor.*",
         "options": {},
         "bodyParametersUi": {
           "parameter": [
@@ -1518,5 +1518,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2024-02-05T13:09:26.211Z"
+  "updatedAt": "2024-02-19T11:51:49.773Z"
 }
