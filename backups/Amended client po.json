@@ -678,6 +678,10 @@
             {
               "name": "po",
               "value": "={{$node[\"Function to split vendor po's\"].json[\"po\"]}}"
+            },
+            {
+              "name": "amend_message",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"amend_message\"]}}"
             }
           ]
         }
@@ -751,5 +755,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2024-02-16T06:42:06.820Z"
+  "updatedAt": "2024-02-19T06:13:58.228Z"
 }
