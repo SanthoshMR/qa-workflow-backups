@@ -152,7 +152,7 @@
         "fromEmail": "=vedanta <> sd ops <vedantaiob.ops@shakedeal.com>",
         "toEmail": "sairam.reddy@shakedeal.com,bijan.krishna@shakedeal.com,anjali.jain@shakedeal.com",
         "subject": "=Cancellation of Purchase Order - PO# {{$node[\"Get the vendor po\"].json[\"data\"][0][\"id\"]}}",
-        "html": "=<p>Dear {{$node[\"Get the vendor po\"].json[\"data\"][0][\"vendor\"][\"vendor_name\"]}}</p><br>\n<p>This mail is to inform you that the Purchase Order {{$node[\"Get the vendor po\"].json[\"data\"][0][\"id\"]}} has been cancelled. Please refrain from processing any further transactions related to this PO.</p><br>\n<p>We apologize for any inconvenience this may cause and appreciate your understanding in this matter.</p><br>\n<p>If you have any questions or require further clarification, please do not hesitate to contact your POC at {{$node[\"Function\"].json[\"ops_email\"]}}.</p><br>\n<p>Best regards,</p>\n<p>Opcommerce Online Private Limited</p>",
+        "html": "=<p>Dear {{$node[\"Get the vendor po\"].json[\"data\"][0][\"vendor\"][\"vendor_name\"]}}</p>\n<p>This mail is to inform you that the Purchase Order {{$node[\"Get the vendor po\"].json[\"data\"][0][\"id\"]}} has been cancelled. Please refrain from processing any further transactions related to this PO.</p>\n<p>We apologize for any inconvenience this may cause and appreciate your understanding in this matter.</p>\n<p>If you have any questions or require further clarification, please do not hesitate to contact your POC at {{$node[\"Function\"].json[\"ops_email\"]}}.</p><br>\n<p>Best regards,</p>\n<p>Opcommerce Online Private Limited</p>",
         "options": {}
       },
       "name": "Send Email",
@@ -173,5 +173,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2024-02-16T06:18:25.016Z"
+  "updatedAt": "2024-02-19T06:18:27.843Z"
 }
