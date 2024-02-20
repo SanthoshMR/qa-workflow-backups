@@ -279,7 +279,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let template = $node[\"Webhook\"].json[\"body\"][\"template_name\"];\nlet request_params = $node[\"Webhook\"].json[\"body\"][\"params\"];\nlet source = $node[\"Webhook\"].json[\"body\"][\"source\"];\nlet message  = \"\"\nlet template_name = \"\"\nlet params = \"\";\nlet whatsapp_template = \"\"\nif(template == \"otp\"){\n  message = `${request_params[0]} is your OTP for account verification on ShakeDeal. The OTP is valid for 30 mins. Please do not share OTP with anyone.\nTeam ShakeDeal`\n  template_name = \"otp\"\n}else if(template == \"sp_award_points_img\"){\n  params = `\"${request_params[0]}\",\"${request_params[1]}\",\"${request_params[2]}\",\"${request_params[3]}\"`\n  template_name = \"sp_award_points_img\"\n}else if(template == \"voucher_delivery\" || template == \"vouchers\"){\n  params = `\"${request_params[0]}\",\"${request_params[1]}\",\"${request_params[2]}\",\"${request_params[3]}\",\"${request_params[4]}\",\"${request_params[5]}\",\"${request_params[6]}\"`\n  template_name = \"voucher_delivery_3\"\n}else if(template == \"voucher_delivery_document\"){\n  params = `\"${request_params[0]}\",\"${request_params[1]}\"`\n  template_name = \"sp_voucher_delivery_document\"\n}else if(template == \"remindermessage_shakepe\"){\n  params = `\"${request_params[0]}\",\"${request_params[1]}\",\"${request_params[2]}\"`\n  template_name = \"remindermessage_shakepe\"\n}else if(template == \"sp_award_points_image\"){\n  params = `\"${request_params[0]}\",\"${request_params[1]}\",\"${request_params[2]}\",\"${request_params[4]}\",\"${request_params[3]}\"`\n  template_name = \"sp_award_points_image\"\n}else if(template == \"otp_whatsapp\"){\n  params = `\"${request_params[0]}\"`\n  template_name = \"otp_whatsapp\"\n  whatsapp_template = \"otp\"\n}\n\nif(!whatsapp_template){\n  whatsapp_template = template_name;\n}\n// params = `\"${request_params[0]}\",\"${request_params[1]}\",\"${request_params[2]}\",\"${request_params[3]}\",\"${request_params[4]}\",\"${request_params[5]}\",\"${request_params[6]}\"`\n// whatsapp_template = template_name = \"vouchers\";\n\nlet sender_id = \"SHAKDL\";\nif(source == 'Santa Store'){\n  sender_id = \"SHAKPE-OTP\";\n}\n\nitems[0].json.template= template;\nitems[0].json.request_params= request_params;\nitems[0].json.message= message;\nitems[0].json.template_name= template_name;\nitems[0].json.whatsapp_template= whatsapp_template;\nitems[0].json.params= params;\nitems[0].json.sender_id = sender_id;\n\nreturn items;"
+        "functionCode": "let template = $node[\"Webhook\"].json[\"body\"][\"template_name\"];\nlet request_params = $node[\"Webhook\"].json[\"body\"][\"params\"];\nlet source = $node[\"Webhook\"].json[\"body\"][\"source\"];\nlet message  = \"\"\nlet template_name = \"\"\nlet params = \"\";\nlet whatsapp_template = \"\";\nlet request_data = $node[\"Webhook\"].json[\"body\"];\n\nconsole.log(request_data);\nif(request_data.type == \"icici\"){\n  const originalDate = new Date(request_data.validTill);\n\n  // const day = originalDate.getUTCDate();\n  // const month = originalDate.getUTCMonth() + 1; // Month is zero-based, so add 1\n  const day = originalDate.getUTCDate().toString().padStart(2, '0');\n  const month = (originalDate.getUTCMonth() + 1).toString().padStart(2, '0'); // Month is zero-based, so add 1\n  const year = originalDate.getUTCFullYear();\n  let hours = originalDate.getUTCHours();\n  const minutes = originalDate.getUTCMinutes();\n  const ampm = hours >= 12 ? 'PM' : 'AM';\n\n  // Convert hours to 12-hour format\n  hours = hours % 12 || 12;\n\n  const formattedDate = `${day}/${month}/${year}`;\n\n  params = `\"${request_data[\"BrandName\"]}\",\"${request_data[\"voucherCode\"]}\",\"${request_data[\"voucherPin\"]}\",\"₹${request_data[\"amountValue\"]}\",\"${formattedDate}\"`\n\n  console.log(\"===========params=======\",params)\n  template_name = \"icici_voucherdetails\"\n}else{\n  if(template == \"otp\"){\n    message = `${request_params[0]} is your OTP for account verification on ShakeDeal. The OTP is valid for 30 mins. Please do not share OTP with anyone.\n  Team ShakeDeal`\n    template_name = \"otp\"\n  }else if(template == \"sp_award_points_img\"){\n    params = `\"${request_params[0]}\",\"${request_params[1]}\",\"${request_params[2]}\",\"${request_params[3]}\"`\n    template_name = \"sp_award_points_img\"\n  }else if(template == \"voucher_delivery\" || template == \"vouchers\"){\n    params = `\"${request_params[0]}\",\"${request_params[1]}\",\"${request_params[2]}\",\"${request_params[3]}\",\"${request_params[4]}\",\"${request_params[5]}\",\"${request_params[6]}\"`\n    template_name = \"voucher_delivery_3\"\n  }else if(template == \"voucher_delivery_document\"){\n    params = `\"${request_params[0]}\",\"${request_params[1]}\"`\n    template_name = \"sp_voucher_delivery_document\"\n  }else if(template == \"remindermessage_shakepe\"){\n    params = `\"${request_params[0]}\",\"${request_params[1]}\",\"${request_params[2]}\"`\n    template_name = \"remindermessage_shakepe\"\n  }else if(template == \"sp_award_points_image\"){\n    params = `\"${request_params[0]}\",\"${request_params[1]}\",\"${request_params[2]}\",\"${request_params[4]}\",\"${request_params[3]}\"`\n    template_name = \"sp_award_points_image\"\n  }else if(template == \"otp_whatsapp\"){\n    params = `\"${request_params[0]}\"`\n    template_name = \"otp_whatsapp\"\n    whatsapp_template = \"otp\"\n  }\n}\n\n\nif(!whatsapp_template){\n  whatsapp_template = template_name;\n}\n// params = `\"${request_params[0]}\",\"${request_params[1]}\",\"${request_params[2]}\",\"${request_params[3]}\",\"${request_params[4]}\",\"${request_params[5]}\",\"${request_params[6]}\"`\n// whatsapp_template = template_name = \"vouchers\";\n\nlet sender_id = \"SHAKDL\";\nif(source == 'Santa Store'){\n  sender_id = \"SHAKPE-OTP\";\n}\n\nitems[0].json.template= template;\nitems[0].json.request_params= request_params;\nitems[0].json.message= message;\nitems[0].json.template_name= template_name;\nitems[0].json.whatsapp_template= whatsapp_template;\nitems[0].json.params= params;\nitems[0].json.sender_id = sender_id;\n\nreturn items;"
       },
       "name": "Function to get params and templates",
       "type": "n8n-nodes-base.function",
@@ -377,6 +377,7 @@
     },
     {
       "parameters": {
+        "authentication": "basicAuth",
         "httpMethod": "POST",
         "path": "send-notification",
         "responseMode": "lastNode",
@@ -389,7 +390,13 @@
         -260,
         160
       ],
-      "webhookId": "90e5cec9-6b9c-46c8-94ec-e5efca641da1"
+      "webhookId": "90e5cec9-6b9c-46c8-94ec-e5efca641da1",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "SD Basic Auth"
+        }
+      }
     },
     {
       "parameters": {
@@ -544,5 +551,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-12-27T06:13:19.419Z"
+  "updatedAt": "2024-02-20T09:45:14.552Z"
 }
