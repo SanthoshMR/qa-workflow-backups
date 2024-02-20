@@ -121,7 +121,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let poData = $node[\"Get the po\"].json.data;\nlet poItems = $node[\"Get the po items\"].json.data;\n\nlet historyPoItems = [];\npoItems.forEach(function(pItem,index){\n  historyPoItems.push({\n    po_items_id:pItem.id,\n    product:pItem.product,\n    vendor:pItem.vendor,\n    net_price:pItem.net_price,\n    gross_price:pItem.gross_price,\n    requested_qty:pItem.requested_qty,\n    unit_price:pItem.unit_price,\n    po:pItem.po,\n    tax_percentage:pItem.tax_percentage,\n    uom:pItem.uom,\n    plant:pItem.plant,\n    hsn:pItem.hsn\n  })\n});\n\nlet historyVendorPoObj = {\n  po_number:poData.id,\n  po_file:poData.po_file,\n  po_date:poData.po_date,\n  po_status:poData.po_status,\n  po_value:poData.po_value,\n  po_type:poData.po_type,\n  net_po_value:poData.net_po_value,\n  po_deliver_date:poData.po_deliver_date,\n  sdm_po_items_history :historyPoItems,\n  po:poData.id\n}\n\n\nitems[0].json.historyVendorPoObj=historyVendorPoObj;\nreturn items;"
+        "functionCode": "let poData = $node[\"Get the po\"].json.data;\nlet poItems = $node[\"Get the po items\"].json.data;\n\nlet historyPoItems = [];\npoItems.forEach(function(pItem,index){\n  historyPoItems.push({\n    po_items_id:pItem.id,\n    product:pItem.product,\n    vendor:pItem.vendor,\n    net_price:pItem.net_price,\n    gross_price:pItem.gross_price,\n    requested_qty:pItem.requested_qty,\n    unit_price:pItem.unit_price,\n    po:pItem.po,\n    tax_percentage:pItem.tax_percentage,\n    uom:pItem.uom,\n    plant:pItem.plant,\n    hsn:pItem.hsn\n  })\n});\n\nlet historyVendorPoObj = {\n  po_number:poData.id,\n  po_file:poData.po_file,\n  po_date:poData.po_date,\n  po_status:poData.po_status.split(\"_\").join(\" \").toUpperCase(),\n  po_value:poData.po_value,\n  po_type:poData.po_type,\n  net_po_value:poData.net_po_value,\n  po_deliver_date:poData.po_deliver_date,\n  sdm_po_items_history :historyPoItems,\n  po:poData.id\n}\n\n\nitems[0].json.historyVendorPoObj=historyVendorPoObj;\nreturn items;"
       },
       "name": "Function to create history",
       "type": "n8n-nodes-base.function",
@@ -198,5 +198,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2024-02-08T10:09:02.684Z"
+  "updatedAt": "2024-02-20T06:12:04.486Z"
 }
