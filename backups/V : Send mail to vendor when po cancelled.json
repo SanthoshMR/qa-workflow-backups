@@ -137,7 +137,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let operationAgentEmail = $node[\"Get the vendor po\"].json.data[0].operation_agents[0].sdm_operation_agents_id.operation_agent.email;\nlet opAgentName = $node[\"Get the vendor po\"].json.data[0].operation_agents[0].sdm_operation_agents_id.operation_agent.first_name;\nlet extraCcMailIds = $node[\"Get the vendor po\"].json.data[0].vendor.extra_cc_mail_ids.map(mail=>mail.email).join(\",\");\n\nitems[0].json.ops_email = operationAgentEmail;\nitems[0].json.ops_name = opAgentName;\nitems[0].json.extra_cc_mail_ids = extraCcMailIds;\nreturn items;"
+        "functionCode": "let operationAgentEmail = $node[\"Get the vendor po\"].json.data[0].operation_agents[0].sdm_operation_agents_id.operation_agent.email;\nlet opAgentName = $node[\"Get the vendor po\"].json.data[0].operation_agents[0].sdm_operation_agents_id.operation_agent.first_name;\nlet extraCcMailIds = $node[\"Get the vendor po\"].json.data[0]?.vendor.extra_cc_mail_ids.map(mail=>mail.email).join(\",\")??\"\";\n\nitems[0].json.ops_email = operationAgentEmail;\nitems[0].json.ops_name = opAgentName;\nitems[0].json.extra_cc_mail_ids = extraCcMailIds;\nreturn items;"
       },
       "name": "Function",
       "type": "n8n-nodes-base.function",
@@ -173,5 +173,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2024-02-19T06:18:27.843Z"
+  "updatedAt": "2024-02-21T06:02:39.423Z"
 }
