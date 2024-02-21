@@ -454,7 +454,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_shipments?filter={\"_and\": [{\"vendor_po_number\":{\"po_number\":{\"_eq\":\"{{$node[\"Get the shipment\"].json[\"data\"][\"vendor_po_num\"][\"id\"]}}\"}}},{\"invoice_number\":{\"_eq\":\"{{$node[\"Get the shipment\"].json[\"data\"][\"invoice_number\"]}}\"}}]}",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_shipments?filter={\"_and\": [{\"vendor_po_number\":{\"po_number\":{\"_eq\":\"{{$node[\"Get the shipment\"].json[\"data\"][\"vendor_po_num\"][\"id\"]}}\"}}},{\"invoice_number\":{\"_eq\":\"{{$node[\"Get the shipment\"].json[\"data\"][\"invoice_number\"]}}\"}},{\"is_dc_invoice\":{\"_eq\":true}}]}",
         "options": {}
       },
       "name": "Get the vendor Invoice from vpanel",
@@ -488,7 +488,8 @@
               "value": "={{$node[\"Upload file in mozart\"].json[\"data\"][\"id\"]}}"
             },
             {
-              "name": "dc_number"
+              "name": "dc_number",
+              "value": "={{$node[\"Function\"].json[\"dcNumber\"]}}"
             }
           ]
         }
@@ -590,7 +591,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_shipments?filter={\"is_dc_invoice\":{\"_eq\":true}}&sort=-date_created&limit=1",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_shipments?filter={\"_and\":[{\"is_dc_invoice\":{\"_eq\":true}},{\"dc_number\":{\"_null\":false}}]}&sort=-date_created&limit=1",
         "options": {}
       },
       "name": "Get the latest DC",
@@ -602,8 +603,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "50",
-          "name": "Mozart DMS Token"
+          "id": "51",
+          "name": "VendorPanel DMS Token"
         }
       }
     }
@@ -611,5 +612,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-12-01T09:24:26.371Z"
+  "updatedAt": "2024-02-21T12:33:39.119Z"
 }
