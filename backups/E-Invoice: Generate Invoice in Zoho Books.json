@@ -469,8 +469,8 @@
       ]
     }
   },
-  "createdAt": "2022-06-28T10:10:51.001Z",
-  "id": "144",
+  "createdAt": "2022-06-29T10:31:32.062Z",
+  "id": "146",
   "name": "E-Invoice: Generate Invoice in Zoho Books",
   "nodes": [
     {
@@ -884,8 +884,8 @@
         "queryParametersUi": {
           "parameter": [
             {
-              "name": "={{$node[\"Function for item objects\"].json[\"0\"][\"sku\"].startsWith(\"QOC\")?\"name\":\"sku\"}}",
-              "value": "={{$node[\"Function for item objects\"].json[\"0\"][\"sku\"].startsWith(\"QOC\")?$node[\"Function for item objects\"].json[\"0\"][\"name\"]:$node[\"Function for item objects\"].json[\"0\"][\"sku\"]}}"
+              "name": "sku",
+              "value": "={{$node[\"Function for item objects\"].json[\"0\"][\"sku\"]}}"
             }
           ]
         }
@@ -926,7 +926,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let list_items = $node[\"wait for order data\"].json[\"body\"][\"line_items\"]\nlet zoho_taxes = $node[\"Get taxes\"].json[\"taxes\"];\nlet search_text  = $node[\"Function for item objects\"].json[\"0\"][\"sku\"].startsWith(\"QOC\")?\"name\":\"sku\"\nlet returnItems = []\nlet resultFilter = \n   list_items.filter(list=>\n      items.some(\n      data=> data.json[\"page_context\"][\"search_criteria\"][0][\"search_text\"] === list.search_text\n    )\n  );\n\n\nresultFilter .forEach(function(obj,index){ \n    let taxes = obj.item_tax_preferences;\n    let igst_tax =  taxes.filter(tax=>tax.tax_name == \"IGST\");\n    let gst_tax = taxes.filter(tax=>tax.tax_name == \"GST\");\n    let igst_tax_name = igst_tax[0].tax_name+parseInt(igst_tax[0].tax_percentage);\n    let gst_tax_name = gst_tax[0].tax_name+parseInt(gst_tax[0].tax_percentage);\n    let igst_taxid_obj = zoho_taxes.filter(tax=>tax.tax_name == igst_tax_name);\n    let gst_taxid_obj = zoho_taxes.filter(tax=>tax.tax_name == gst_tax_name);\n    returnItems.push({\n    json: [{\n       name:obj[\"name\"],\n       item_type :obj[\"item_type\"],\n       sku:obj[\"sku\"],\n       hsn_or_sac:obj[\"hsn_or_sac\"],\n       available_stock:obj.stock,\n       purchase_account_id:\"1763031000000293201\",\n       purchase_account_name: \"Purchase Domestic\",\n       item_type: \"inventory\",\n       \"item_tax_preferences\": [\n          {\n              \"tax_specification\": \"inter\",\n              \"tax_type\": 2,\n              \"tax_name\": igst_tax[0].tax_name+parseInt(igst_tax[0].tax_percentage),\n              \"tax_percentage\": parseInt(igst_tax[0].tax_percentage),\n              \"tax_id\": igst_taxid_obj[0].tax_id\n          },\n          {\n              \"tax_specification\": \"intra\",\n              \"tax_type\": 2,\n              \"tax_name\": gst_tax[0].tax_name+parseInt(gst_tax[0].tax_percentage),\n              \"tax_percentage\": parseInt(gst_tax[0].tax_percentage),\n              \"tax_id\": gst_taxid_obj[0].tax_id\n          }\n        ],\n    }]\n  }); \n})\n\nreturn returnItems ;\n\n"
+        "functionCode": "let list_items = $node[\"wait for order data\"].json[\"body\"][\"line_items\"]\nlet zoho_taxes = $node[\"Get taxes\"].json[\"taxes\"];\n\nlet returnItems = []\nlet resultFilter = \n   list_items.filter(list=>\n      items.some(\n      data=> data.json[\"page_context\"][\"search_criteria\"][0][\"search_text\"] === list.sku\n    )\n  );\n\n\nresultFilter .forEach(function(obj,index){ \n    let taxes = obj.item_tax_preferences;\n    let igst_tax =  taxes.filter(tax=>tax.tax_name == \"IGST\");\n    let gst_tax = taxes.filter(tax=>tax.tax_name == \"GST\");\n    let igst_tax_name = igst_tax[0].tax_name+parseInt(igst_tax[0].tax_percentage);\n    let gst_tax_name = gst_tax[0].tax_name+parseInt(gst_tax[0].tax_percentage);\n    let igst_taxid_obj = zoho_taxes.filter(tax=>tax.tax_name == igst_tax_name);\n    let gst_taxid_obj = zoho_taxes.filter(tax=>tax.tax_name == gst_tax_name);\n    returnItems.push({\n    json: [{\n       name:obj[\"name\"],\n       item_type :obj[\"item_type\"],\n       sku:obj[\"sku\"],\n       hsn_or_sac:obj[\"hsn_or_sac\"],\n       available_stock:obj.stock,\n       purchase_account_id:\"1763031000000293201\",\n       purchase_account_name: \"Purchase Domestic\",\n       item_type: \"inventory\",\n       \"item_tax_preferences\": [\n          {\n              \"tax_specification\": \"inter\",\n              \"tax_type\": 2,\n              \"tax_name\": igst_tax[0].tax_name+parseInt(igst_tax[0].tax_percentage),\n              \"tax_percentage\": parseInt(igst_tax[0].tax_percentage),\n              \"tax_id\": igst_taxid_obj[0].tax_id\n          },\n          {\n              \"tax_specification\": \"intra\",\n              \"tax_type\": 2,\n              \"tax_name\": gst_tax[0].tax_name+parseInt(gst_tax[0].tax_percentage),\n              \"tax_percentage\": parseInt(gst_tax[0].tax_percentage),\n              \"tax_id\": gst_taxid_obj[0].tax_id\n          }\n        ],\n    }]\n  }); \n})\n\nreturn returnItems ;\n\n"
       },
       "name": "Function for create item",
       "type": "n8n-nodes-base.function",
@@ -1556,5 +1556,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-06-30T05:20:08.229Z"
+  "updatedAt": "2022-06-29T10:31:32.062Z"
 }
