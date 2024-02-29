@@ -1,20 +1,8 @@
 {
   "active": false,
-  "connections": {
-    "Start": {
-      "main": [
-        [
-          {
-            "node": "Postgres",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    }
-  },
-  "createdAt": "2024-01-21T10:39:21.473Z",
-  "id": "410",
+  "connections": {},
+  "createdAt": "2024-02-28T15:49:39.627Z",
+  "id": "422",
   "name": "My workflow 30",
   "nodes": [
     {
@@ -29,27 +17,22 @@
     },
     {
       "parameters": {
-        "operation": "executeQuery",
-        "query": "=select shipment_Status from sdv_shipments",
-        "additionalFields": {}
+        "httpMethod": "POST",
+        "path": "d34246fd-55bc-4191-82fe-b010e009bd6f",
+        "options": {}
       },
-      "name": "Postgres",
-      "type": "n8n-nodes-base.postgres",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
         460,
         300
       ],
-      "credentials": {
-        "postgres": {
-          "id": "111",
-          "name": "Vendor panel demo"
-        }
-      }
+      "webhookId": "d34246fd-55bc-4191-82fe-b010e009bd6f"
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2024-01-21T10:39:21.473Z"
+  "updatedAt": "2024-02-28T15:49:39.627Z"
 }
