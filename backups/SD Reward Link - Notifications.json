@@ -96,7 +96,7 @@
       "main": [
         [
           {
-            "node": "Switch1",
+            "node": "Prepare Data",
             "type": "main",
             "index": 0
           }
@@ -157,17 +157,6 @@
         ]
       ]
     },
-    "SMS Templates1": {
-      "main": [
-        [
-          {
-            "node": "Send OTP-Msg",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Email Templates1": {
       "main": [
         [
@@ -184,6 +173,17 @@
         [
           {
             "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Data": {
+      "main": [
+        [
+          {
+            "node": "Switch1",
             "type": "main",
             "index": 0
           }
@@ -450,7 +450,7 @@
           "string": [
             {
               "value1": "={{$node[\"Webhook\"].json[\"body\"][\"type\"]}}",
-              "value2": "=otp"
+              "value2": "=link"
             }
           ]
         }
@@ -512,11 +512,11 @@
             },
             {
               "name": "params",
-              "value": "={{$node[\"Webhook\"].json[\"body\"][\"template_params\"][0]+\"\"}}"
+              "value": "=\"{{$node[\"Prepare Data\"].json[\"brand_name\"]}}\",\"{{$node[\"Webhook\"].json[\"body\"][\"extra_params\"][\"value\"]}}\",\"{{$node[\"Prepare Data\"].json[\"link\"]}}\",\"{{$node[\"Webhook\"].json[\"body\"][\"extra_params\"][\"reference_code_otp\"]}}\",\"{{$node[\"Prepare Data\"].json[\"validity\"]}}\""
             },
             {
               "name": "template_name",
-              "value": "=otp"
+              "value": "=smartlink_shakepe_3"
             },
             {
               "name": "channel",
@@ -555,7 +555,7 @@
       "typeVersion": 1,
       "position": [
         1340,
-        260
+        240
       ],
       "alwaysOutputData": true
     },
@@ -563,7 +563,7 @@
       "parameters": {
         "fromEmail": "={{$node[\"Webhook\"].json[\"body\"][\"email_from\"]}}",
         "toEmail": "={{$node[\"Webhook\"].json[\"body\"][\"email_to\"]}}",
-        "subject": "Reward Link - OTP",
+        "subject": "={{$node[\"Prepare Data\"].json[\"subject\"]}}",
         "text": "=",
         "html": "={{$node[\"Email Templates1\"].json[\"emailBody\"]}}",
         "options": {}
@@ -608,13 +608,13 @@
     },
     {
       "parameters": {
-        "functionCode": "let emailBody = null;\n\nconst templateName = $node[\"Webhook\"].json[\"body\"][\"template_name\"];\nconst templateParams = $node[\"Webhook\"].json[\"body\"][\"template_params\"];\n\nswitch(templateName) {\n  case 'reward-template': {\n    let roughTemplate =  \"Hello, <br /><br /> The OTP to redeem your Voucher is: <br /><br /><strong>{{$par0}}</strong> <br /><br />The OTP is valid for 5 mins. Please do not share OTP with anyone.<br /><br />Regards,<br />{{$par1}}<br />\";\n\n    templateParams.forEach((param, index)=>{\n      roughTemplate = roughTemplate.split(`{{$par${index}}}`).join(param);\n    });\n    \n    emailBody = roughTemplate;\n    break;\n  }\n  case 'reward-link-template': {\n    let roughTemplate =  \"Hello,<br /><br />Click and Access Your Link: <br /><br /><strong>{{$par0}}</strong> <br /> <br /><br /> The OTP to redeem your Voucher is: <br /><br /><strong>{{$par0}}</strong> <br /><br />The OTP is valid for 5 mins. Please do not share OTP with anyone.<br /><br />Regards,<br />{{$par1}}<br />\";\n\n    templateParams.forEach((param, index)=>{\n      roughTemplate = roughTemplate.split(`{{$par${index}}}`).join(param);\n    });\n    \n    emailBody = roughTemplate;\n    break;\n  }\n}\n\nreturn {emailBody};"
+        "functionCode": "let emailBody = null;\n\nconst templateName = $node[\"Webhook\"].json[\"body\"][\"template_name\"];\nconst templateParams = $node[\"Webhook\"].json[\"body\"][\"template_params\"];\nconst params = $node[\"Webhook\"].json[\"body\"][\"extra_params\"];\nconst data = $node[\"Prepare Data\"].json;\n\n\nlet roughTemplate =  '<!DOCTYPE html><head><title>Email Notification</title><style type=\"text/css\">.main-content{width:600px;position:relative;background-color:#fff;border:1px solid #e6e6e6;padding:0 44px 0 46px;text-align:left}.content-table{width:100%;direction:ltr;height:100%;background-color:#fff;font-family:system-ui}.print-width100{width:100%}a:link{text-decoration:none}a:visited{text-decoration:none}a:hover{text-decoration:none}a:active{text-decoration:none}.heading-text{font-size:30px;color:#4e6db5;font-weight:600;font-family:system-ui}.content-text{font-size:16px;color:#4e6db5;font-weight:400;font-family:system-ui}.footer-text{font-size:16px;color:#4e6db5;font-weight:400;text-align:center;vertical-align:middle;font-family:system-ui}.voucher-table{text-align:center;vertical-align:middle;border-collapse:collapse;border:dashed 1.5px #8896bb;border-radius:10px}.dashed-table{border:dashed 1px #d3d7e3}.footer{padding:20px;border-top:1px solid #aebbdd;background-color:#f8fafe;border-radius:0 0 10px 10px}</style></head><body><div class=\"main-content\"><div><table class=\"content-table\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tbody><tr><th align=\"left\" style=\"width:25%\"></th><th><img src=\"https://cdn.shakedeal.com/images/logos/2/ShakeDealLogo.png\" style=\"width:60%\"></th><th align=\"right\" style=\"width:15%\"></th></tr></tbody></table><table class=\"print-width100\"><tbody><tr><th><div style=\"border:1px solid #aebbdd;border-radius:10px\"><div class=\"content\" style=\"padding:20px\"><div><table class=\"content-table\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"padding:5px\"><tbody><tr><th class=\"heading-text\">Your Exclusive Vouchers Await!🎁</th></tr></tbody></table><table class=\"content-table\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"padding:5px;padding-top:30px\"><tbody><tr><th class=\"content-text\">Hey,</th></tr><tr><th>&nbsp;</th></tr><tr><th class=\"content-text\">Here are your voucher details, simply click on the link below and enter the corresponding PIN:</th></tr></tbody></table></div><div style=\"padding-top:20px;padding-left:5px\"><table class=\"content-table voucher-table\" cellpadding=\"5\" cellspacing=\"0\"><thead><tr><th style=\"font-size:14px;color:#4e6db5;width:20%;font-weight:600\" class=\"dashed-table\">Brand Name</th><th style=\"font-size:14px;color:#4e6db5;width:20%;font-weight:600\" class=\"dashed-table\">Value</th><th style=\"font-size:14px;color:#4e6db5;width:20%;font-weight:600\" class=\"dashed-table\">Voucher</th><th style=\"font-size:14px;color:#4e6db5;width:20%;font-weight:600\" class=\"dashed-table\">Pin</th><th style=\"font-size:14px;color:#4e6db5;width:20%;font-weight:600\" class=\"dashed-table\">Expiry Date</th></tr></thead><tbody><tr><th style=\"font-size:14px;color:#4e6db5;font-weight:400\" class=\"dashed-table\">{brand_name}</th><th style=\"font-size:14px;color:#4e6db5;font-weight:400\" class=\"dashed-table\">₹{value}</th><th style=\"font-size:14px;color:#4e6db5;font-weight:400\" class=\"dashed-table\"><a href=\"{link}\"><span style=\"color:#5fbd57\">{reference_number}</span></a></th><th style=\"font-size:14px;color:#4e6db5;font-weight:400\" class=\"dashed-table\">{pin}</th><th style=\"font-size:14px;color:#4e6db5;font-weight:400\" class=\"dashed-table\">{validity}</th></tr></tbody></table></div><div style=\"padding-top:30px\"><table class=\"content-table\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"padding:5px\"><tbody><tr><th class=\"content-text\">The link will expire on {validity}.</th></tr><tr><th class=\"content-text\">Happy shopping!</th></tr></tbody></table></div><div style=\"padding-top:30px\"><table class=\"content-table\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"padding:5px\"><tbody><tr><th class=\"content-text\">Best,</th></tr><tr><th class=\"content-text\">Team ShakePe</th></tr></tbody></table></div></div><div class=\"footer\"><table class=\"content-table\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"padding:5px;background-color:#f8fafe\"><tbody><tr style=\"width:100%\"><th class=\"footer-text\">Need any<br><span style=\"font-weight:700\">ASSISTANCE?</span></th><th class=\"footer-text\">EMAIL<br><a href=\"mailto:support@shakepe.com\"><span style=\"color:#5fbd57\">support@shakepe.com</span></a></th><th class=\"footer-text\">CALL<br><a href=\"tel:+916366532173\"><span style=\"color:#4e6db5;font-weight:700\">+91-6366532173</span></a></th></tr></tbody></table></div></div></th></tr></tbody></table><br><br><br></div></div></body>';\n\nlet brand_name = data.brand_name;\nlet value = params.value;\nlet reference_number = params.link_reference_id;\nlet pin = params.reference_code_otp;\nlet validity = data.validity;\n\nlet link = params.other_site_domain + '?link=' + reference_number;\n\nlet content = roughTemplate.replace(/{brand_name}/g, brand_name)\n              .replace(/{value}/g, value)\n              .replace(/{reference_number}/g, reference_number)\n              .replace(/{pin}/g, pin)\n              .replace(/{link}/g, link)\n              .replace(/{validity}/g, validity);\n\nemailBody = content;\n  \n\n\nreturn {emailBody};"
       },
       "name": "Email Templates1",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1080,
+        1120,
         60
       ]
     },
@@ -658,10 +658,22 @@
           "name": "Notification"
         }
       }
+    },
+    {
+      "parameters": {
+        "functionCode": "let emailBody = null;\n\nconst templateName = $node[\"Webhook\"].json[\"body\"][\"template_name\"];\nconst templateParams = $node[\"Webhook\"].json[\"body\"][\"template_params\"];\nconst params = $node[\"Webhook\"].json[\"body\"][\"extra_params\"];\n\nlet brand = params.brand;\nlet brand_name = \"\";\nif(brand[0]){\n    brand_name = brand[0].brand ? brand[0].brand.name : \"\";\n}\nlet value = params.value;\nlet reference_number = params.link_reference_id;\nlet pin = params.reference_code_otp;\nlet link = params.other_site_domain + '?link=' + reference_number;\n\n// Create a Date object from the input string\nconst inputDate = new Date(params.valid_till);\n\n// Extract day, month, and year components\nconst day = inputDate.getUTCDate();\nconst month = inputDate.getUTCMonth() + 1; // Months are zero-based, so we add 1\nconst year = inputDate.getUTCFullYear();\n\n// Format the date in the desired format (DD-MM-YYYY)\nconst formattedDate = `${day < 10 ? '0' : ''}${day}-${month < 10 ? '0' : ''}${month}-${year}`;\n\nlet subject = \"Resent: Your Exclusive Voucher Await! 🎁\";\nif(params.first_time_send == true){\n    subject = \"Your Exclusive Voucher Await! 🎁\";\n}\n\nlet validity = inputDate;\n\nitems[0].json.link = link;\nitems[0].json.validity = formattedDate;\nitems[0].json.subject = subject;\nitems[0].json.brand_name = brand_name;\n\nreturn items;"
+      },
+      "name": "Prepare Data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        560,
+        180
+      ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2024-02-28T08:48:01.103Z"
+  "updatedAt": "2024-02-29T08:29:30.100Z"
 }
