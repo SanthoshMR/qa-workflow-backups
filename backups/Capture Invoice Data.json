@@ -57,13 +57,13 @@
       ]
     }
   },
-  "createdAt": "2022-11-17T10:19:13.046Z",
-  "id": "236",
+  "createdAt": "2022-09-06T07:05:46.732Z",
+  "id": "176",
   "name": "Capture Invoice Data",
   "nodes": [
     {
       "parameters": {
-        "functionCode": "let invoice_text = $node[\"Wait for invoice Email\"].json[\"text\"];\nlet subject = $node[\"Wait for invoice Email\"].json[\"subject\"];\nlet lines=  invoice_text.split(\"\\n\");\nlet dp_number = lines.find(line=>line.includes(\"Our Unique Reference number (DP number):\")).split(\":\")[1].trim();\nlet invoice_number = lines.find(line=>line.includes(\"Invoice number\")).split(\":\")[1].trim();\nlet payment_status = \"\";\nlet processing_number = \"\";\nif(subject.includes(\"processed\")){\n  payment_status = \"processed\"; \n  processing_number = lines.find(line=>line.includes(\"Invoice Processing number\")).split(\":\")[1].trim();\n}else if(subject.includes(\"rejected\")){\n  payment_status = \"rejected\";\n}else payment_status = \"paymentpending\"\n\nitems[0].json.invoice_text = invoice_text;\nitems[0].json.lines = lines;\nitems[0].json.dp_number = dp_number;\nitems[0].json.invoice_number = invoice_number;\nitems[0].json.payment_status = payment_status;\nitems[0].json.processing_number = processing_number;\nitems[0].json.subject = subject;\nreturn items;"
+        "functionCode": "let invoice_text = $node[\"Wait for invoice Email\"].json[\"text\"];\nlet subject = $node[\"Wait for invoice Email\"].json[\"subject\"];\nlet updatePaymentDueDate = false;\nlet paymentDueDate = \"\";\nlet lines=  invoice_text.split(\"\\n\");\nlet dp_number = lines.find(line=>line.includes(\"Our Unique Reference number (DP number):\")).split(\":\")[1].trim();\nlet invoice_number = lines.find(line=>line.includes(\"Invoice number\")).split(\":\")[1].trim();\nlet payment_status = \"\";\nlet processing_number = \"\";\nif(subject.includes(\"processed\")){\n  payment_status = \"paymentpending\"; \n  processing_number = lines.find(line=>line.includes(\"Invoice Processing number\")).split(\":\")[1].trim();\n}else if(subject.includes(\"rejected\")){\n  payment_status = \"rejected\";\n}else payment_status = \"pn_pending\"\nif(payment_status == \"pn_pending\"){\n  updatePaymentDueDate = true;\n  // Get the current date\n  let today = new Date();\n\n  // Add 7 days to the current date\n  today.setDate(today.getDate() + parseInt(7));\n\n  // Format the resulting date as YYYY-MM-DD\n  let year = today.getFullYear();\n  let month = String(today.getMonth() + 1).padStart(2, '0');\n  let day = String(today.getDate()).padStart(2, '0');\n  let formattedDate = year + '-' + month + '-' + day;\n  paymentDueDate = formattedDate\n\n}\n\nitems[0].json.invoice_text = invoice_text;\nitems[0].json.lines = lines;\nitems[0].json.dp_number = dp_number;\nitems[0].json.invoice_number = invoice_number;\nitems[0].json.payment_status = payment_status;\nitems[0].json.processing_number = processing_number;\nitems[0].json.subject = subject;\nitems[0].json.update_payment_due_date = updatePaymentDueDate;\nitems[0].json.payment_due_date = paymentDueDate;\nreturn items;"
       },
       "name": "Function to update shakedeal payment status",
       "type": "n8n-nodes-base.function",
@@ -92,6 +92,14 @@
             {
               "name": "shakedeal_payment_status",
               "value": "={{$node[\"Function to update shakedeal payment status\"].json[\"payment_status\"]}}"
+            },
+            {
+              "name": "payment_due_date",
+              "value": "={{$node[\"Function to update shakedeal payment status\"].json[\"update_payment_due_date\"]?new Date($node[\"Function to update shakedeal payment status\"].json[\"payment_due_date\"]):$node[\"Get the invoice details\"].json[\"data\"][0][\"payment_due_date\"]}}"
+            },
+            {
+              "name": "payment_aging",
+              "value": "={{$node[\"Function to update shakedeal payment status\"].json[\"update_payment_due_date\"]?\"Due in 7 days\":$node[\"Get the invoice details\"].json[\"data\"][0][\"payment_aging\"]}}"
             }
           ]
         }
@@ -167,7 +175,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_payment_advise?filter={\"order\":{\"shipment\":{\"invoice_number\":{\"_eq\":\"{{$node[\"Function to update shakedeal payment status\"].json.invoice_number}}\"}}}}",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_payment_advise?filter={\"invoice\":{\"id\":{\"_eq\":\"{{$node[\"Function to update shakedeal payment status\"].json.invoice_number}}\"}}}",
         "options": {}
       },
       "name": "Get the invoice details",
@@ -195,8 +203,17 @@
       ]
     }
   ],
-  "settings": {},
+  "settings": {
+    "saveManualExecutions": true
+  },
   "staticData": null,
-  "tags": [],
-  "updatedAt": "2022-11-17T10:19:13.046Z"
+  "tags": [
+    {
+      "id": "5",
+      "name": "Mozart",
+      "createdAt": "2022-05-30T07:16:52.136Z",
+      "updatedAt": "2022-05-30T07:16:52.136Z"
+    }
+  ],
+  "updatedAt": "2023-06-14T02:19:53.753Z"
 }
