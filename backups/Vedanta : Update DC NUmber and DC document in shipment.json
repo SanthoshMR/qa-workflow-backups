@@ -589,7 +589,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_shipments?filter={\"_and\":[{\"is_dc_invoice\":{\"_eq\":true}},{\"dc_number\":{\"_null\":false}}]}&sort=-date_created&limit=1",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_shipments?filter={\"_and\":[{\"is_dc_invoice\":{\"_eq\":true}},{\"dc_number\":{\"_nnull\":true}}]}&sort=-date_created&limit=1",
         "options": {}
       },
       "name": "Get the latest DC",
@@ -610,5 +610,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2024-02-27T10:21:10.994Z"
+  "updatedAt": "2024-03-04T12:45:39.375Z"
 }
