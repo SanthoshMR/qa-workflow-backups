@@ -631,7 +631,7 @@
     },
     {
       "parameters": {
-        "functionCode": "// return items;\nlet poFiles=[];\nlet excelFiles=[];\nitems.forEach((item) => {\n    const fullPath = item.json[\"path\"].split(\"/\");\n    const fileName = fullPath[fullPath.length - 1]\n    if(decodeURI(fileName).includes(\".csv\") || decodeURI(fileName).includes(\".xlsx\") || decodeURI(fileName).includes(\".xls\")){\n        excelFiles.push({\"file_name\":decodeURI(fileName)});\n    }\n});\n\nreturn [{\n     json: {\n         excelData:excelFiles\n    }\n}];"
+        "functionCode": "// return items;\nlet poFiles=[];\nlet excelFiles=[];\nitems.forEach((item) => {\n    const fullPath = item.json[\"path\"].split(\"/\");\n    const fileName = fullPath[fullPath.length - 1]\n    if(decodeURI(fileName).includes(\".csv\") || decodeURI(fileName).includes(\".xlsx\") || decodeURI(fileName).includes(\".xls\") || decodeURI(fileName).includes(\".XLSX\")){\n        excelFiles.push({\"file_name\":decodeURI(fileName)});\n    }\n});\n\nreturn [{\n     json: {\n         excelData:excelFiles\n    }\n}];"
       },
       "name": "Combine Items",
       "type": "n8n-nodes-base.function",
@@ -1512,5 +1512,5 @@
   },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2024-02-27T11:31:09.604Z"
+  "updatedAt": "2024-03-04T09:18:03.249Z"
 }
