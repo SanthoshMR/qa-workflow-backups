@@ -582,6 +582,10 @@
             {
               "name": "consignment_type",
               "value": "={{$node[\"Get po_id from mozart\"].json[\"data\"][0][\"consignment_type\"]}}"
+            },
+            {
+              "name": "is_dc_invoice",
+              "value": "={{$node[\"Wait for shipment\"].json[\"body\"][\"payload\"][\"is_dc_invoice\"]}}"
             }
           ]
         }
@@ -1146,5 +1150,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2024-02-26T05:52:59.839Z"
+  "updatedAt": "2024-03-06T10:34:29.301Z"
 }
