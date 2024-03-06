@@ -358,7 +358,6 @@
     },
     {
       "parameters": {
-        "authentication": "headerAuth",
         "httpMethod": "POST",
         "path": "sd-notifications",
         "responseMode": "lastNode",
@@ -371,13 +370,7 @@
         140,
         360
       ],
-      "webhookId": "b6d016ec-2af2-4432-a24d-f5fa2cde27cf",
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "85",
-          "name": "SD Notifications Auth"
-        }
-      }
+      "webhookId": "b6d016ec-2af2-4432-a24d-f5fa2cde27cf"
     },
     {
       "parameters": {
@@ -675,5 +668,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2024-03-05T08:48:46.221Z"
+  "updatedAt": "2024-03-06T06:24:19.069Z"
 }
