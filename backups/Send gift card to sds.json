@@ -596,7 +596,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let gift_card = [];\nconst isSuccess = $node[\"Get Order Details\"].json[\"success\"];\nconst message = $node[\"Get Voucher from VPP API\"].json[0][\"message\"].toLowerCase();\nconst isUniqueRefId = !message.includes(\"unique reference id\");\nconst try_qwikcilver = false\n\n// Below 3 variables required only for success case from work advantage\nconst vouchers = isSuccess? $node[\"Get Order Details\"].json[\"response\"]: [];\nconst amount = isSuccess? $node[\"Check for gift card amount\"].json[\"data\"][0][\"amount\"]*1: null;\nconst productCode = isSuccess? $node[\"Wait for order\"].json[\"body\"][\"product_code\"]: null;\n\nif(isSuccess){\n  vouchers.forEach((obj,index)=>{\n    gift_card[index]={};\n    gift_card[index].cardNumber = obj.code;\n    gift_card[index].validity = obj.expiry;\n    gift_card[index].cardPin = obj.pin;\n    gift_card[index].amount = amount\n    gift_card[index].sku = productCode;\n  });\n}\n\nif(!items[0].json || !items[0].json[0]) { items[0].json = []; items[0].json[0] = {} }\n\nitems[0].json[0].cards = gift_card;\nitems[0].json[0].try_qwikcilver = try_qwikcilver;\nreturn items[0].json;"
+        "functionCode": "let gift_card = [];\nconst isSuccess = $node[\"Get Order Details\"].json[\"success\"];\nconst message = $node[\"Get Voucher from VPP API\"].json[0][\"message\"].toLowerCase();\nconst isUniqueRefId = !message.includes(\"unique reference id\");\nconst try_qwikcilver = false\n\n// Below 3 variables required only for success case from work advantage\nconst vouchers = isSuccess? $node[\"Get Order Details\"].json[\"response\"]: [];\nconst amount = isSuccess? $node[\"Check for gift card amount\"].json[\"data\"][0][\"amount\"]*1: null;\nconst productCode = isSuccess? $node[\"Wait for order\"].json[\"body\"][\"product_code\"]: null;\nconst order_type = $node[\"Wait for order\"].json[\"body\"][\"voucher_delivery_type\"];\n\n\nif(isSuccess){\n  vouchers.forEach((obj,index)=>{\n    gift_card[index]={};\n    gift_card[index].cardNumber = order_type == 'Link' ? \"\" : obj.code;\n    gift_card[index].validity = obj.expiry;\n    gift_card[index].cardPin = order_type == 'Link' ? \"\" : obj.pin;\n    gift_card[index].amount = amount\n    gift_card[index].sku = productCode;\n    gift_card[index].reference_number = order_type == 'Link' ? obj.link_reference_id : \"\";\n    gift_card[index].secret_pin = order_type == 'Link' ? obj.reference_code_otp : \"\";\n  });\n}\n\nif(!items[0].json || !items[0].json[0]) { items[0].json = []; items[0].json[0] = {} }\n\nitems[0].json[0].cards = gift_card;\nitems[0].json[0].try_qwikcilver = try_qwikcilver;\nreturn items[0].json;"
       },
       "name": "send gift card to sds1",
       "type": "n8n-nodes-base.function",
@@ -876,5 +876,5 @@
       "updatedAt": "2022-06-27T13:07:10.771Z"
     }
   ],
-  "updatedAt": "2024-03-04T09:30:08.721Z"
+  "updatedAt": "2024-03-06T11:39:20.185Z"
 }
