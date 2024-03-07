@@ -27,7 +27,7 @@
       "main": [
         [
           {
-            "node": "Check for gift card",
+            "node": "IF3",
             "type": "main",
             "index": 0
           }
@@ -278,6 +278,24 @@
           }
         ]
       ]
+    },
+    "IF3": {
+      "main": [
+        [
+          {
+            "node": "Check for gift card amount",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Check for gift card",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2022-06-08T09:59:06.769Z",
@@ -290,7 +308,7 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        -360,
+        -620,
         300
       ]
     },
@@ -315,8 +333,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        80,
-        280
+        20,
+        360
       ]
     },
     {
@@ -341,8 +359,8 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        -120,
-        280
+        -180,
+        360
       ],
       "webhookId": "7ef2430a-40e8-436d-9a36-2163079a599b",
       "credentials": {
@@ -362,8 +380,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        940,
-        300
+        1140,
+        200
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -380,8 +398,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        700,
-        300
+        640,
+        380
       ]
     },
     {
@@ -392,8 +410,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1760,
-        100
+        1960,
+        0
       ]
     },
     {
@@ -412,8 +430,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        1140,
-        300
+        1340,
+        200
       ]
     },
     {
@@ -424,8 +442,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1340,
-        100
+        1540,
+        0
       ]
     },
     {
@@ -441,8 +459,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1560,
-        100
+        1760,
+        0
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -461,8 +479,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        260,
-        280
+        200,
+        360
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -487,20 +505,20 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        440,
-        280
+        380,
+        360
       ]
     },
     {
       "parameters": {
-        "functionCode": "let gift_card = [];\nlet data = $node[\"Check for order and sku\"].json.data\n\ndata.forEach(function(obj,index){\n  gift_card[index]={};\n  gift_card[index].cardNumber = obj.code;\n  gift_card[index].validity = obj.validity;\n  gift_card[index].amount = obj.price\n  gift_card[index].cardPin = obj.pin;\n  gift_card[index].sku = obj.product_code;\n})\n\n\nitems[0].json.cards = gift_card;\nreturn items;"
+        "functionCode": "let gift_card = [];\nlet data = $node[\"Check for order and sku\"].json.data\nconst order_type = $node[\"Wait for order\"].json[\"body\"][\"voucher_delivery_type\"];\n\ndata.forEach(function(obj,index){\n  gift_card[index]={};\n  gift_card[index].cardNumber = order_type == 'Link' ? \"\" : obj.code;\n  gift_card[index].validity = obj.validity;\n  gift_card[index].amount = obj.price\n  gift_card[index].cardPin = order_type == 'Link' ? \"\" : obj.pin;\n  gift_card[index].sku = obj.product_code;\n  gift_card[index].reference_number = order_type == 'Link' ? obj.link_reference_id : \"\";\n  gift_card[index].secret_pin = order_type == 'Link' ? obj.reference_code_otp : \"\";\n})\n\n\nitems[0].json.cards = gift_card;\nreturn items;"
       },
       "name": "Function",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        700,
-        120
+        640,
+        200
       ]
     },
     {
@@ -512,7 +530,7 @@
         "options": {
           "bodyContentType": "json"
         },
-        "bodyParametersJson": "={\n\t\"required_vouchers\": [\n         {\n           \"sku\": \"{{$node[\"Wait for order\"].json[\"body\"][\"product_code\"]}}\",\n           \"qty\": {{$node[\"Wait for order\"].json[\"body\"][\"quantity\"]}},\n           \"amt\": {{$node[\"Check for gift card amount\"].json[\"data\"][0]?$node[\"Check for gift card amount\"].json[\"data\"][0][\"amount\"]*1:0}}\n          }\n     ],\n\t \"options\": {\n\t \t\"redeemed\": true,\n        \"retrieveIfRedeemed\": true,\n        \"reference_id\":\"{{$node[\"Wait for order\"].json[\"body\"][\"product_code\"]+\"-\"+$node[\"Wait for order\"].json[\"body\"][\"order_id\"]}}\", \n\t \t\"order_id\": {{$node[\"Wait for order\"].json[\"body\"][\"order_id\"]?$node[\"Wait for order\"].json[\"body\"][\"order_id\"]+\"\":null}},\n\t    \"extra\": {\n               \"client\": \"{{$node[\"Wait for order\"].json[\"body\"][\"client\"]}}\",\n               \"voucher_order_type\" :  \"{{$node[\"Wait for order\"].json[\"body\"][\"voucher_delivery_type\"]}}\"\n\t\t}\t\t\t\n\t }\n}"
+        "bodyParametersJson": "={\n\t\"required_vouchers\": [\n         {\n           \"sku\": \"{{$node[\"Wait for order\"].json[\"body\"][\"product_code\"]}}\",\n           \"qty\": {{$node[\"Wait for order\"].json[\"body\"][\"quantity\"]}},\n           \"amt\": {{$node[\"Check for gift card amount\"].json[\"data\"][0]?$node[\"Check for gift card amount\"].json[\"data\"][0][\"amount\"]*1:0}}\n          }\n     ],\n\t \"options\": {\n\t \t\"redeemed\": true,\n        \"syncOnly\": true, \n        \"retrieveIfRedeemed\": true,\n        \"reference_id\":\"{{$node[\"Wait for order\"].json[\"body\"][\"product_code\"]+\"-\"+$node[\"Wait for order\"].json[\"body\"][\"order_id\"]}}\", \n\t \t\"order_id\": {{$node[\"Wait for order\"].json[\"body\"][\"order_id\"]?$node[\"Wait for order\"].json[\"body\"][\"order_id\"]+\"\":null}},\n\t    \"extra\": {\n               \"client\": \"{{$node[\"Wait for order\"].json[\"body\"][\"client\"]}}\",\n               \"voucher_order_type\" :  \"{{$node[\"Wait for order\"].json[\"body\"][\"voucher_delivery_type\"]}}\"\n\t\t}\t\t\t\n\t }\n}"
       },
       "name": "Get Voucher from VPP API",
       "type": "n8n-nodes-base.httpRequest",
@@ -864,6 +882,25 @@
           "name": "Vendor Partner Program Zeus QA"
         }
       }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Wait for order\"].json[\"body\"][\"voucher_delivery_type\"]}}",
+              "value2": "=Link"
+            }
+          ]
+        }
+      },
+      "name": "IF3",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        860,
+        380
+      ]
     }
   ],
   "settings": {},
@@ -876,5 +913,5 @@
       "updatedAt": "2022-06-27T13:07:10.771Z"
     }
   ],
-  "updatedAt": "2024-03-06T11:39:20.185Z"
+  "updatedAt": "2024-03-07T07:38:46.058Z"
 }
