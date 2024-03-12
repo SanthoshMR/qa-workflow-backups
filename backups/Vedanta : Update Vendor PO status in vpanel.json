@@ -134,7 +134,7 @@
           "parameter": [
             {
               "name": "=vendor_po_status",
-              "value": "=cancelled"
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"po_status\"]}}"
             }
           ]
         }
@@ -157,5 +157,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-07-17T12:27:24.128Z"
+  "updatedAt": "2024-03-12T12:56:02.074Z"
 }
