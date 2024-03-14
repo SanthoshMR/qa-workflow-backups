@@ -1110,7 +1110,7 @@
     {
       "parameters": {
         "fromEmail": "=chidanand@shakedeal.com",
-        "toEmail": "=sairam.reddy@shakedeal.com,anjali.jain@shakedeal.com,bijan.krishna@shakedeal.com",
+        "toEmail": "=sairam.reddy@shakedeal.com,anjali.jain@shakedeal.com,bijan.krishna@shakedeal.com,siddesh.nayak@shakedeal.com",
         "ccEmail": "=",
         "subject": "PO format not matched or product/vendor not exist",
         "html": "={{$node[\"Construct the table\"].json[\"tableHtml\"]}}",
@@ -1277,5 +1277,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-09-25T07:06:31.101Z"
+  "updatedAt": "2024-03-14T12:05:03.097Z"
 }
