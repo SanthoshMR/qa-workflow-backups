@@ -1131,7 +1131,10 @@
         "authentication": "headerAuth",
         "requestMethod": "PATCH",
         "url": "={{$node[\"Function to get the splitted grn\"].json[\"dms_url\"]}}/items/sdm_shipment_items/{{$node[\"Update shipment Items\"].json[\"data\"][\"id\"]}}?fields= *,sdm_shipments_id.*,sdm_shipments_id.shipment_items.*",
-        "options": {},
+        "options": {
+          "batchInterval": 3000,
+          "batchSize": 1
+        },
         "bodyParametersUi": {
           "parameter": [
             {
@@ -1512,5 +1515,5 @@
   },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2024-03-04T09:18:03.249Z"
+  "updatedAt": "2024-03-14T07:02:20.279Z"
 }
