@@ -195,7 +195,7 @@
             },
             {
               "name": "api-key",
-              "value": "Ad3aca40e1bf47b84114c9b8b967c9db8"
+              "value": "Aaf2dc8b64b4abf35e6c0a046612b5dae"
             }
           ]
         },
@@ -216,7 +216,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let reply = $node[\"Webhook\"].json[\"query\"][\"body\"];\n\nlet params = \"\"\nlet template_name =\"\";\nlet media_url = \"\";\nlet partner_language = $node[\"Get the partner id\"].json[\"data\"][0][\"partner\"][\"language\"];\nlet first_name = $node[\"Get the partner id\"].json[\"data\"][0][\"partner\"][\"first_name\"];\nlet last_name = $node[\"Get the partner id\"].json[\"data\"][0][\"partner\"][\"last_name\"];\nlet campaign_name = $node[\"Get the partner id\"].json[\"data\"][0][\"campaign\"]?$node[\"Get the partner id\"].json[\"data\"][0][\"campaign\"][\"name\"]:\"\";\nlet amount = $node[\"Get partner progress\"].json[\"data\"][0][\"total\"]?$node[\"Get partner progress\"].json[\"data\"][0][\"total\"]:\"0\";\nlet date = new Date().toLocaleDateString().replaceAll(\"/\",\"-\")\nif(reply == \"Campaign Details\"){\n  template_name = \"campaign_details_english\";\n  media_url = \"https://sdqa.shakedeal.com/images/shake_deal/adani/Diwali_Dhamaka.pdf\";\n  \n}else if(reply == \"Prizes To Be Won\"){\n  template_name = \"prizes_to_be_won_english\";\n  media_url = \"https://sdqa.shakedeal.com/images/shake_deal/adani/diwali_award.jpg\";\n}else if(reply == \"Change Language\" || reply == \"भाषा बदलिए\"){\n  template_name = \"language_selection_1\";\n}else if(reply == \"अभियान विवरण\"){\n  template_name = \"campaign_details_hindi\";\n  media_url = \"https://sdqa.shakedeal.com/images/shake_deal/adani/Diwali_Dhamaka.pdf\";\n}else if(reply == \"पुरस्कार विवरण\"){\n  template_name = \"prizes_to_be_won_hindi\";\n  media_url = \"https://sdqa.shakedeal.com/images/shake_deal/adani/diwali_award.jpg\";\n}else if(reply == \"Current Progress\"){\n  template_name = \"my_progress_1_english\";\n  params = `\"${first_name + last_name}\",\"${campaign_name}\",\"${amount}\",\"${date}\"`\n}else if(reply == \"मेरी तरक्की\"){\n  template_name = \"my_progress_hindi\";\n  params = `\"${first_name+last_name}\",\"${campaign_name}\",\"${amount}\",\"${date}\"`\n}\n\n\nitems[0].json.params= params;\nitems[0].json.template_name = template_name;\nitems[0].json.media_url = media_url;\nreturn items;"
+        "functionCode": "let reply = $node[\"Webhook\"].json[\"query\"][\"body\"];\n\nlet params = \"\"\nlet template_name =\"\";\nlet media_url = \"\";\nlet partner_language = $node[\"Get the partner id\"].json[\"data\"][0][\"partner\"][\"language\"];\nlet first_name = $node[\"Get the partner id\"].json[\"data\"][0][\"partner\"][\"first_name\"];\nlet last_name = $node[\"Get the partner id\"].json[\"data\"][0][\"partner\"][\"last_name\"];\nlet campaign_name = $node[\"Get the partner id\"].json[\"data\"][0][\"campaign\"]?$node[\"Get the partner id\"].json[\"data\"][0][\"campaign\"][\"name\"]:\"\";\nlet amount = $node[\"Get partner progress\"].json[\"data\"][0][\"total\"]?$node[\"Get partner progress\"].json[\"data\"][0][\"total\"]:\"0\";\nlet date = new Date().toLocaleDateString().replaceAll(\"/\",\"-\")\nif(reply == \"Campaign Details\"){\n  template_name = \"campaign_details_english\";\n  media_url = \"https://sdqa.shakedeal.com/images/shake_deal/adani/Diwali_Dhamaka.pdf\";\n  \n}else if(reply == \"Prizes To Be Won\"){\n  template_name = \"prizes_to_be_won_english\";\n  media_url = \"https://sdqa.shakedeal.com/images/shake_deal/adani/diwali_award.jpg\";\n}else if(reply == \"Change Language\" || reply == \"भाषा बदलिए\"){\n  template_name = \"language_selection_2\";\n}else if(reply == \"अभियान विवरण\"){\n  template_name = \"campaign_details_hindi\";\n  media_url = \"https://sdqa.shakedeal.com/images/shake_deal/adani/Diwali_Dhamaka.pdf\";\n}else if(reply == \"पुरस्कार विवरण\"){\n  template_name = \"prizes_to_be_won_hindi\";\n  media_url = \"https://sdqa.shakedeal.com/images/shake_deal/adani/diwali_award.jpg\";\n}else if(reply == \"Current Progress\"){\n  template_name = \"my_progress_1_english\";\n  params = `\"${first_name + last_name}\",\"${campaign_name}\",\"${amount}\",\"${date}\"`\n}else if(reply == \"मेरी तरक्की\"){\n  template_name = \"my_progress_hindi\";\n  params = `\"${first_name+last_name}\",\"${campaign_name}\",\"${amount}\",\"${date}\"`\n}\n\n\nitems[0].json.params= params;\nitems[0].json.template_name = template_name;\nitems[0].json.media_url = media_url;\nreturn items;"
       },
       "name": "Function to get whatapp details",
       "type": "n8n-nodes-base.function",
@@ -231,7 +231,7 @@
         "conditions": {
           "boolean": [
             {
-              "value1": "={{$node[\"Webhook\"].json[\"query\"][\"body\"] == \"English\" || $node[\"Webhook\"].json[\"query\"][\"body\"] == \"हिंदी\"?true:false}}",
+              "value1": "={{$node[\"Webhook\"].json[\"query\"][\"body\"] == \"1 English\" || $node[\"Webhook\"].json[\"query\"][\"body\"] == \"2 हिंदी\"?true:false}}",
               "value2": true
             }
           ]
@@ -368,7 +368,7 @@
             },
             {
               "name": "api-key",
-              "value": "Ad3aca40e1bf47b84114c9b8b967c9db8"
+              "value": "Aaf2dc8b64b4abf35e6c0a046612b5dae"
             }
           ]
         },
@@ -496,5 +496,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-11-10T09:26:12.306Z"
+  "updatedAt": "2024-03-15T11:56:39.855Z"
 }
