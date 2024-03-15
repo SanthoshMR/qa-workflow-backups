@@ -259,8 +259,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "57",
-          "name": "Adani header auth"
+          "id": "102",
+          "name": "Header Auth account 2(campaign qa)"
         }
       },
       "continueOnFail": true
@@ -279,5 +279,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-11-08T14:23:11.390Z"
+  "updatedAt": "2024-03-15T10:03:43.128Z"
 }
