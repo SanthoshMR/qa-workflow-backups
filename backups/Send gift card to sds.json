@@ -34,57 +34,6 @@
         ]
       ]
     },
-    "Check for gift card": {
-      "main": [
-        [
-          {
-            "node": "IF",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "IF": {
-      "main": [
-        [
-          {
-            "node": "Function to get keys",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Check for gift card amount",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Function to get keys": {
-      "main": [
-        [
-          {
-            "node": "Update the order_id and status ",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Update the order_id and status ": {
-      "main": [
-        [
-          {
-            "node": "Function for sending gift card to sds",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Check for order and sku": {
       "main": [
         [
@@ -283,7 +232,7 @@
       "main": [
         [
           {
-            "node": "Check for gift card amount",
+            "node": "Check for link gift card",
             "type": "main",
             "index": 0
           }
@@ -291,6 +240,108 @@
         [
           {
             "node": "Check for gift card",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for link gift card": {
+      "main": [
+        [
+          {
+            "node": "link IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to get keys link": {
+      "main": [
+        [
+          {
+            "node": "Update the order_id and status link",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update the order_id and status link": {
+      "main": [
+        [
+          {
+            "node": "Function for sending link gift card to sds",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "link IF": {
+      "main": [
+        [
+          {
+            "node": "Function to get keys link",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Check for gift card amount",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for gift card": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Function to get keys",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Check for gift card amount",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to get keys": {
+      "main": [
+        [
+          {
+            "node": "Update the order_id and status ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update the order_id and status ": {
+      "main": [
+        [
+          {
+            "node": "Function for sending gift card to sds",
             "type": "main",
             "index": 0
           }
@@ -372,26 +423,6 @@
     },
     {
       "parameters": {
-        "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_gift_card_inventory?filter={\"_and\": [{\"gift_card\": {\"_eq\":false}},{\"product_code\":{\"_eq\":\"{{$node[\"Wait for order\"].json[\"body\"][\"product_code\"]}}\"}},{\"validity\":{\"_gt\":\"{{$node[\"Get current time\"].json[\"time\"]}}\"}},{\"link_reference_id\":{\"_null\":true}}]}&sort=date_created&limit={{$node[\"Wait for order\"].json[\"body\"][\"quantity\"]}}",
-        "options": {}
-      },
-      "name": "Check for gift card",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        1140,
-        200
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "75",
-          "name": "Vendor Partner Program Zeus QA"
-        }
-      }
-    },
-    {
-      "parameters": {
         "functionCode": "let time = new Date()\nlet slack_text = \"\";\n\ntime.setHours(time.getHours() + 5);\ntime.setMinutes(time.getMinutes() + 30);\n\nitems[0].json.time = time\n\nreturn items;"
       },
       "name": "Get current time",
@@ -401,73 +432,6 @@
         640,
         380
       ]
-    },
-    {
-      "parameters": {
-        "functionCode": "let gift_card = [];\nlet data = $node[\"Check for gift card\"].json.data\n\nif(data.length && data.length == $node[\"Wait for order\"].json[\"body\"][\"quantity\"] ){\n  data.forEach(function(obj,index){\n    gift_card[index]={};\n    gift_card[index].cardNumber = obj.code;\n    gift_card[index].validity = obj.validity;\n    gift_card[index].amount = obj.price\n    gift_card[index].cardPin = obj.pin;\n    gift_card[index].sku = obj.product_code;\n  })\n}\n\nitems[0].json.cards = gift_card;\nreturn items;"
-      },
-      "name": "Function for sending gift card to sds",
-      "type": "n8n-nodes-base.function",
-      "typeVersion": 1,
-      "position": [
-        1960,
-        0
-      ]
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "number": [
-            {
-              "value1": "={{parseInt($node[\"Wait for order\"].json[\"body\"][\"quantity\"])}}",
-              "operation": "equal",
-              "value2": "={{$node[\"Check for gift card\"].json[\"data\"].length}}"
-            }
-          ]
-        }
-      },
-      "name": "IF",
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 1,
-      "position": [
-        1340,
-        200
-      ]
-    },
-    {
-      "parameters": {
-        "functionCode": "let data = $node[\"Check for gift card\"].json.data\nlet keys = [];\nlet req_body = {};\nlet gift_card_status = {\n    \"gift_card\": true,\n    \"order_id\" : $node[\"Wait for order\"].json[\"body\"][\"order_id\"],\n    \"client\" : $node[\"Wait for order\"].json[\"body\"][\"client\"]\n}\ndata.forEach(function(obj,index){\n    keys.push(obj.id)\n})\nreq_body.keys = keys;\nreq_body.data = gift_card_status;\n\nitems[0].json.keys = keys;\nitems[0].json.req_body = req_body;\nreturn items;"
-      },
-      "name": "Function to get keys",
-      "type": "n8n-nodes-base.function",
-      "typeVersion": 1,
-      "position": [
-        1540,
-        0
-      ]
-    },
-    {
-      "parameters": {
-        "authentication": "headerAuth",
-        "requestMethod": "PATCH",
-        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_gift_card_inventory",
-        "jsonParameters": true,
-        "options": {},
-        "bodyParametersJson": "={{$node[\"Function to get keys\"].json[\"req_body\"]}}"
-      },
-      "name": "Update the order_id and status ",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        1760,
-        0
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "75",
-          "name": "Vendor Partner Program Zeus QA"
-        }
-      }
     },
     {
       "parameters": {
@@ -536,7 +500,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1640,
+        1860,
         500
       ],
       "credentials": {
@@ -557,7 +521,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1340,
+        1620,
         500
       ],
       "credentials": {
@@ -688,7 +652,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        1860,
+        2040,
         500
       ]
     },
@@ -898,9 +862,185 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        860,
+        840,
         380
       ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_gift_card_inventory?filter={\"_and\": [{\"gift_card\": {\"_eq\":false}},{\"product_code\":{\"_eq\":\"{{$node[\"Wait for order\"].json[\"body\"][\"product_code\"]}}\"}},{\"validity\":{\"_gt\":\"{{$node[\"Get current time\"].json[\"time\"]}}\"}},{\"link_order_type\":{\"_eq\":false}},{\"link_reference_id\":{\"_nnull\":true}}]}&sort=date_created&limit={{$node[\"Wait for order\"].json[\"body\"][\"quantity\"]}}",
+        "options": {}
+      },
+      "name": "Check for link gift card",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        -80
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "75",
+          "name": "Vendor Partner Program Zeus QA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let gift_card = [];\nlet data = $node[\"Check for link gift card\"].json.data;\nconst order_type = $node[\"Wait for order\"].json[\"body\"][\"voucher_delivery_type\"];\n\nif(data.length && data.length == $node[\"Wait for order\"].json[\"body\"][\"quantity\"] ){\n  data.forEach(function(obj,index){\n    gift_card[index]={};\n    gift_card[index].cardNumber = order_type == 'Link' ? \"\" : obj.code;\n    gift_card[index].validity = obj.validity;\n    gift_card[index].amount = obj.price\n    gift_card[index].cardPin = order_type == 'Link' ? \"\" : obj.pin;\n    gift_card[index].sku = obj.product_code;\n    gift_card[index].reference_number = order_type == 'Link' ? obj.link_reference_id : \"\";\n    gift_card[index].secret_pin = order_type == 'Link' ? obj.reference_code_otp : \"\";\n  })\n}\n\nitems[0].json.cards = gift_card;\nreturn items;"
+      },
+      "name": "Function for sending link gift card to sds",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1960,
+        -100
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let data = $node[\"Check for link gift card\"].json.data\nlet keys = [];\nlet req_body = {};\nlet gift_card_status = {\n    \"link_order_type\": true,\n    // \"order_id\" : $node[\"Wait for order\"].json[\"body\"][\"order_id\"],\n    \"client\" : $node[\"Wait for order\"].json[\"body\"][\"client\"]\n}\ndata.forEach(function(obj,index){\n    keys.push(obj.id)\n})\nreq_body.keys = keys;\nreq_body.data = gift_card_status;\n\nitems[0].json.keys = keys;\nitems[0].json.req_body = req_body;\nreturn items;"
+      },
+      "name": "Function to get keys link",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1500,
+        -100
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_gift_card_inventory",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Function to get keys link\"].json[\"req_body\"]}}"
+      },
+      "name": "Update the order_id and status link",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1740,
+        -100
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "75",
+          "name": "Vendor Partner Program Zeus QA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_gift_card_inventory?filter={\"_and\": [{\"gift_card\": {\"_eq\":false}},{\"product_code\":{\"_eq\":\"{{$node[\"Wait for order\"].json[\"body\"][\"product_code\"]}}\"}},{\"validity\":{\"_gt\":\"{{$node[\"Get current time\"].json[\"time\"]}}\"}},{\"link_reference_id\":{\"_null\":true}}]}&sort=date_created&limit={{$node[\"Wait for order\"].json[\"body\"][\"quantity\"]}}",
+        "allowUnauthorizedCerts": true,
+        "options": {}
+      },
+      "name": "Check for gift card",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1020,
+        480
+      ],
+      "retryOnFail": true,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "10",
+          "name": "SD-Dms-Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{parseInt($node[\"Wait for order\"].json[\"body\"][\"quantity\"])}}",
+              "operation": "equal",
+              "value2": "={{$node[\"Check for link gift card\"].json[\"data\"].length}}"
+            }
+          ]
+        }
+      },
+      "name": "link IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1220,
+        -80
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{parseInt($node[\"Wait for order\"].json[\"body\"][\"quantity\"])}}",
+              "operation": "equal",
+              "value2": "={{$node[\"Check for gift card\"].json[\"data\"].length}}"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let gift_card = [];\nlet data = $node[\"Check for gift card\"].json.data\n\nif(data.length && data.length == $node[\"Wait for order\"].json[\"body\"][\"quantity\"] ){\n  data.forEach(function(obj,index){\n    gift_card[index]={};\n    gift_card[index].cardNumber = obj.code;\n    gift_card[index].validity = obj.validity;\n    gift_card[index].amount = obj.price\n    gift_card[index].cardPin = obj.pin;\n    gift_card[index].sku = obj.product_code;\n  })\n}\n\nitems[0].json.cards = gift_card;\nreturn items;"
+      },
+      "name": "Function for sending gift card to sds",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1900,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let data = $node[\"Check for gift card\"].json.data\nlet keys = [];\nlet req_body = {};\nlet gift_card_status = {\n    \"gift_card\": true,\n    \"order_id\" : $node[\"Wait for order\"].json[\"body\"][\"order_id\"],\n    \"client\" : $node[\"Wait for order\"].json[\"body\"][\"client\"]\n}\ndata.forEach(function(obj,index){\n    keys.push(obj.id)\n})\nreq_body.keys = keys;\nreq_body.data = gift_card_status;\n\n\nitems[0].json.keys = keys;\nitems[0].json.req_body = req_body;\nreturn items;"
+      },
+      "name": "Function to get keys",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1280,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Globals\"].json[\"dms_url\"]}}/items/sd_gift_card_inventory",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Function to get keys\"].json[\"req_body\"]}}"
+      },
+      "name": "Update the order_id and status ",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1600,
+        160
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "10",
+          "name": "SD-Dms-Token"
+        }
+      }
     }
   ],
   "settings": {},
@@ -913,5 +1053,5 @@
       "updatedAt": "2022-06-27T13:07:10.771Z"
     }
   ],
-  "updatedAt": "2024-03-07T07:38:46.058Z"
+  "updatedAt": "2024-03-15T05:43:13.651Z"
 }
