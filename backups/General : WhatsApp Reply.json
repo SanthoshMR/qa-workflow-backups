@@ -275,7 +275,7 @@
           "parameter": [
             {
               "name": "language",
-              "value": "={{$node[\"Webhook\"].json[\"query\"][\"body\"]}}"
+              "value": "={{$node[\"Webhook\"].json[\"query\"][\"body\"]  ==  \"1 English\" ? \"English\" : \"Hindi\"}}"
             }
           ]
         }
@@ -344,11 +344,11 @@
             },
             {
               "name": "params",
-              "value": "=\"{{$node[\"Get the partner id\"].json[\"data\"][0][\"partner\"][\"first_name\"]}}\",\"{{$node[\"Get the partner id\"].json[\"data\"][0][\"partner\"][\"last_name\"]}}\",\"{{$node[\"Webhook\"].json[\"query\"][\"body\"]==\"English\"?\"Fortune\":\"फॉर्चन \"}}\",\"{{$node[\"Webhook\"].json[\"query\"][\"body\"]==\"English\"?\"Diwali Dhamka Contest\":\"दिवाली धमका प्रतियोगिता\"}}\",\"{{new Date($node[\"Get the partner id\"].json[\"data\"][0][\"campaign\"][\"start_date\"]).toLocaleDateString().replaceAll(\"/\",\"-\")}}\",\"{{new Date($node[\"Get the partner id\"].json[\"data\"][0][\"campaign\"][\"end_date\"]).toLocaleDateString().replaceAll(\"/\",\"-\")}}\""
+              "value": "=\"{{$node[\"Get the partner id\"].json[\"data\"][0][\"partner\"][\"first_name\"]}}\",\"{{$node[\"Get the partner id\"].json[\"data\"][0][\"partner\"][\"last_name\"]}}\",\"{{$node[\"Webhook\"].json[\"query\"][\"body\"]==\"1 English\"?\"Fortune\":\"फॉर्चन \"}}\",\"{{$node[\"Webhook\"].json[\"query\"][\"body\"]==\"1 English\"?\"Diwali Dhamka Contest\":\"दिवाली धमका प्रतियोगिता\"}}\",\"{{new Date($node[\"Get the partner id\"].json[\"data\"][0][\"campaign\"][\"start_date\"]).toLocaleDateString().replaceAll(\"/\",\"-\")}}\",\"{{new Date($node[\"Get the partner id\"].json[\"data\"][0][\"campaign\"][\"end_date\"]).toLocaleDateString().replaceAll(\"/\",\"-\")}}\""
             },
             {
               "name": "template_name",
-              "value": "={{$node[\"Webhook\"].json[\"query\"][\"body\"] == \"English\"?\"scheme_intimation_english_1\":\"scheme_intimation_1_hindi\"}}"
+              "value": "={{$node[\"Webhook\"].json[\"query\"][\"body\"] == \"1 English\"?\"scheme_intimation_english_1\":\"scheme_intimation_1_hindi\"}}"
             },
             {
               "name": "channel",
@@ -496,5 +496,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2024-03-15T11:56:39.855Z"
+  "updatedAt": "2024-03-18T09:09:35.335Z"
 }
