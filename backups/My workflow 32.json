@@ -1,0 +1,84 @@
+{
+  "active": false,
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Spreadsheet File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Spreadsheet File": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "createdAt": "2024-03-19T12:31:36.048Z",
+  "id": "426",
+  "name": "My workflow 32",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "https://campaignsqa.shakepe.com/assets/b2152c5a-6ce1-4fd0-b4bc-52825e15bc3e",
+        "responseFormat": "file",
+        "options": {}
+      },
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "102",
+          "name": "Header Auth account 2(campaign qa)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "name": "Spreadsheet File",
+      "type": "n8n-nodes-base.spreadsheetFile",
+      "typeVersion": 1,
+      "position": [
+        680,
+        300
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2024-03-19T12:31:36.048Z"
+}
