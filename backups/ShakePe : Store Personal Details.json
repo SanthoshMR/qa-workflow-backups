@@ -27,7 +27,7 @@
       "main": [
         [
           {
-            "node": "IF1",
+            "node": "Send Campaign Email",
             "type": "main",
             "index": 0
           }
@@ -57,24 +57,6 @@
         [
           {
             "node": "NoOp",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "IF1": {
-      "main": [
-        [
-          {
-            "node": "Send Email",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Send Campaign Email",
             "type": "main",
             "index": 0
           }
@@ -175,8 +157,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1110,
-        210
+        1120,
+        140
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -277,37 +259,18 @@
     },
     {
       "parameters": {
-        "conditions": {
-          "boolean": [
-            {
-              "value1": true,
-              "value2": "={{$node[\"Wait for Personal details\"].json[\"body\"][\"form_type\"]==null}}"
-            }
-          ]
-        }
-      },
-      "name": "IF1",
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 1,
-      "position": [
-        1340,
-        200
-      ]
-    },
-    {
-      "parameters": {
         "fromEmail": "={{$node[\"Globals\"].json[\"from_email\"]}}",
         "toEmail": "={{$node[\"Globals\"].json[\"to_email\"]}}",
         "subject": "=ShakePe Enquiry Details",
-        "text": "=Hi Team,\n\nPlease find the requirements :\n\nWork email : {{$node[\"Wait for Personal details\"].json[\"body\"][\"email\"]}}\nMob no : {{parseInt($node[\"Wait for Personal details\"].json[\"body\"][\"phone\"])}}",
+        "text": "=Hi Team,\n\nPlease find the requirements :\n\nWork email : {{$node[\"Wait for Personal details\"].json[\"body\"][\"email\"]}}\nMob no : {{parseInt($node[\"Wait for Personal details\"].json[\"body\"][\"phone\"])}}\nSource : {{$node[\"Post the data\"].json[\"data\"][\"source\"] == 3 ? \"Channel Partner Incentivization\" : $node[\"Post the data\"].json[\"data\"][\"source\"] == 4 ?  \"Employee Rewards And Recognition\": $node[\"Post the data\"].json[\"data\"][\"source\"] == 5 ? \"Brand Activation\" : \"\" }}",
         "options": {}
       },
       "name": "Send Campaign Email",
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 1,
       "position": [
-        1580,
-        260
+        1620,
+        320
       ],
       "credentials": {
         "smtp": {
@@ -328,19 +291,20 @@
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 1,
       "position": [
-        1580,
-        40
+        1420,
+        100
       ],
       "credentials": {
         "smtp": {
           "id": "7",
           "name": "AWS SES Creds"
         }
-      }
+      },
+      "disabled": true
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-12-14T09:46:40.206Z"
+  "updatedAt": "2024-03-20T11:04:24.975Z"
 }
