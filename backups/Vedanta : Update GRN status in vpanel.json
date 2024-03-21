@@ -44,6 +44,35 @@
           }
         ]
       ]
+    },
+    "Update shipment status in vpanel": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Update shipment status in mozart",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2023-12-01T06:34:48.040Z",
@@ -138,7 +167,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_shipments?filter={\"_and\":[{\"invoice_number\":{\"_eq\":\"{{$node[\"Get the invoice details from mozart\"].json.data[\"invoice_number\"]}}\"}},{\"vendor_po_num\":{\"po_number\":{\"_eq\":\"{{$node[\"Get the invoice details from mozart\"].json.data[\"vendor_po_num\"]}}\"}}}]}",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_shipments?filter={\"_and\":[{\"invoice_number\":{\"_eq\":\"{{$node[\"Get the invoice details from mozart\"].json.data[\"invoice_number\"]}}\"}},{\"vendor_po_number\":{\"po_number\":{\"_eq\":\"{{$node[\"Get the invoice details from mozart\"].json.data[\"vendor_po_num\"]}}\"}}}]}",
         "options": {}
       },
       "name": "Get shipment from vendor panel",
@@ -183,10 +212,68 @@
           "name": "VendorPanel DMS Token"
         }
       }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_shipments/{{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"invoice_id\"]}}",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "shipment_status",
+              "value": "=qc_pending"
+            }
+          ]
+        }
+      },
+      "name": "Update shipment status in mozart",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1720,
+        180
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"grn_status\"] == \"qc_pending\"?true:false}}"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1540,
+        300
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1740,
+        400
+      ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2024-03-18T07:43:46.686Z"
+  "updatedAt": "2024-03-21T07:39:50.642Z"
 }
