@@ -301,10 +301,53 @@
         }
       },
       "disabled": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Wait for Personal details\"].json[\"body\"][\"form_type\"]}}",
+              "value2": "=2"
+            }
+          ]
+        }
+      },
+      "name": "IF1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1440,
+        520
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{$node[\"Globals\"].json[\"from_email\"]}}",
+        "toEmail": "={{$node[\"Globals\"].json[\"to_email\"]}}",
+        "subject": "=ShakePe Enquiry Details",
+        "text": "=Hi Team,\n\nPlease find the requirements :\n\nCompany Name : {{$node[\"Wait for Personal details\"].json[\"body\"][\"company\"]}}\nName : {{$node[\"Wait for Personal details\"].json[\"body\"][\"name\"]}}\nJob Title : {{$node[\"Wait for Personal details\"].json[\"body\"][\"jobtitle\"]}}\nEnquiry Type : {{$node[\"Wait for Personal details\"].json[\"body\"][\"enquirytype\"]}}\nWork email : {{$node[\"Wait for Personal details\"].json[\"body\"][\"email\"]}}\nMob no : {{parseInt($node[\"Wait for Personal details\"].json[\"body\"][\"phone\"])}}\nComments : {{$node[\"Wait for Personal details\"].json[\"body\"][\"message\"]}}",
+        "options": {}
+      },
+      "name": "Send Email1",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        1640,
+        520
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "7",
+          "name": "AWS SES Creds"
+        }
+      },
+      "disabled": true
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2024-03-20T11:04:24.975Z"
+  "updatedAt": "2024-03-21T10:26:29.854Z"
 }
