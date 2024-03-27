@@ -518,7 +518,7 @@
           "parameter": [
             {
               "name": "shipment_status",
-              "value": "=grn_completed"
+              "value": "={{$node[\"Get the parent invoice\"].json.data.shipment_status==\"grn_cancelled\"?\"grn_cancelled\":\"grn_completed\"}}"
             }
           ]
         }
@@ -547,7 +547,7 @@
           "parameter": [
             {
               "name": "shipment_Status",
-              "value": "=grn_completed"
+              "value": "={{$node[\"Get the parent invoice\"].json.data.shipment_status==\"grn_cancelled\"?\"grn_cancelled\":\"grn_completed\"}}"
             }
           ]
         }
@@ -569,7 +569,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_shipments/{{parseInt($node[\"Get the vendor Invoice from vpanel\"].json[\"data\"][0][\"mozart_parent_invoice\"])}}?fields=sdm_orders.sdm_orders_id.*",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_shipments/{{parseInt($node[\"Get the vendor Invoice from vpanel\"].json[\"data\"][0][\"mozart_parent_invoice\"])}}?fields=*,sdm_orders.sdm_orders_id.*",
         "options": {}
       },
       "name": "Get the parent invoice",
@@ -610,5 +610,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2024-03-12T07:03:24.618Z"
+  "updatedAt": "2024-03-27T12:03:07.384Z"
 }
