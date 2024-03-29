@@ -1,17 +1,6 @@
 {
-  "active": false,
+  "active": true,
   "connections": {
-    "Start": {
-      "main": [
-        [
-          {
-            "node": "HTTP Request",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "HTTP Request": {
       "main": [
         [
@@ -23,9 +12,15 @@
         ]
       ]
     },
-    "Spreadsheet File": {
+    "Webhook": {
       "main": [
-        []
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     }
   },
@@ -39,14 +34,14 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        240,
-        300
+        -160,
+        260
       ]
     },
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "https://campaignsqa.shakepe.com/assets/b2152c5a-6ce1-4fd0-b4bc-52825e15bc3e",
+        "url": "=https://campaignsqa.shakepe.com/assets/{{$json[\"body\"][\"data\"][\"id\"]}}",
         "responseFormat": "file",
         "options": {}
       },
@@ -54,8 +49,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        460,
-        300
+        300,
+        260
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -72,13 +67,30 @@
       "type": "n8n-nodes-base.spreadsheetFile",
       "typeVersion": 1,
       "position": [
-        680,
-        300
+        560,
+        260
       ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "903e66d9-80fa-46a7-93a4-fa9461d9d7e1",
+        "responseMode": "lastNode",
+        "responseData": "allEntries",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        40,
+        260
+      ],
+      "webhookId": "903e66d9-80fa-46a7-93a4-fa9461d9d7e1"
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2024-03-19T12:31:36.048Z"
+  "updatedAt": "2024-03-29T12:30:13.793Z"
 }
