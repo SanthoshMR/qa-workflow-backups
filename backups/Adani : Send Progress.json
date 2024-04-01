@@ -79,7 +79,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "=https://campaignsqa.shakepe.com/items/sp_partner_progress/{{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"keys\"][0]}}?fields= id,partner.*,campaign.*",
+        "url": "=https://campaignsdemo.shakepe.com/items/sp_partner_progress/{{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"keys\"][0]}}?fields= id,partner.*,campaign.*",
         "options": {}
       },
       "name": "Get partner data",
@@ -160,5 +160,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2024-03-18T07:34:43.268Z"
+  "updatedAt": "2024-04-01T12:36:58.468Z"
 }
