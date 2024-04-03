@@ -87,7 +87,7 @@
     },
     {
       "parameters": {
-        "functionCode": "console.log($node[\"getpartners\"].json[\"data\"])\nlet groups=$node[\"getpartners\"].json[\"data\"][0].groups;\nlet campaign = $node[\"getpartners\"].json[\"data\"][0].name;\n\nlet from_date = $node[\"getpartners\"].json[\"data\"][0].start_date;\nlet end_date = $node[\"getpartners\"].json[\"data\"][0].end_date;\nlet partners =[]\n\ngroups.forEach(function(grp,index){\n  grp.partners.forEach(function(partner){\n    if(partner.wa_notifications!=false) partners.push({\n    json: [{partner:partner.sp_partners_id,campaign : campaign,from_date : from_date,end_date:end_date}]});\n  })  \n})\n\nreturn partners;"
+        "functionCode": "console.log($node[\"getpartners\"].json[\"data\"])\nlet groups=$node[\"getpartners\"].json[\"data\"][0].groups;\nlet campaign = $node[\"getpartners\"].json[\"data\"][0].name;\nlet campaign_id = $node[\"getpartners\"].json[\"data\"][0].id;\n\nlet from_date = $node[\"getpartners\"].json[\"data\"][0].start_date;\nlet end_date = $node[\"getpartners\"].json[\"data\"][0].end_date;\nlet partners =[]\n\ngroups.forEach(function(grp,index){\n  grp.partners.forEach(function(partner){\n    if(partner.wa_notifications!=false) partners.push({\n    json: [{partner:partner.sp_partners_id,campaign_id : campaign_id,campaign : campaign,from_date : from_date,end_date:end_date}]});\n  })  \n})\n\nreturn partners;"
       },
       "name": "Function",
       "type": "n8n-nodes-base.function",
@@ -127,7 +127,7 @@
             },
             {
               "name": "campaign",
-              "value": "={{$node[\"getpartners\"].json[\"data\"][0][\"id\"]}}"
+              "value": "={{$node[\"Function\"].json[\"0\"][\"campaign_id\"]}}"
             }
           ]
         }
@@ -150,5 +150,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2024-04-01T12:26:49.061Z"
+  "updatedAt": "2024-04-03T12:12:26.283Z"
 }
