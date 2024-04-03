@@ -27,6 +27,17 @@
       "main": [
         [
           {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
             "node": "Send progress",
             "type": "main",
             "index": 0
@@ -79,7 +90,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "=https://campaignsdemo.shakepe.com/items/sp_partner_progress/{{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"keys\"][0]}}?fields= id,partner.*,campaign.*",
+        "url": "=https://campaignsdemo.shakepe.com/items/sp_partner_progress?filter={\"id\": {\"_in\":\"{{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"keys\"]}}\"}}&fields= id,partner.*,campaign.*",
         "options": {}
       },
       "name": "Get partner data",
@@ -109,7 +120,7 @@
             },
             {
               "name": "to",
-              "value": "={{\"+91\"+$node[\"Get partner data\"].json[\"data\"][\"partner\"][\"phone\"]}}"
+              "value": "=+91{{$node[\"Function\"].json[\"data\"][\"partner\"][\"phone\"]}}"
             },
             {
               "name": "type",
@@ -117,11 +128,11 @@
             },
             {
               "name": "params",
-              "value": "=\"{{$node[\"Get partner data\"].json[\"data\"][\"partner\"][\"first_name\"]}} {{$node[\"Get partner data\"].json[\"data\"][\"partner\"][\"last_name\"]}}\""
+              "value": "=\"{{$node[\"Function\"].json[\"data\"][\"partner\"][\"first_name\"]}} {{$node[\"Function\"].json[\"data\"][\"partner\"][\"last_name\"]}}\""
             },
             {
               "name": "template_name",
-              "value": "={{$node[\"Get partner data\"].json[\"data\"][\"partner\"][\"language\"]== \"English\"?\"nudge_2_english\":\"progress_1_hindi\"}}"
+              "value": "={{$node[\"Function\"].json[\"data\"][\"partner\"][\"language\"] == \"English\"?\"nudge_2_english\":\"progress_1_hindi\"}}"
             },
             {
               "name": "channel",
@@ -151,14 +162,26 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1100,
+        1340,
         300
       ],
       "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "functionCode": "\nlet partner_details = $node[\"Get partner data\"].json.data;\n\nlet partner_data = [];\n\npartner_details.forEach((obj,index)=>{\n    partner_data.push({\n        json: {\n            data:obj,\n        }\n    });\n    \n});\n\nreturn partner_data;\n\n"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        300
+      ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2024-04-01T12:36:58.468Z"
+  "updatedAt": "2024-04-03T12:03:10.071Z"
 }
