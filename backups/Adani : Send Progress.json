@@ -128,11 +128,11 @@
             },
             {
               "name": "params",
-              "value": "=\"{{$node[\"Function\"].json[\"data\"][\"partner\"][\"first_name\"]}} {{$node[\"Function\"].json[\"data\"][\"partner\"][\"last_name\"]}}\""
+              "value": "=\"{{$node[\"Function\"].json[\"data\"][\"partner\"][\"first_name\"]}} {{$node[\"Function\"].json[\"data\"][\"partner\"][\"last_name\"]}}\",\"{{$node[\"Function\"].json[\"data\"][\"campaign\"][\"end_date\"]}}\""
             },
             {
               "name": "template_name",
-              "value": "={{$node[\"Function\"].json[\"data\"][\"partner\"][\"language\"] == \"English\"?\"nudge_2_english\":\"progress_1_hindi\"}}"
+              "value": "={{$node[\"Function\"].json[\"data\"][\"partner\"][\"language\"] == \"English\"?\"nudge_3_english\":\"progress_1_hindi\"}}"
             },
             {
               "name": "channel",
@@ -183,5 +183,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2024-04-03T12:03:10.071Z"
+  "updatedAt": "2024-04-04T07:01:21.457Z"
 }
