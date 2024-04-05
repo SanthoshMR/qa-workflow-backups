@@ -382,7 +382,7 @@
       "main": [
         [
           {
-            "node": "Update shipment Items",
+            "node": "IF3",
             "type": "main",
             "index": 0
           }
@@ -616,6 +616,35 @@
         [
           {
             "node": "Function to get the splitted grn",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF3": {
+      "main": [
+        [
+          {
+            "node": "Update shipment Items",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NoOp4": {
+      "main": [
+        [
+          {
+            "node": "Get Shipment Items",
             "type": "main",
             "index": 0
           }
@@ -928,7 +957,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        4000,
+        4120,
         200
       ],
       "credentials": {
@@ -1027,7 +1056,7 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        4200,
+        4320,
         180
       ]
     },
@@ -1050,7 +1079,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        5060,
+        5180,
         180
       ],
       "credentials": {
@@ -1104,7 +1133,7 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        4380,
+        4500,
         180
       ]
     },
@@ -1118,7 +1147,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        4560,
+        4680,
         180
       ],
       "credentials": {
@@ -1155,7 +1184,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        4720,
+        4840,
         180
       ],
       "credentials": {
@@ -1173,7 +1202,7 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        4880,
+        5000,
         180
       ]
     },
@@ -1228,7 +1257,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        4120,
+        4240,
         -100
       ],
       "credentials": {
@@ -1289,7 +1318,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        4320,
+        4440,
         -100
       ],
       "credentials": {
@@ -1318,8 +1347,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        5240,
-        -80
+        5260,
+        -120
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -1384,8 +1413,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        3900,
-        -100
+        3800,
+        -140
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -1599,7 +1628,7 @@
     },
     {
       "parameters": {
-        "functionCode": "let grnData = $node[\"Function to get grn data\"].json[\"result\"];\nlet currentIndex = $node[\"Start Loop\"].json[\"index\"];\nlet currentGrn = grnData[currentIndex];\nlet poItemIds = currentGrn.filter(grn=>grn.movement_type == \"accepted\" || grn.movement_type == \"rejected\").map(grn=>grn.po_item_id);\nlet dmsUrl = $node[\"Get url and token\"].json[\"0\"][\"mozart_url\"];\n\nitems[0].json.po_item_ids = poItemIds;\nitems[0].json.dms_url = dmsUrl;\nreturn items;"
+        "functionCode": "let grnData = $node[\"Function to get grn data\"].json[\"result\"];\nlet currentIndex = $node[\"Start Loop\"].json[\"index\"];\nlet currentGrn = grnData[currentIndex];\nlet poItemIds = currentGrn.filter(grn=>grn.movement_type == \"accepted\" || grn.movement_type == \"rejected\").map(grn=>grn.po_item_id);\nlet dmsUrl = $node[\"Get url and token\"].json[\"0\"][\"mozart_url\"];\nlet allPoItemIds = currentGrn.map(grn=>grn.po_item_id);\n\nitems[0].json.po_item_ids = poItemIds;\nitems[0].json.dms_url = dmsUrl;\nitems[0].json.all_po_item_ids=allPoItemIds;\nreturn items;"
       },
       "name": "Function to get sd order invoice from grn history",
       "type": "n8n-nodes-base.function",
@@ -1712,6 +1741,35 @@
           "name": "Mozart qa creds"
         }
       }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Get Shipment Items\"].json[\"data\"].length>0?true:false}}"
+            }
+          ]
+        }
+      },
+      "name": "IF3",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        3960,
+        -140
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "NoOp4",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        3960,
+        240
+      ]
     }
   ],
   "settings": {
@@ -1719,5 +1777,5 @@
   },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2024-04-01T12:43:42.515Z"
+  "updatedAt": "2024-04-05T06:12:39.726Z"
 }
