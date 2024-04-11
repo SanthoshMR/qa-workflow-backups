@@ -404,7 +404,7 @@
       "main": [
         [
           {
-            "node": "Check for consignment invoices",
+            "node": "Get the grn error log",
             "type": "main",
             "index": 0
           }
@@ -638,6 +638,50 @@
         [
           {
             "node": "Function to update grn in vpanel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the grn error log": {
+      "main": [
+        [
+          {
+            "node": "Function to construct grn error table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function to construct grn error table": {
+      "main": [
+        [
+          {
+            "node": "Update mail sent logs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update mail sent logs": {
+      "main": [
+        [
+          {
+            "node": "Send GRN error mail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send GRN error mail": {
+      "main": [
+        [
+          {
+            "node": "Check for consignment invoices",
             "type": "main",
             "index": 0
           }
@@ -1460,8 +1504,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        6640,
-        -200
+        7460,
+        -220
       ]
     },
     {
@@ -1474,7 +1518,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        6740,
+        7680,
         -400
       ],
       "credentials": {
@@ -1491,8 +1535,8 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        6780,
-        -100
+        7720,
+        0
       ]
     },
     {
@@ -1510,8 +1554,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        7120,
-        -220
+        7880,
+        -200
       ]
     },
     {
@@ -1524,8 +1568,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        6980,
-        -480
+        8160,
+        -460
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -1541,8 +1585,8 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        7460,
-        -20
+        8220,
+        0
       ]
     },
     {
@@ -1560,8 +1604,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        7680,
-        -200
+        8440,
+        -180
       ]
     },
     {
@@ -1574,8 +1618,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        7480,
-        -420
+        8660,
+        -400
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -1591,8 +1635,8 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        7920,
-        -80
+        8680,
+        -60
       ]
     },
     {
@@ -1603,8 +1647,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        8340,
-        -260
+        9100,
+        -240
       ]
     },
     {
@@ -1620,8 +1664,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        8560,
-        -260
+        9320,
+        -240
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -1789,6 +1833,84 @@
           "name": "Mozart qa creds"
         }
       }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://sdqa.mozart.shakedeal.com/items/sdm_grn_error_log?filter={\"_and\":[{\"file_name\":{\"_eq\":\"{{$node[\"Nextcloud\"].json[\"excelData\"][0][\"file_name\"]}}\"}},{\"mail_sent\":{\"_eq\":false}}]}",
+        "options": {}
+      },
+      "name": "Get the grn error log",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        6660,
+        -200
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "80",
+          "name": "Mozart qa creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let errorData = $node[\"Get the grn error log\"].json.data;\nlet keysToUpdate = errorData.map(error=>error.id);\nlet tableData = '';\nlet borderStyle = \"border: 1px solid black;border-collapse: collapse\"\nerrorData.forEach(function(error,index){\n  let movementType = error.movement_type == \"received\"?103:error.movement_type == \"accepted\"?105:124;\n  tableData=tableData+\n      `<tr style='${borderStyle}'>`+\n      `<td style='${borderStyle}'>${error.po_item_id.split(\"-\")[0]}</td>`+\n      `<td style='${borderStyle}'>${error.product}</td>`+\n      `<td style='${borderStyle}'>${error.po_item_id.split(\"-\")[1]}</td>`+\n      `<td style='${borderStyle}'>${error.grn_number}</td>`+\n      `<td style='${borderStyle}'>${error.qty}</td>`+\n      `<td style='${borderStyle}'>${error.plant}</td>`+\n      `<td style='${borderStyle}'>${movementType}</td>`+\n      `<td style='${borderStyle}'>${error.sd_invoice_nummber}</td>`+\n      `</tr>`;\n})\nlet tableHtml = `<table  style=\"color:#000000;width: auto;border: 1px solid black;border-collapse: collapse;\">`+\n    `<tr style='background-color:#9BC2E6;border: 1px solid black;border-collapse: collapse'>`+\n    `<th style='${borderStyle}'>Purchase Order</th>`+\n    `<th style='${borderStyle}'>Material</th>`+\n    `<th style='${borderStyle}'>Item</th>`+\n    `<th style='${borderStyle}'>Material Document</th>`+\n    `<th style='${borderStyle}'>Quantity</th>`+\n    `<th style='${borderStyle}'>Plant</th>`+\n    `<th style='${borderStyle}'>Movement Type</th>`+\n    `<th style='${borderStyle}'>Bill of Lading</th>`+\n    `</tr>${tableData}`+\n    `</table>`;\n\nlet updateErrorObj = {\n  keys:keysToUpdate,\n  data:{\n    mail_sent:true\n  }\n}\nitems[0].json.tableHtml = tableHtml;\nitems[0].json.updateErrorObj = updateErrorObj;\nreturn items;"
+      },
+      "name": "Function to construct grn error table",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        6880,
+        -200
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "=https://sdqa.mozart.shakedeal.com/items/sdm_grn_error_log",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$node[\"Function to construct grn error table\"].json[\"updateErrorObj\"]}}"
+      },
+      "name": "Update mail sent logs",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        7060,
+        -200
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "80",
+          "name": "Mozart qa creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "=chidanand@shakedeal.com",
+        "toEmail": "=sairam.reddy@shakedeal.com,anjali.jain@shakedeal.com,bijan.krishna@shakedeal.com,siddesh.nayak@shakedeal.com",
+        "ccEmail": "=",
+        "subject": "=Alert - Material not captured in GRN file - {{$node[\"Nextcloud\"].json[\"excelData\"][0][\"file_name\"]}} to Mozart",
+        "html": "=<p>Hi Team,</p>\n<p>The below line items extracted from GRN file - {{$node[\"Nextcloud\"].json[\"excelData\"][0][\"file_name\"]}} are not captured in Mozart . Kindly check and revert </p><br>\n{{$node[\"Function to construct grn error table\"].json[\"tableHtml\"]}}",
+        "options": {}
+      },
+      "name": "Send GRN error mail",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        7240,
+        -200
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "7",
+          "name": "AWS SES Creds"
+        }
+      }
     }
   ],
   "settings": {
@@ -1796,5 +1918,5 @@
   },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2024-04-08T09:09:40.977Z"
+  "updatedAt": "2024-04-11T09:38:37.894Z"
 }
