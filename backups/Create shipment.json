@@ -1,5 +1,5 @@
 {
-  "active": true,
+  "active": false,
   "connections": {
     "Wait for shipment": {
       "main": [
@@ -49,7 +49,7 @@
       "main": [
         [
           {
-            "node": "Update title and file name",
+            "node": "Get the po number",
             "type": "main",
             "index": 0
           }
@@ -78,17 +78,6 @@
         ]
       ]
     },
-    "Create shipment in mozart": {
-      "main": [
-        [
-          {
-            "node": "Update mozart key in vpanel",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Get url and token": {
       "main": [
         [
@@ -100,82 +89,11 @@
         ]
       ]
     },
-    "Get the shipment items": {
+    "Create shipment in mozart": {
       "main": [
         [
           {
-            "node": "Function",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Function": {
-      "main": [
-        [
-          {
-            "node": "HTTP Request2",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "HTTP Request2": {
-      "main": [
-        [
-          {
-            "node": "Update po status",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Function to update hsn": {
-      "main": [
-        [
-          {
-            "node": "Update hsn",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Update hsn": {
-      "main": [
-        []
-      ]
-    },
-    "Update title and file name": {
-      "main": [
-        [
-          {
-            "node": "Get the po number",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Update mozart key in vpanel": {
-      "main": [
-        [
-          {
-            "node": "Get the shipment items",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Update po status": {
-      "main": [
-        [
-          {
-            "node": "Function to update hsn",
+            "node": "Send Email",
             "type": "main",
             "index": 0
           }
@@ -183,8 +101,8 @@
       ]
     }
   },
-  "createdAt": "2024-01-22T06:13:24.440Z",
-  "id": "411",
+  "createdAt": "2022-05-30T07:16:53.844Z",
+  "id": "124",
   "name": "Create shipment",
   "nodes": [
     {
@@ -193,23 +111,23 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        -1700,
-        140
+        140,
+        300
       ]
     },
     {
       "parameters": {
         "authentication": "basicAuth",
         "httpMethod": "POST",
-        "path": "=create_shipment_demo",
+        "path": "=create_shipment",
         "options": {}
       },
       "name": "Wait for shipment",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        -1380,
-        140
+        320,
+        300
       ],
       "webhookId": "6068e010-29ce-48cd-bfa2-ed6de444d572",
       "credentials": {
@@ -239,15 +157,6 @@
               "name": "accounts_email",
               "value": "=sairam.reddy@shakedeal.com"
             }
-          ],
-          "number": [
-            {
-              "name": "max_percentage",
-              "value": 90
-            },
-            {
-              "name": "min_percentage"
-            }
           ]
         },
         "options": {}
@@ -256,8 +165,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        -1020,
-        140
+        680,
+        300
       ]
     },
     {
@@ -271,8 +180,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        -820,
-        140
+        880,
+        300
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -294,8 +203,8 @@
       "type": "n8n-nodes-base.moveBinaryData",
       "typeVersion": 1,
       "position": [
-        -600,
-        140
+        1100,
+        300
       ]
     },
     {
@@ -315,8 +224,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        -380,
-        140
+        1360,
+        300
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -328,15 +237,15 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_vendor_pos/{{$node[\"Wait for shipment\"].json[\"body\"][\"payload\"][\"vendor_po_number\"]}}?fields = id,po_number,shipments.*",
+        "url": "={{$node[\"Globals\"].json[\"vpanel_dms_url\"]}}/items/sdv_vendor_pos/{{$node[\"Wait for shipment\"].json[\"body\"][\"payload\"][\"vendor_po_number\"]}}",
         "options": {}
       },
       "name": "Get the po number",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        40,
-        140
+        1620,
+        300
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -348,15 +257,15 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_pos?filter={\"id\":{\"_eq\":\"{{$node[\"Get the po number\"].json[\"data\"][\"po_number\"]}}\"}}",
+        "url": "={{$node[\"Globals\"].json[\"mozart_dms_url\"]}}/items/sd_mozart_vendor_po_details?filter={\"vendor_po_number\":{\"_eq\":\"{{$node[\"Get the po number\"].json[\"data\"][\"po_number\"]}}\"}}",
         "options": {}
       },
       "name": "Get po_id from mozart",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        280,
-        140
+        1860,
+        300
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -400,18 +309,6 @@
             {
               "name": "net_invoice_value",
               "value": "={{$node[\"Wait for shipment\"].json[\"body\"][\"payload\"][\"net_invoice_value\"]}}"
-            },
-            {
-              "name": "whether_tax_payable_on_reverse_charge",
-              "value": "={{$node[\"Wait for shipment\"].json[\"body\"][\"payload\"][\"whether_tax_payable_on_reverse_charge\"]}}"
-            },
-            {
-              "name": "e_way_bill_number",
-              "value": "={{$node[\"Wait for shipment\"].json[\"body\"][\"payload\"][\"e_way_bill_number\"]}}"
-            },
-            {
-              "name": "consignment_type",
-              "value": "={{$node[\"Get po_id from mozart\"].json[\"data\"][0][\"consignment_type\"]}}"
             }
           ]
         }
@@ -420,8 +317,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        540,
-        140
+        2120,
+        300
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -440,7 +337,7 @@
           "parameter": [
             {
               "name": "client",
-              "value": "=vedanta"
+              "value": "={{$node[\"Wait for shipment\"].json[\"body\"][\"payload\"][\"client\"]}}"
             },
             {
               "name": "env",
@@ -453,8 +350,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        -1200,
-        140
+        500,
+        300
       ],
       "credentials": {
         "httpBasicAuth": {
@@ -465,202 +362,35 @@
     },
     {
       "parameters": {
-        "authentication": "headerAuth",
-        "url": "={{$node[\"Globals\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_shipments/{{$node[\"Wait for shipment\"].json[\"body\"][\"key\"]}}?fields=shipment_items.*.*&limit=-1",
+        "fromEmail": "={{$node[\"Globals\"].json[\"send_from_email\"]}}",
+        "toEmail": "={{$node[\"Globals\"].json[\"accounts_email\"]}}",
+        "subject": "=Shipment Created for invoice number: {{$node[\"Wait for shipment\"].json[\"body\"][\"payload\"][\"invoice_number\"]}}",
         "options": {}
       },
-      "name": "Get the shipment items",
-      "type": "n8n-nodes-base.httpRequest",
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
       "typeVersion": 1,
       "position": [
-        900,
-        140
+        2400,
+        300
       ],
       "credentials": {
-        "httpHeaderAuth": {
-          "id": "51",
-          "name": "VendorPanel DMS Token"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "functionCode": "let sdvShipmentItems = $node[\"Get the shipment items\"].json[\"data\"][\"shipment_items\"];\nlet sdmShipmentId = $node[\"Create shipment in mozart\"].json[\"data\"][\"id\"];\n\nlet sdmShipmentItems = [];\nsdvShipmentItems.forEach(function(shipmentItem,index){\n  sdmShipmentItems[index] ={};\n  sdmShipmentItems[index].sdm_shipments_id = sdmShipmentId;\n  sdmShipmentItems[index].sdm_po_items_id = shipmentItem.sdv_vendor_pos_sdv_products_id.po_items_id;\n  sdmShipmentItems[index].shipment_qty = shipmentItem.shipment_qty;\n  sdmShipmentItems[index].hsn = shipmentItem.sdv_vendor_pos_sdv_products_id.hsn;\n  sdmShipmentItems[index].tax_percentage = shipmentItem.sdv_vendor_pos_sdv_products_id.tax_percentage;\n  sdmShipmentItems[index].uom = shipmentItem.sdv_vendor_pos_sdv_products_id.uom;\n})\n\nitems[0].json.sdmShipmentItems = sdmShipmentItems\n\nreturn items;"
-      },
-      "name": "Function",
-      "type": "n8n-nodes-base.function",
-      "typeVersion": 1,
-      "position": [
-        1140,
-        140
-      ]
-    },
-    {
-      "parameters": {
-        "authentication": "headerAuth",
-        "requestMethod": "POST",
-        "url": "={{$node[\"Globals\"].json[\"mozart_dms_url\"]}}/items/sdm_shipment_items",
-        "jsonParameters": true,
-        "options": {},
-        "bodyParametersJson": "={{$node[\"Function\"].json[\"sdmShipmentItems\"]}}"
-      },
-      "name": "HTTP Request2",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        1360,
-        140
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "50",
-          "name": "Mozart DMS Token"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "functionCode": "let shipmentItems = $node[\"Function\"].json[\"sdmShipmentItems\"];\nlet returnItems =[];\nshipmentItems.forEach(function(item,index){\n  returnItems.push({\n    json: \n      {\n       poItemId : item.sdm_po_items_id,\n       hsn : item.hsn,\n       tax_percentage:item.tax_percentage,\n       uom:item.uom,\n       dms_url : $node[\"Globals\"].json[\"0\"][\"mozart_url\"]\n    }\n  });\n})\n\nreturn returnItems;"
-      },
-      "name": "Function to update hsn",
-      "type": "n8n-nodes-base.function",
-      "typeVersion": 1,
-      "position": [
-        1920,
-        140
-      ]
-    },
-    {
-      "parameters": {
-        "authentication": "headerAuth",
-        "requestMethod": "PATCH",
-        "url": "={{$node[\"Function to update hsn\"].json[\"dms_url\"]}}/items/sdm_po_items/{{$node[\"Function to update hsn\"].json[\"poItemId\"]}}",
-        "options": {},
-        "bodyParametersUi": {
-          "parameter": [
-            {
-              "name": "hsn",
-              "value": "={{$node[\"Function to update hsn\"].json[\"hsn\"]}}"
-            },
-            {
-              "name": "tax_percentage",
-              "value": "={{$node[\"Function to update hsn\"].json[\"tax_percentage\"]}}"
-            },
-            {
-              "name": "uom",
-              "value": "={{$node[\"Function to update hsn\"].json[\"uom\"]}}"
-            }
-          ]
-        }
-      },
-      "name": "Update hsn",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        2180,
-        140
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "50",
-          "name": "Mozart DMS Token"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "authentication": "headerAuth",
-        "requestMethod": "PATCH",
-        "url": "={{$node[\"Globals\"].json[\"mozart_dms_url\"]}}/files/{{$node[\"Upload shipment in mozart\"].json[\"data\"][\"id\"]}}",
-        "options": {},
-        "bodyParametersUi": {
-          "parameter": [
-            {
-              "name": "=title",
-              "value": "={{$node[\"Wait for shipment\"].json[\"body\"][\"payload\"][\"invoice_number\"]}}"
-            },
-            {
-              "name": "filename_download",
-              "value": "={{$node[\"Wait for shipment\"].json[\"body\"][\"payload\"][\"invoice_number\"]+\".\"+$node[\"Upload shipment in mozart\"].json[\"data\"][\"filename_disk\"].split(\".\")[1]}}"
-            }
-          ]
-        }
-      },
-      "name": "Update title and file name",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        -180,
-        140
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "50",
-          "name": "Mozart DMS Token"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "authentication": "headerAuth",
-        "requestMethod": "PATCH",
-        "url": "={{$node[\"Globals\"].json[\"0\"][\"vendor_panel_url\"]}}/items/sdv_shipments/{{$node[\"Wait for shipment\"].json[\"body\"][\"key\"]}}",
-        "options": {},
-        "bodyParametersUi": {
-          "parameter": [
-            {
-              "name": "mozart_shipment_key",
-              "value": "={{$node[\"Create shipment in mozart\"].json[\"data\"][\"id\"]}}"
-            }
-          ]
-        }
-      },
-      "name": "Update mozart key in vpanel",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        720,
-        140
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "51",
-          "name": "VendorPanel DMS Token"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "authentication": "headerAuth",
-        "requestMethod": "PATCH",
-        "url": "={{$node[\"Globals\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_vendor_pos/{{$node[\"Get the po number\"].json[\"data\"][\"po_number\"]}}",
-        "options": {},
-        "bodyParametersUi": {
-          "parameter": [
-            {
-              "name": "po_status",
-              "value": "=processing"
-            }
-          ]
-        }
-      },
-      "name": "Update po status",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        1660,
-        140
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "50",
-          "name": "Mozart DMS Token"
+        "smtp": {
+          "id": "17",
+          "name": "smtp(sai)creds"
         }
       }
     }
   ],
   "settings": {},
   "staticData": null,
-  "tags": [],
-  "updatedAt": "2024-01-22T06:15:51.010Z"
+  "tags": [
+    {
+      "id": "5",
+      "name": "Mozart",
+      "createdAt": "2022-05-30T07:16:52.136Z",
+      "updatedAt": "2022-05-30T07:16:52.136Z"
+    }
+  ],
+  "updatedAt": "2022-09-14T07:04:15.541Z"
 }
