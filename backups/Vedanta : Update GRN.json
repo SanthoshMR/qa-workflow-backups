@@ -648,7 +648,7 @@
       "main": [
         [
           {
-            "node": "Function to construct grn error table",
+            "node": "Check for error logs",
             "type": "main",
             "index": 0
           }
@@ -678,6 +678,35 @@
       ]
     },
     "Send GRN error mail": {
+      "main": [
+        [
+          {
+            "node": "Check for consignment invoices",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for error logs": {
+      "main": [
+        [
+          {
+            "node": "Function to construct grn error table",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NoOp4": {
       "main": [
         [
           {
@@ -1862,8 +1891,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        6880,
-        -200
+        6940,
+        -560
       ]
     },
     {
@@ -1879,8 +1908,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        7060,
-        -200
+        7080,
+        -560
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -1902,8 +1931,8 @@
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 1,
       "position": [
-        7240,
-        -200
+        7260,
+        -560
       ],
       "credentials": {
         "smtp": {
@@ -1911,6 +1940,35 @@
           "name": "AWS SES Creds"
         }
       }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"Get the grn error log\"].json.data.length>0?true:false}}"
+            }
+          ]
+        }
+      },
+      "name": "Check for error logs",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        6860,
+        -200
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "NoOp4",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        7280,
+        100
+      ]
     }
   ],
   "settings": {
@@ -1918,5 +1976,5 @@
   },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2024-04-15T10:03:00.145Z"
+  "updatedAt": "2024-04-16T11:49:17.003Z"
 }
