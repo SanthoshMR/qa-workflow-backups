@@ -16,7 +16,7 @@
       "main": [
         [
           {
-            "node": "Get the shipment id",
+            "node": "Get the current shipment",
             "type": "main",
             "index": 0
           }
@@ -342,6 +342,17 @@
         [
           {
             "node": "Get the shipment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the current shipment": {
+      "main": [
+        [
+          {
+            "node": "Get the shipment id",
             "type": "main",
             "index": 0
           }
@@ -1011,15 +1022,35 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_shipments/{{$node[\"Webhook\"].json[\"body\"][\"keys\"][0]}}",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_shipments?filter={\"_and\": [{\"invoice_number\":{\"_eq\":\"{{$node[\"Webhook\"].json[\"body\"][\"payload\"][\"parent_invoice\"]}}\"}},{\"vendor_po_num\":{\"id\":{\"_eq\":\"{{$node[\"Get the current shipment\"].json[\"data\"][\"vendor_po_num\"]}}\"}}}]}",
         "options": {}
       },
       "name": "Get the shipment id",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        300,
+        400,
         100
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "50",
+          "name": "Mozart DMS Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "={{$node[\"Get url and token\"].json[\"0\"][\"mozart_url\"]}}/items/sdm_shipments/{{$node[\"Webhook\"].json[\"body\"][\"keys\"][0]}}",
+        "options": {}
+      },
+      "name": "Get the current shipment",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        240,
+        -20
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -1032,5 +1063,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2024-04-17T12:08:16.784Z"
+  "updatedAt": "2024-04-18T09:22:10.790Z"
 }
