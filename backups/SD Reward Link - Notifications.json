@@ -278,7 +278,7 @@
             },
             {
               "name": "template_name",
-              "value": "=otp"
+              "value": "=shakepe_otp"
             },
             {
               "name": "channel",
@@ -418,7 +418,7 @@
             },
             {
               "name": "sender_id",
-              "value": "=SHAKPE-OTP"
+              "value": "=SHAKPE-Links-OTP"
             }
           ]
         }
@@ -505,7 +505,7 @@
             },
             {
               "name": "params",
-              "value": "=\"{{$node[\"Prepare Data\"].json[\"brand_name\"]}}\",\"{{$node[\"Webhook\"].json[\"body\"][\"extra_params\"][\"value\"]}}\",\"{{$node[\"Prepare Data\"].json[\"link\"]}}\",\"{{$node[\"Webhook\"].json[\"body\"][\"extra_params\"][\"reference_code_otp\"]}}\",\"{{$node[\"Prepare Data\"].json[\"validity\"]}}\""
+              "value": "=\"{{$node[\"Prepare Data\"].json[\"brand_name\"]}}\",\"₹{{$node[\"Webhook\"].json[\"body\"][\"extra_params\"][\"value\"]}}\",\"{{$node[\"Prepare Data\"].json[\"link\"]}}\",\"{{$node[\"Webhook\"].json[\"body\"][\"extra_params\"][\"reference_code_otp\"]}}\",\"{{$node[\"Prepare Data\"].json[\"validity\"]}}\""
             },
             {
               "name": "template_name",
@@ -668,5 +668,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2024-03-20T12:05:55.719Z"
+  "updatedAt": "2024-04-22T09:19:47.966Z"
 }
