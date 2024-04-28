@@ -1,5 +1,5 @@
 {
-  "active": false,
+  "active": true,
   "connections": {
     "Globals": {
       "main": [
@@ -152,8 +152,8 @@
       ]
     }
   },
-  "createdAt": "2022-11-09T12:08:19.890Z",
-  "id": "232",
+  "createdAt": "2021-05-04T10:24:20.434Z",
+  "id": "64",
   "name": "Kaleyra : Order Confirmation",
   "nodes": [
     {
@@ -630,5 +630,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-11-09T12:08:19.890Z"
+  "updatedAt": "2022-11-09T10:06:41.900Z"
 }
