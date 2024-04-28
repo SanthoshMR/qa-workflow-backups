@@ -79,8 +79,8 @@
       ]
     }
   },
-  "createdAt": "2023-11-28T13:29:07.913Z",
-  "id": "383",
+  "createdAt": "2023-11-28T13:29:07.899Z",
+  "id": "382",
   "name": "Revision History",
   "nodes": [
     {
@@ -96,7 +96,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "https://zeusqa.shakedeal.com/items/sp_card_inventory",
+        "url": "https://zeusqa.shakedeal.com/items/sp_card_inventory?fields[]=sd_serial_number&limit=-1",
         "options": {}
       },
       "name": "HTTP Request",
@@ -115,7 +115,7 @@
     },
     {
       "parameters": {
-        "functionCode": "arr =$node[\"HTTP Request\"].json[\"data\"];\nlet result =  arr.slice();\nlet ids = result.map( (item) => item.sd_serial_number);\n      return {ids};"
+        "functionCode": "const arr = $node[\"HTTP Request\"].json[\"data\"];\nlet ids = arr.map((item) => item.sd_serial_number);\nreturn { ids };"
       },
       "name": "Function",
       "type": "n8n-nodes-base.function",
@@ -127,7 +127,14 @@
     },
     {
       "parameters": {
-        "fieldToSplitOut": "ids",
+        "operation": "aggregateItems",
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {
+              "fieldToAggregate": "ids"
+            }
+          ]
+        },
         "options": {}
       },
       "name": "Item Lists",
@@ -141,7 +148,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "url": "=https://zeusqa.shakedeal.com/revisions?filter[collection][_eq]=sp_card_inventory&filter[item][_eq]={{$node[\"Item Lists\"].json[\"ids\"]}}",
+        "url": "=https://zeusqa.shakedeal.com/revisions?filter[collection][_eq]=sp_card_inventory&filter[item][_in]={{$node[\"Item Lists\"].json[\"ids\"]}}&limit=-1",
         "options": {}
       },
       "name": "HTTP Request2",
@@ -180,7 +187,7 @@
     },
     {
       "parameters": {
-        "functionCode": " arr = $node[\"Item Lists1\"].json[\"data\"];\nlet tableData = [];\n\nfor (let i = 0; i < arr.length; i++) {\n    let order = arr[i];\n\n    for (let j = 0; j < order.length; j++) {\n        let currentItem = order[j];\n\n        let status = currentItem['delta'] ? currentItem['delta']['status'] : undefined;\n        let dateUpdated = currentItem['delta'] ? currentItem['delta']['date_updated'] : undefined;\n        let dateCreated = currentItem['data'] ? currentItem['data']['date_created'] : undefined;\n\n        if (status === 'NotAssigned' && dateCreated !== undefined) {\n            dateUpdated = dateCreated;\n        }\n\n        let sdSerialNumber = currentItem['data'] ? currentItem['data']['sd_serial_number'] : undefined;\n\n        if (status !== undefined && dateUpdated !== undefined && sdSerialNumber !== undefined) {\n            let itemData = {\n                revision_history: sdSerialNumber,\n                status: status,\n                date_created: dateUpdated\n            };\n\n            tableData.push(itemData);\n        }\n    }\n}\nreturn tableData;\n\n\n"
+        "functionCode": " let arr = $node[\"Item Lists1\"].json[\"data\"];\nlet tableData = [];\n\nfor (let i = 0; i < arr.length; i++) {\n    let order = arr[i];\n\n    for (let j = 0; j < order.length; j++) {\n        let currentItem = order[j];\n\n        let status = currentItem['delta'] ? currentItem['delta']['status'] : undefined;\n        let dateUpdated = currentItem['delta'] ? currentItem['delta']['date_updated'] : undefined;\n        let dateCreated = currentItem['data'] ? currentItem['data']['date_created'] : undefined;\n\n        if (status === 'NotAssigned' && dateCreated !== undefined) {\n            dateUpdated = dateCreated;\n        }\n\n        let sdSerialNumber = currentItem['data'] ? currentItem['data']['sd_serial_number'] : undefined;\n\n        if (status !== undefined && dateUpdated !== undefined && sdSerialNumber !== undefined) {\n            // Adding 5 hours 30 minutes (5.5 hours) to dateUpdated (in milliseconds)\n            const utcDate = new Date(dateUpdated); // Convert dateUpdated to UTC\n            const utcMilliseconds = utcDate.getTime(); // Get UTC time in milliseconds\n\n            const offsetMilliseconds = 5.5 * 60 * 60 * 1000; // 5.5 hours in milliseconds\n            const adjustedMilliseconds = utcMilliseconds + offsetMilliseconds; // Add offset\n\n            let adjustedDate = new Date(adjustedMilliseconds);\n\n            let itemData = {\n                revision_history: sdSerialNumber,\n                status: status,\n                date_created: adjustedDate\n            };\n\n            tableData.push(itemData);\n        }\n    }\n}\n\nreturn tableData;"
       },
       "name": "Function1",
       "type": "n8n-nodes-base.function",
@@ -207,5 +214,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-11-28T13:29:07.913Z"
+  "updatedAt": "2023-11-29T12:45:35.439Z"
 }
